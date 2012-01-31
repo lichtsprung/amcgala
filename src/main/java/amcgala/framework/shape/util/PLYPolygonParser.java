@@ -58,7 +58,29 @@ public class PLYPolygonParser {
 	 */
 	public static List<Polygon> parseAsPolygonList(String filePath, double scale)
 			throws Exception {
+		// Stream öffnen (Exception!)
+		InputStream inputStream = new FileInputStream(filePath);
+		return parseAsPolygonList(inputStream, scale);
+	}
 
+	/**
+	 * Parst .ply File und gibt Polygone zurueck<br/>
+	 * <br/>
+	 * <b>ACHTUNG!</b> : Export als Stanford (.ply) File ohne Normalen Vektoren
+	 * ! <br/>
+	 * Einstellungen lassen sich im Export Kontextmenue von zB Blender
+	 * festlegen. <br/>
+	 * <i>Eigenschaft: "Normals"</i>
+	 * 
+	 * @param inputStream
+	 *            to File
+	 * @param scale
+	 *            Skalierung des Objektes (zB 100)
+	 * @return ArrayList von allen Polygonen
+	 * @throws IOException
+	 */
+	public static List<Polygon> parseAsPolygonList(InputStream inputStream,
+			double scale) throws Exception {
 		// resultierende Polygone
 		ArrayList<Polygon> al = new ArrayList<Polygon>();
 		// Koordinaten Anzahl
@@ -67,8 +89,6 @@ public class PLYPolygonParser {
 		int face_count = 0;
 		// Koordinaten
 		ArrayList<Vector3d> vertexes = new ArrayList<Vector3d>();
-		// Stream öffnen (Exception!)
-		InputStream inputStream = new FileInputStream(filePath);
 		// Stream in Scanner legen
 		final Scanner scanner = new Scanner(inputStream).useLocale(Locale.US);
 
