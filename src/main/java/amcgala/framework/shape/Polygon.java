@@ -33,6 +33,39 @@ public class Polygon extends Shape {
 	private BresenhamLine3d bl3;
 	private BresenhamLine3d bl4;
 
+	public void move(double x, double y, double z) {
+		if (bl1 != null && bl2 != null && bl3 != null) {
+			bl1.x1 += x;
+			bl1.x2 += x;
+			bl1.y1 += y;
+			bl1.y2 += y;
+			bl1.z1 += z;
+			bl1.z2 += z;
+
+			bl2.x1 += x;
+			bl2.x2 += x;
+			bl2.y1 += y;
+			bl2.y2 += y;
+			bl2.z1 += z;
+			bl2.z2 += z;
+
+			bl3.x1 += x;
+			bl3.x2 += x;
+			bl3.y1 += y;
+			bl3.y2 += y;
+			bl3.z1 += z;
+			bl3.z2 += z;
+			if (bl4 != null) {
+				bl4.x1 += x;
+				bl4.x2 += x;
+				bl4.y1 += y;
+				bl4.y2 += y;
+				bl4.z1 += z;
+				bl4.z2 += z;
+			}
+		}
+	}
+
 	public Polygon() {
 		throw new IllegalAccessError();
 	}

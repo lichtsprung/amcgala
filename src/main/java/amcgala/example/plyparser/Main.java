@@ -36,7 +36,7 @@ public class Main extends Framework implements InputHandler {
 
 		} catch (Exception e) {
 			System.out
-					.println("Fehler beim Laden der Polygone! Bitte uebertruefen Sie die Exporteigenschaften!");
+					.println("Fehler beim Laden der Polygone! Bitte ueberpruefen Sie die Exporteigenschaften!");
 		}
 
 	}
