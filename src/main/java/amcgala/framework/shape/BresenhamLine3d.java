@@ -22,6 +22,7 @@ import amcgala.framework.renderer.Renderer;
 
 /**
  * Eine Linie im 3d Raum.
+ * TODO Refactoring: Umbenennen in Line, Anbieten von zwei Konstruktoren für 2d und 3d Varianten. Löschen der Klasse Bresenhamline2d.
  *
  * @author Robert Giacinto
  */

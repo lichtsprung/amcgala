@@ -14,7 +14,6 @@
  */
 package amcgala.framework.shape;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
@@ -24,7 +23,7 @@ import java.util.logging.Logger;
 
 /**
  * Eine 2d Linie, die mithilfe des Bresenham Algorithmus gezeichnet wird.
- *
+ * TODO Refactoring: Sollte mit der 3d Variante zusammengefasst werden und zwei Konstruktoren anbieten. Danach 2d Variante löschen.
  * @author Anne Hofmeister
  * @author Hubert Grzeskowiak
  * @author Robert Giacinto

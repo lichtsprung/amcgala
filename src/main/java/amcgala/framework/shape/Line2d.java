@@ -26,6 +26,7 @@ import amcgala.framework.renderer.Renderer;
  *
  * <p/>
  * @author Robert Giacinto
+ * @deprecated Veraltete Klasse. Bitte BresenhamLine2/3d verwenden.
  */
 public class Line2d extends Shape {
 

@@ -19,79 +19,83 @@ import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Pixel;
 import amcgala.framework.renderer.Renderer;
-import java.util.logging.Logger;
 
 /**
  * Ein 2d Kreis, der mithilfe des Bresenham Algorithmus gezeichnet wird.
- * 
+ *
  * @author Steffen Troester
  */
 public class Circle2d extends Shape {
 
-	public double x, y;
-	public double radius;
-	private Vector3d pos;
+    public double x, y;
+    public double radius;
+    private Vector3d pos;
 
-	public Circle2d(double x, double y, double radius) {
-		this.x = x;
-		this.y = y;
-		this.radius = radius;
-		pos = new Vector3d(x, y, -1);
-	}
+    /**
+     * Ein Kreis an der Position (x,y).
+     * @param x x-Position des Mittelpunkts
+     * @param y y-Position des Mittelpunkts.
+     * @param radius der Radius
+     */
+    public Circle2d(double x, double y, double radius) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        pos = new Vector3d(x, y, -1);
+    }
 
-	@Override
-	public void render(Matrix transformation, Camera camera, Renderer renderer) {
-		// Einbeziehen der Transformationsgruppen. Um Animationen zu
-		// beruecksichtigen, die auf die einzelnen Felder zugegriffen
-		// haben, wird der pos Vektor aktualisiert, bevor er mit
-		// der Transformationsmatrix multipliziert wird.
+    @Override
+    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+        // Einbeziehen der Transformationsgruppen. Um Animationen zu
+        // beruecksichtigen, die auf die einzelnen Felder zugegriffen
+        // haben, wird der pos Vektor aktualisiert, bevor er mit
+        // der Transformationsmatrix multipliziert wird.
 
-		pos = new Vector3d(x, y, -1).transform(transformation);
-		x = pos.x;
-		y = pos.y;
+        pos = new Vector3d(x, y, -1).transform(transformation);
+        x = pos.x;
+        y = pos.y;
 
-		double f = 1 - radius;
-		double ddF_x = 0;
-		double ddF_y = -2 * radius;
-		double x1 = 0;
-		double y1 = radius;
+        double f = 1 - radius;
+        double ddF_x = 0;
+        double ddF_y = -2 * radius;
+        double x1 = 0;
+        double y1 = radius;
 
-		// Eckpunkte zeichnen
-		renderer.putPixel(new Pixel(x, y + radius), this.color);
-		renderer.putPixel(new Pixel(x, y - radius), this.color);
-		renderer.putPixel(new Pixel(x + radius, y), this.color);
-		renderer.putPixel(new Pixel(x - radius, y), this.color);
+        // Eckpunkte zeichnen
+        renderer.putPixel(new Pixel(x, y + radius), this.color);
+        renderer.putPixel(new Pixel(x, y - radius), this.color);
+        renderer.putPixel(new Pixel(x + radius, y), this.color);
+        renderer.putPixel(new Pixel(x - radius, y), this.color);
 
-		while (x1 < y1) {
-			if (f >= 0) {
-				y1--;
-				ddF_y += 2;
-				f += ddF_y;
-			}
-			x1++;
-			ddF_x += 2;
-			f += ddF_x + 1;
+        while (x1 < y1) {
+            if (f >= 0) {
+                y1--;
+                ddF_y += 2;
+                f += ddF_y;
+            }
+            x1++;
+            ddF_x += 2;
+            f += ddF_x + 1;
 
-			// Zeichne jeweiligen Randsegmente
-			renderer.putPixel(new Pixel(this.x + x1, this.y + y1), this.color);
-			renderer.putPixel(new Pixel(this.x - x1, this.y + y1), this.color);
-			renderer.putPixel(new Pixel(this.x + x1, this.y - y1), this.color);
-			renderer.putPixel(new Pixel(this.x - x1, this.y - y1), this.color);
-			renderer.putPixel(new Pixel(this.x + y1, this.y + x1), this.color);
-			renderer.putPixel(new Pixel(this.x - y1, this.y + x1), this.color);
-			renderer.putPixel(new Pixel(this.x + y1, this.y - x1), this.color);
-			renderer.putPixel(new Pixel(this.x - y1, this.y - x1), this.color);
-		}
+            // Zeichne jeweiligen Randsegmente
+            renderer.putPixel(new Pixel(this.x + x1, this.y + y1), this.color);
+            renderer.putPixel(new Pixel(this.x - x1, this.y + y1), this.color);
+            renderer.putPixel(new Pixel(this.x + x1, this.y - y1), this.color);
+            renderer.putPixel(new Pixel(this.x - x1, this.y - y1), this.color);
+            renderer.putPixel(new Pixel(this.x + y1, this.y + x1), this.color);
+            renderer.putPixel(new Pixel(this.x - y1, this.y + x1), this.color);
+            renderer.putPixel(new Pixel(this.x + y1, this.y - x1), this.color);
+            renderer.putPixel(new Pixel(this.x - y1, this.y - x1), this.color);
+        }
 
-		/*
-		 * Ende Bresenham Algorithmus
-		 */
-	}
+        /*
+         * Ende Bresenham Algorithmus
+         */
+    }
 
-	@Override
-	public String toString() {
-		return "Circle2d{" + "x=" + x + ", y=" + y + ", radius=" + radius
-				+ ", pos=" + pos + '}';
-	}
-
+    @Override
+    public String toString() {
+        return "Circle2d{" + "x=" + x + ", y=" + y + ", radius=" + radius
+               + ", pos=" + pos + '}';
+    }
 }
