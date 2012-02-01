@@ -96,6 +96,4 @@ public class Circle3d extends Shape {
 				+ ", pos=" + pos + '}';
 	}
 
-	private static final Logger LOG = Logger
-			.getLogger(Circle2d.class.getName());
 }
