@@ -50,8 +50,7 @@ public class PLYExampleMain extends Framework implements InputHandler {
         if (e.getID() == MouseEvent.MOUSE_MOVED) {
             direction.x = (double) e.getX() / (double) getScreenWidth();
             direction.y = (double) e.getY() / (double) getScreenHeight();
-            setCamera(new SimplePerspectiveCamera(up, position, direction,
-                                                  DESTINATION));
+            getCamera().setDirection(direction);
         }
     }
 
