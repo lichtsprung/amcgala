@@ -36,7 +36,8 @@ public final class SimplePerspectiveCamera extends AbstractCamera {
      * @param vup Das Oben der Kamera
      * @param position Die Position der Kamera
      * @param direction Der Punkt, zu dem die Kamera blickt
-     * @param d der Abstand der Kamera zur Projektionsebene. Umso kleiner der Wert desto größer die perspektivische Wirkung
+     * @param d der Abstand der Kamera zur Projektionsebene. Umso kleiner der
+     * Wert desto größer die perspektivische Wirkung
      */
     public SimplePerspectiveCamera(Vector3d vup, Vector3d position, Vector3d direction, double d) {
         this.vup = vup;
@@ -97,6 +98,8 @@ public final class SimplePerspectiveCamera extends AbstractCamera {
         this.d = d;
         update();
     }
+
+   
 
     @Override
     public CVPoint getClippingSpaceCoordinates(Vector3d vector3d) {
