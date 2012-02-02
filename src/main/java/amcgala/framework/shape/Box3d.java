@@ -97,6 +97,7 @@ public class Box3d extends Shape {
      */
     public void setWidth(double width) {
     	this.width = width;
+        this.calculate();
     }
     
     /**
@@ -113,6 +114,7 @@ public class Box3d extends Shape {
      */
     public void setHeight(double height) {
     	this.height = height;
+        this.calculate();
     }
     
     /**
@@ -129,6 +131,7 @@ public class Box3d extends Shape {
      */
     public void setDepth(double depth) {
     	this.depth = depth;
+        this.calculate();
     }
     
     /**
