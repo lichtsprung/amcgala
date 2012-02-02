@@ -14,6 +14,9 @@
  */
 package amcgala.framework.shape;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
@@ -27,8 +30,8 @@ import amcgala.framework.renderer.Renderer;
  */
 public class Circle3d extends Shape {
 
-    public double x, y;
-    public double radius;
+    private double x, y;
+    private double radius;
     private Vector3d pos;
     private final double z;
 
@@ -46,14 +49,50 @@ public class Circle3d extends Shape {
         this.radius = radius;
         pos = new Vector3d(x, y, z);
     }
+    
+    /**
+     * Setzt den Radius des Kreises auf den übergebenen Wert.
+     * @param r
+     */
+    public void setRadius(double r) {
+    	this.radius = r;
+    }
+    
+    /**
+     * Gibt den Radius des Kreises zurück.
+     * @return
+     */
+    public double getRadius() {
+    	return this.radius;
+    }
+    
+    /**
+     * Setzt den Kreis auf die übergebene Position.
+     */
+    public void setPosition(double x, double y) {
+    	this.x = x;
+    	this.y = y;
+    }
+    
+    /**
+     * Gibt die Position in Form eines Vektors zurück.
+     * @return
+     */
+    public Vector3d getPosition() {
+    	return new Vector3d(this.x, this.y, this.z);
+    }
 
+    /**
+     * 
+     */
     @Override
     public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        // Einbeziehen der Transformationsgruppen. Um Animationen zu
-        // beruecksichtigen, die auf die einzelnen Felder zugegriffen
-        // haben, wird der pos Vektor aktualisiert, bevor er mit
-        // der Transformationsmatrix multipliziert wird.
-
+    	/*
+    	 * Einbeziehen der Transformationsgruppen. Um Animationen zu
+    	 * beruecksichtigen, die auf die einzelnen Felder zugegriffen
+    	 * haben, wird der pos Vektor aktualisiert, bevor er mit
+    	 * der Transformationsmatrix multipliziert wird.
+    	 */
         pos = new Vector3d(x, y, z).transform(transformation);
         x = pos.x;
         y = pos.y;
@@ -96,9 +135,14 @@ public class Circle3d extends Shape {
          */
     }
 
+    /**
+     * 
+     */
     @Override
     public String toString() {
-        return "Circle2d{" + "x=" + x + ", y=" + y + ", radius=" + radius
+        return "Circle3d{" + "x=" + x + ", y=" + y + ", radius=" + radius
                + ", pos=" + pos + '}';
     }
+
+    private static final Logger log = LoggerFactory.getLogger(Circle3d.class);
 }
