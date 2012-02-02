@@ -24,7 +24,7 @@ import amcgala.framework.renderer.Renderer;
  * Weiter Linien oder Vektoren können auch im nachhinein hinzugefügt werden.<br />
  * @author Sascha Lemke
  */
-public class Paint extends Shape {
+public class Container extends Shape {
 
 	private BresenhamLine3d linien [];
 	private int position;
@@ -33,7 +33,7 @@ public class Paint extends Shape {
 	/**
 	 * Erstellt eine "leeres" Shapeobjekt.
 	 */
-	public Paint() {
+	public Container() {
 		this.position = 0;
 		this.linien = new BresenhamLine3d[10];
 	}
@@ -42,20 +42,10 @@ public class Paint extends Shape {
 	 * Wird benutzt um ein Shapeobjekt auf Basis eines Arrays zu entwerfen.
 	 * @param koordinaten
 	 */
-	public Paint(Vector3d[] koordinaten) {
-		if(koordinaten.length > 1) {
-			this.linien = new BresenhamLine3d[koordinaten.length];
-			for(int i = 0; i < koordinaten.length; i++) {
-				if(i == koordinaten.length-1) {
-					this.linien[i] = new BresenhamLine3d(koordinaten[i], new Vector3d(this.linien[0].x1, this.linien[0].y1, this.linien[0].z1));
-				} else {
-					this.linien[i] = new BresenhamLine3d(koordinaten[i], koordinaten[i+1]);
-				}
-			}
-			this.position = this.linien.length-1;
-		} else {
-			this.linien = new BresenhamLine3d[10];
-			this.linien[0] = new BresenhamLine3d(koordinaten[0], new Vector3d(0,0,0));
+	public Container(Vector3d[][] koordinaten) {
+		this.linien = new BresenhamLine3d[koordinaten.length];
+		for(int i = 0; i < koordinaten.length; i++) {
+			this.linien[i] = new BresenhamLine3d(koordinaten[i][0], koordinaten[i][1]);
 			this.position++;
 		}
 	}
@@ -64,14 +54,17 @@ public class Paint extends Shape {
 	 * Übernimmt automatisch 2D-Linien um sie mit anderen Linien zu verbinden.
 	 * @param linien
 	 */
-	public Paint(BresenhamLine2d[] linien) {
+	public Container(BresenhamLine2d[] linien) {
 		this.linien = new BresenhamLine3d[10];
+		
 		if(linien.length > this.linien.length) {
 			this.linien = newArray(this.linien);
 		}
+		
 		for(int i = 0; i < linien.length; i++) {
 			this.linien[i] = new BresenhamLine3d(new Vector3d(linien[i].x1, linien[i].y1, 0), new Vector3d(linien[i].x2, linien[i].y2, 0));
 		}
+		
 		this.position = linien.length;
 	}
 	
@@ -79,14 +72,17 @@ public class Paint extends Shape {
 	 * Übernimmt automatisch 3D-Linien um sie mit anderen Linien zu verbinden.
 	 * @param linien
 	 */
-	public Paint(BresenhamLine3d[] linien) {
+	public Container(BresenhamLine3d[] linien) {
 		this.linien = new BresenhamLine3d[10];
+		
 		if(linien.length > this.linien.length) {
 			this.linien = newArray(this.linien);
 		}
+		
 		for(int i = 0; i < linien.length; i++) {
 			this.linien[i] = linien[i];
 		}
+		
 		this.position = linien.length;
 	}
 
@@ -95,12 +91,11 @@ public class Paint extends Shape {
 	 * @param x
 	 * @param y
 	 */
-	public void add(Vector3d point) {
+	public void add(Vector3d point, Vector3d point1) {
 		if(this.position >= this.linien.length - 1) {
 			this.linien = newArray(this.linien);
 		}
-		this.linien[this.position+1] = new BresenhamLine3d(new Vector3d(this.linien[this.position].x2, this.linien[this.position].y2, this.linien[this.position].z2), point);
-		this.position++;
+		this.linien[this.position++] = new BresenhamLine3d(point, point1);
 	}
 	
 	/**
