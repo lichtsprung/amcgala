@@ -16,6 +16,10 @@ package amcgala.framework.shape;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import amcgala.framework.camera.Camera;
 import amcgala.framework.event.InputHandler;
 import amcgala.framework.math.Matrix;
@@ -151,7 +155,11 @@ public class Container extends Shape implements InputHandler {
 	public void render(Matrix transformation, Camera camera, Renderer renderer) {
 		Iterator<BresenhamLine3d> iter = this.linien.iterator();
 		while(iter.hasNext()) {
-			iter.next().render(transformation, camera, renderer);
+			BresenhamLine3d line = iter.next();
+			line.color = color;
+			line.render(transformation, camera, renderer);
 		}
 	}
+	
+    private static final Logger log = LoggerFactory.getLogger(Container.class);
 }
