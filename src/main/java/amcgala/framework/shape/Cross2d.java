@@ -14,7 +14,6 @@
  */
 package amcgala.framework.shape;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
@@ -32,31 +31,58 @@ public class Cross2d extends Shape {
     private int size;
     private BresenhamLine2d l1, l2;
 
+    /**
+     * 
+     * @param position
+     * @param size
+     */
     public Cross2d(Vector3d position, int size) {
         this.position = position;
         this.size = size;
         init();
     }
 
+    /**
+     * 
+     * @param x
+     * @param y
+     * @param size
+     */
     public Cross2d(double x, double y, int size) {
         this.position = new Vector3d(x, y, -1);
         this.size = size;
         init();
     }
 
+    /**
+     * Gibt die Position in Form eines 3D Vektors zurück.
+     * @return
+     */
     public Vector3d getPosition() {
         return position;
     }
 
+    /**
+     *
+     * @param position
+     */
     public void setPosition(Vector3d position) {
         this.position = position;
         init();
     }
 
+    /**
+     * Gibt die Größe des Kreuzes zurück.
+     * @return
+     */
     public int getSize() {
         return size;
     }
 
+    /**
+     * Setzt die Größe des Kreuzes auf den übergebenen Wert.
+     * @param size
+     */
     public void setSize(int size) {
         this.size = size;
         init();
@@ -67,6 +93,9 @@ public class Cross2d extends Shape {
         l2 = new BresenhamLine2d(position.x - size, position.y + size, position.x + size, position.y - size);
     }
 
+    /**
+     * 
+     */
     @Override
     public void render(Matrix transformation, Camera camera, Renderer renderer) {
         l1.color = color;
