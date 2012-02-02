@@ -14,7 +14,10 @@
  */
 package amcgala.framework.shape;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import amcgala.framework.camera.Camera;
+import amcgala.framework.event.InputHandler;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
@@ -22,20 +25,18 @@ import amcgala.framework.renderer.Renderer;
 /**
  * Zeichnet ein 2D/3D Shapeobjekt mit übergebenen Parametern in den Formen: BresenhamLine3d, BresenhamLine2d oder Vector3d <br /> 
  * Weiter Linien oder Vektoren können auch im nachhinein hinzugefügt werden.<br />
+ * Implementiert außerdem den Eventbus.
  * @author Sascha Lemke
  */
-public class Container extends Shape {
+public class Container extends Shape implements InputHandler {
 
-	private BresenhamLine3d linien [];
-	private int position;
-	public int length;
+	private ArrayList <BresenhamLine3d> linien;
 	
 	/**
 	 * Erstellt eine "leeres" Shapeobjekt.
 	 */
 	public Container() {
-		this.position = 0;
-		this.linien = new BresenhamLine3d[10];
+		this.linien = new ArrayList<BresenhamLine3d>();
 	}
 	
 	/**
@@ -43,10 +44,9 @@ public class Container extends Shape {
 	 * @param koordinaten
 	 */
 	public Container(Vector3d[][] koordinaten) {
-		this.linien = new BresenhamLine3d[koordinaten.length];
+		this.linien = new ArrayList<BresenhamLine3d>();
 		for(int i = 0; i < koordinaten.length; i++) {
-			this.linien[i] = new BresenhamLine3d(koordinaten[i][0], koordinaten[i][1]);
-			this.position++;
+			this.linien.add(new BresenhamLine3d(koordinaten[i][0], koordinaten[i][1]));
 		}
 	}
 	
@@ -55,17 +55,10 @@ public class Container extends Shape {
 	 * @param linien
 	 */
 	public Container(BresenhamLine2d[] linien) {
-		this.linien = new BresenhamLine3d[10];
-		
-		if(linien.length > this.linien.length) {
-			this.linien = newArray(this.linien);
-		}
-		
+		this.linien = new ArrayList<BresenhamLine3d>();
 		for(int i = 0; i < linien.length; i++) {
-			this.linien[i] = new BresenhamLine3d(new Vector3d(linien[i].x1, linien[i].y1, 0), new Vector3d(linien[i].x2, linien[i].y2, 0));
+			this.linien.add(new BresenhamLine3d(new Vector3d(linien[i].x1, linien[i].y1, 0), new Vector3d(linien[i].x2, linien[i].y2, 0)));
 		}
-		
-		this.position = linien.length;
 	}
 	
 	/**
@@ -73,42 +66,38 @@ public class Container extends Shape {
 	 * @param linien
 	 */
 	public Container(BresenhamLine3d[] linien) {
-		this.linien = new BresenhamLine3d[10];
-		
-		if(linien.length > this.linien.length) {
-			this.linien = newArray(this.linien);
-		}
-		
+		this.linien = new ArrayList<BresenhamLine3d>();
 		for(int i = 0; i < linien.length; i++) {
-			this.linien[i] = linien[i];
+			this.linien.add(linien[i]);
 		}
-		
-		this.position = linien.length;
 	}
 
 	/**
-	 * Fügt einen Punkt am Ende der Liste hinzu
-	 * @param x
-	 * @param y
+	 * Fügt eine Linie am Ende hinzu.
+	 * @param point
+	 * @param point1
 	 */
 	public void add(Vector3d point, Vector3d point1) {
-		if(this.position >= this.linien.length - 1) {
-			this.linien = newArray(this.linien);
-		}
-		this.linien[this.position++] = new BresenhamLine3d(point, point1);
+		this.linien.add(new BresenhamLine3d(point, point1));
 	}
+
+	/**
+	 *  Fügt 2D Linien am Ende hinzu.
+	 */
+	public void add(BresenhamLine2d[] lines) {
+		for(int i = 0; i < lines.length; i++) {
+			this.linien.add(new BresenhamLine3d(new Vector3d(lines[i].x1, lines[i].y1, 0), new Vector3d(lines[i].x2, lines[i].y2, 0)));
+		}
+	}
+	
 	
 	/**
 	 * Übernimmt die übergebenen Linien und bezieht sie in das ShapeObjekt mit ein.
 	 * @param lines
 	 */
-	public void add(BresenhamLine3d[] lines) {
-		if(this.position + lines.length >= this.linien.length) {
-			this.linien = newArray(this.linien);
-		}
-		for(int i = 0; i < lines.length; i++) {
-			this.linien[this.position] = lines[i];
-			this.position++;
+	public void add(BresenhamLine3d[] linien) {
+		for(int i = 0; i < linien.length; i++) {
+			this.linien.add(linien[i]);
 		}
 	}
 	
@@ -117,8 +106,7 @@ public class Container extends Shape {
 	 * @return
 	 */
 	public void remove() {
-		this.linien[this.position-1] = null;
-		this.position--;
+		this.linien.remove(this.linien.size()-1);
 	}
 	
 	/**
@@ -127,34 +115,7 @@ public class Container extends Shape {
 	 * @return
 	 */
 	public void remove(int index) {
-		if(checkIndex(index)) {
-			for(int i = index; i < this.position-1; i++) {
-				this.linien[index] = this.linien[index+1];
-			}
-			this.linien[this.position-1] = null;
-			this.position--;
-		}
-	}
-	
-	/**
-	 * Erweitert das Array um die doppelte Groesse, wenn der Platz aufgebraucht ist.
-	 */
-	private BresenhamLine3d[] newArray(BresenhamLine3d[] oldArray) {
-		BresenhamLine3d[] newArray = new BresenhamLine3d[oldArray.length*2];
-		for(int i = 0; i < oldArray.length; i++) {
-			newArray[i] = oldArray[i];
-		}
-		return newArray; 
-	}
-	
-	/**
-	 * Überprüft den Index.
-	 * @param index
-	 * @return
-	 */
-	private boolean checkIndex(int index) {
-		if(this.linien[index] != null) return true;
-		else return false;
+		this.linien.remove(index);
 	}
 	
 	/**
@@ -163,31 +124,34 @@ public class Container extends Shape {
 	@Override
 	public String toString() {
 		String ausgabe = "";
-		for(int i = 0; i < this.linien.length && this.linien[i] != null; i++) {
+		Iterator<BresenhamLine3d> iter = this.linien.iterator();
+		
+		int i = 0;
+		while(iter.hasNext()) {
+			BresenhamLine3d line = iter.next();
 			ausgabe += "" + i + ". Linie: \n";
-			ausgabe += "\t x1: " + this.linien[i].x1 + "\n";
-			ausgabe += "\t y1: " + this.linien[i].y1 + "\n";
-			ausgabe += "\t z1: " + this.linien[i].z1 + "\n\n";
-			
-			ausgabe += "\t x2: " + this.linien[i].x2 + "\n";
-			ausgabe += "\t y2: " + this.linien[i].y2 + "\n";
-			ausgabe += "\t z2: " + this.linien[i].z2 + "\n";
+			ausgabe += "\t x1: " + line.x1 + "\n";
+			ausgabe += "\t y1: " + line.y1  + "\n";
+			ausgabe += "\t z1: " + line.z1  + "\n\n";
+
+			ausgabe += "\t x1: " + line.x2  + "\n";
+			ausgabe += "\t y1: " + line.y2  + "\n";
+			ausgabe += "\t z1: " + line.z2  + "\n\n";
+			i++;
 		}
-		ausgabe += "- Linien insgesamt: " + this.linien.length;
-		int ll = 0;
-		for(int i = 0; i < this.linien.length; i++) {
-			if(this.linien[i] == null) ll++;
-		}
-		ausgabe += "\n- Leere Linien insgesamt: " + ll;
-		ausgabe += "\n- Aktuelle Position: " + this.position;
+
+		ausgabe += "- Linien insgesamt: " + this.linien.size();
 		return ausgabe;
 	}
-	
 
+	/**
+	 *
+	 */
 	@Override
 	public void render(Matrix transformation, Camera camera, Renderer renderer) {
-		for(int i = 0; i < this.linien.length && this.linien[i] != null; i++) {
-			this.linien[i].render(transformation, camera, renderer);
+		Iterator<BresenhamLine3d> iter = this.linien.iterator();
+		while(iter.hasNext()) {
+			iter.next().render(transformation, camera, renderer);
 		}
 	}
 }
