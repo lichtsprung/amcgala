@@ -14,7 +14,6 @@
  */
 package amcgala.framework.shape;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
@@ -131,10 +130,7 @@ public class Text extends Shape {
                 default:
                     letters[i] = Letter.getBlank(x + (i * (this.width + SPACING)), y, this.width);
                     break;
-
             }
-
-
         }
     }
 

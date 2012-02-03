@@ -14,7 +14,6 @@
  */
 package amcgala.framework.shape;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
@@ -23,7 +22,6 @@ import amcgala.framework.renderer.Renderer;
 
 /**
  * Ein Punkt in einer Ebene für die Darstellung von 2d Geometrien.
- * <p/>
  * @author Robert Giacinto
  */
 public class Point2d extends Shape {
@@ -31,11 +29,19 @@ public class Point2d extends Shape {
     public double x;
     public double y;
 
+    /**
+     * 
+     * @param x Punkt an der x-Achse
+     * @param y Punkt an der y-Achse
+     */
     public Point2d(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * Rendermethode.
+     */
     @Override
     public void render(Matrix transformation, Camera camera, Renderer renderer) {
         Vector3d point = new Vector3d(x, y, -1).transform(transformation);
@@ -44,6 +50,9 @@ public class Point2d extends Shape {
         renderer.putPixel(pixel, color);
     }
 
+    /**
+     * Überschreibt die Methode <i>toString</i> der Klasse <i>Object</i> und gibt die Variablen x und y zurück.
+     */
     @Override
     public String toString() {
         return "Point2d{" + "x=" + x + ", y=" + y + '}';

@@ -32,6 +32,12 @@ public class Polygon extends Shape {
     private BresenhamLine3d bl3;
     private BresenhamLine3d bl4;
 
+    /**
+     * Bewegt das Polygon.
+     * @param x
+     * @param y
+     * @param z
+     */
     public void move(double x, double y, double z) {
         if (bl1 != null && bl2 != null && bl3 != null) {
             bl1.x1 += x;
@@ -65,18 +71,25 @@ public class Polygon extends Shape {
         }
     }
 
-    /*
-     * Verhindern des Standardkonstruktors.
+    /**
+     * 
+     * @param v1
+     * @param v2
+     * @param v3
      */
-    private Polygon() {
-    }
-
     public Polygon(Vector3d v1, Vector3d v2, Vector3d v3) {
         bl1 = new BresenhamLine3d(v1, v2);
         bl2 = new BresenhamLine3d(v2, v3);
         bl3 = new BresenhamLine3d(v3, v1);
     }
 
+    /**
+     * 
+     * @param v1
+     * @param v2
+     * @param v3
+     * @param v4
+     */
     public Polygon(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4) {
         bl1 = new BresenhamLine3d(v1, v2);
         bl2 = new BresenhamLine3d(v2, v3);
@@ -84,6 +97,9 @@ public class Polygon extends Shape {
         bl4 = new BresenhamLine3d(v4, v1);
     }
 
+    /**
+     *
+     */
     @Override
     public void render(Matrix transformation, Camera camera, Renderer renderer) {
         if (bl1 != null && bl2 != null && bl3 != null) {
@@ -97,6 +113,9 @@ public class Polygon extends Shape {
 
     }
 
+    /**
+     * 
+     */
     @Override
     public String toString() {
         return "Polygon{" + "line 1=" + bl1 + ", line 2=" + bl2 + ", line 3="

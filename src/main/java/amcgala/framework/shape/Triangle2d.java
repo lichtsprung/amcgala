@@ -116,6 +116,9 @@ public class Triangle2d extends Shape {
      */
     @Override
     public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    	a.color = color;
+    	b.color = color;
+    	c.color = color;
         a.render(transformation, camera, renderer);
         b.render(transformation, camera, renderer);
         c.render(transformation, camera, renderer);
