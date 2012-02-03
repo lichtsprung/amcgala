@@ -103,6 +103,13 @@ public class Triangle2d extends Shape {
     public BresenhamLine2d getC() {
     	return this.c;
     }
+    
+    /**
+     * Überschreibt die Methode <i>toString</i> der Klasse <i>Object</i> und gibt die Werte für die Triangle zurück.
+     */
+    public String toString() {
+    	return "Triangle2d { ax = " + a.x1 + ", ay = " + a.y1 + ", bx = " + b.x1 + ", by = " + b.y1 + ", cx = " + c.x1 + ", cy = " + c.y1;
+    }
 
     /**
      * Rendermethode.
