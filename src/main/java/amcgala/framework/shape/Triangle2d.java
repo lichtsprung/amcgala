@@ -14,31 +14,105 @@
  */
 package amcgala.framework.shape;
 
-import amcgala.framework.camera.AbstractCamera;
+import java.util.logging.Logger;
+
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 
+/**
+ * Zeichnet eine Triangle im 2D Raum.
+ * @author Sascha Lemke
+ */
 public class Triangle2d extends Shape {
 
-    public Line2d a, b, c;
-
-    public Triangle2d(Line2d a, Line2d b, Line2d c) {
+    private BresenhamLine2d a;
+    private BresenhamLine2d b;
+    private BresenhamLine2d c;
+    
+    /**
+     * Konstruktor, zeichnet die Triangle mit fertigen Linien.
+     * @param a
+     * @param b
+     * @param c
+     */
+    public Triangle2d(BresenhamLine2d a, BresenhamLine2d b, BresenhamLine2d c) {
         this.a = a;
         this.b = b;
         this.c = c;
-    }
-
+    }    
+    
+    /**
+     * Konstruktor, erlaubt es eine Triangle mit Werten statt fertigen Linien zu zeichnen.
+     * @param ax
+     * @param ay
+     * @param bx
+     * @param by
+     * @param cx
+     * @param cy
+     */
     public Triangle2d(double ax, double ay, double bx, double by, double cx, double cy) {
-        a = new Line2d(cx, cy, bx, by);
-        b = new Line2d(ax, ay, cx, cy);
-        c = new Line2d(ax, ay, bx, by);
+        a = new BresenhamLine2d(cx, cy, bx, by);
+        b = new BresenhamLine2d(ax, ay, cx, cy);
+        c = new BresenhamLine2d(ax, ay, bx, by);
+    }
+    
+    /**
+     * Übernimmt die Linie für die Linie a.
+     */
+    public void setA(BresenhamLine2d a) {
+    	this.a = a;
+    }
+    
+    /**
+     * Gibt die Linie a zurück.
+     * @return
+     */
+    public BresenhamLine2d getA() {
+    	return a;
+    }
+    
+    /**
+     *  Übernimmt die Linie für die Linie b.
+     * @param b
+     */
+    public void setB(BresenhamLine2d b) {
+    	this.b = b;
+    }
+    
+    /**
+     * Gibt die Linie b zurück.
+     * @return
+     */
+    public BresenhamLine2d getB() {
+    	return this.b;
+    }
+    
+    /**
+     *  Übernimmt die Linie für die Linie c.
+     * @param c
+     */
+    public void setC(BresenhamLine2d c) {
+    	this.c = c;
+    }
+    
+    /**
+     * Gibt die Linie c zurück.
+     * @return
+     */
+    public BresenhamLine2d getC() {
+    	return this.c;
     }
 
+    /**
+     * Rendermethode.
+     */
     @Override
     public void render(Matrix transformation, Camera camera, Renderer renderer) {
         a.render(transformation, camera, renderer);
         b.render(transformation, camera, renderer);
         c.render(transformation, camera, renderer);
     }
+
+    private static final Logger logger = Logger.getLogger(Triangle2d.class.getName());
 }
