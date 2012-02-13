@@ -1,0 +1,155 @@
+package amcgala.framework.shape;
+
+/*
+ * Copyright 2011 Cologne University of Applied Sciences Licensed under the
+ * Educational Community License, Version 2.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the
+ * License at
+ *
+ * http://www.osedu.org/licenses/ECL-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.imageio.ImageIO;
+
+import amcgala.framework.camera.Camera;
+import amcgala.framework.math.Matrix;
+import amcgala.framework.renderer.Color;
+import amcgala.framework.renderer.Renderer;
+
+/**
+ * Spriteobjekt zum Darstellen
+ * 
+ * @author Steffen Troester
+ * 
+ */
+public class Sprite extends Shape {
+	/**
+	 * Position des Sprites
+	 */
+	private double x, y;
+	/**
+	 * Groesse des Sprites
+	 */
+	private int width, height;
+	/**
+	 * Pixelarray
+	 */
+	private Point2d[] pixel;
+	/**
+	 * geoeffnete Datei
+	 */
+	private String filepath;
+
+	/**
+	 * Spriteobjekt aus einer Datei (jpeg,png,gif)
+	 * 
+	 * @param filepath
+	 * @param x
+	 * @param y
+	 * @throws IOException
+	 */
+	public Sprite(String filepath, double x, double y) throws IOException {
+		this(filepath);
+		this.x = x;
+		this.y = y;
+
+	}
+
+	/**
+	 * Spriteobjekt aus einer Datei (jpeg,png,gif)
+	 * 
+	 * @param inputStream
+	 * @throws IOException
+	 */
+	public void loadImage(InputStream inputStream) throws IOException {
+
+		// Imagefile auslesen
+		BufferedImage image = ImageIO.read(inputStream);
+		// Groesse definieren
+		width = image.getWidth();
+		height = image.getHeight();
+		// Farbwerte auslesen
+		int[] rgbs = new int[width * height];
+		image.getRGB(0, 0, width, height, rgbs, 0, width);
+		// Pixel erzeugen (Point2d's)
+		pixel = new Point2d[rgbs.length];
+		for (int i = 0; i < width * height; i++) {
+			pixel[i] = new Point2d(i % width, (height - i) / width);
+
+			// Farbwerte auswerfen (Shiftenaufgrund von RGBintValues)
+			int red = (rgbs[i] >> 16) & 0xFF;
+			int green = (rgbs[i] >> 8) & 0xFF;
+			int blue = (rgbs[i] >> 0) & 0xFF;
+
+			pixel[i].color = new Color(red, green, blue);
+		}
+
+	}
+
+	/**
+	 * Spriteobjekt aus einer Datei (jpeg,png,gif)
+	 * 
+	 * @param inputStream
+	 * @param x
+	 * @param y
+	 * @throws IOException
+	 */
+	public Sprite(InputStream inputStream, int x, int y) throws IOException {
+		loadImage(inputStream);
+		this.x = x;
+		this.y = y;
+	}
+
+	/**
+	 * Spriteobjekt aus einer Datei (jpeg,png,gif)
+	 * 
+	 * @param filepath
+	 * @throws IOException
+	 */
+	public Sprite(String filepath) throws IOException {
+		this.filepath = filepath;
+		FileInputStream f = new FileInputStream(filepath);
+		loadImage(f);
+	}
+
+	@Override
+	public void render(Matrix transformation, Camera camera, Renderer renderer) {
+		for (int i = 0; i < pixel.length; i++) {
+			pixel[i].x = i % width + x;
+			pixel[i].y = (height - i) / width + y;
+			pixel[i].render(transformation, camera, renderer);
+		}
+	}
+
+	public double getX() {
+		return x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	@Override
+	public String toString() {
+		return "Sprite from:" + filepath + " width:" + width + " height:"
+				+ height;
+	}
+}
