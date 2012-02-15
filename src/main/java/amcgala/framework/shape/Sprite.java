@@ -24,6 +24,7 @@ import javax.imageio.ImageIO;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
+import amcgala.framework.renderer.Pixel;
 import amcgala.framework.renderer.Renderer;
 
 /**
@@ -44,7 +45,8 @@ public class Sprite extends Shape {
 	/**
 	 * Pixelarray
 	 */
-	private Point2d[] pixel;
+	private Pixel[] pixel;
+	private Color[] color;
 	/**
 	 * geoeffnete Datei
 	 */
@@ -82,16 +84,18 @@ public class Sprite extends Shape {
 		int[] rgbs = new int[width * height];
 		image.getRGB(0, 0, width, height, rgbs, 0, width);
 		// Pixel erzeugen (Point2d's)
-		pixel = new Point2d[rgbs.length];
+		pixel = new Pixel[rgbs.length];
+		color = new Color[rgbs.length];
 		for (int i = 0; i < width * height; i++) {
-			pixel[i] = new Point2d(i % width, (height - i) / width);
+			pixel[i] = new Pixel(i % width, (height - i) / width);
+			
 
 			// Farbwerte auswerfen (Shiftenaufgrund von RGBintValues)
 			int red = (rgbs[i] >> 16) & 0xFF;
 			int green = (rgbs[i] >> 8) & 0xFF;
 			int blue = (rgbs[i] >> 0) & 0xFF;
 
-			pixel[i].color = new Color(red, green, blue);
+			color[i] = new Color(red, green, blue);
 		}
 
 	}
@@ -125,9 +129,9 @@ public class Sprite extends Shape {
 	@Override
 	public void render(Matrix transformation, Camera camera, Renderer renderer) {
 		for (int i = 0; i < pixel.length; i++) {
-			pixel[i].x = i % width + x;
-			pixel[i].y = (height - i) / width + y;
-			pixel[i].render(transformation, camera, renderer);
+			pixel[i].x = (int) (i % width + x);
+			pixel[i].y = (int) ((height - i) / width + y);
+			renderer.putPixel(pixel[i], color[i]);
 		}
 	}
 
