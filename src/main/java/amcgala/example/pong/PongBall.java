@@ -20,6 +20,7 @@ import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Arrow2d;
+import amcgala.framework.shape.Circle2d;
 import amcgala.framework.shape.Cross2d;
 import amcgala.framework.shape.Shape;
 
@@ -34,7 +35,7 @@ public class PongBall extends Shape {
     private Vector3d direction;
     private Vector3d position;
     private PongBoard board;
-    private Cross2d cross;
+    private Circle2d circle;
     private Arrow2d arrow;
 
     /**
@@ -49,7 +50,7 @@ public class PongBall extends Shape {
         direction = getRandomDirection().times(velocity);
 
         position = new Vector3d(board.getXmin() + board.getWidth() * board.getBallStart(), board.getHeight() / 2, -1);
-        cross = new Cross2d(position, 5);
+        circle = new Circle2d(position.x,position.y, 5);
         arrow = new Arrow2d(position, direction, velocity * 50);
     }
 
@@ -57,7 +58,7 @@ public class PongBall extends Shape {
     public void update() {
         position.x += direction.x;
         position.y += direction.y;
-        cross.setPosition(position);
+        circle.setPosition(position.x,position.y);
         arrow.setPosition(position);
         checkPosition();
     }
@@ -118,7 +119,7 @@ public class PongBall extends Shape {
 
     @Override
     public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        cross.render(transformation, camera, renderer);
+        circle.render(transformation, camera, renderer);
         arrow.render(transformation, camera, renderer);
     }
 
