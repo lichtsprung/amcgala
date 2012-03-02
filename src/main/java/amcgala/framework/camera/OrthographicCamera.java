@@ -39,8 +39,8 @@ public final class OrthographicCamera extends AbstractCamera {
      * @param direction Der Punkt, zu dem die Kamera blickt
      */
     public OrthographicCamera(Vector3d vup, Vector3d position, Vector3d direction) {
-        this.vup = vup;
-        this.position = position;
+        this.up = vup;
+        this.location = position;
         this.direction = direction;
 
         update();
@@ -53,8 +53,8 @@ public final class OrthographicCamera extends AbstractCamera {
 
     @Override
     public void update() {
-        this.n = direction.sub(position).times(-1);
-        this.u = vup.cross(n).normalize();
+        this.n = direction.sub(location).times(-1);
+        this.u = up.cross(n).normalize();
         this.v = n.cross(u).normalize();
 
         double[][] vdValues = {
@@ -66,7 +66,7 @@ public final class OrthographicCamera extends AbstractCamera {
 
         Matrix vd = Matrix.constructWithCopy(vdValues);
 
-        Vector3d d = new Vector3d(position.dot(u), position.dot(v), position.dot(n));
+        Vector3d d = new Vector3d(location.dot(u), location.dot(v), location.dot(n));
 
         double[][] viewValues = {
                 {u.x, u.y, u.z, d.x},

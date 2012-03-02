@@ -105,7 +105,7 @@ public final class PerspectiveCamera extends AbstractCamera {
             cullingPlanes[i] = new Plane();
         }
 
-        position = new Vector3d(0, 0, 0);
+        location = new Vector3d(0, 0, 0);
 
         frustumNear = 1.0;
         frustumFar = 2.0;
@@ -121,7 +121,7 @@ public final class PerspectiveCamera extends AbstractCamera {
 
         fieldOfView = Math.toRadians(75);
 
-        vup = Vector3d.UNIT_Y;
+        up = Vector3d.UNIT_Y;
     }
 
     /**
@@ -143,18 +143,18 @@ public final class PerspectiveCamera extends AbstractCamera {
     /**
      * Erzeugt eine neue Kamera an einer Position mit einem bestimmten Blickpunkt.
      *
-     * @param vup       Das Oben der Kamera
-     * @param position  Die Position der Kamera
+     * @param up       Das Oben der Kamera
+     * @param location  Die Position der Kamera
      * @param direction Der Punkt, zu dem die Kamera blickt
      * @param fov       Der Öffnungswinkel der Kamera
      * @param width     die Breite der Bildschirmausgabe
      * @param height    die Höhe der Bildschirmausgabe
      */
-    public PerspectiveCamera(Vector3d position, Vector3d direction, Vector3d vup, double fov, int width, int height) {
+    public PerspectiveCamera(Vector3d location, Vector3d direction, Vector3d up, double fov, int width, int height) {
         this();
-        this.position = position;
+        this.location = location;
         this.direction = direction;
-        this.vup = vup;
+        this.up = up;
         this.fieldOfView = fov;
         this.aspectRatio = width / height;
         this.width = width;
@@ -178,19 +178,9 @@ public final class PerspectiveCamera extends AbstractCamera {
         /*
          * Erste Transformation: Weltkoordinaten -> Kamerakoordinaten.
          */
-        n = direction.sub(position).times(-1);
-        u = vup.cross(n).normalize();
-        v = n.cross(u);
-
-        Vector3d d = new Vector3d(position.dot(u), position.dot(v), position.dot(n)).times(-1);
-
-        double[][] viewValues = {
-                {u.x, u.y, u.z, d.x},
-                {v.x, v.y, v.z, d.y},
-                {n.x, n.y, n.z, d.z},
-                {0, 0, 0, 1}
-        };
-        view = Matrix.constructWithCopy(viewValues);
+        u = up.cross(n).normalize();
+        view = Matrix.getView(location, direction, up, u);
+       
 
         /*
          * Zweite Transformation: Kamerakoordinaten -> Bildkoordinaten

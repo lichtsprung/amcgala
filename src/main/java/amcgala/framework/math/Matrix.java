@@ -50,7 +50,7 @@ import java.util.logging.Logger;
  * </PRE></DD> </DL>
  *
  * @author The MathWorks, Inc. and the National Institute of Standards and
- *         Technology.
+ * Technology.
  * @version 5 August 1998
  */
 public class Matrix implements Cloneable, java.io.Serializable {
@@ -75,7 +75,6 @@ public class Matrix implements Cloneable, java.io.Serializable {
     /*
      * ------------------------ Constructors ------------------------
      */
-
     /**
      * Construct an m-by-n matrix of zeros.
      *
@@ -141,8 +140,8 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Construct a matrix from a one-dimensional packed array
      *
      * @param vals One-dimensional array of doubles, packed by columns (ala
-     *             Fortran).
-     * @param m    Number of rows.
+     * Fortran).
+     * @param m Number of rows.
      * @throws IllegalArgumentException Array length must be a multiple of m.
      */
     public Matrix(double vals[], int m) {
@@ -162,7 +161,6 @@ public class Matrix implements Cloneable, java.io.Serializable {
     /*
      * ------------------------ Public Methods ------------------------
      */
-
     /**
      * Construct a matrix from a copy of a 2-D array.
      *
@@ -348,7 +346,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      *
      * @param i0 Initial row index
      * @param i1 Final row index
-     * @param c  Array of column indices.
+     * @param c Array of column indices.
      * @return A(i0:i1, c(:))
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
@@ -370,7 +368,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
     /**
      * Get a submatrix.
      *
-     * @param r  Array of row indices.
+     * @param r Array of row indices.
      * @param j0 Initial column index
      * @param j1 Final column index
      * @return A(r(:), j0:j1)
@@ -410,7 +408,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param i1 Final row index
      * @param j0 Initial column index
      * @param j1 Final column index
-     * @param X  A(i0:i1,j0:j1)
+     * @param X A(i0:i1,j0:j1)
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
     public void setMatrix(int i0, int i1, int j0, int j1, Matrix X) {
@@ -448,10 +446,10 @@ public class Matrix implements Cloneable, java.io.Serializable {
     /**
      * Set a submatrix.
      *
-     * @param r  Array of row indices.
+     * @param r Array of row indices.
      * @param j0 Initial column index
      * @param j1 Final column index
-     * @param X  A(r(:),j0:j1)
+     * @param X A(r(:),j0:j1)
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
     public void setMatrix(int[] r, int j0, int j1, Matrix X) {
@@ -471,8 +469,8 @@ public class Matrix implements Cloneable, java.io.Serializable {
      *
      * @param i0 Initial row index
      * @param i1 Final row index
-     * @param c  Array of column indices.
-     * @param X  A(i0:i1,c(:))
+     * @param c Array of column indices.
+     * @param X A(i0:i1,c(:))
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
     public void setMatrix(int i0, int i1, int[] c, Matrix X) {
@@ -981,8 +979,8 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * with a Fortran-like 'Fw.d' style format.
      *
      * @param output Output stream.
-     * @param w      Column width.
-     * @param d      Number of digits after the decimal.
+     * @param w Column width.
+     * @param d Number of digits after the decimal.
      */
     public void print(PrintWriter output, int w, int d) {
         DecimalFormat format = new DecimalFormat();
@@ -1001,7 +999,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * NumberFormat that is set to US Locale.
      *
      * @param format A Formatting object for individual elements.
-     * @param width  Field width for each column.
+     * @param width Field width for each column.
      * @see java.text.DecimalFormat#setDecimalFormatSymbols
      */
     public void print(NumberFormat format, int width) {
@@ -1012,7 +1010,6 @@ public class Matrix implements Cloneable, java.io.Serializable {
     // Since it doesn't pad on the left, the elements will come out different
     // widths.  Consequently, we'll pass the desired column width in as an
     // argument and do the extra padding ourselves.
-
     /**
      * Print the matrix to the output stream. Line the elements up in columns.
      * Use the format object, and right justify within columns of width
@@ -1021,7 +1018,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      *
      * @param output the output stream.
      * @param format A formatting object to format the matrix elements
-     * @param width  Column width.
+     * @param width Column width.
      * @see java.text.DecimalFormat#setDecimalFormatSymbols
      */
     public void print(PrintWriter output, NumberFormat format, int width) {
@@ -1100,11 +1097,93 @@ public class Matrix implements Cloneable, java.io.Serializable {
         return new Matrix(A);
     }
 
+    /**
+     * Erzeugt eine Projektionsmatrix von den Grenzen des View Frustrum.
+     *
+     * @param near near-Plane
+     * @param far far-Plane
+     * @param left left-Plane
+     * @param right right-Plane
+     * @param top top-PLane
+     * @param bottom bottom-Plane
+     * @param parallel is parallel projection
+     * @return Projektionsmatrix
+     */
+    public static Matrix getProjectionFromFrustum(double near, double far, double left, double right, double top, double bottom, boolean parallel) {
+
+        double m00 = 1, m01 = 0, m02 = 0, m03 = 0;
+        double m10 = 0, m11 = 1, m12 = 0, m13 = 0;
+        double m20 = 0, m21 = 0, m22 = 1, m23 = 0;
+        double m30 = 0, m31 = 0, m32 = 0, m33 = 1;
+
+        if (parallel) {
+            // scale
+            m00 = 2.0 / (right - left);
+            m11 = 2.0 / (top - bottom);
+            m22 = -2.0 / (far - near);
+            m33 = 1;
+            // translation
+            m03 = -(right + left) / (right - left);
+            m13 = -(top + bottom) / (top - bottom);
+            m23 = -(far + near) / (far - near);
+        } else {
+            m00 = (2.0 * near) / (right - left);
+            m11 = (2.0 * near) / (top - bottom);
+            m32 = -1.0;
+            m33 = -0.0;
+            m02 = (right + left) / (right - left);
+            m12 = (top + bottom) / (top - bottom);
+            m22 = -(far + near) / (far - near);
+            m23 = -(2.0f * far * near) / (far - near);
+        }
+
+        double[][] values = {
+            {m00, m01, m02, m03},
+            {m10, m11, m12, m13},
+            {m20, m21, m22, 23},
+            {m30, m31, m32, m33}};
+
+        return Matrix.constructWithCopy(values);
+    }
+
+    /**
+     * Erzeugt eine View-Matrix von dem lokalen Koordinatensystem der Kamera.
+     * @param location die Position der Kamera
+     * @param direction die Blickrichtung der Kamera
+     * @param up das Oben der Kamera
+     * @param left das links der Kamera
+     * @return die View-Matrix
+     */
+    public static Matrix getView(Vector3d location, Vector3d direction, Vector3d up, Vector3d left) {
+        Vector3d s = direction.cross(up);
+        Vector3d u = s.cross(direction);
+        
+        Matrix viewMatrix = Matrix.identity(4, 4);
+        viewMatrix.set(0, 0, s.x);
+        viewMatrix.set(0, 1, s.y);
+        viewMatrix.set(0, 2, s.z);
+        
+        viewMatrix.set(1, 0, u.x);
+        viewMatrix.set(1, 1, u.y);
+        viewMatrix.set(1, 2, u.z);
+        
+        viewMatrix.set(2, 0, -direction.x);
+        viewMatrix.set(2, 1, -direction.y);
+        viewMatrix.set(2, 2, -direction.z);
+        
+        Matrix transMatrix = Matrix.identity(4, 4);
+        transMatrix.set(0, 3, -location.x);
+        transMatrix.set(1, 3, -location.y);
+        transMatrix.set(2, 3, -location.z);
+
+
+        return viewMatrix.times(transMatrix);
+    }
+
 
     /*
      * ------------------------ Private Methods ------------------------
      */
-
     /**
      * Check if size(A) == size(B) *
      */
