@@ -14,7 +14,6 @@
  */
 package amcgala.framework.shape;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
@@ -37,9 +36,9 @@ public class Rectangle2d extends Shape {
      * Erzeugt ein neues Rechteck, über die Position der linken unteren Ecke und
      * der Höhe und Breite des Rechtecks.
      *
-     * @param x die x-Koordinate der Ecke links unten.
-     * @param y die y-Koordinate der Ecke links unten.
-     * @param width die Breite des Rechtecks
+     * @param x      die x-Koordinate der Ecke links unten.
+     * @param y      die y-Koordinate der Ecke links unten.
+     * @param width  die Breite des Rechtecks
      * @param height die Höhe des Rechtecks
      */
     public Rectangle2d(double x, double y, double width, double height) {
@@ -53,10 +52,10 @@ public class Rectangle2d extends Shape {
      * Erzeugt ein neues Rechteck, das über die Kanten definiert wird.
      *
      * @param bottom die untere Seite des Rechtecks
-     * @param left die linke Seite des Rechtecks
-     * @param top die obere Seite des Rechtecks
-     * @param right die rechte Seite des Rechtecks
-     * @deprecated 
+     * @param left   die linke Seite des Rechtecks
+     * @param top    die obere Seite des Rechtecks
+     * @param right  die rechte Seite des Rechtecks
+     * @deprecated
      */
     public Rectangle2d(BresenhamLine2d bottom, BresenhamLine2d left, BresenhamLine2d top, BresenhamLine2d right) {
         this.top = top;

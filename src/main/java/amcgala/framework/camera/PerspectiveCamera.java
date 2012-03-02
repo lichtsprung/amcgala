@@ -19,6 +19,7 @@ import amcgala.framework.math.Plane;
 import amcgala.framework.math.Quaternion;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Pixel;
+
 import java.util.logging.Logger;
 
 /**
@@ -39,7 +40,7 @@ public final class PerspectiveCamera extends AbstractCamera {
     private static final int PLANE_NEAR = 5;
     private static final int FRUSTUM_PLANES_COUNT = 6;
     private static final int MAX_WORLD_PLANES = 6;
-   
+
     /**
      * Abstand zur near plane
      */
@@ -124,10 +125,11 @@ public final class PerspectiveCamera extends AbstractCamera {
     }
 
     /**
-     * Erzeugt eine neue perspektivische Kamera mit einer Bildschirmausgabe in 
+     * Erzeugt eine neue perspektivische Kamera mit einer Bildschirmausgabe in
      * der Auflösung width x height.
-     * @param width die Breite der Ausgabe
-     * @param height  die Höhe der Ausgabe
+     *
+     * @param width  die Breite der Ausgabe
+     * @param height die Höhe der Ausgabe
      */
     public PerspectiveCamera(int width, int height) {
         this();
@@ -140,13 +142,13 @@ public final class PerspectiveCamera extends AbstractCamera {
 
     /**
      * Erzeugt eine neue Kamera an einer Position mit einem bestimmten Blickpunkt.
-     * 
-     * @param vup Das Oben der Kamera
-     * @param position Die Position der Kamera
+     *
+     * @param vup       Das Oben der Kamera
+     * @param position  Die Position der Kamera
      * @param direction Der Punkt, zu dem die Kamera blickt
-     * @param fov Der Öffnungswinkel der Kamera
-     * @param width die Breite der Bildschirmausgabe
-     * @param height die Höhe der Bildschirmausgabe
+     * @param fov       Der Öffnungswinkel der Kamera
+     * @param width     die Breite der Bildschirmausgabe
+     * @param height    die Höhe der Bildschirmausgabe
      */
     public PerspectiveCamera(Vector3d position, Vector3d direction, Vector3d vup, double fov, int width, int height) {
         this();
@@ -168,8 +170,7 @@ public final class PerspectiveCamera extends AbstractCamera {
     @Override
     public CVPoint getClippingSpaceCoordinates(Vector3d vector3d) {
         Matrix point = view.times(vector3d.toMatrix());
-        CVPoint cvPoint = new CVPoint(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0));
-        return cvPoint;
+        return new CVPoint(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0));
     }
 
     @Override
@@ -184,10 +185,10 @@ public final class PerspectiveCamera extends AbstractCamera {
         Vector3d d = new Vector3d(position.dot(u), position.dot(v), position.dot(n)).times(-1);
 
         double[][] viewValues = {
-            {u.x, u.y, u.z, d.x},
-            {v.x, v.y, v.z, d.y},
-            {n.x, n.y, n.z, d.z},
-            {0, 0, 0, 1}
+                {u.x, u.y, u.z, d.x},
+                {v.x, v.y, v.z, d.y},
+                {n.x, n.y, n.z, d.z},
+                {0, 0, 0, 1}
         };
         view = Matrix.constructWithCopy(viewValues);
 

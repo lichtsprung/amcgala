@@ -18,14 +18,15 @@ import amcgala.Framework;
 
 /**
  * Dieses Beispiel zeigt die Minimalkonfiguration des Frameworks.
- * 
+ *
  * @author Robert Giacinto
  */
 public class Minimal extends Framework {
 
     /**
      * Neues Framework, das eine Java2D Ausgabe der Größe width x height hat.
-     * @param width die Breite des Fensters
+     *
+     * @param width  die Breite des Fensters
      * @param height die Höhe des Fensters
      */
     public Minimal(int width, int height) {

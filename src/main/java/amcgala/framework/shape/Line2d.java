@@ -14,7 +14,6 @@
  */
 package amcgala.framework.shape;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
@@ -23,8 +22,9 @@ import amcgala.framework.renderer.Renderer;
 
 /**
  * 2d Linie.
- *
  * <p/>
+ * <p/>
+ *
  * @author Robert Giacinto
  * @deprecated Veraltete Klasse. Bitte BresenhamLine2/3d verwenden.
  */
@@ -36,6 +36,7 @@ public class Line2d extends Shape {
 
     /**
      * Erzeugt eine 2d-Linie vom Punkt (x1, y1) nach (x2, y2).
+     *
      * @param x1 die x-Koordinate des Startpunkts
      * @param y1 die y- Koordinate des Startpunkts
      * @param x2 die x-Koordinate des Endpunkts
@@ -46,14 +47,14 @@ public class Line2d extends Shape {
         this.y1 = y1;
         this.x2 = x2;
         this.y2 = y2;
-        
+
         if (x1 > x2) { // vertausche Punkte
             this.x1 = x2;
             this.y1 = y2;
             this.x2 = x1;
             this.y2 = y1;
         }
-        
+
         if (x1 == x2 && y1 > y2) { // Vertikale von y1 unten nach y2 oben
             this.y1 = y2;
             this.y2 = y1;

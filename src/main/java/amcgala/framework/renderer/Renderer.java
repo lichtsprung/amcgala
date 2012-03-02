@@ -14,11 +14,11 @@
  */
 package amcgala.framework.renderer;
 
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.MouseAdapter;
 import java.awt.image.BufferStrategy;
-import javax.swing.JFrame;
 
 /**
  * Wird von jedem Renderer erweitert und stellt die Funktionen putPixel und show
@@ -117,8 +117,8 @@ public class Renderer {
      * Fügt dem JFrame der Ausgabe einen MouseListener hinzu, mit dem
      * Interaktionen implementiert werden können.
      *
-     * @deprecated
      * @param mouseAdapter der MouseListener
+     * @deprecated
      */
     public void addMouseListener(MouseAdapter mouseAdapter) {
         frame.addMouseListener(mouseAdapter);
@@ -130,9 +130,8 @@ public class Renderer {
      * Fügt dem JFrame einen KeyListener hinzu, mit dem Interaktionen über das
      * Keyboard implementiert werden können .
      *
-     * @deprecated
      * @param keyAdapter der KeyListener
-     *
+     * @deprecated
      */
     public void addKeyListener(KeyAdapter keyAdapter) {
         frame.addKeyListener(keyAdapter);

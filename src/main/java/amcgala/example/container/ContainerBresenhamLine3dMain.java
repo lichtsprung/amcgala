@@ -21,39 +21,40 @@ import amcgala.framework.shape.Container;
 
 /**
  * Zeigt die funktionsweise der Klasse <i>Paint</i> mit Koordinaten.
+ *
  * @author Sascha Lemke
  */
 public class ContainerBresenhamLine3dMain extends Framework {
 
-	public ContainerBresenhamLine3dMain(int width, int height) {
-		super(width, height);
-	}
-	
-	public static void main(String[] args) {
-		Framework fm = new ContainerBresenhamLine3dMain(800, 600);
-		fm.start();
-	}
+    public ContainerBresenhamLine3dMain(int width, int height) {
+        super(width, height);
+    }
 
-	@Override
-	public void initGraph() {
-		BresenhamLine3d[] linien = new BresenhamLine3d[4];
-		linien[0] = new BresenhamLine3d(new Vector3d(-100, 0, 0), new Vector3d(100, 0, 0));
-		linien[1] = new BresenhamLine3d(new Vector3d(100, 0, 0), new Vector3d(100, 100, -100));
-		linien[2] = new BresenhamLine3d(new Vector3d(100, 100, -100), new Vector3d(-100, 100, -100));
-		linien[3] = new BresenhamLine3d(new Vector3d(-100, 100, -100), new Vector3d(-100, 0, 0));
-		
-		this.getCamera().setPosition(new Vector3d(50, 0, -20));
+    public static void main(String[] args) {
+        Framework fm = new ContainerBresenhamLine3dMain(800, 600);
+        fm.start();
+    }
 
-		BresenhamLine3d[] linien2 = new BresenhamLine3d[4];
-		linien2[0] = new BresenhamLine3d(new Vector3d(-100, 0, 0), new Vector3d(100, 0, 0));
-		linien2[1] = new BresenhamLine3d(new Vector3d(100, 0, 0), new Vector3d(100, 100, 0));
-		linien2[2] = new BresenhamLine3d(new Vector3d(100, 100, 0), new Vector3d(-100, 100, 0));
-		linien2[3] = new BresenhamLine3d(new Vector3d(-100, 100, 0), new Vector3d(-100, 0, 0));
-		
-		
-		Container viereck = new Container(linien);
-		viereck.add(linien2);
-		System.out.println(viereck.toString());
-		add(viereck);
-	}
+    @Override
+    public void initGraph() {
+        BresenhamLine3d[] linien = new BresenhamLine3d[4];
+        linien[0] = new BresenhamLine3d(new Vector3d(-100, 0, 0), new Vector3d(100, 0, 0));
+        linien[1] = new BresenhamLine3d(new Vector3d(100, 0, 0), new Vector3d(100, 100, -100));
+        linien[2] = new BresenhamLine3d(new Vector3d(100, 100, -100), new Vector3d(-100, 100, -100));
+        linien[3] = new BresenhamLine3d(new Vector3d(-100, 100, -100), new Vector3d(-100, 0, 0));
+
+        this.getCamera().setPosition(new Vector3d(50, 0, -20));
+
+        BresenhamLine3d[] linien2 = new BresenhamLine3d[4];
+        linien2[0] = new BresenhamLine3d(new Vector3d(-100, 0, 0), new Vector3d(100, 0, 0));
+        linien2[1] = new BresenhamLine3d(new Vector3d(100, 0, 0), new Vector3d(100, 100, 0));
+        linien2[2] = new BresenhamLine3d(new Vector3d(100, 100, 0), new Vector3d(-100, 100, 0));
+        linien2[3] = new BresenhamLine3d(new Vector3d(-100, 100, 0), new Vector3d(-100, 0, 0));
+
+
+        Container viereck = new Container(linien);
+        viereck.add(linien2);
+        System.out.println(viereck.toString());
+        add(viereck);
+    }
 }

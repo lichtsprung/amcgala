@@ -19,11 +19,13 @@ import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Pixel;
 import amcgala.framework.renderer.Renderer;
+
 import java.util.logging.Logger;
 
 /**
  * Eine 2d Linie, die mithilfe des Bresenham Algorithmus gezeichnet wird.
  * TODO Refactoring: Sollte mit der 3d Variante zusammengefasst werden und zwei Konstruktoren anbieten. Danach 2d Variante löschen.
+ *
  * @author Anne Hofmeister
  * @author Hubert Grzeskowiak
  * @author Robert Giacinto
@@ -138,5 +140,6 @@ public class BresenhamLine2d extends Shape {
     public String toString() {
         return "BresenhamLine2d{" + "x1=" + x1 + ", y1=" + y1 + ", x2=" + x2 + ", y2=" + y2 + ", start=" + start + ", end=" + end + '}';
     }
+
     private static final Logger LOG = Logger.getLogger(BresenhamLine2d.class.getName());
 }

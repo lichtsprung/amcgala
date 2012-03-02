@@ -14,6 +14,7 @@ package amcgala.framework.shape;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
@@ -23,7 +24,6 @@ import amcgala.framework.renderer.Renderer;
  * Polygonobjekt fuer die Koerperdarstellung im 3D Raum
  *
  * @author Steffen Troester
- *
  */
 public class Polygon extends Shape {
 
@@ -100,6 +100,6 @@ public class Polygon extends Shape {
     @Override
     public String toString() {
         return "Polygon{" + "line 1=" + bl1 + ", line 2=" + bl2 + ", line 3="
-               + bl3 + '}';
+                + bl3 + '}';
     }
 }

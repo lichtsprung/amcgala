@@ -22,6 +22,7 @@ import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Cross2d;
 import amcgala.framework.shape.Shape;
 import com.google.common.eventbus.Subscribe;
+
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.Random;

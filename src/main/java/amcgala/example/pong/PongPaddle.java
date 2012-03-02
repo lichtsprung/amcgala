@@ -14,7 +14,6 @@
  */
 package amcgala.example.pong;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Plane;
@@ -48,8 +47,8 @@ public class PongPaddle extends Shape {
      *
      * @param lengthH horizontale Länge des Paddles
      * @param lengthV vertikale Länge des Paddles
-     * @param ball der Ball, der von dem Paddle gespielt werden kann
-     * @param board das Spielfeld
+     * @param ball    der Ball, der von dem Paddle gespielt werden kann
+     * @param board   das Spielfeld
      */
     public PongPaddle(int lengthH, int lengthV, PongBall ball, PongBoard board) {
         moveStep = 15;

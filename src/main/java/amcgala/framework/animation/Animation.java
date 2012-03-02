@@ -15,12 +15,14 @@
 package amcgala.framework.animation;
 
 import amcgala.framework.shape.Shape;
+
 import java.util.logging.Logger;
 
 /**
  * Eine Animation, die das Verhalten eines Shapes beeinflussen kann.
+ *
+ * @param <T> Der Typ des Shapes, das durch diese Animation beeinflusst wird. Dies ermöglicht den direkten Zugriff auf die Felder des Objekts ohne einen Cast durchführen zu müssen.
  * @author Robert Giacinto
- * @param <T>  Der Typ des Shapes, das durch diese Animation beeinflusst wird. Dies ermöglicht den direkten Zugriff auf die Felder des Objekts ohne einen Cast durchführen zu müssen.
  */
 public abstract class Animation<T extends Shape> {
 
@@ -29,6 +31,7 @@ public abstract class Animation<T extends Shape> {
 
     /**
      * Gibt das Shape zurück, das von der Animation beeinflusst wird.
+     *
      * @return das Shapeobjekt
      */
     public T getShape() {
@@ -37,7 +40,8 @@ public abstract class Animation<T extends Shape> {
 
     /**
      * Ändert das Shapeobjekt, das von der Animation beeinflusst wird.
-     * @param shape 
+     *
+     * @param shape
      */
     public void setShape(T shape) {
         this.shape = shape;

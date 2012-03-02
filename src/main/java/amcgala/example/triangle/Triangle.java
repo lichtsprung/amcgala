@@ -14,7 +14,6 @@
  */
 package amcgala.example.triangle;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
@@ -25,6 +24,7 @@ import amcgala.framework.shape.Shape;
 
 /**
  * Eine Dreiecksklasse. Sie nimmt die Eckpunkte eines beliebigen Dreiecks entgegen.
+ *
  * @author Robert Giacinto
  */
 public class Triangle extends Shape {

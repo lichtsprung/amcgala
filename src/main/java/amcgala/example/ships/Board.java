@@ -14,7 +14,6 @@
  */
 package amcgala.example.ships;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
@@ -57,11 +56,11 @@ public class Board extends Shape {
     /**
      * Erstellt ein Spielfeld für das Spiel Schiffe Versenken.
      *
-     * @param x die x-Koordinate der Spielfeldposition
-     * @param y die y-Koordinate der Spielfeldposition
-     * @param size die Größe des quadratischen Spielfelds
-     * @param width die Breite einer Zelle
-     * @param height die Höhe einer Zelle
+     * @param x        die x-Koordinate der Spielfeldposition
+     * @param y        die y-Koordinate der Spielfeldposition
+     * @param size     die Größe des quadratischen Spielfelds
+     * @param width    die Breite einer Zelle
+     * @param height   die Höhe einer Zelle
      * @param distance der Abstand zwischen den Zellen
      */
     public Board(double x, double y, int size, double width, double height, double distance) {
@@ -76,16 +75,16 @@ public class Board extends Shape {
     }
 
     /**
-     *  /**
+     * /**
      * Initialisiert das Spielfeld.
      *
-     * @param size die Anzahl der Zellen in einer Reihe des quadratischen
-     * Spielfeldes
-     * @param x die x-Position des Spielfeldes
-     * @param width die Breite einer Spielfeldzelle
+     * @param size     die Anzahl der Zellen in einer Reihe des quadratischen
+     *                 Spielfeldes
+     * @param x        die x-Position des Spielfeldes
+     * @param width    die Breite einer Spielfeldzelle
      * @param distance der Abstand zwischen den Zellen
-     * @param y die y-Position des Spielfeldes
-     * @param height die Höhe einer Spielfeldzelle
+     * @param y        die y-Position des Spielfeldes
+     * @param height   die Höhe einer Spielfeldzelle
      */
     private void initBoard(int size, double x, double width, double distance, double y, double height) {
         boardArray = new BoardCell[size][size];
@@ -99,7 +98,7 @@ public class Board extends Shape {
     /**
      * Platziert Schiffe auf dem Spielfeld.
      *
-     * @param width die Breite einer Zelle
+     * @param width  die Breite einer Zelle
      * @param height die Höhe einer Zelle
      */
     private void placeShips(double width, double height) {

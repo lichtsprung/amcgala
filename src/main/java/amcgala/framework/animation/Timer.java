@@ -67,8 +67,7 @@ public class Timer {
      * @return die Sleeptime
      */
     public double getSleepTime() {
-        double sleepTime = (timePerFrame - duration < 0) ? 5 : (timePerFrame - duration) / 1000000;
-        return sleepTime;
+        return (timePerFrame - duration < 0) ? 5 : (timePerFrame - duration) / 1000000;
     }
 
     /**

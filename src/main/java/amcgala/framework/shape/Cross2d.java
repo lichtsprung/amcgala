@@ -18,6 +18,7 @@ import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
+
 import java.util.logging.Logger;
 
 /**
@@ -32,7 +33,6 @@ public class Cross2d extends Shape {
     private BresenhamLine2d l1, l2;
 
     /**
-     * 
      * @param position
      * @param size
      */
@@ -43,7 +43,6 @@ public class Cross2d extends Shape {
     }
 
     /**
-     * 
      * @param x
      * @param y
      * @param size
@@ -56,6 +55,7 @@ public class Cross2d extends Shape {
 
     /**
      * Gibt die Position in Form eines 3D Vektors zurück.
+     *
      * @return
      */
     public Vector3d getPosition() {
@@ -63,7 +63,6 @@ public class Cross2d extends Shape {
     }
 
     /**
-     *
      * @param position
      */
     public void setPosition(Vector3d position) {
@@ -73,6 +72,7 @@ public class Cross2d extends Shape {
 
     /**
      * Gibt die Größe des Kreuzes zurück.
+     *
      * @return
      */
     public int getSize() {
@@ -81,6 +81,7 @@ public class Cross2d extends Shape {
 
     /**
      * Setzt die Größe des Kreuzes auf den übergebenen Wert.
+     *
      * @param size
      */
     public void setSize(int size) {
@@ -94,7 +95,7 @@ public class Cross2d extends Shape {
     }
 
     /**
-     * 
+     *
      */
     @Override
     public void render(Matrix transformation, Camera camera, Renderer renderer) {
@@ -103,5 +104,6 @@ public class Cross2d extends Shape {
         l1.render(transformation, camera, renderer);
         l2.render(transformation, camera, renderer);
     }
+
     private static final Logger LOG = Logger.getLogger(Cross2d.class.getName());
 }

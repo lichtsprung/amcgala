@@ -392,6 +392,7 @@ public class EigenvalueDecomposition implements java.io.Serializable {
             }
         }
     }
+
     // Complex scalar division.
     private transient double cdivr, cdivi;
 
@@ -855,6 +856,7 @@ public class EigenvalueDecomposition implements java.io.Serializable {
     /*
      * ------------------------ Constructor ------------------------
      */
+
     /**
      * Check for symmetry, then construct the eigenvalue decomposition
      *
@@ -909,6 +911,7 @@ public class EigenvalueDecomposition implements java.io.Serializable {
     /*
      * ------------------------ Public Methods ------------------------
      */
+
     /**
      * Return the eigenvector matrix
      *

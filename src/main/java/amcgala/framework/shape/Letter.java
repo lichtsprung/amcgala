@@ -14,7 +14,6 @@
  */
 package amcgala.framework.shape;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
@@ -33,158 +32,158 @@ public class Letter extends Shape {
     private BresenhamLine2d[] letterLines;
     private static final double RATIO = 1.5;
     private static final Line[] A = {
-        new Line(new Point2d(0, 0), new Point2d(0.4, 1.0)),
-        new Line(new Point2d(0.4, 1.0), new Point2d(0.6, 1.0)),
-        new Line(new Point2d(0.6, 1.0), new Point2d(1.0, 0)),
-        new Line(new Point2d(0.2, 0.5), new Point2d(0.8, 0.5))
+            new Line(new Point2d(0, 0), new Point2d(0.4, 1.0)),
+            new Line(new Point2d(0.4, 1.0), new Point2d(0.6, 1.0)),
+            new Line(new Point2d(0.6, 1.0), new Point2d(1.0, 0)),
+            new Line(new Point2d(0.2, 0.5), new Point2d(0.8, 0.5))
     };
     private static final Line[] B = {
-        new Line(new Point2d(0, 0), new Point2d(0, 1)),
-        new Line(new Point2d(0, 1), new Point2d(0.8, 1)),
-        new Line(new Point2d(0.8, 1), new Point2d(1, 0.9)),
-        new Line(new Point2d(1, 0.9), new Point2d(1, 0.7)),
-        new Line(new Point2d(1, 0.7), new Point2d(0.8, 0.6)),
-        new Line(new Point2d(0.8, 0.6), new Point2d(0.2, 0.6)),
-        new Line(new Point2d(0.2, 0.6), new Point2d(0.2, 0.5)),
-        new Line(new Point2d(0.2, 0.5), new Point2d(0.8, 0.5)),
-        new Line(new Point2d(0.8, 0.5), new Point2d(1, 0.4)),
-        new Line(new Point2d(1, 0.4), new Point2d(1.0, 0.2)),
-        new Line(new Point2d(1.0, 0.2), new Point2d(0.8, 0)),
-        new Line(new Point2d(0.8, 0), new Point2d(0, 0))
+            new Line(new Point2d(0, 0), new Point2d(0, 1)),
+            new Line(new Point2d(0, 1), new Point2d(0.8, 1)),
+            new Line(new Point2d(0.8, 1), new Point2d(1, 0.9)),
+            new Line(new Point2d(1, 0.9), new Point2d(1, 0.7)),
+            new Line(new Point2d(1, 0.7), new Point2d(0.8, 0.6)),
+            new Line(new Point2d(0.8, 0.6), new Point2d(0.2, 0.6)),
+            new Line(new Point2d(0.2, 0.6), new Point2d(0.2, 0.5)),
+            new Line(new Point2d(0.2, 0.5), new Point2d(0.8, 0.5)),
+            new Line(new Point2d(0.8, 0.5), new Point2d(1, 0.4)),
+            new Line(new Point2d(1, 0.4), new Point2d(1.0, 0.2)),
+            new Line(new Point2d(1.0, 0.2), new Point2d(0.8, 0)),
+            new Line(new Point2d(0.8, 0), new Point2d(0, 0))
     };
     private static final Line[] C = {
-        new Line(new Point2d(1, 0), new Point2d(0.3, 0)),
-        new Line(new Point2d(0.3, 0), new Point2d(0, 0.3)),
-        new Line(new Point2d(0, 0.3), new Point2d(0, 0.8)),
-        new Line(new Point2d(0, 0.8), new Point2d(0.3, 1)),
-        new Line(new Point2d(0.3, 1.0), new Point2d(1.0, 1.0))
+            new Line(new Point2d(1, 0), new Point2d(0.3, 0)),
+            new Line(new Point2d(0.3, 0), new Point2d(0, 0.3)),
+            new Line(new Point2d(0, 0.3), new Point2d(0, 0.8)),
+            new Line(new Point2d(0, 0.8), new Point2d(0.3, 1)),
+            new Line(new Point2d(0.3, 1.0), new Point2d(1.0, 1.0))
     };
     private static final Line[] D = {
-        new Line(new Point2d(0, 0), new Point2d(0, 1.0)),
-        new Line(new Point2d(0, 1.0), new Point2d(0.7, 1.0)),
-        new Line(new Point2d(0.7, 1.0), new Point2d(1.0, 0.7)),
-        new Line(new Point2d(1.0, 0.7), new Point2d(1.0, 0.4)),
-        new Line(new Point2d(1.0, 0.4), new Point2d(0.7, 0)),
-        new Line(new Point2d(0.7, 0), new Point2d(0, 0))
+            new Line(new Point2d(0, 0), new Point2d(0, 1.0)),
+            new Line(new Point2d(0, 1.0), new Point2d(0.7, 1.0)),
+            new Line(new Point2d(0.7, 1.0), new Point2d(1.0, 0.7)),
+            new Line(new Point2d(1.0, 0.7), new Point2d(1.0, 0.4)),
+            new Line(new Point2d(1.0, 0.4), new Point2d(0.7, 0)),
+            new Line(new Point2d(0.7, 0), new Point2d(0, 0))
     };
     private static final Line[] E = {
-        new Line(new Point2d(1.0, 0), new Point2d(0, 0)),
-        new Line(new Point2d(0, 0), new Point2d(0, 1.0)),
-        new Line(new Point2d(0, 1.0), new Point2d(1.0, 1.0)),
-        new Line(new Point2d(0, 0.5), new Point2d(0.6, 0.5))
+            new Line(new Point2d(1.0, 0), new Point2d(0, 0)),
+            new Line(new Point2d(0, 0), new Point2d(0, 1.0)),
+            new Line(new Point2d(0, 1.0), new Point2d(1.0, 1.0)),
+            new Line(new Point2d(0, 0.5), new Point2d(0.6, 0.5))
     };
     private static final Line[] F = {
-        new Line(new Point2d(0, 0), new Point2d(0, 1.0)),
-        new Line(new Point2d(0, 1.0), new Point2d(1.0, 1.0)),
-        new Line(new Point2d(0, 0.5), new Point2d(0.6, 0.5))
+            new Line(new Point2d(0, 0), new Point2d(0, 1.0)),
+            new Line(new Point2d(0, 1.0), new Point2d(1.0, 1.0)),
+            new Line(new Point2d(0, 0.5), new Point2d(0.6, 0.5))
     };
     private static final Line[] G = {
-        new Line(new Point2d(1.0, 0), new Point2d(0, 0)),
-        new Line(new Point2d(0, 0), new Point2d(0, 1.0)),
-        new Line(new Point2d(0, 1.0), new Point2d(1.0, 1.0)),
-        new Line(new Point2d(1.0, 0), new Point2d(1.0, 0.5)),
-        new Line(new Point2d(1.0, 0.5), new Point2d(0.5, 0.5))
+            new Line(new Point2d(1.0, 0), new Point2d(0, 0)),
+            new Line(new Point2d(0, 0), new Point2d(0, 1.0)),
+            new Line(new Point2d(0, 1.0), new Point2d(1.0, 1.0)),
+            new Line(new Point2d(1.0, 0), new Point2d(1.0, 0.5)),
+            new Line(new Point2d(1.0, 0.5), new Point2d(0.5, 0.5))
     };
     private static final Line[] H = {
-        new Line(new Point2d(1.0, 0), new Point2d(1.0, 1.0)),
-        new Line(new Point2d(0, 0), new Point2d(0, 1.0)),
-        new Line(new Point2d(0, 0.5), new Point2d(1.0, 0.5))
+            new Line(new Point2d(1.0, 0), new Point2d(1.0, 1.0)),
+            new Line(new Point2d(0, 0), new Point2d(0, 1.0)),
+            new Line(new Point2d(0, 0.5), new Point2d(1.0, 0.5))
     };
     private static final Line[] I = {
-        new Line(new Point2d(0.5, 0), new Point2d(0.5, 1.0)),
-        new Line(new Point2d(0.3, 1.0), new Point2d(0.7, 1.0)),
-        new Line(new Point2d(0.3, 0), new Point2d(0.7, 0))
+            new Line(new Point2d(0.5, 0), new Point2d(0.5, 1.0)),
+            new Line(new Point2d(0.3, 1.0), new Point2d(0.7, 1.0)),
+            new Line(new Point2d(0.3, 0), new Point2d(0.7, 0))
     };
     private static final Line[] J = {
-        new Line(new Point2d(0.3, 1.0), new Point2d(0.7, 1.0)),
-        new Line(new Point2d(0.7, 1.0), new Point2d(0.5, 0)),
-        new Line(new Point2d(0.5, 0), new Point2d(0.3, 0.1))
+            new Line(new Point2d(0.3, 1.0), new Point2d(0.7, 1.0)),
+            new Line(new Point2d(0.7, 1.0), new Point2d(0.5, 0)),
+            new Line(new Point2d(0.5, 0), new Point2d(0.3, 0.1))
     };
     private static final Line[] K = {
-        new Line(new Point2d(0.0, 0.0), new Point2d(0, 1.0)),
-        new Line(new Point2d(1, 1.0), new Point2d(0, 0.2)),
-        new Line(new Point2d(0.4, 0.5), new Point2d(1, 0))
+            new Line(new Point2d(0.0, 0.0), new Point2d(0, 1.0)),
+            new Line(new Point2d(1, 1.0), new Point2d(0, 0.2)),
+            new Line(new Point2d(0.4, 0.5), new Point2d(1, 0))
     };
     private static final Line[] L = {
-        new Line(new Point2d(0.0, 1.0), new Point2d(0, 0.0)),
-        new Line(new Point2d(0, 0.0), new Point2d(1.0, 0))
+            new Line(new Point2d(0.0, 1.0), new Point2d(0, 0.0)),
+            new Line(new Point2d(0, 0.0), new Point2d(1.0, 0))
     };
     private static final Line[] M = {
-        new Line(new Point2d(0.0, 0.0), new Point2d(0.2, 1.0)),
-        new Line(new Point2d(0.2, 1.0), new Point2d(0.5, 0.4)),
-        new Line(new Point2d(0.5, 0.4), new Point2d(0.8, 1.0)),
-        new Line(new Point2d(0.8, 1.0), new Point2d(1.0, 0.0))
+            new Line(new Point2d(0.0, 0.0), new Point2d(0.2, 1.0)),
+            new Line(new Point2d(0.2, 1.0), new Point2d(0.5, 0.4)),
+            new Line(new Point2d(0.5, 0.4), new Point2d(0.8, 1.0)),
+            new Line(new Point2d(0.8, 1.0), new Point2d(1.0, 0.0))
     };
     private static final Line[] N = {
-        new Line(new Point2d(0.0, 0.0), new Point2d(0.4, 1.0)),
-        new Line(new Point2d(0.4, 1.0), new Point2d(0.6, 0.0)),
-        new Line(new Point2d(0.6, 0.0), new Point2d(1.0, 1.0))
+            new Line(new Point2d(0.0, 0.0), new Point2d(0.4, 1.0)),
+            new Line(new Point2d(0.4, 1.0), new Point2d(0.6, 0.0)),
+            new Line(new Point2d(0.6, 0.0), new Point2d(1.0, 1.0))
     };
     private static final Line[] O = {
-        new Line(new Point2d(0.0, 0.0), new Point2d(0.0, 1.0)),
-        new Line(new Point2d(0.0, 1.0), new Point2d(1.0, 1.0)),
-        new Line(new Point2d(1.0, 1.0), new Point2d(1.0, 0.0)),
-        new Line(new Point2d(1.0, 0.0), new Point2d(0.0, 0.0))
+            new Line(new Point2d(0.0, 0.0), new Point2d(0.0, 1.0)),
+            new Line(new Point2d(0.0, 1.0), new Point2d(1.0, 1.0)),
+            new Line(new Point2d(1.0, 1.0), new Point2d(1.0, 0.0)),
+            new Line(new Point2d(1.0, 0.0), new Point2d(0.0, 0.0))
     };
     private static final Line[] P = {
-        new Line(new Point2d(0.0, 0.0), new Point2d(0.0, 1.0)),
-        new Line(new Point2d(0.0, 1.0), new Point2d(1.0, 1.0)),
-        new Line(new Point2d(1.0, 1.0), new Point2d(1.0, 0.5)),
-        new Line(new Point2d(1.0, 0.5), new Point2d(0.0, 0.5))
+            new Line(new Point2d(0.0, 0.0), new Point2d(0.0, 1.0)),
+            new Line(new Point2d(0.0, 1.0), new Point2d(1.0, 1.0)),
+            new Line(new Point2d(1.0, 1.0), new Point2d(1.0, 0.5)),
+            new Line(new Point2d(1.0, 0.5), new Point2d(0.0, 0.5))
     };
     private static final Line[] Q = {
-        new Line(new Point2d(0.0, 0.0), new Point2d(0.0, 1.0)),
-        new Line(new Point2d(0.0, 1.0), new Point2d(1.0, 1.0)),
-        new Line(new Point2d(1.0, 1.0), new Point2d(1.0, 0.0)),
-        new Line(new Point2d(1.0, 0.0), new Point2d(0.0, 0.0)),
-        new Line(new Point2d(0.5, 0.5), new Point2d(1.1, 0.0))
+            new Line(new Point2d(0.0, 0.0), new Point2d(0.0, 1.0)),
+            new Line(new Point2d(0.0, 1.0), new Point2d(1.0, 1.0)),
+            new Line(new Point2d(1.0, 1.0), new Point2d(1.0, 0.0)),
+            new Line(new Point2d(1.0, 0.0), new Point2d(0.0, 0.0)),
+            new Line(new Point2d(0.5, 0.5), new Point2d(1.1, 0.0))
     };
     private static final Line[] R = {
-        new Line(new Point2d(0.0, 0.0), new Point2d(0.0, 1.0)),
-        new Line(new Point2d(0.0, 1.0), new Point2d(1.0, 1.0)),
-        new Line(new Point2d(1.0, 1.0), new Point2d(1.0, 0.5)),
-        new Line(new Point2d(1.0, 0.5), new Point2d(0.0, 0.5)),
-        new Line(new Point2d(0.0, 0.5), new Point2d(1.0, 0.0))
+            new Line(new Point2d(0.0, 0.0), new Point2d(0.0, 1.0)),
+            new Line(new Point2d(0.0, 1.0), new Point2d(1.0, 1.0)),
+            new Line(new Point2d(1.0, 1.0), new Point2d(1.0, 0.5)),
+            new Line(new Point2d(1.0, 0.5), new Point2d(0.0, 0.5)),
+            new Line(new Point2d(0.0, 0.5), new Point2d(1.0, 0.0))
     };
     private static final Line[] S = {
-        new Line(new Point2d(1.0, 1.0), new Point2d(0.0, 1.0)),
-        new Line(new Point2d(0.0, 1.0), new Point2d(0.0, 0.5)),
-        new Line(new Point2d(0.0, 0.5), new Point2d(1.0, 0.5)),
-        new Line(new Point2d(1.0, 0.5), new Point2d(1.0, 0.0)),
-        new Line(new Point2d(1.0, 0.0), new Point2d(0.0, 0.0))
+            new Line(new Point2d(1.0, 1.0), new Point2d(0.0, 1.0)),
+            new Line(new Point2d(0.0, 1.0), new Point2d(0.0, 0.5)),
+            new Line(new Point2d(0.0, 0.5), new Point2d(1.0, 0.5)),
+            new Line(new Point2d(1.0, 0.5), new Point2d(1.0, 0.0)),
+            new Line(new Point2d(1.0, 0.0), new Point2d(0.0, 0.0))
     };
     private static final Line[] T = {
-        new Line(new Point2d(0.0, 1.0), new Point2d(1.0, 1.0)),
-        new Line(new Point2d(0.5, 1.0), new Point2d(0.5, 0.0))
+            new Line(new Point2d(0.0, 1.0), new Point2d(1.0, 1.0)),
+            new Line(new Point2d(0.5, 1.0), new Point2d(0.5, 0.0))
     };
     private static final Line[] U = {
-        new Line(new Point2d(0.0, 1.0), new Point2d(0.0, 0.0)),
-        new Line(new Point2d(0.0, 0.0), new Point2d(1.0, 0.0)),
-        new Line(new Point2d(1.0, 0.0), new Point2d(1.0, 1.0))
+            new Line(new Point2d(0.0, 1.0), new Point2d(0.0, 0.0)),
+            new Line(new Point2d(0.0, 0.0), new Point2d(1.0, 0.0)),
+            new Line(new Point2d(1.0, 0.0), new Point2d(1.0, 1.0))
     };
     private static final Line[] V = {
-        new Line(new Point2d(0.0, 1.0), new Point2d(0.5, 0.0)),
-        new Line(new Point2d(0.5, 0.0), new Point2d(1.0, 1.0))
+            new Line(new Point2d(0.0, 1.0), new Point2d(0.5, 0.0)),
+            new Line(new Point2d(0.5, 0.0), new Point2d(1.0, 1.0))
     };
     private static final Line[] W = {
-        new Line(new Point2d(0.0, 1.0), new Point2d(0.4, 0.0)),
-        new Line(new Point2d(0.4, 0.0), new Point2d(0.5, 0.4)),
-        new Line(new Point2d(0.5, 0.4), new Point2d(0.6, 0.0)),
-        new Line(new Point2d(0.6, 0.0), new Point2d(1.0, 1.0))
+            new Line(new Point2d(0.0, 1.0), new Point2d(0.4, 0.0)),
+            new Line(new Point2d(0.4, 0.0), new Point2d(0.5, 0.4)),
+            new Line(new Point2d(0.5, 0.4), new Point2d(0.6, 0.0)),
+            new Line(new Point2d(0.6, 0.0), new Point2d(1.0, 1.0))
     };
     private static final Line[] X = {
-        new Line(new Point2d(0.0, 1.0), new Point2d(1.0, 0.0)),
-        new Line(new Point2d(0.0, 0.0), new Point2d(1.0, 1.0))
+            new Line(new Point2d(0.0, 1.0), new Point2d(1.0, 0.0)),
+            new Line(new Point2d(0.0, 0.0), new Point2d(1.0, 1.0))
     };
     private static final Line[] Y = {
-        new Line(new Point2d(0.0, 0.0), new Point2d(0.5, 0.5)),
-        new Line(new Point2d(0.5, 0.5), new Point2d(1.0, 1.0)),
-        new Line(new Point2d(0.5, 0.5), new Point2d(0.5, 0.0))
+            new Line(new Point2d(0.0, 0.0), new Point2d(0.5, 0.5)),
+            new Line(new Point2d(0.5, 0.5), new Point2d(1.0, 1.0)),
+            new Line(new Point2d(0.5, 0.5), new Point2d(0.5, 0.0))
     };
     private static final Line[] Z = {
-        new Line(new Point2d(0.0, 0.0), new Point2d(1.0, 0.0)),
-        new Line(new Point2d(0.0, 0.0), new Point2d(1.0, 1.0)),
-        new Line(new Point2d(1.0, 1.0), new Point2d(0.0, 1.0))
+            new Line(new Point2d(0.0, 0.0), new Point2d(1.0, 0.0)),
+            new Line(new Point2d(0.0, 0.0), new Point2d(1.0, 1.0)),
+            new Line(new Point2d(1.0, 1.0), new Point2d(0.0, 1.0))
     };
     private static final Line[] BLANK = {};
 

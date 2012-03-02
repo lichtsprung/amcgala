@@ -15,11 +15,11 @@
 package amcgala.framework.math;
 
 /**
- * Diese Klasse stellt eine Gerade im dreidimensionalen Raum dar. 
+ * Diese Klasse stellt eine Gerade im dreidimensionalen Raum dar.
  * Sie bietet Methoden für Schnittberechnungen mit anderen Geraden, Ebenen und Punkten zur Verfügung.
- * 
+ *
  * @author Robert Giacinto
  */
 public class Line {
-    
+
 }

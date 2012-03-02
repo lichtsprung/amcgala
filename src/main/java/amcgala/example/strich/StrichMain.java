@@ -18,7 +18,7 @@ import amcgala.Framework;
 
 /**
  * Ein kleines Beispielprogramm, das einen Strich ausgibt.
- * 
+ *
  * @author Robert Giacinto
  */
 public class StrichMain extends Framework {

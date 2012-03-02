@@ -6,8 +6,7 @@ import amcgala.framework.event.InputHandler;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.shape.Polygon;
 import amcgala.framework.shape.util.PLYPolygonParser;
-import com.google.common.eventbus.Subscribe;
-import java.awt.event.MouseEvent;
+
 import java.io.InputStream;
 
 /**
@@ -44,16 +43,16 @@ public class PLYExampleMain extends Framework implements InputHandler {
 
     }
 
-    @Subscribe
-    public void handleMouse(MouseEvent e) {
-        if (e.getID() == MouseEvent.MOUSE_MOVED) {
-            direction.x = (double) e.getX() / (double) getScreenWidth();
-            direction.y = (double) e.getY() / (double) getScreenHeight();
-            getCamera().setDirection(direction);
-            getCamera().setPosition(position);
-            getCamera().setVup(up);
-        }
-    }
+//    @Subscribe
+//    public void handleMouse(MouseEvent e) {
+//        if (e.getID() == MouseEvent.MOUSE_MOVED) {
+//            direction.x = (double) e.getX() / (double) getScreenWidth();
+//            direction.y = (double) e.getY() / (double) getScreenHeight();
+//            getCamera().setDirection(direction);
+//            getCamera().setPosition(position);
+//            getCamera().setVup(up);
+//        }
+//    }
 
     public static void main(String[] args) {
         PLYExampleMain m = new PLYExampleMain(500, 500);

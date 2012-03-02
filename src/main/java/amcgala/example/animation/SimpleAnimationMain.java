@@ -17,6 +17,7 @@ package amcgala.example.animation;
 import amcgala.Framework;
 import amcgala.framework.animation.Animation;
 import amcgala.framework.shape.BresenhamLine2d;
+
 import java.util.Random;
 
 /**
@@ -24,7 +25,7 @@ import java.util.Random;
  * implementiert werden kann.
  * Hierfür soll eine 2d Linie so verändert werden, dass die Endpunkte der Linie einer zufälligen (brownschen) Bewegung folgen
  * und zufällig versetzt werden, wenn sie den Rand der Bildschirmausgabe berühren.
- * 
+ *
  * @author Robert Giacinto
  */
 public class SimpleAnimationMain extends Framework {
@@ -34,7 +35,8 @@ public class SimpleAnimationMain extends Framework {
 
     /**
      * Erzeugt ein SimpleAnimation Beispiel mit einer bestimmten Größe.
-     * @param width die Breite des Beispielfensters
+     *
+     * @param width  die Breite des Beispielfensters
      * @param height die Höhe des Beispielfensters
      */
     public SimpleAnimationMain(int width, int height) {
@@ -62,6 +64,7 @@ public class SimpleAnimationMain extends Framework {
 
     /**
      * Einstiegspunkt für das Beispiel.
+     *
      * @param args mögliche Parameter, die über die Konsole übergeben werden
      */
     public static void main(String[] args) {

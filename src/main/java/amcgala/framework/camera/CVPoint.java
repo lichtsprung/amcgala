@@ -25,6 +25,7 @@ public class CVPoint {
     /**
      * Erzeugt einen neuen CVPunkt.
      * TODO nochmal überprüfen: Sollte eigentlich 3d sein.
+     *
      * @param x x-Koordinate
      * @param y y-Koordinate
      */

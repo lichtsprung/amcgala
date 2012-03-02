@@ -15,6 +15,7 @@
 package amcgala.framework.camera;
 
 import amcgala.framework.math.Matrix;
+import amcgala.framework.math.Quaternion;
 import amcgala.framework.math.Vector3d;
 
 /**
@@ -53,6 +54,10 @@ public abstract class AbstractCamera implements Camera {
      */
     protected Matrix projection;
 
+    protected Quaternion quaternion;
+
+    protected boolean parallel;
+
     /**
      * Gibt die Projektionsmatrix der Kamera zurück.
      *
@@ -67,7 +72,7 @@ public abstract class AbstractCamera implements Camera {
      */
     @Override
     public Vector3d getDirection() {
-        return direction;
+        return quaternion.getRotationColumn(2);
     }
 
     /**
@@ -109,7 +114,7 @@ public abstract class AbstractCamera implements Camera {
      */
     @Override
     public Vector3d getVup() {
-        return vup;
+        return quaternion.getRotationColumn(1);
     }
 
     /**
@@ -121,5 +126,13 @@ public abstract class AbstractCamera implements Camera {
     public void setVup(Vector3d vup) {
         this.vup = vup;
         update();
+    }
+
+    public Vector3d getLeft(){
+        return quaternion.getRotationColumn(0);
+    }
+
+    public boolean isParallel(){
+        return parallel;
     }
 }

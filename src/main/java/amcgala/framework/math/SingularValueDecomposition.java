@@ -49,6 +49,7 @@ public class SingularValueDecomposition implements java.io.Serializable {
     /*
      * ------------------------ Constructor ------------------------
      */
+
     /**
      * Construct the singular value decomposition
      *
@@ -484,6 +485,7 @@ public class SingularValueDecomposition implements java.io.Serializable {
     /*
      * ------------------------ Public Methods ------------------------
      */
+
     /**
      * Return the left singular vectors
      *

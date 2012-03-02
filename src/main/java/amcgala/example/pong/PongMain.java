@@ -15,6 +15,7 @@
 package amcgala.example.pong;
 
 import amcgala.Framework;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -29,7 +30,7 @@ public class PongMain extends Framework {
 
     public PongMain(int width, int height) {
         super(width, height);
-       addKeyAdapter(new MyKeyListener());
+        addKeyAdapter(new MyKeyListener());
     }
 
     @Override

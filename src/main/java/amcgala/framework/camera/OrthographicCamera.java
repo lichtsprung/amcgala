@@ -34,8 +34,8 @@ public final class OrthographicCamera extends AbstractCamera {
      * Erzeugt eine neue Kamera an einer Position mit einem bestimmten
      * Blickpunkt.
      *
-     * @param vup Das Oben der Kamera
-     * @param position Die Position der Kamera
+     * @param vup       Das Oben der Kamera
+     * @param position  Die Position der Kamera
      * @param direction Der Punkt, zu dem die Kamera blickt
      */
     public OrthographicCamera(Vector3d vup, Vector3d position, Vector3d direction) {
@@ -58,10 +58,10 @@ public final class OrthographicCamera extends AbstractCamera {
         this.v = n.cross(u).normalize();
 
         double[][] vdValues = {
-            {1, 0, 0, 0},
-            {0, 1, 0, 0},
-            {0, 0, 0, 0},
-            {0, 0, 0, 1}
+                {1, 0, 0, 0},
+                {0, 1, 0, 0},
+                {0, 0, 0, 0},
+                {0, 0, 0, 1}
         };
 
         Matrix vd = Matrix.constructWithCopy(vdValues);
@@ -69,10 +69,10 @@ public final class OrthographicCamera extends AbstractCamera {
         Vector3d d = new Vector3d(position.dot(u), position.dot(v), position.dot(n));
 
         double[][] viewValues = {
-            {u.x, u.y, u.z, d.x},
-            {v.x, v.y, v.z, d.y},
-            {n.x, n.y, n.z, d.z},
-            {0, 0, 0, 1}
+                {u.x, u.y, u.z, d.x},
+                {v.x, v.y, v.z, d.y},
+                {n.x, n.y, n.z, d.z},
+                {0, 0, 0, 1}
         };
         Matrix kt = Matrix.constructWithCopy(viewValues);
         projection = vd.times(kt);
@@ -81,15 +81,14 @@ public final class OrthographicCamera extends AbstractCamera {
     @Override
     public CVPoint getClippingSpaceCoordinates(Vector3d vector3d) {
         Matrix point = projection.times(vector3d.toMatrix());
-        CVPoint cvPoint = new CVPoint(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0));
-        return cvPoint;
+        return new CVPoint(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0));
     }
 
     @Override
     public Pixel getImageSpaceCoordinates(Vector3d vector3d) {
         Matrix point = projection.times(vector3d.toMatrix());
-        Pixel pixel = new Pixel(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0));
-        return pixel;
+        return new Pixel(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0));
     }
+
     private static final Logger log = LoggerFactory.getLogger(OrthographicCamera.class);
 }

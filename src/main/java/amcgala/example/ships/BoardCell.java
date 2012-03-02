@@ -14,7 +14,6 @@
  */
 package amcgala.example.ships;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
@@ -40,6 +39,7 @@ public class BoardCell extends Shape {
         HIT,
         NOTHING
     }
+
     private double x;
     private double y;
     private double width;
@@ -57,9 +57,9 @@ public class BoardCell extends Shape {
     /**
      * Ein Feld auf dem Spielbrett.
      *
-     * @param x die x-Koordinate dieses Feldes
-     * @param y die y-Koordinate dieses Feldes
-     * @param width die Breite des Feldes
+     * @param x      die x-Koordinate dieses Feldes
+     * @param y      die y-Koordinate dieses Feldes
+     * @param width  die Breite des Feldes
      * @param height die Höhe des Feldes
      */
     public BoardCell(double x, double y, double width, double height) {
@@ -94,7 +94,7 @@ public class BoardCell extends Shape {
      */
     public void setState(State state) {
         previousState = this.state;
-        
+
         this.state = state;
         if (state == State.HIT) {
             bounds.color = Color.RED;
@@ -109,7 +109,7 @@ public class BoardCell extends Shape {
 
     public void recoverPreviousState() {
         this.state = previousState;
-        
+
         if (state == State.HIT) {
             bounds.color = Color.RED;
         } else if (state == State.MISS) {

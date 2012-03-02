@@ -20,31 +20,32 @@ import amcgala.framework.shape.Container;
 
 /**
  * Zeigt die funktionsweise der Klasse <i>Paint</i> mit Koordinaten.
+ *
  * @author Sascha Lemke
  */
 public class ContainerKoordinatenMain extends Framework {
 
-	public ContainerKoordinatenMain(int width, int height) {
-		super(width, height);
-	}
-	
-	public static void main(String[] args) {
-		Framework fm = new ContainerKoordinatenMain(800, 600);
-		fm.start();
-	}
+    public ContainerKoordinatenMain(int width, int height) {
+        super(width, height);
+    }
 
-	@Override
-	public void initGraph() {
+    public static void main(String[] args) {
+        Framework fm = new ContainerKoordinatenMain(800, 600);
+        fm.start();
+    }
 
-		Container quadrat = new Container();		
-		quadrat.add(new Vector3d(-100, -100, 0), new Vector3d(100, -100, 0));
-		quadrat.add(new Vector3d(100, -100, 0), new Vector3d(100, 100, 0));
-		quadrat.add(new Vector3d(100, 100, 0), new Vector3d(-100, 100, 0));
-		quadrat.add(new Vector3d(-100, 100, 0), new Vector3d(-100, -100, 0));
+    @Override
+    public void initGraph() {
 
-		System.out.println(quadrat.toString());
-		
-		add(quadrat);
-	}
+        Container quadrat = new Container();
+        quadrat.add(new Vector3d(-100, -100, 0), new Vector3d(100, -100, 0));
+        quadrat.add(new Vector3d(100, -100, 0), new Vector3d(100, 100, 0));
+        quadrat.add(new Vector3d(100, 100, 0), new Vector3d(-100, 100, 0));
+        quadrat.add(new Vector3d(-100, 100, 0), new Vector3d(-100, -100, 0));
+
+        System.out.println(quadrat.toString());
+
+        add(quadrat);
+    }
 
 }

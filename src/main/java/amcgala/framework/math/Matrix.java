@@ -5,6 +5,7 @@
 package amcgala.framework.math;
 
 import amcgala.framework.math.util.Maths;
+
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.StreamTokenizer;
@@ -49,7 +50,7 @@ import java.util.logging.Logger;
  * </PRE></DD> </DL>
  *
  * @author The MathWorks, Inc. and the National Institute of Standards and
- * Technology.
+ *         Technology.
  * @version 5 August 1998
  */
 public class Matrix implements Cloneable, java.io.Serializable {
@@ -74,6 +75,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
     /*
      * ------------------------ Constructors ------------------------
      */
+
     /**
      * Construct an m-by-n matrix of zeros.
      *
@@ -139,8 +141,8 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Construct a matrix from a one-dimensional packed array
      *
      * @param vals One-dimensional array of doubles, packed by columns (ala
-     * Fortran).
-     * @param m Number of rows.
+     *             Fortran).
+     * @param m    Number of rows.
      * @throws IllegalArgumentException Array length must be a multiple of m.
      */
     public Matrix(double vals[], int m) {
@@ -160,6 +162,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
     /*
      * ------------------------ Public Methods ------------------------
      */
+
     /**
      * Construct a matrix from a copy of a 2-D array.
      *
@@ -345,7 +348,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      *
      * @param i0 Initial row index
      * @param i1 Final row index
-     * @param c Array of column indices.
+     * @param c  Array of column indices.
      * @return A(i0:i1, c(:))
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
@@ -367,7 +370,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
     /**
      * Get a submatrix.
      *
-     * @param r Array of row indices.
+     * @param r  Array of row indices.
      * @param j0 Initial column index
      * @param j1 Final column index
      * @return A(r(:), j0:j1)
@@ -407,7 +410,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param i1 Final row index
      * @param j0 Initial column index
      * @param j1 Final column index
-     * @param X A(i0:i1,j0:j1)
+     * @param X  A(i0:i1,j0:j1)
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
     public void setMatrix(int i0, int i1, int j0, int j1, Matrix X) {
@@ -445,10 +448,10 @@ public class Matrix implements Cloneable, java.io.Serializable {
     /**
      * Set a submatrix.
      *
-     * @param r Array of row indices.
+     * @param r  Array of row indices.
      * @param j0 Initial column index
      * @param j1 Final column index
-     * @param X A(r(:),j0:j1)
+     * @param X  A(r(:),j0:j1)
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
     public void setMatrix(int[] r, int j0, int j1, Matrix X) {
@@ -468,8 +471,8 @@ public class Matrix implements Cloneable, java.io.Serializable {
      *
      * @param i0 Initial row index
      * @param i1 Final row index
-     * @param c Array of column indices.
-     * @param X A(i0:i1,c(:))
+     * @param c  Array of column indices.
+     * @param X  A(i0:i1,c(:))
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
     public void setMatrix(int i0, int i1, int[] c, Matrix X) {
@@ -978,8 +981,8 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * with a Fortran-like 'Fw.d' style format.
      *
      * @param output Output stream.
-     * @param w Column width.
-     * @param d Number of digits after the decimal.
+     * @param w      Column width.
+     * @param d      Number of digits after the decimal.
      */
     public void print(PrintWriter output, int w, int d) {
         DecimalFormat format = new DecimalFormat();
@@ -998,7 +1001,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * NumberFormat that is set to US Locale.
      *
      * @param format A Formatting object for individual elements.
-     * @param width Field width for each column.
+     * @param width  Field width for each column.
      * @see java.text.DecimalFormat#setDecimalFormatSymbols
      */
     public void print(NumberFormat format, int width) {
@@ -1009,6 +1012,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
     // Since it doesn't pad on the left, the elements will come out different
     // widths.  Consequently, we'll pass the desired column width in as an
     // argument and do the extra padding ourselves.
+
     /**
      * Print the matrix to the output stream. Line the elements up in columns.
      * Use the format object, and right justify within columns of width
@@ -1017,7 +1021,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      *
      * @param output the output stream.
      * @param format A formatting object to format the matrix elements
-     * @param width Column width.
+     * @param width  Column width.
      * @see java.text.DecimalFormat#setDecimalFormatSymbols
      */
     public void print(PrintWriter output, NumberFormat format, int width) {
@@ -1100,6 +1104,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
     /*
      * ------------------------ Private Methods ------------------------
      */
+
     /**
      * Check if size(A) == size(B) *
      */

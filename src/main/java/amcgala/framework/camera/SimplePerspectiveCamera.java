@@ -15,6 +15,7 @@
 package amcgala.framework.camera;
 
 import amcgala.framework.math.Matrix;
+import amcgala.framework.math.Quaternion;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Pixel;
 import org.slf4j.Logger;
@@ -28,23 +29,24 @@ import org.slf4j.LoggerFactory;
 public final class SimplePerspectiveCamera extends AbstractCamera {
 
     private double d;
+    private Quaternion quaternion;
 
     /**
      * Erzeugt eine neue Kamera an einer Position mit einem bestimmten
      * Blickpunkt.
      *
-     * @param vup Das Oben der Kamera
-     * @param position Die Position der Kamera
+     * @param vup       Das Oben der Kamera
+     * @param position  Die Position der Kamera
      * @param direction Der Punkt, zu dem die Kamera blickt
-     * @param d der Abstand der Kamera zur Projektionsebene. Umso kleiner der
-     * Wert desto größer die perspektivische Wirkung
+     * @param d         der Abstand der Kamera zur Projektionsebene. Umso kleiner der
+     *                  Wert desto größer die perspektivische Wirkung
      */
     public SimplePerspectiveCamera(Vector3d vup, Vector3d position, Vector3d direction, double d) {
         this.vup = vup;
         this.position = position;
         this.direction = direction;
         this.d = d;
-
+        quaternion = new Quaternion(direction, 0);
         update();
     }
 
@@ -60,10 +62,10 @@ public final class SimplePerspectiveCamera extends AbstractCamera {
         this.v = n.cross(u).normalize();
 
         double[][] vdValues = {
-            {1, 0, 0, 0},
-            {0, 1, 0, 0},
-            {0, 0, 0, 0},
-            {0, 0, 1.0 / d, 1}
+                {1, 0, 0, 0},
+                {0, 1, 0, 0},
+                {0, 0, 0, 0},
+                {0, 0, 1.0 / d, 1}
         };
 
         Matrix vd = Matrix.constructWithCopy(vdValues);
@@ -71,10 +73,10 @@ public final class SimplePerspectiveCamera extends AbstractCamera {
         Vector3d d = new Vector3d(position.dot(u), position.dot(v), position.dot(n));
 
         double[][] viewValues = {
-            {u.x, u.y, u.z, d.x},
-            {v.x, v.y, v.z, d.y},
-            {n.x, n.y, n.z, d.z},
-            {0, 0, 0, 1}
+                {u.x, u.y, u.z, d.x},
+                {v.x, v.y, v.z, d.y},
+                {n.x, n.y, n.z, d.z},
+                {0, 0, 0, 1}
         };
         Matrix kt = Matrix.constructWithCopy(viewValues);
         projection = vd.times(kt);
@@ -99,7 +101,6 @@ public final class SimplePerspectiveCamera extends AbstractCamera {
         update();
     }
 
-   
 
     @Override
     public CVPoint getClippingSpaceCoordinates(Vector3d vector3d) {
@@ -114,5 +115,6 @@ public final class SimplePerspectiveCamera extends AbstractCamera {
         Pixel pixel = new Pixel(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0));
         return pixel;
     }
+
     private static final Logger log = LoggerFactory.getLogger(OrthographicCamera.class);
 }

@@ -16,6 +16,7 @@ package amcgala.framework.scenegraph.visitor;
 
 import amcgala.framework.scenegraph.Node;
 import amcgala.framework.shape.Shape;
+
 import java.util.logging.Logger;
 
 public class AnimationVisitor implements Visitor {

@@ -29,11 +29,11 @@ public class EaseInInterpolation extends Interpolation {
 
     /**
      * Erzeugt eine neue EaseInInterpolation.
-     * 
-     * @param start der Startwert, bei der die Interpolation beginnen soll
-     * @param end der Endwert, bei der die Interpolation enden soll
+     *
+     * @param start     der Startwert, bei der die Interpolation beginnen soll
+     * @param end       der Endwert, bei der die Interpolation enden soll
      * @param stepCount die Anzahl der Schritte der Interpolation
-     * @param cyclic true, wenn die Intpoleration zyklisch von Neuem beginnen soll
+     * @param cyclic    true, wenn die Intpoleration zyklisch von Neuem beginnen soll
      */
     public EaseInInterpolation(double start, double end, int stepCount, boolean cyclic) {
         super(start, end, stepCount, cyclic);

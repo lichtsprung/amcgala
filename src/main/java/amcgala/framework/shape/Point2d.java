@@ -14,7 +14,6 @@
  */
 package amcgala.framework.shape;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
@@ -24,6 +23,7 @@ import amcgala.framework.renderer.Renderer;
 /**
  * Ein Punkt in einer Ebene für die Darstellung von 2d Geometrien.
  * <p/>
+ *
  * @author Robert Giacinto
  */
 public class Point2d extends Shape {

@@ -24,7 +24,7 @@ public interface Transformation {
     /**
      * Gibt die Transformationsmatrix zurück, die die in Transformation repräsentiert, die
      * durch die jeweilige Klasse implementiert wird.
-     * 
+     *
      * @return die Transformationsmatrix der Transformation
      */
     public Matrix getTransformMatrix();

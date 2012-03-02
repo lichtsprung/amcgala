@@ -25,7 +25,13 @@ public final class Quaternion {
 
         LookAt
     }
+
     private double x, y, z, w;
+
+
+    public Quaternion(){
+        w=1;
+    }
 
     public Quaternion(double x, double y, double z, double w) {
         this.x = x;
@@ -144,9 +150,9 @@ public final class Quaternion {
     /**
      * Setzt das Quaternion auf die übergebenen Eulerwinkel.
      *
-     * @param yaw der Scherwinkel
+     * @param yaw   der Scherwinkel
      * @param pitch der Kantenwinkel
-     * @param roll der Rollwinkel
+     * @param roll  der Rollwinkel
      * @return das Quaternion, das den Eulerwinkeln entspricht
      */
     public Quaternion fromAngles(double yaw, double pitch, double roll) {
@@ -267,7 +273,7 @@ public final class Quaternion {
      * Gibt eine Komponente des Quaternions zurück.
      *
      * @param i der Index der Komponente, die zurückgegeben werden soll. i
-     * sollte zwischen 0 und 2 liegen
+     *          sollte zwischen 0 und 2 liegen
      * @return die i. Komponente
      */
     public Vector3d getRotationColumn(int i) {
@@ -311,16 +317,24 @@ public final class Quaternion {
 
     /**
      * Gibt die Matrixdarstellung des Quaternions zurück.
+     *
      * @return die Matrixdarstellung des Quaternions
      */
     public Matrix toMatrix() {
         double[][] vals = {
-            {x, y, z, w},
-            {-y, x, -w, z},
-            {-z, w, x, -y},
-            {-w, -z, y, x}
+                {x, y, z, w},
+                {-y, x, -w, z},
+                {-z, w, x, -y},
+                {-w, -z, y, x}
         };
         return Matrix.constructWithCopy(vals);
+    }
+
+    public Quaternion lookAt(Vector3d vup, Vector3d direction){
+        Vector3d v3 = direction.normalize();
+        Vector3d v1 = vup.cross(direction).normalize();
+        Vector3d v2 = direction.cross(v1).normalize();
+        return fromAxes(v1, v2, v3);
     }
 
     @Override

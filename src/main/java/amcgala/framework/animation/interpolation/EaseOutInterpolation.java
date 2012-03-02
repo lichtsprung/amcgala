@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 /**
  * Eine Interpolation, bei der die Schritt zu Beginn groß sind und zum Ende hin
  * kleiner werden.
+ *
  * @author Robert Giacinto
  */
 public class EaseOutInterpolation extends Interpolation {
@@ -27,11 +28,11 @@ public class EaseOutInterpolation extends Interpolation {
 
     /**
      * Erzeugt eine neue EaseOutInterpolation.
-     * 
-     * @param start der Startwert
-     * @param end der Endwert
+     *
+     * @param start     der Startwert
+     * @param end       der Endwert
      * @param stepCount die Anzahl der Schritte
-     * @param cyclic true, wenn die Interpolation zyklisch von Neuem beginnen soll
+     * @param cyclic    true, wenn die Interpolation zyklisch von Neuem beginnen soll
      */
     public EaseOutInterpolation(double start, double end, int stepCount, boolean cyclic) {
         super(start, end, stepCount, cyclic);

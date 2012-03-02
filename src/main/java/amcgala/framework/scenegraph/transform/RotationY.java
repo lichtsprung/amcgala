@@ -48,10 +48,10 @@ public class RotationY implements Transformation {
      */
     private void updateMatrix() {
         double[][] values = {
-            {Math.cos(phi), 0, Math.sin(phi), 0},
-            {0, 1, 0, 0},
-            {-Math.sin(phi), 0, Math.cos(phi), 0},
-            {0, 0, 0, 1}
+                {Math.cos(phi), 0, Math.sin(phi), 0},
+                {0, 1, 0, 0},
+                {-Math.sin(phi), 0, Math.cos(phi), 0},
+                {0, 0, 0, 1}
         };
         transformMatrix = Matrix.constructWithCopy(values);
     }

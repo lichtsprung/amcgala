@@ -22,7 +22,7 @@ import amcgala.framework.renderer.Renderer;
 
 /**
  * Ein 2d Pfeil.
- * 
+ *
  * @author Robert Giacinto
  */
 public class Arrow2d extends Shape {

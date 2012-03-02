@@ -45,5 +45,6 @@ public class ConcurrencyTest extends Framework {
         test.start();
 
     }
+
     private static final Logger log = LoggerFactory.getLogger(ConcurrencyTest.class);
 }

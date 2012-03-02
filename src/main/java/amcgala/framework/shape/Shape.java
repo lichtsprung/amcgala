@@ -20,10 +20,12 @@ import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
+
 import java.util.logging.Logger;
 
 /**
  * Diese Klasse stellt die Oberklasse aller darstellbaren Objekte dar.
+ *
  * @author Robert Giacinto
  */
 public abstract class Shape implements Updatable {
@@ -35,6 +37,7 @@ public abstract class Shape implements Updatable {
 
     /**
      * Gibt den Renderstatus des Shapes zurück.
+     *
      * @return <code>true</code> wenn Shape gerade gerendert wird
      */
     public boolean isRendering() {
@@ -43,6 +46,7 @@ public abstract class Shape implements Updatable {
 
     /**
      * Wird vom Framework verwendet, um anzuzeigen, dass dieses Shape gerade gerendert wird.
+     *
      * @param rendering der Renderstatus dieses Shapes
      */
     public void setRendering(boolean rendering) {
@@ -51,14 +55,16 @@ public abstract class Shape implements Updatable {
 
     /**
      * Diese Methode gibt das Shapeobjekt aus. Es wird von allen Unterklassen implementiert.
+     *
      * @param transformation die Transformationsmatrix, die aus den Transformationsgruppen resultiert
-     * @param camera die Kamera der Szene
-     * @param renderer der Renderer
+     * @param camera         die Kamera der Szene
+     * @param renderer       der Renderer
      */
     public abstract void render(Matrix transformation, Camera camera, Renderer renderer);
 
     /**
      * Setzt die Animation, die auf das Shape angewendet werden soll.
+     *
      * @param animation die Animation
      */
     public void setAnimation(Animation animation) {
@@ -69,6 +75,7 @@ public abstract class Shape implements Updatable {
     /**
      * Gibt die Animation zurück, die in dem Shape registriert ist. Animation kann <code>null</code> sein, wenn das Shape keine Animation besitzt.
      * TODO Sollte vielleicht eine leere Animation statt <code>null</code> zurückgegeben werden?
+     *
      * @return die aktuelle Animation
      */
     public Animation getAnimation() {

@@ -14,14 +14,12 @@
  */
 package amcgala.example.pong;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Arrow2d;
 import amcgala.framework.shape.Circle2d;
-import amcgala.framework.shape.Cross2d;
 import amcgala.framework.shape.Shape;
 
 /**
@@ -50,7 +48,7 @@ public class PongBall extends Shape {
         direction = getRandomDirection().times(velocity);
 
         position = new Vector3d(board.getXmin() + board.getWidth() * board.getBallStart(), board.getHeight() / 2, -1);
-        circle = new Circle2d(position.x,position.y, 5);
+        circle = new Circle2d(position.x, position.y, 5);
         arrow = new Arrow2d(position, direction, velocity * 50);
     }
 
@@ -58,7 +56,7 @@ public class PongBall extends Shape {
     public void update() {
         position.x += direction.x;
         position.y += direction.y;
-        circle.setPosition(position.x,position.y);
+        circle.setPosition(position.x, position.y);
         arrow.setPosition(position);
         checkPosition();
     }
@@ -133,7 +131,7 @@ public class PongBall extends Shape {
         } else if (board.getLeft().isNearPlane(position)) {
             direction.x = -direction.x;
         } else if (board.getXmax() < position.x) {
-           position = new Vector3d(board.getXmin() + board.getWidth() * board.getBallStart(), board.getHeight() / 2, -1);
+            position = new Vector3d(board.getXmin() + board.getWidth() * board.getBallStart(), board.getHeight() / 2, -1);
         }
     }
 }

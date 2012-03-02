@@ -36,10 +36,10 @@ public class Scale implements Transformation {
 
     private void updateMatrix() {
         double[][] values = {
-            {scaleX, 0, 0, 0},
-            {0, scaleY, 0, 0},
-            {0, 0, scaleZ, 0},
-            {0, 0, 0, 1}
+                {scaleX, 0, 0, 0},
+                {0, scaleY, 0, 0},
+                {0, 0, scaleZ, 0},
+                {0, 0, 0, 1}
         };
 
         transformMatrix = Matrix.constructWithCopy(values);

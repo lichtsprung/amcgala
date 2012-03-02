@@ -35,7 +35,7 @@ public class RotationX implements Transformation {
 
     /**
      * Erstellt ein Rotationsobjekt, das eine Rotation, um den Winkel phi beschreibt.
-     * 
+     *
      * @param phi der Winkel phi der Rotation
      */
     public RotationX(double phi) {
@@ -48,10 +48,10 @@ public class RotationX implements Transformation {
      */
     private void updateMatrix() {
         double[][] values = {
-            {1, 0, 0, 0},
-            {0, Math.cos(phi), -Math.sin(phi), 0},
-            {0, Math.sin(phi), Math.cos(phi), 0},
-            {0, 0, 0, 1}
+                {1, 0, 0, 0},
+                {0, Math.cos(phi), -Math.sin(phi), 0},
+                {0, Math.sin(phi), Math.cos(phi), 0},
+                {0, 0, 0, 1}
         };
         transformMatrix = Matrix.constructWithCopy(values);
     }

@@ -16,6 +16,7 @@ package amcgala.example.ships;
 
 import amcgala.Framework;
 import amcgala.framework.shape.Text;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
