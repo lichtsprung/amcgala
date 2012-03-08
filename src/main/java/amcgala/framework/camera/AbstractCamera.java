@@ -72,7 +72,8 @@ public abstract class AbstractCamera implements Camera {
      */
     @Override
     public Vector3d getDirection() {
-        return quaternion.getRotationColumn(2);
+        // return quaternion.getRotationColumn(2);
+    	return direction;
     }
 
     /**
