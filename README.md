@@ -9,3 +9,4 @@ https://github.com/amcgala/amcgala/wiki
 - Z-Buffer
 - Beleuchtung
 - Scenegraph-Editor
+- OpenGL
