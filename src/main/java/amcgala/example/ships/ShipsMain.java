@@ -61,7 +61,7 @@ public class ShipsMain extends Framework {
         // Board des Gegners
         add(aiBoard);
 
-        add(new Text("Schiffe Versenken", -250, 245, 245));
+        add(new Text("Schiffe Versenken", -250, 245));
     }
 
     public static void main(String[] args) {
