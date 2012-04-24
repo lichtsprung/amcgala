@@ -14,25 +14,50 @@
  */
 package amcgala.framework.shape;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Pixel;
 import amcgala.framework.renderer.Renderer;
+import amcgala.framework.shape3d.Box;
 
 /**
  * Eine Linie im 3d Raum.
- * TODO Refactoring: Umbenennen in Line, Anbieten von zwei Konstruktoren für 2d und 3d Varianten. Löschen der Klasse Bresenhamline2d.
  *
  * @author Robert Giacinto
  */
-public class BresenhamLine3d extends Shape {
+public class BresenhamLine extends Shape {
 
     public double x1, y1, z1;
     public double x2, y2, z2;
     private Vector3d start, end;
+    
+    public BresenhamLine(double x1, double y1, double x2, double y2) {
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
 
-    public BresenhamLine3d(Vector3d start, Vector3d end) {
+        if (x1 > x2) { // vertausche Punkte
+            this.x1 = x2;
+            this.y1 = y2;
+            this.x2 = x1;
+            this.y2 = y1;
+        }
+
+        if (x1 == x2 && y1 > y2) { // Vertikale von y1 unten nach y2 oben
+            this.y1 = y2;
+            this.y2 = y1;
+        }
+
+        start = new Vector3d(x1, y1, -1);
+        end = new Vector3d(x2, y2, -1);
+    }
+
+    public BresenhamLine(Vector3d start, Vector3d end) {
         this.x1 = start.x;
         this.y1 = start.y;
         this.z1 = start.z;
@@ -120,4 +145,6 @@ public class BresenhamLine3d extends Shape {
 
 
     }
+    
+    private static final Logger log = LoggerFactory.getLogger(BresenhamLine.class.getName());
 }

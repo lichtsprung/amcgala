@@ -17,7 +17,7 @@ package amcgala.example.pong;
 import amcgala.framework.math.Plane;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.scenegraph.Node;
-import amcgala.framework.shape.Rectangle2d;
+import amcgala.framework.shape2d.Rectangle;
 
 /**
  * Das Board, in dem das Spiel stattfindet. Es definiert die Grenzen, in denen
@@ -29,7 +29,7 @@ public class PongBoard extends Node {
 
     private PongBall ball;
     private PongPaddle paddle;
-    private Rectangle2d boundaries;
+    private Rectangle boundaries;
     private Plane top;
     private Plane bottom;
     private Plane left;
@@ -56,7 +56,7 @@ public class PongBoard extends Node {
         left = new Plane(Vector3d.UNIT_X, x);
 
         // Die äußeren Grenzen des Spielfeldes.
-        boundaries = new Rectangle2d(x, y, width, height); // rechts
+        boundaries = new Rectangle(x, y, width, height); // rechts
 
         addShape(boundaries);
         ball = new PongBall(this);
@@ -121,11 +121,11 @@ public class PongBoard extends Node {
         this.ball = ball;
     }
 
-    public Rectangle2d getBoundaries() {
+    public Rectangle getBoundaries() {
         return boundaries;
     }
 
-    public void setBoundaries(Rectangle2d boundaries) {
+    public void setBoundaries(Rectangle boundaries) {
         this.boundaries = boundaries;
     }
 

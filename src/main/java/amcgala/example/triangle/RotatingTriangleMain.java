@@ -15,7 +15,7 @@
 package amcgala.example.triangle;
 
 import amcgala.Framework;
-import amcgala.framework.shape.Point2d;
+import amcgala.framework.shape2d.Point2d;
 
 /**
  * Dies ist das Aufwärmbeispiel für die Einführungsveranstaltung. Es ist ein

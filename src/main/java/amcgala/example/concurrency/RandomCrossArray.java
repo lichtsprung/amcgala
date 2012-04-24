@@ -19,8 +19,9 @@ import amcgala.framework.event.InputHandler;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
-import amcgala.framework.shape.Cross2d;
 import amcgala.framework.shape.Shape;
+import amcgala.framework.shape2d.Cross;
+
 import com.google.common.eventbus.Subscribe;
 
 import java.awt.event.KeyEvent;
@@ -36,21 +37,21 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class RandomCrossArray extends Shape implements InputHandler {
 
-    private List<Cross2d> crosses;
+    private List<Cross> crosses;
     private Random random;
 
     public RandomCrossArray() {
-        crosses = new CopyOnWriteArrayList<Cross2d>();
+        crosses = new CopyOnWriteArrayList<Cross>();
         random = new Random(System.nanoTime());
     }
 
-    public void addCross(Cross2d cross) {
+    public void addCross(Cross cross) {
         crosses.add(cross);
     }
 
     @Override
     public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        for (Cross2d cross : crosses) {
+        for (Cross cross : crosses) {
             cross.render(transformation, camera, renderer);
         }
     }
@@ -58,7 +59,7 @@ public class RandomCrossArray extends Shape implements InputHandler {
     @Subscribe
     public void handleKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.VK_SPACE) {
-            Cross2d c2d = new Cross2d(random.nextInt(800) - 400, random.nextInt(600) - 300, random.nextInt(50));
+            Cross c2d = new Cross(random.nextInt(800) - 400, random.nextInt(600) - 300, random.nextInt(50));
             c2d.color = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
             addCross(c2d);
         }

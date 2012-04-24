@@ -12,21 +12,24 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package amcgala.framework.shape;
+package amcgala.framework.shape3d;
 
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
+import amcgala.framework.shape.Container;
+import amcgala.framework.shape.Shape;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Eine Box im 3d Raum.
+ * Draws a 3D Box.
  *
  * @author Robert Giacinto
  */
-public class Box3d extends Shape {
+public class Box extends Shape {
 
     private Container lines;
     private Vector3d position;
@@ -35,14 +38,14 @@ public class Box3d extends Shape {
     private double depth;
 
     /**
-     * Der Konstruktor der 3D Box.
+     * Constructor.
      *
      * @param position
      * @param width
      * @param height
      * @param depth
      */
-    public Box3d(Vector3d position, double width, double height, double depth) {
+    public Box(Vector3d position, double width, double height, double depth) {
         this.position = position;
         this.width = width;
         this.height = height;
@@ -51,6 +54,9 @@ public class Box3d extends Shape {
         this.calculate();
     }
 
+    /*
+     * Updates the Box at runtime.
+     */
     private void calculate() {
         lines.add(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x + width, position.y, position.z));
         lines.add(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x, position.y + height, position.z));
@@ -67,7 +73,7 @@ public class Box3d extends Shape {
     }
 
     /**
-     * Gibt die Position der Box in Form eines Vektors zurück.
+     * Returns the Position in form of a 3D Vector.
      *
      * @return Vector3d
      */
@@ -76,7 +82,7 @@ public class Box3d extends Shape {
     }
 
     /**
-     * Setzt die Box auf die übergebene Position.
+     * Sets the Box to the specified location.
      *
      * @param position
      */
@@ -87,7 +93,7 @@ public class Box3d extends Shape {
     }
 
     /**
-     * Gibt die Breite der Box zurück.
+     * Returns the width of the box.
      *
      * @return
      */
@@ -96,7 +102,7 @@ public class Box3d extends Shape {
     }
 
     /**
-     * Setzt die Breite der Box auf den übergebenen Wert.
+     * Sets the width of the box.
      *
      * @param width
      */
@@ -106,7 +112,7 @@ public class Box3d extends Shape {
     }
 
     /**
-     * Gibt die Höhe der Box zurück.
+     * Returns the height of the box.
      *
      * @return
      */
@@ -115,7 +121,7 @@ public class Box3d extends Shape {
     }
 
     /**
-     * Setzt die Höhe der Box auf den übergebenen Wert.
+     * Sets the height of the box.
      *
      * @param height
      */
@@ -125,7 +131,7 @@ public class Box3d extends Shape {
     }
 
     /**
-     * Gibt die Tiefe der Box zurück.
+     * Returns the depth of the box.
      *
      * @return
      */
@@ -134,7 +140,7 @@ public class Box3d extends Shape {
     }
 
     /**
-     * Setzt die Tiefe der Box auf den übergebenen Wert.
+     * Sets the depth of the box.
      *
      * @param depth
      */
@@ -144,7 +150,7 @@ public class Box3d extends Shape {
     }
 
     /**
-     *
+     * Rendermethod.
      */
     @Override
     public void render(Matrix transformation, Camera camera, Renderer renderer) {
@@ -153,7 +159,7 @@ public class Box3d extends Shape {
     }
 
     /**
-     * Überschreibt die <i>toString</i> Methode der Klasse <i>Object</i> und gibt die Basiswerte der Box3d zurück.
+     * Overwrites toString of the Objectclass.
      */
     public String toString() {
         String ausgabe = "";
@@ -178,5 +184,5 @@ public class Box3d extends Shape {
         return ausgabe;
     }
 
-    private static final Logger log = LoggerFactory.getLogger(Box3d.class);
+    private static final Logger log = LoggerFactory.getLogger(Box.class.getName());
 }

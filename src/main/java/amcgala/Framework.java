@@ -79,7 +79,7 @@ public abstract class Framework {
         aspectRatio = width / height;
         fieldOfView = Math.toRadians(76);
 
-        frame = new JFrame("Java2D Renderer");
+        frame = new JFrame("amCGAla Framework");
         frame.setSize(width, height);
         frame.setResizable(false);
         frame.addWindowListener(new WindowAdapter() {

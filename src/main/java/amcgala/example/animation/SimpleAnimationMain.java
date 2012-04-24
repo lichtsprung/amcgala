@@ -16,7 +16,7 @@ package amcgala.example.animation;
 
 import amcgala.Framework;
 import amcgala.framework.animation.Animation;
-import amcgala.framework.shape.BresenhamLine2d;
+import amcgala.framework.shape.BresenhamLine;
 
 import java.util.Random;
 
@@ -30,7 +30,7 @@ import java.util.Random;
  */
 public class SimpleAnimationMain extends Framework {
 
-    private BresenhamLine2d[] lines;
+    private BresenhamLine[] lines;
     private Random random;
 
     /**
@@ -45,11 +45,11 @@ public class SimpleAnimationMain extends Framework {
 
     @Override
     public void initGraph() {
-        lines = new BresenhamLine2d[100];
+        lines = new BresenhamLine[100];
         random = new Random(System.nanoTime());
 
         for (int i = 0; i < lines.length; i++) {
-            lines[i] = new BresenhamLine2d(
+            lines[i] = new BresenhamLine(
                     Math.pow(-1, random.nextInt(2)) * random.nextInt(getScreenWidth() / 2),
                     Math.pow(-1, random.nextInt(2)) * random.nextInt(getScreenHeight() / 2),
                     Math.pow(-1, random.nextInt(2)) * random.nextInt(getScreenWidth() / 2),
@@ -72,7 +72,7 @@ public class SimpleAnimationMain extends Framework {
         framework.start();
     }
 
-    private class SimpleAnimation extends Animation<BresenhamLine2d> {
+    private class SimpleAnimation extends Animation<BresenhamLine> {
 
         @Override
         public void animate() {

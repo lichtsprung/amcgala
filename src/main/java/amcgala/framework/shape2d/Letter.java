@@ -12,7 +12,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package amcgala.framework.shape;
+package amcgala.framework.shape2d;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -28,6 +28,8 @@ import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
+import amcgala.framework.shape.Shape;
+import amcgala.framework.shape3d.Box;
 
 /**
  * Ein Zeichen dass an der Stelle (x,y) dargestellt wird. Beim ersten Verwenden

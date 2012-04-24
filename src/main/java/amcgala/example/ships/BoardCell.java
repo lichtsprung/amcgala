@@ -18,8 +18,8 @@ import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
-import amcgala.framework.shape.Rectangle2d;
 import amcgala.framework.shape.Shape;
+import amcgala.framework.shape2d.Rectangle;
 
 /**
  * Ein Feld auf dem Spielbrett. Es speichert den aktuellen Zustand für diese
@@ -52,7 +52,7 @@ public class BoardCell extends Shape {
     /**
      * Die Grenzen einer Zelle, die gezeichnet werden sollen.
      */
-    protected Rectangle2d bounds;
+    protected Rectangle bounds;
 
     /**
      * Ein Feld auf dem Spielbrett.
@@ -67,7 +67,7 @@ public class BoardCell extends Shape {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.bounds = new Rectangle2d(x, y, width, height);
+        this.bounds = new Rectangle(x, y, width, height);
         this.state = State.NOTHING;
         this.previousState = State.NOTHING;
     }

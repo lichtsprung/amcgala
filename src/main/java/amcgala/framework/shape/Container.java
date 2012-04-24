@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Zeichnet ein 2D/3D Shapeobjekt mit übergebenen Parametern in den Formen: BresenhamLine3d, BresenhamLine2d oder Vector3d <br />
+ * Zeichnet ein Shapeobjekt mit übergebenen Parametern in den Formen: BresenhamLine oder Vector3D <br />
  * Weiter Linien oder Vektoren können auch im nachhinein hinzugefügt werden.<br />
  * Implementiert außerdem den Eventbus.
  *
@@ -34,13 +34,13 @@ import java.util.Iterator;
  */
 public class Container extends Shape implements InputHandler {
 
-    private ArrayList<BresenhamLine3d> linien;
+    private ArrayList<BresenhamLine> linien;
 
     /**
      * Erstellt eine "leeres" Shapeobjekt.
      */
     public Container() {
-        this.linien = new ArrayList<BresenhamLine3d>();
+        this.linien = new ArrayList<BresenhamLine>();
     }
 
     /**
@@ -49,21 +49,9 @@ public class Container extends Shape implements InputHandler {
      * @param koordinaten
      */
     public Container(Vector3d[][] koordinaten) {
-        this.linien = new ArrayList<BresenhamLine3d>();
+        this.linien = new ArrayList<BresenhamLine>();
         for (int i = 0; i < koordinaten.length; i++) {
-            this.linien.add(new BresenhamLine3d(koordinaten[i][0], koordinaten[i][1]));
-        }
-    }
-
-    /**
-     * Übernimmt automatisch 2D-Linien um sie mit anderen Linien zu verbinden.
-     *
-     * @param linien
-     */
-    public Container(BresenhamLine2d[] linien) {
-        this.linien = new ArrayList<BresenhamLine3d>();
-        for (int i = 0; i < linien.length; i++) {
-            this.linien.add(new BresenhamLine3d(new Vector3d(linien[i].x1, linien[i].y1, 0), new Vector3d(linien[i].x2, linien[i].y2, 0)));
+            this.linien.add(new BresenhamLine(koordinaten[i][0], koordinaten[i][1]));
         }
     }
 
@@ -72,8 +60,8 @@ public class Container extends Shape implements InputHandler {
      *
      * @param linien
      */
-    public Container(BresenhamLine3d[] linien) {
-        this.linien = new ArrayList<BresenhamLine3d>();
+    public Container(BresenhamLine[] linien) {
+        this.linien = new ArrayList<BresenhamLine>();
         for (int i = 0; i < linien.length; i++) {
             this.linien.add(linien[i]);
         }
@@ -86,16 +74,7 @@ public class Container extends Shape implements InputHandler {
      * @param point1
      */
     public void add(Vector3d point, Vector3d point1) {
-        this.linien.add(new BresenhamLine3d(point, point1));
-    }
-
-    /**
-     * Fügt 2D Linien am Ende hinzu.
-     */
-    public void add(BresenhamLine2d[] lines) {
-        for (int i = 0; i < lines.length; i++) {
-            this.linien.add(new BresenhamLine3d(new Vector3d(lines[i].x1, lines[i].y1, 0), new Vector3d(lines[i].x2, lines[i].y2, 0)));
-        }
+        this.linien.add(new BresenhamLine(point, point1));
     }
 
 
@@ -104,7 +83,7 @@ public class Container extends Shape implements InputHandler {
      *
      * @param lines
      */
-    public void add(BresenhamLine3d[] linien) {
+    public void add(BresenhamLine[] linien) {
         for (int i = 0; i < linien.length; i++) {
             this.linien.add(linien[i]);
         }
@@ -135,11 +114,11 @@ public class Container extends Shape implements InputHandler {
     @Override
     public String toString() {
         String ausgabe = "";
-        Iterator<BresenhamLine3d> iter = this.linien.iterator();
+        Iterator<BresenhamLine> iter = this.linien.iterator();
 
         int i = 0;
         while (iter.hasNext()) {
-            BresenhamLine3d line = iter.next();
+            BresenhamLine line = iter.next();
             ausgabe += "" + i + ". Linie: \n";
             ausgabe += "\t x1: " + line.x1 + "\n";
             ausgabe += "\t y1: " + line.y1 + "\n";
@@ -160,13 +139,13 @@ public class Container extends Shape implements InputHandler {
      */
     @Override
     public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        Iterator<BresenhamLine3d> iter = this.linien.iterator();
+        Iterator<BresenhamLine> iter = this.linien.iterator();
         while (iter.hasNext()) {
-            BresenhamLine3d line = iter.next();
+            BresenhamLine line = iter.next();
             line.color = color;
             line.render(transformation, camera, renderer);
         }
     }
 
-    private static final Logger log = LoggerFactory.getLogger(Container.class);
+    private static final Logger log = LoggerFactory.getLogger(Container.class.getName());
 }

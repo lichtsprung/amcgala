@@ -18,9 +18,9 @@ import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
-import amcgala.framework.shape.Arrow2d;
-import amcgala.framework.shape.Circle2d;
 import amcgala.framework.shape.Shape;
+import amcgala.framework.shape2d.Arrow;
+import amcgala.framework.shape2d.Circle;
 
 /**
  * Der Ball, der vom Spieler getroffen werden muss.
@@ -33,8 +33,8 @@ public class PongBall extends Shape {
     private Vector3d direction;
     private Vector3d position;
     private PongBoard board;
-    private Circle2d circle;
-    private Arrow2d arrow;
+    private Circle circle;
+    private Arrow arrow;
 
     /**
      * Ein Ball, der sich auf dem Pong Spielfeld bewegen kann, und von einem
@@ -48,8 +48,8 @@ public class PongBall extends Shape {
         direction = getRandomDirection().times(velocity);
 
         position = new Vector3d(board.getXmin() + board.getWidth() * board.getBallStart(), board.getHeight() / 2, -1);
-        circle = new Circle2d(position.x, position.y, 5);
-        arrow = new Arrow2d(position, direction, velocity * 50);
+        circle = new Circle(position.x, position.y, 5);
+        arrow = new Arrow(position, direction, velocity * 50);
     }
 
     @Override

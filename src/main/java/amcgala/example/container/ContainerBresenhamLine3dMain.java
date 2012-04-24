@@ -16,7 +16,7 @@ package amcgala.example.container;
 
 import amcgala.Framework;
 import amcgala.framework.math.Vector3d;
-import amcgala.framework.shape.BresenhamLine3d;
+import amcgala.framework.shape.BresenhamLine;
 import amcgala.framework.shape.Container;
 
 /**
@@ -37,19 +37,19 @@ public class ContainerBresenhamLine3dMain extends Framework {
 
     @Override
     public void initGraph() {
-        BresenhamLine3d[] linien = new BresenhamLine3d[4];
-        linien[0] = new BresenhamLine3d(new Vector3d(-100, 0, 0), new Vector3d(100, 0, 0));
-        linien[1] = new BresenhamLine3d(new Vector3d(100, 0, 0), new Vector3d(100, 100, -100));
-        linien[2] = new BresenhamLine3d(new Vector3d(100, 100, -100), new Vector3d(-100, 100, -100));
-        linien[3] = new BresenhamLine3d(new Vector3d(-100, 100, -100), new Vector3d(-100, 0, 0));
+        BresenhamLine[] linien = new BresenhamLine[4];
+        linien[0] = new BresenhamLine(new Vector3d(-100, 0, 0), new Vector3d(100, 0, 0));
+        linien[1] = new BresenhamLine(new Vector3d(100, 0, 0), new Vector3d(100, 100, -100));
+        linien[2] = new BresenhamLine(new Vector3d(100, 100, -100), new Vector3d(-100, 100, -100));
+        linien[3] = new BresenhamLine(new Vector3d(-100, 100, -100), new Vector3d(-100, 0, 0));
 
         this.getCamera().setPosition(new Vector3d(50, 0, -20));
 
-        BresenhamLine3d[] linien2 = new BresenhamLine3d[4];
-        linien2[0] = new BresenhamLine3d(new Vector3d(-100, 0, 0), new Vector3d(100, 0, 0));
-        linien2[1] = new BresenhamLine3d(new Vector3d(100, 0, 0), new Vector3d(100, 100, 0));
-        linien2[2] = new BresenhamLine3d(new Vector3d(100, 100, 0), new Vector3d(-100, 100, 0));
-        linien2[3] = new BresenhamLine3d(new Vector3d(-100, 100, 0), new Vector3d(-100, 0, 0));
+        BresenhamLine[] linien2 = new BresenhamLine[4];
+        linien2[0] = new BresenhamLine(new Vector3d(-100, 0, 0), new Vector3d(100, 0, 0));
+        linien2[1] = new BresenhamLine(new Vector3d(100, 0, 0), new Vector3d(100, 100, 0));
+        linien2[2] = new BresenhamLine(new Vector3d(100, 100, 0), new Vector3d(-100, 100, 0));
+        linien2[3] = new BresenhamLine(new Vector3d(-100, 100, 0), new Vector3d(-100, 0, 0));
 
 
         Container viereck = new Container(linien);

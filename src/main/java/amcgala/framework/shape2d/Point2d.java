@@ -12,7 +12,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package amcgala.framework.shape;
+package amcgala.framework.shape2d;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
@@ -20,6 +23,8 @@ import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Pixel;
 import amcgala.framework.renderer.Renderer;
+import amcgala.framework.shape.Shape;
+import amcgala.framework.shape3d.Box;
 
 /**
  * Ein Punkt in einer Ebene für die Darstellung von 2d Geometrien.
@@ -54,4 +59,6 @@ public class Point2d extends Shape {
 	public String toString() {
 		return "Point2d{" + "x=" + x + ", y=" + y + '}';
 	}
+	
+    private static final Logger log = LoggerFactory.getLogger(Point2d.class.getName());
 }

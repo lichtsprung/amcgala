@@ -21,7 +21,8 @@ import amcgala.framework.event.InputHandler;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.scenegraph.Node;
 import amcgala.framework.scenegraph.transform.RotationY;
-import amcgala.framework.shape.Box3d;
+import amcgala.framework.shape3d.Box;
+
 import com.google.common.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,9 +57,9 @@ public class MovingCamera extends Framework implements InputHandler {
         RotationY rotY = new RotationY();
         rotY.setInterpolationPhi(new LinearInterpolation(0, 4 * Math.PI, 250, true));
         n.setTransformation(rotY);
-        n.addShape(new Box3d(new Vector3d(0, 0, 0), 40, 40, 40));
-        n.addShape(new Box3d(new Vector3d(0, 100, 0), 40, 40, 40));
-        n.addShape(new Box3d(new Vector3d(0, 200, 0), 40, 40, 40));
+        n.addShape(new Box(new Vector3d(0, 0, 0), 40, 40, 40));
+        n.addShape(new Box(new Vector3d(0, 100, 0), 40, 40, 40));
+        n.addShape(new Box(new Vector3d(0, 200, 0), 40, 40, 40));
         add(n);
     }
 

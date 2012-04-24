@@ -12,11 +12,16 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package amcgala.framework.shape;
+package amcgala.framework.shape2d;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
+import amcgala.framework.shape.Shape;
+import amcgala.framework.shape3d.Box;
 
 /**
  * Eine Klasse, die Text darstellen kann. Die grundlegenden Zeichen werden
@@ -74,4 +79,6 @@ public class Text extends Shape {
 			s.render(transformation, camera, renderer);
 		}
 	}
+	
+    private static final Logger log = LoggerFactory.getLogger(Text.class.getName());
 }

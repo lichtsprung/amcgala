@@ -20,8 +20,13 @@ import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Pixel;
 import amcgala.framework.renderer.Renderer;
+import amcgala.framework.shape3d.Box;
 
 import javax.imageio.ImageIO;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -155,4 +160,6 @@ public class Sprite extends Shape {
         return "Sprite from:" + filepath + " width:" + width + " height:"
                 + height;
     }
+    
+    private static final Logger log = LoggerFactory.getLogger(Sprite.class.getName());
 }

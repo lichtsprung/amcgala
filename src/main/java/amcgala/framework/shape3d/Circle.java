@@ -12,13 +12,15 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package amcgala.framework.shape;
+package amcgala.framework.shape3d;
 
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Pixel;
 import amcgala.framework.renderer.Renderer;
+import amcgala.framework.shape.Shape;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +29,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Steffen Tröster
  */
-public class Circle3d extends Shape {
+public class Circle extends Shape {
 
     private double x, y;
     private double radius;
@@ -42,7 +44,7 @@ public class Circle3d extends Shape {
      * @param z      die z-Position des Mittelpunkts
      * @param radius der Radius
      */
-    public Circle3d(double x, double y, double z, double radius) {
+    public Circle(double x, double y, double z, double radius) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -147,5 +149,5 @@ public class Circle3d extends Shape {
                 + ", pos=" + pos + '}';
     }
 
-    private static final Logger log = LoggerFactory.getLogger(Circle3d.class);
+    private static final Logger log = LoggerFactory.getLogger(Circle.class.getName());
 }

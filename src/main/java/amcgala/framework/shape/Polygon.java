@@ -15,10 +15,14 @@ package amcgala.framework.shape;
  * the License.
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
+import amcgala.framework.shape3d.Box;
 
 /**
  * Polygonobjekt fuer die Koerperdarstellung im 3D Raum
@@ -27,10 +31,10 @@ import amcgala.framework.renderer.Renderer;
  */
 public class Polygon extends Shape {
 
-	private BresenhamLine3d bl1;
-	private BresenhamLine3d bl2;
-	private BresenhamLine3d bl3;
-	private BresenhamLine3d bl4;
+	private BresenhamLine bl1;
+	private BresenhamLine bl2;
+	private BresenhamLine bl3;
+	private BresenhamLine bl4;
 	private Vector3d norm;
 
 	public void move(double x, double y, double z) {
@@ -73,18 +77,18 @@ public class Polygon extends Shape {
 	}
 
 	public Polygon(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d norm) {
-		bl1 = new BresenhamLine3d(v1, v2);
-		bl2 = new BresenhamLine3d(v2, v3);
-		bl3 = new BresenhamLine3d(v3, v1);
+		bl1 = new BresenhamLine(v1, v2);
+		bl2 = new BresenhamLine(v2, v3);
+		bl3 = new BresenhamLine(v3, v1);
 		this.norm = norm;
 	}
 
 	public Polygon(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4,
 			Vector3d norm) {
-		bl1 = new BresenhamLine3d(v1, v2);
-		bl2 = new BresenhamLine3d(v2, v3);
-		bl3 = new BresenhamLine3d(v3, v4);
-		bl4 = new BresenhamLine3d(v4, v1);
+		bl1 = new BresenhamLine(v1, v2);
+		bl2 = new BresenhamLine(v2, v3);
+		bl3 = new BresenhamLine(v3, v4);
+		bl4 = new BresenhamLine(v4, v1);
 		this.norm = norm;
 	}
 
@@ -112,4 +116,5 @@ public class Polygon extends Shape {
 		return "Polygon{" + "line 1=" + bl1 + ", line 2=" + bl2 + ", line 3="
 				+ bl3 + '}';
 	}
+    private static final Logger log = LoggerFactory.getLogger(Polygon.class.getName());
 }

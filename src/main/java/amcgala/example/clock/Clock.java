@@ -22,17 +22,17 @@ import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
-import amcgala.framework.shape.Circle3d;
 import amcgala.framework.shape.Polygon;
 import amcgala.framework.shape.Shape;
+import amcgala.framework.shape3d.Circle;
 
 public class Clock extends Shape {
 
 	private Polygon second, minute, hour;
-	private Circle3d clockFace;
+	private Circle clockFace;
 
 	public Clock() {
-		this.clockFace = new Circle3d(0, 0, 1, 120);
+		this.clockFace = new Circle(0, 0, 1, 120);
 		second = new Polygon(new Vector3d(-5, 0, 0), new Vector3d(5, 0, 0),
 				new Vector3d(0, 5, 0), new Vector3d(0, 0, 0));
 		minute = new Polygon(new Vector3d(-5, 0, 0), new Vector3d(5, 0, 0),
