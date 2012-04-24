@@ -20,9 +20,9 @@ import amcgala.framework.animation.interpolation.LinearInterpolation;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
-import amcgala.framework.shape.BresenhamLine2d;
-import amcgala.framework.shape.Point2d;
+import amcgala.framework.shape.BresenhamLine;
 import amcgala.framework.shape.Shape;
+import amcgala.framework.shape2d.Point2d;
 
 /**
  * Eine animierte Sinuskurve.
@@ -112,7 +112,7 @@ public class AnimatedSineCurve extends Shape {
     @Override
     public void render(Matrix transformation, Camera camera, Renderer renderer) {
         for (int i = 0; i < points.length - 1; i++) {
-            BresenhamLine2d line = new BresenhamLine2d(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
+            BresenhamLine line = new BresenhamLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
             line.render(transformation, camera, renderer);
         }
     }

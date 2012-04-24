@@ -17,7 +17,7 @@ package amcgala.framework.animation;
 /**
  * Dieses Interface zeigt an, ob sich der interne Zustand eines Objekts verändern kann. Ein entsprechender Visitor ruft die Methode
  * update in jedem Aktualisierungsschritt auf und ermöglicht so die Änderung von Zuständen von Objekten zur Laufzeit.
- * 
+ *
  * @author Robert Giacinto
  */
 public interface Updatable {

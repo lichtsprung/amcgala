@@ -12,12 +12,15 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package amcgala.framework.shape;
+package amcgala.framework.shape2d;
 
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
+import amcgala.framework.shape.BresenhamLine;
+import amcgala.framework.shape.Shape;
+
 import java.util.logging.Logger;
 
 /**
@@ -25,30 +28,28 @@ import java.util.logging.Logger;
  *
  * @author Robert Giacinto
  */
-public class Cross2d extends Shape {
+public class Cross extends Shape {
 
     private Vector3d position;
     private int size;
-    private BresenhamLine2d l1, l2;
+    private BresenhamLine l1, l2;
 
     /**
-     * 
      * @param position
      * @param size
      */
-    public Cross2d(Vector3d position, int size) {
+    public Cross(Vector3d position, int size) {
         this.position = position;
         this.size = size;
         init();
     }
 
     /**
-     * 
      * @param x
      * @param y
      * @param size
      */
-    public Cross2d(double x, double y, int size) {
+    public Cross(double x, double y, int size) {
         this.position = new Vector3d(x, y, -1);
         this.size = size;
         init();
@@ -56,6 +57,7 @@ public class Cross2d extends Shape {
 
     /**
      * Gibt die Position in Form eines 3D Vektors zurück.
+     *
      * @return
      */
     public Vector3d getPosition() {
@@ -63,7 +65,6 @@ public class Cross2d extends Shape {
     }
 
     /**
-     *
      * @param position
      */
     public void setPosition(Vector3d position) {
@@ -73,6 +74,7 @@ public class Cross2d extends Shape {
 
     /**
      * Gibt die Größe des Kreuzes zurück.
+     *
      * @return
      */
     public int getSize() {
@@ -81,6 +83,7 @@ public class Cross2d extends Shape {
 
     /**
      * Setzt die Größe des Kreuzes auf den übergebenen Wert.
+     *
      * @param size
      */
     public void setSize(int size) {
@@ -88,13 +91,16 @@ public class Cross2d extends Shape {
         init();
     }
 
+    /*
+     * 
+     */
     private void init() {
-        l1 = new BresenhamLine2d(position.x - size, position.y - size, position.x + size, position.y + size);
-        l2 = new BresenhamLine2d(position.x - size, position.y + size, position.x + size, position.y - size);
+        l1 = new BresenhamLine(position.x - size, position.y - size, position.x + size, position.y + size);
+        l2 = new BresenhamLine(position.x - size, position.y + size, position.x + size, position.y - size);
     }
 
     /**
-     * 
+     *
      */
     @Override
     public void render(Matrix transformation, Camera camera, Renderer renderer) {
@@ -103,5 +109,6 @@ public class Cross2d extends Shape {
         l1.render(transformation, camera, renderer);
         l2.render(transformation, camera, renderer);
     }
-    private static final Logger LOG = Logger.getLogger(Cross2d.class.getName());
+
+    private static final Logger LOG = Logger.getLogger(Cross.class.getName());
 }

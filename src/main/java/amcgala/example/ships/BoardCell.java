@@ -14,13 +14,12 @@
  */
 package amcgala.example.ships;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
-import amcgala.framework.shape.Rectangle2d;
 import amcgala.framework.shape.Shape;
+import amcgala.framework.shape2d.Rectangle;
 
 /**
  * Ein Feld auf dem Spielbrett. Es speichert den aktuellen Zustand für diese
@@ -40,6 +39,7 @@ public class BoardCell extends Shape {
         HIT,
         NOTHING
     }
+
     private double x;
     private double y;
     private double width;
@@ -52,14 +52,14 @@ public class BoardCell extends Shape {
     /**
      * Die Grenzen einer Zelle, die gezeichnet werden sollen.
      */
-    protected Rectangle2d bounds;
+    protected Rectangle bounds;
 
     /**
      * Ein Feld auf dem Spielbrett.
      *
-     * @param x die x-Koordinate dieses Feldes
-     * @param y die y-Koordinate dieses Feldes
-     * @param width die Breite des Feldes
+     * @param x      die x-Koordinate dieses Feldes
+     * @param y      die y-Koordinate dieses Feldes
+     * @param width  die Breite des Feldes
      * @param height die Höhe des Feldes
      */
     public BoardCell(double x, double y, double width, double height) {
@@ -67,7 +67,7 @@ public class BoardCell extends Shape {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.bounds = new Rectangle2d(x, y, width, height);
+        this.bounds = new Rectangle(x, y, width, height);
         this.state = State.NOTHING;
         this.previousState = State.NOTHING;
     }
@@ -94,7 +94,7 @@ public class BoardCell extends Shape {
      */
     public void setState(State state) {
         previousState = this.state;
-        
+
         this.state = state;
         if (state == State.HIT) {
             bounds.color = Color.RED;
@@ -109,7 +109,7 @@ public class BoardCell extends Shape {
 
     public void recoverPreviousState() {
         this.state = previousState;
-        
+
         if (state == State.HIT) {
             bounds.color = Color.RED;
         } else if (state == State.MISS) {

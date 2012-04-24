@@ -14,23 +14,23 @@
  */
 package amcgala.example.strich;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
-import amcgala.framework.shape.Line2d;
+import amcgala.framework.shape.BresenhamLine;
 import amcgala.framework.shape.Shape;
 
 /**
  * Ein 2d-Strich zwischen zwei Punkten.
+ *
  * @author Robert Giacinto
  */
 public class Strich extends Shape {
 
-    private Line2d line;
+    private BresenhamLine line;
 
     public Strich(int x1, int y1, int x2, int y2) {
-        line = new Line2d(x1, y1, x2, y2);
+        line = new BresenhamLine(x1, y1, x2, y2);
     }
 
     @Override

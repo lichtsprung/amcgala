@@ -6,9 +6,11 @@ import amcgala.framework.event.InputHandler;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.shape.Polygon;
 import amcgala.framework.shape.util.PLYPolygonParser;
-import com.google.common.eventbus.Subscribe;
+
 import java.awt.event.MouseEvent;
 import java.io.InputStream;
+
+import com.google.common.eventbus.Subscribe;
 
 /**
  * Beispiel, das die Verwendung des PLYParsers demonstriert.

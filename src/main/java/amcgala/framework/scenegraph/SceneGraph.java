@@ -28,6 +28,7 @@ public class SceneGraph {
     /**
      * Fügt dem Szenengraph einen Knoten hinzu.
      * Dieser wird direkt an den Wurzelknoten des Graphen gehängt.
+     *
      * @param node der neue Knoten
      */
     public void addNode(Node node) {
@@ -40,7 +41,8 @@ public class SceneGraph {
 
     /**
      * Fügt dem Knoten mit der übergebenen Bezeichnung einen neuen Kindsknoten hinzu.
-     * @param node der Kindsknoten, der hinzugefügt werden soll
+     *
+     * @param node  der Kindsknoten, der hinzugefügt werden soll
      * @param label der Name des Knoten, an den der Kindsknoten gehängt werden soll
      */
     public void addNode(Node node, String label) {
@@ -53,30 +55,33 @@ public class SceneGraph {
 
     /**
      * Entfernt den Knoten aus dem Szenengraph.
+     *
      * @param node der Knoten,der entfernt werden soll
      */
     public void removeNode(Node node) {
-       if(node != null){
+        if (node != null) {
             root.removeNode(node.getLabel());
-       }else{
-           throw new IllegalArgumentException("node darf nicht null sein!");
-       }
+        } else {
+            throw new IllegalArgumentException("node darf nicht null sein!");
+        }
     }
-    
+
     /**
      * Entfernt den Knoten mit der übergebenen Bezeichnung aus dem Szenengraph.
+     *
      * @param label der Name des Knotens, der entfernt werden soll
      */
     public void removeNode(String label) {
-       if(label != null){
+        if (label != null) {
             root.removeNode(label);
-       }else{
-           throw new IllegalArgumentException("label darf nicht null sein!");
-       }
+        } else {
+            throw new IllegalArgumentException("label darf nicht null sein!");
+        }
     }
 
     /**
      * Gibt den Knoten mit einem gegebenen Namen zurück.
+     *
      * @param label der Name des gesuchten Knotens
      * @return der gesuchte Knoten
      */
@@ -86,6 +91,7 @@ public class SceneGraph {
 
     /**
      * Fügt einem bestimmten Knoten innerhalb des Szenengraphs ein neues Shapeobjekt hinzu.
+     *
      * @param label der Name des Knotens
      * @param shape das Shapeobjekt
      */
@@ -95,6 +101,7 @@ public class SceneGraph {
 
     /**
      * Fügt dem Wurzelknoten ein neues Shapeobjekt hinzu.
+     *
      * @param shape das Shapeobjekt
      */
     public void addShape(Shape shape) {
@@ -103,6 +110,7 @@ public class SceneGraph {
 
     /**
      * Teil des Visitor-Patterns. Eintrittspunkt der Visitors
+     *
      * @param visitor der Visitor
      */
     public void accept(Visitor visitor) {
@@ -111,20 +119,22 @@ public class SceneGraph {
 
     /**
      * Fügt dem Wurzelknoten eine neue Transformation hinzu.
+     *
      * @param transformation die neue Transformation
      */
     public void addTransformation(Transformation transformation) {
         root.setTransformation(transformation);
     }
-    
-     /**
+
+    /**
      * Fügt einem bestimmten Knoten innerhalb des Szenengraphs eine neue Transformation hinzu.
+     *
      * @param transformation die neue Transformation
-     * @param label die Bezeichnung des gesuchten Knotens
+     * @param label          die Bezeichnung des gesuchten Knotens
      */
     public void addTransformation(Transformation transformation, String label) {
         findNode(label).setTransformation(transformation);
     }
-    
-    
+
+
 }

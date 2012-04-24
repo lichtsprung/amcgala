@@ -21,6 +21,7 @@ import amcgala.framework.math.Matrix;
  * Eine Rotation um die z-Achse.
  * <p/>
  * <p/>
+ *
  * @author Robert Giacinto
  */
 public class RotationZ implements Transformation {
@@ -51,10 +52,10 @@ public class RotationZ implements Transformation {
      */
     private void updateMatrix() {
         double[][] values = {
-            {Math.cos(phi), -Math.sin(phi), 0, 0},
-            {Math.sin(phi), Math.cos(phi), 0, 0},
-            {0, 0, 1, 0},
-            {0, 0, 0, 1}
+                {Math.cos(phi), -Math.sin(phi), 0, 0},
+                {Math.sin(phi), Math.cos(phi), 0, 0},
+                {0, 0, 1, 0},
+                {0, 0, 0, 1}
         };
         transformMatrix = Matrix.constructWithCopy(values);
     }

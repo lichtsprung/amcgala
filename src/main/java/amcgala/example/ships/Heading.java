@@ -16,12 +16,12 @@ package amcgala.example.ships;
 
 /**
  * Eine Enumeration mit Ausrichtungen.
- * 
+ *
  * @author Robert Giacinto
  */
 public enum Heading {
-   LEFT,
-   RIGHT,
-   TOP, 
-   BOTTOM
+    LEFT,
+    RIGHT,
+    TOP,
+    BOTTOM
 }

@@ -136,6 +136,7 @@ public class Vector3d {
 
     /**
      * Gibt den Vektor in einer 4d Matrix zurück. Diese wird für viele Transformationen benötigt.
+     *
      * @return die Matrixrepräsentation des Vektors
      */
     public Matrix toMatrix() {
@@ -145,6 +146,7 @@ public class Vector3d {
 
     /**
      * Transformiert den Vektor mithilfe einer Transformationsmatrix und gibt eine Kopie des transformierten Vektors zurück.
+     *
      * @param transformation die Transformationsmatrix
      * @return der transformierte Vektor
      */

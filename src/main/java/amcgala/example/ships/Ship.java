@@ -14,11 +14,10 @@
  */
 package amcgala.example.ships;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
-import amcgala.framework.shape.BresenhamLine2d;
+import amcgala.framework.shape.BresenhamLine;
 import amcgala.framework.shape.Shape;
 
 /**
@@ -33,7 +32,7 @@ public class Ship extends Shape {
     protected double width;
     protected double height;
     protected Heading heading;
-    private BresenhamLine2d l1, l2;
+    private BresenhamLine l1, l2;
 
     public Ship(double width, double height, double x, double y, Heading heading) {
         this.x = x;
@@ -42,33 +41,33 @@ public class Ship extends Shape {
         this.height = height;
         this.heading = heading;
         if (Heading.BOTTOM.equals(heading) || Heading.TOP.equals(heading)) {
-            l1 = new BresenhamLine2d(x, y, x, y + height);
-            l2 = new BresenhamLine2d(x + width, y, x + width, y + height);
+            l1 = new BresenhamLine(x, y, x, y + height);
+            l2 = new BresenhamLine(x + width, y, x + width, y + height);
         } else {
-            l1 = new BresenhamLine2d(x, y, x + width, y);
-            l2 = new BresenhamLine2d(x, y + height, x + width, y + height);
+            l1 = new BresenhamLine(x, y, x + width, y);
+            l2 = new BresenhamLine(x, y + height, x + width, y + height);
         }
     }
 
     public void setX(double x) {
         this.x = x;
         if (Heading.BOTTOM.equals(heading) || Heading.TOP.equals(heading)) {
-            l1 = new BresenhamLine2d(x, y, x, y + height);
-            l2 = new BresenhamLine2d(x + width, y, x + width, y + height);
+            l1 = new BresenhamLine(x, y, x, y + height);
+            l2 = new BresenhamLine(x + width, y, x + width, y + height);
         } else {
-            l1 = new BresenhamLine2d(x, y, x + width, y);
-            l2 = new BresenhamLine2d(x, y + height, x + width, y + height);
+            l1 = new BresenhamLine(x, y, x + width, y);
+            l2 = new BresenhamLine(x, y + height, x + width, y + height);
         }
     }
 
     public void setY(double y) {
         this.y = y;
         if (Heading.BOTTOM.equals(heading) || Heading.TOP.equals(heading)) {
-            l1 = new BresenhamLine2d(x, y, x, y + height);
-            l2 = new BresenhamLine2d(x + width, y, x + width, y + height);
+            l1 = new BresenhamLine(x, y, x, y + height);
+            l2 = new BresenhamLine(x + width, y, x + width, y + height);
         } else {
-            l1 = new BresenhamLine2d(x, y, x + width, y);
-            l2 = new BresenhamLine2d(x, y + height, x + width, y + height);
+            l1 = new BresenhamLine(x, y, x + width, y);
+            l2 = new BresenhamLine(x, y + height, x + width, y + height);
         }
     }
 

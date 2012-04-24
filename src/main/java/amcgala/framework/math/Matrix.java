@@ -5,6 +5,7 @@
 package amcgala.framework.math;
 
 import amcgala.framework.math.util.Maths;
+
 import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.io.StreamTokenizer;
@@ -1094,6 +1095,89 @@ public class Matrix implements Cloneable, java.io.Serializable {
         double[][] A = new double[m][];
         v.copyInto(A);  // copy the rows out of the vector
         return new Matrix(A);
+    }
+
+    /**
+     * Erzeugt eine Projektionsmatrix von den Grenzen des View Frustrum.
+     *
+     * @param near near-Plane
+     * @param far far-Plane
+     * @param left left-Plane
+     * @param right right-Plane
+     * @param top top-PLane
+     * @param bottom bottom-Plane
+     * @param parallel is parallel projection
+     * @return Projektionsmatrix
+     */
+    public static Matrix getProjectionFromFrustum(double near, double far, double left, double right, double top, double bottom, boolean parallel) {
+
+        double m00 = 1, m01 = 0, m02 = 0, m03 = 0;
+        double m10 = 0, m11 = 1, m12 = 0, m13 = 0;
+        double m20 = 0, m21 = 0, m22 = 1, m23 = 0;
+        double m30 = 0, m31 = 0, m32 = 0, m33 = 1;
+
+        if (parallel) {
+            // scale
+            m00 = 2.0 / (right - left);
+            m11 = 2.0 / (top - bottom);
+            m22 = -2.0 / (far - near);
+            m33 = 1;
+            // translation
+            m03 = -(right + left) / (right - left);
+            m13 = -(top + bottom) / (top - bottom);
+            m23 = -(far + near) / (far - near);
+        } else {
+            m00 = (2.0 * near) / (right - left);
+            m11 = (2.0 * near) / (top - bottom);
+            m32 = -1.0;
+            m33 = -0.0;
+            m02 = (right + left) / (right - left);
+            m12 = (top + bottom) / (top - bottom);
+            m22 = -(far + near) / (far - near);
+            m23 = -(2.0f * far * near) / (far - near);
+        }
+
+        double[][] values = {
+            {m00, m01, m02, m03},
+            {m10, m11, m12, m13},
+            {m20, m21, m22, 23},
+            {m30, m31, m32, m33}};
+
+        return Matrix.constructWithCopy(values);
+    }
+
+    /**
+     * Erzeugt eine View-Matrix von dem lokalen Koordinatensystem der Kamera.
+     * @param location die Position der Kamera
+     * @param direction die Blickrichtung der Kamera
+     * @param up das Oben der Kamera
+     * @param left das links der Kamera
+     * @return die View-Matrix
+     */
+    public static Matrix getView(Vector3d location, Vector3d direction, Vector3d up, Vector3d left) {
+        Vector3d s = direction.cross(up);
+        Vector3d u = s.cross(direction);
+        
+        Matrix viewMatrix = Matrix.identity(4, 4);
+        viewMatrix.set(0, 0, s.x);
+        viewMatrix.set(0, 1, s.y);
+        viewMatrix.set(0, 2, s.z);
+        
+        viewMatrix.set(1, 0, u.x);
+        viewMatrix.set(1, 1, u.y);
+        viewMatrix.set(1, 2, u.z);
+        
+        viewMatrix.set(2, 0, -direction.x);
+        viewMatrix.set(2, 1, -direction.y);
+        viewMatrix.set(2, 2, -direction.z);
+        
+        Matrix transMatrix = Matrix.identity(4, 4);
+        transMatrix.set(0, 3, -location.x);
+        transMatrix.set(1, 3, -location.y);
+        transMatrix.set(2, 3, -location.z);
+
+
+        return viewMatrix.times(transMatrix);
     }
 
 

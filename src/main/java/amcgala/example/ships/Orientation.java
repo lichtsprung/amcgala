@@ -16,8 +16,8 @@ package amcgala.example.ships;
 
 /**
  * Die Ausrichtung des Schiffs.
- * 
- * @author Robert Giacinto 
+ *
+ * @author Robert Giacinto
  */
 public enum Orientation {
     VERTICAL,

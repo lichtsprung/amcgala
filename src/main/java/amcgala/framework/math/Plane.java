@@ -27,6 +27,7 @@ public class Plane {
         Positive,
         Negative
     }
+
     private Vector3d normal;
     private double constant;
 
@@ -35,7 +36,8 @@ public class Plane {
 
     /**
      * Erzeugt eine neue Ebene.
-     * @param normal die Normale der Ebene
+     *
+     * @param normal   die Normale der Ebene
      * @param constant die Konstant der Ebene
      */
     public Plane(Vector3d normal, double constant) {
@@ -45,6 +47,7 @@ public class Plane {
 
     /**
      * Gibt die Konstante der Ebenengleichung zurück.
+     *
      * @return die Konstante
      */
     public double getConstant() {
@@ -53,6 +56,7 @@ public class Plane {
 
     /**
      * Setzt die Konstante der Ebenengleichung.
+     *
      * @param constant die neue Konstante
      */
     public void setConstant(double constant) {
@@ -61,6 +65,7 @@ public class Plane {
 
     /**
      * Gibt die Normale der Ebene zurück.
+     *
      * @return die Normale der Ebene
      */
     public Vector3d getNormal() {
@@ -69,6 +74,7 @@ public class Plane {
 
     /**
      * Ändert die Normale der Ebene.
+     *
      * @param normal die Normale
      */
     public void setNormal(Vector3d normal) {
@@ -80,6 +86,7 @@ public class Plane {
 
     /**
      * Ändert die Normale der Ebene.
+     *
      * @param x die x-Komponente der Normalen
      * @param y die y-Komponente der Normalen
      * @param z die z-Komponente der Normalen
@@ -90,6 +97,7 @@ public class Plane {
 
     /**
      * Gibt die Entfernung des Punktes von der Ebene zurück.
+     *
      * @param point der Punkt, der überprüft werden soll
      * @return die Entfernung von der Ebene
      */
@@ -100,11 +108,11 @@ public class Plane {
     /**
      * Überprüft, auf welcher Seite der Ebene der gegebene Punkt liegt.
      * Es gibt drei Möglichkeiten.
-     * 
+     * <p/>
      * 1. Unter der Ebene (Side.Negative)
      * 2. Über der Ebene (Side.Positive)
      * 3. In der Ebene (Side.None)
-     * 
+     *
      * @param point der Punkt, der überprüft werden soll
      * @return Lage des Punktes
      */
@@ -121,6 +129,7 @@ public class Plane {
 
     /**
      * Überprüft, ob ein Punkt auf dieser Ebene liegt.
+     *
      * @param point der Punkt, der überprüft werden soll
      * @return true, wenn Punkt auf Ebene liegt
      */
@@ -137,7 +146,7 @@ public class Plane {
     /**
      * Prüft, ob ein Punkt in der neuer dieser Ebene liegt. Die Standardentfernung kann in der Klasse
      * MathConstants.NEAR_EPSILON nachgeschaut werden.
-     * 
+     *
      * @param point der Punkt der überprüft werden soll
      * @return true, wenn Punkt in der Nähe der Ebene
      */

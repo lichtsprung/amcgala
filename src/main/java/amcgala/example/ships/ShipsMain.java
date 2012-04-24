@@ -15,7 +15,8 @@
 package amcgala.example.ships;
 
 import amcgala.Framework;
-import amcgala.framework.shape.Text;
+import amcgala.framework.shape2d.Text;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -60,7 +61,7 @@ public class ShipsMain extends Framework {
         // Board des Gegners
         add(aiBoard);
 
-        add(new Text("Schiffe Versenken", -250, 245, 245));
+        add(new Text("Schiffe Versenken", -250, 245));
     }
 
     public static void main(String[] args) {

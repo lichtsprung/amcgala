@@ -61,10 +61,10 @@ public class Translation implements Transformation {
 
     private void updateMatrix() {
         double[][] values = {
-            {1, 0, 0, translateX},
-            {0, 1, 0, translateY},
-            {0, 0, 1, translateZ},
-            {0, 0, 0, 1}
+                {1, 0, 0, translateX},
+                {0, 1, 0, translateY},
+                {0, 0, 1, translateZ},
+                {0, 0, 0, 1}
         };
         transformMatrix = Matrix.constructWithCopy(values);
     }

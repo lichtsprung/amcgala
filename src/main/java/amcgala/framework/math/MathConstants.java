@@ -15,7 +15,6 @@
 package amcgala.framework.math;
 
 /**
- *
  * @author Robert Giacinto
  */
 public interface MathConstants {

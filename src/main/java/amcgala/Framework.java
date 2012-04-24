@@ -16,36 +16,26 @@ package amcgala;
 
 import amcgala.framework.animation.Animator;
 import amcgala.framework.camera.AbstractCamera;
-import amcgala.framework.camera.OrthographicCamera;
+import amcgala.framework.camera.Camera;
+import amcgala.framework.camera.SimplePerspectiveCamera;
 import amcgala.framework.event.InputHandler;
+import amcgala.framework.event.WASDController;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.scenegraph.Node;
 import amcgala.framework.scenegraph.SceneGraph;
-import amcgala.framework.scenegraph.visitor.AnimationVisitor;
-import amcgala.framework.scenegraph.visitor.InterpolationVisitor;
-import amcgala.framework.scenegraph.visitor.RenderVisitor;
-import amcgala.framework.scenegraph.visitor.UpdateVisitor;
-import amcgala.framework.scenegraph.visitor.Visitor;
+import amcgala.framework.scenegraph.visitor.*;
 import amcgala.framework.shape.Shape;
 import com.google.common.eventbus.EventBus;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.swing.JFrame;
-import javax.swing.event.MouseInputAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Die Hauptklasse des Frameworks, die die Hauptaufgaben übernimmt. Sie
@@ -58,10 +48,11 @@ public abstract class Framework {
     private static final Logger log = LoggerFactory.getLogger(Framework.class);
     private SceneGraph scenegraph;
     private Renderer renderer;
-    private AbstractCamera camera;
+    private Camera camera;
     private Animator animator;
     private List<Visitor> visitors;
     private RenderVisitor rv;
+    private WASDController wasdController;
     private double aspectRatio;
     private double fieldOfView;
     private int screenWidth;
@@ -74,7 +65,7 @@ public abstract class Framework {
      * Erstellt ein neues Framework, das eine grafische Ausgabe in der Auflösung
      * width x height hat.
      *
-     * @param width die Breite der Auflösung
+     * @param width  die Breite der Auflösung
      * @param height die Höhe der Auflösung
      */
     public Framework(int width, int height) {
@@ -88,7 +79,7 @@ public abstract class Framework {
         aspectRatio = width / height;
         fieldOfView = Math.toRadians(76);
 
-        frame = new JFrame("Java2D Renderer");
+        frame = new JFrame("amCGAla Framework");
         frame.setSize(width, height);
         frame.setResizable(false);
         frame.addWindowListener(new WindowAdapter() {
@@ -105,7 +96,9 @@ public abstract class Framework {
         frame.setVisible(true);
 
 
-        camera = new OrthographicCamera(Vector3d.UNIT_Y, Vector3d.UNIT_Z, Vector3d.ZERO);
+        camera = new SimplePerspectiveCamera(Vector3d.UNIT_Y, Vector3d.UNIT_Z, Vector3d.ZERO,2000);
+        wasdController = new WASDController(camera);
+        registerInputEventHandler(wasdController);
 
         renderer = new Renderer(width, height, frame);
 
@@ -123,16 +116,17 @@ public abstract class Framework {
         rv.setRenderer(renderer);
         visitors.add(rv);
 
+
         frame.addKeyListener(new KeyAdapter() {
 
             @Override
             public void keyPressed(KeyEvent e) {
                 inputEventBus.post(e);
             }
-            
+
             @Override
             public void keyReleased(KeyEvent e) {
-            	inputEventBus.post(e);
+                inputEventBus.post(e);
             }
         });
 
@@ -303,7 +297,7 @@ public abstract class Framework {
      *
      * @return die Kamera des Frameworks
      */
-    public AbstractCamera getCamera() {
+    public Camera getCamera() {
         return camera;
     }
 
@@ -391,9 +385,9 @@ public abstract class Framework {
      * und behandelt.
      *
      * @param keyAdapter der KeyAdapter, der dem Framework hinzugefügt werden
-     * soll
+     *                   soll
      * @deprecated wird zum Ende des Semesters entfernt, da auf den Eventbus
-     * zurückgegriffen wird.
+     *             zurückgegriffen wird.
      */
     public void addKeyAdapter(KeyAdapter keyAdapter) {
         frame.addKeyListener(keyAdapter);
@@ -404,7 +398,7 @@ public abstract class Framework {
      *
      * @param keyAdapter der KeyListener, der entfernt werden soll
      * @deprecated wird zum Ende des Semesters entfernt, da auf den Eventbus
-     * zurückgegriffen wird.
+     *             zurückgegriffen wird.
      */
     public void removeKeyAdapter(KeyAdapter keyAdapter) {
         frame.removeKeyListener(keyAdapter);
@@ -415,7 +409,7 @@ public abstract class Framework {
      *
      * @param mouseAdapter der MouseAdapter, der entfernt werden soll
      * @deprecated wird zum Ende des Semesters entfernt, da auf den Eventbus
-     * zurückgegriffen wird.
+     *             zurückgegriffen wird.
      */
     public void removeMouseAdapter(MouseAdapter mouseAdapter) {
         frame.removeMouseListener(mouseAdapter);
@@ -428,9 +422,9 @@ public abstract class Framework {
      * abfängt und behandelt.
      *
      * @param mouseAdapter der MouseAdapter, der dem Framework hinzugefügt
-     * werden soll
+     *                     werden soll
      * @deprecated wird zum Ende des Semesters entfernt, da auf den Eventbus
-     * zurückgegriffen wird.
+     *             zurückgegriffen wird.
      */
     public void addMouseAdapter(MouseInputAdapter mouseAdapter) {
         frame.addMouseListener(mouseAdapter);
@@ -446,6 +440,7 @@ public abstract class Framework {
     public void setCamera(AbstractCamera camera) {
         this.camera = camera;
         rv.setCamera(camera);
+        wasdController.setCamera(camera);
     }
 
     /**

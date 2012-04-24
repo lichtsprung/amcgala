@@ -19,7 +19,7 @@ import amcgala.framework.scenegraph.transform.Transformation;
 import amcgala.framework.scenegraph.transform.Translation;
 import amcgala.framework.scenegraph.visitor.Visitor;
 import amcgala.framework.shape.Shape;
-import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -70,7 +70,7 @@ public class Node {
      * Erzeugt eine neue Node mit einem Label und einem zugewiesenen
      * Elternknoten.
      *
-     * @param label das Label des Knotens
+     * @param label  das Label des Knotens
      * @param parent der Elternknoten
      */
     public Node(String label, Node parent) {
@@ -84,7 +84,7 @@ public class Node {
      *
      * @param childNode der neue Knoten
      * @return gibt Referenz auf sich selbst zurück um verschachtelte Aufrufe zu
-     * ermöglichen
+     *         ermöglichen
      */
     public Node addChild(Node childNode) {
         childNode.parent = this;
@@ -121,8 +121,8 @@ public class Node {
      * Fügt einem Knoten mit einem bestimmten Label ein neues Geometrieobjekt
      * hinzu.
      *
-     * @param label das Label des Knoten, dem das neue Objekt hinzugefügt werden
-     * soll
+     * @param label    das Label des Knoten, dem das neue Objekt hinzugefügt werden
+     *                 soll
      * @param newShape das neue Geometrieobjekt
      * @return true, wenn es hinzugefügt werden konnte
      */
@@ -258,7 +258,7 @@ public class Node {
 
         return b;
     }
-    
+
 
     @Override
     public String toString() {

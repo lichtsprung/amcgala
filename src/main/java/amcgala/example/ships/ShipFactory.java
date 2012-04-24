@@ -46,8 +46,9 @@ public class ShipFactory {
 
     /**
      * Erzeugt ein neues Schiff der Größe 2.
-     * @param width die Breite der Spielfeldzelle
-     * @param height die Höhe der Spielfeldzelle
+     *
+     * @param width       die Breite der Spielfeldzelle
+     * @param height      die Höhe der Spielfeldzelle
      * @param orientation die Ausrichtung des Schiffs
      * @return Array, das die Schiffsteile hält
      */

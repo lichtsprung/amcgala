@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
  */
 public class InterpolationVisitor implements Visitor {
     private static Logger log = LoggerFactory.getLogger(InterpolationVisitor.class);
+
     @Override
     public void visit(Node node) {
         if (node.getTransformation() != null) {

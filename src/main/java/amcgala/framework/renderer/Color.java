@@ -15,8 +15,8 @@
 package amcgala.framework.renderer;
 
 /**
- *  Diese Klasse repräsentiert eine Farbe, mit der Pixel eingefärbt werden können.
- * 
+ * Diese Klasse repräsentiert eine Farbe, mit der Pixel eingefärbt werden können.
+ *
  * @author Robert Giacinto
  */
 public class Color {
@@ -33,6 +33,7 @@ public class Color {
 
     /**
      * Erzeugt eine neue Farbe von einer java.awt.Color.
+     *
      * @param color die Farbe
      */
     public Color(java.awt.Color color) {
@@ -44,6 +45,7 @@ public class Color {
 
     /**
      * Erzeugt eine neue Farbe von den Einzelwerten der Farbkanäle.
+     *
      * @param r der rote Farbanteil
      * @param g der grüne Farbanteil
      * @param b der blaue Farbanteil
@@ -57,6 +59,7 @@ public class Color {
 
     /**
      * Gibt den blauen Farbanteil der Farbe zurück.
+     *
      * @return der blaue Farbanteil
      */
     public int getB() {
@@ -65,6 +68,7 @@ public class Color {
 
     /**
      * Ändert den blauen Farbanteil der Farbe.
+     *
      * @param b der blaue Farbanteil
      */
     public void setB(int b) {
@@ -74,6 +78,7 @@ public class Color {
 
     /**
      * Gibt den grünen Farbanteil der Farbe zurück.
+     *
      * @return der grüne Farbanteil
      */
     public int getG() {
@@ -82,6 +87,7 @@ public class Color {
 
     /**
      * Ändert den grünen Farbanteil der Farbe.
+     *
      * @param g der grüne Farbanteil
      */
     public void setG(int g) {
@@ -91,6 +97,7 @@ public class Color {
 
     /**
      * Gibt den roten Farbanteil der Farbe zurück.
+     *
      * @return der rote Farbanteil
      */
     public int getR() {
@@ -99,6 +106,7 @@ public class Color {
 
     /**
      * Ändert den roten Farbanteil der Farbe
+     *
      * @param r der rote Farbanteil
      */
     public void setR(int r) {

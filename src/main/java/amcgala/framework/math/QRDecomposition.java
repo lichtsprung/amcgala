@@ -45,6 +45,7 @@ public class QRDecomposition implements java.io.Serializable {
     /*
      * ------------------------ Constructor ------------------------
      */
+
     /**
      * QR Decomposition, computed by Householder reflections.
      *
@@ -95,6 +96,7 @@ public class QRDecomposition implements java.io.Serializable {
     /*
      * ------------------------ Public Methods ------------------------
      */
+
     /**
      * Is the matrix full rank?
      *
@@ -186,7 +188,7 @@ public class QRDecomposition implements java.io.Serializable {
      * @param B A Matrix with as many rows as A and any number of columns.
      * @return X that minimizes the two norm of Q*R*X-B.
      * @throws IllegalArgumentException Matrix row dimensions must agree.
-     * @throws RuntimeException Matrix is rank deficient.
+     * @throws RuntimeException         Matrix is rank deficient.
      */
     public Matrix solve(Matrix B) {
         if (B.getRowDimension() != m) {

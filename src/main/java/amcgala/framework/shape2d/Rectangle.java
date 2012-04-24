@@ -12,52 +12,57 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package amcgala.framework.shape;
+package amcgala.framework.shape2d;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
+import amcgala.framework.shape.BresenhamLine;
+import amcgala.framework.shape.Shape;
 
 /**
  * Ein 2d-Rechteck.
  *
  * @author Robert Giacinto
  */
-public class Rectangle2d extends Shape {
+public class Rectangle extends Shape {
 
     public double width;
     public double height;
-    public BresenhamLine2d bottom;
-    public BresenhamLine2d top;
-    public BresenhamLine2d left;
-    public BresenhamLine2d right;
+    public BresenhamLine bottom;
+    public BresenhamLine top;
+    public BresenhamLine left;
+    public BresenhamLine right;
 
     /**
      * Erzeugt ein neues Rechteck, über die Position der linken unteren Ecke und
      * der Höhe und Breite des Rechtecks.
      *
-     * @param x die x-Koordinate der Ecke links unten.
-     * @param y die y-Koordinate der Ecke links unten.
-     * @param width die Breite des Rechtecks
+     * @param x      die x-Koordinate der Ecke links unten.
+     * @param y      die y-Koordinate der Ecke links unten.
+     * @param width  die Breite des Rechtecks
      * @param height die Höhe des Rechtecks
      */
-    public Rectangle2d(double x, double y, double width, double height) {
-        bottom = new BresenhamLine2d(x, y, x + width, y);
-        top = new BresenhamLine2d(x, y + height, x + width, y + height);
-        left = new BresenhamLine2d(x, y, x, y + height);
-        right = new BresenhamLine2d(x + width, y, x + width, y + height);
+    public Rectangle(double x, double y, double width, double height) {
+        bottom = new BresenhamLine(x, y, x + width, y);
+        top = new BresenhamLine(x, y + height, x + width, y + height);
+        left = new BresenhamLine(x, y, x, y + height);
+        right = new BresenhamLine(x + width, y, x + width, y + height);
     }
 
     /**
      * Erzeugt ein neues Rechteck, das über die Kanten definiert wird.
      *
      * @param bottom die untere Seite des Rechtecks
-     * @param left die linke Seite des Rechtecks
-     * @param top die obere Seite des Rechtecks
-     * @param right die rechte Seite des Rechtecks
-     * @deprecated 
+     * @param left   die linke Seite des Rechtecks
+     * @param top    die obere Seite des Rechtecks
+     * @param right  die rechte Seite des Rechtecks
+     * @deprecated
      */
-    public Rectangle2d(BresenhamLine2d bottom, BresenhamLine2d left, BresenhamLine2d top, BresenhamLine2d right) {
+    public Rectangle(BresenhamLine bottom, BresenhamLine left, BresenhamLine top, BresenhamLine right) {
         this.top = top;
         this.bottom = bottom;
         this.left = left;
@@ -81,4 +86,6 @@ public class Rectangle2d extends Shape {
     public String toString() {
         return "Rectangle2d{" + "bottom =" + bottom + ", top =" + top + ", left =" + left + ", right =" + right + '}';
     }
+    
+    private static final Logger log = LoggerFactory.getLogger(Rectangle.class.getName());
 }

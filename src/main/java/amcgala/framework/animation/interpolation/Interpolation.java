@@ -20,6 +20,7 @@ import java.util.logging.Logger;
  * Interface, das alle Klassen implementieren, die eine Interpolation
  * darstellen.
  * <p/>
+ *
  * @author Robert Giacinto
  */
 public abstract class Interpolation {
@@ -33,10 +34,11 @@ public abstract class Interpolation {
 
     /**
      * Superkonstruktor aller Interpolationen. Er initialisiert die gemeinsamen Felder.
-     * @param start Startwert der Interpolation
-     * @param end Endwert der Interpolation
+     *
+     * @param start     Startwert der Interpolation
+     * @param end       Endwert der Interpolation
      * @param stepCount die Anzahl der Schritte
-     * @param cyclic true, wenn Interpolation zyklisch von Neuem beginnen soll
+     * @param cyclic    true, wenn Interpolation zyklisch von Neuem beginnen soll
      */
     public Interpolation(double start, double end, int stepCount, boolean cyclic) {
         this.min = start;
@@ -47,6 +49,7 @@ public abstract class Interpolation {
 
     /**
      * Diese Methode wird von allen Unterklassen implementiert und gibt den nächsten interpolierten Wert zurück.
+     *
      * @return der nächste interpolierte Wert
      */
     public abstract double nextValue();

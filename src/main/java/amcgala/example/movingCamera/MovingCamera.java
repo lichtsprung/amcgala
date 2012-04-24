@@ -21,11 +21,13 @@ import amcgala.framework.event.InputHandler;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.scenegraph.Node;
 import amcgala.framework.scenegraph.transform.RotationY;
-import amcgala.framework.shape.Box3d;
+import amcgala.framework.shape3d.Box;
+
 import com.google.common.eventbus.Subscribe;
-import java.awt.event.KeyEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.event.KeyEvent;
 
 /**
  * Dieses Beispiel zeigt die Minimalkonfiguration des Frameworks.
@@ -39,7 +41,7 @@ public class MovingCamera extends Framework implements InputHandler {
     /**
      * Neues Framework, das eine Java2D Ausgabe der Größe width x height hat.
      *
-     * @param width die Breite des Fensters
+     * @param width  die Breite des Fensters
      * @param height die Höhe des Fensters
      */
     public MovingCamera(int width, int height) {
@@ -55,9 +57,9 @@ public class MovingCamera extends Framework implements InputHandler {
         RotationY rotY = new RotationY();
         rotY.setInterpolationPhi(new LinearInterpolation(0, 4 * Math.PI, 250, true));
         n.setTransformation(rotY);
-        n.addShape(new Box3d(new Vector3d(0, 0, 0), 40, 40, 40));
-        n.addShape(new Box3d(new Vector3d(0, 100, 0), 40, 40, 40));
-        n.addShape(new Box3d(new Vector3d(0, 200, 0), 40, 40, 40));
+        n.addShape(new Box(new Vector3d(0, 0, 0), 40, 40, 40));
+        n.addShape(new Box(new Vector3d(0, 100, 0), 40, 40, 40));
+        n.addShape(new Box(new Vector3d(0, 200, 0), 40, 40, 40));
         add(n);
     }
 

@@ -14,27 +14,27 @@
  */
 package amcgala.example.triangle;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
-import amcgala.framework.shape.Line2d;
-import amcgala.framework.shape.Point2d;
+import amcgala.framework.shape.BresenhamLine;
 import amcgala.framework.shape.Shape;
+import amcgala.framework.shape2d.Point2d;
 
 /**
  * Eine Dreiecksklasse. Sie nimmt die Eckpunkte eines beliebigen Dreiecks entgegen.
+ *
  * @author Robert Giacinto
  */
 public class Triangle extends Shape {
 
-    private Line2d l1, l2, l3;
+    private BresenhamLine l1, l2, l3;
 
     public Triangle(Point2d p1, Point2d p2, Point2d p3) {
-        l1 = new Line2d(p1.x, p1.y, p2.x, p2.y);
-        l2 = new Line2d(p1.x, p1.y, p3.x, p3.y);
-        l3 = new Line2d(p3.x, p3.y, p2.x, p2.y);
+        l1 = new BresenhamLine(p1.x, p1.y, p2.x, p2.y);
+        l2 = new BresenhamLine(p1.x, p1.y, p3.x, p3.y);
+        l3 = new BresenhamLine(p3.x, p3.y, p2.x, p2.y);
 
         l1.color = Color.BLACK;
         l2.color = Color.RED;

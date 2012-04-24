@@ -14,15 +14,15 @@
  */
 package amcgala.framework.scenegraph.visitor;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.scenegraph.Node;
 import amcgala.framework.shape.Shape;
-import java.util.ConcurrentModificationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ConcurrentModificationException;
 
 /**
  * Der RenderVisitor traversiert einmal pro Frame über den Szenengraph und
@@ -51,7 +51,7 @@ public class RenderVisitor implements Visitor {
      *
      * @param camera die neue Kamera
      */
-    public void setCamera(AbstractCamera camera) {
+    public void setCamera(Camera camera) {
         this.camera = camera;
     }
 

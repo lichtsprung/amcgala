@@ -14,15 +14,14 @@
  */
 package amcgala.example.pong;
 
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Plane;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
-import amcgala.framework.shape.Cross2d;
-import amcgala.framework.shape.Rectangle2d;
 import amcgala.framework.shape.Shape;
+import amcgala.framework.shape2d.Cross;
+import amcgala.framework.shape2d.Rectangle;
 
 /**
  * Das Paddle, mit dem man den Ball treffen muss.
@@ -32,14 +31,14 @@ import amcgala.framework.shape.Shape;
 public class PongPaddle extends Shape {
 
     private int moveStep;
-    private Rectangle2d paddle;
+    private Rectangle paddle;
     private Vector3d position;
     private Plane top;
     private Plane bottom;
     private Plane paddleCol;
     private PongBall ball;
     private PongBoard board;
-    private Cross2d c1, c2;
+    private Cross c1, c2;
     private int lengthH, lengthV;
     private boolean stopDown, stopUp;
 
@@ -48,8 +47,8 @@ public class PongPaddle extends Shape {
      *
      * @param lengthH horizontale Länge des Paddles
      * @param lengthV vertikale Länge des Paddles
-     * @param ball der Ball, der von dem Paddle gespielt werden kann
-     * @param board das Spielfeld
+     * @param ball    der Ball, der von dem Paddle gespielt werden kann
+     * @param board   das Spielfeld
      */
     public PongPaddle(int lengthH, int lengthV, PongBall ball, PongBoard board) {
         moveStep = 15;
@@ -59,14 +58,14 @@ public class PongPaddle extends Shape {
         this.board = board;
         this.position = new Vector3d(board.getXmin() + board.getWidth() * board.getPaddlePosition(), board.getYmin() + board.getHeight() / 2, -1);
 
-        paddle = new Rectangle2d(position.x - lengthH, position.y - lengthV, lengthH, lengthV);
+        paddle = new Rectangle(position.x - lengthH, position.y - lengthV, lengthH, lengthV);
 
         top = new Plane(Vector3d.UNIT_Y, position.y + lengthV);
         bottom = new Plane(Vector3d.UNIT_Y, position.y - lengthV);
         paddleCol = new Plane(Vector3d.UNIT_X, position.x - lengthH);
 
-        c1 = new Cross2d(position.x, position.y + lengthV, 10);
-        c2 = new Cross2d(position.x, position.y - lengthV, 10);
+        c1 = new Cross(position.x, position.y + lengthV, 10);
+        c2 = new Cross(position.x, position.y - lengthV, 10);
 
     }
 
@@ -108,7 +107,7 @@ public class PongPaddle extends Shape {
     private void updateCollisionPlanes() {
         top.setConstant(position.y + lengthV);
         bottom.setConstant(position.y - lengthV);
-        paddle = new Rectangle2d(position.x - lengthH, position.y - lengthV, lengthH, lengthV);
+        paddle = new Rectangle(position.x - lengthH, position.y - lengthV, lengthH, lengthV);
     }
 
     /**

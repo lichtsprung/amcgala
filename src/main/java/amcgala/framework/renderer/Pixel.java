@@ -15,9 +15,10 @@
 package amcgala.framework.renderer;
 
 /**
- * Ein Pixel stellt einen Punkt in der Ausgabe dar. 
- * Es wird während des Renderings verwendet, um ein Shape über einen Renderer 
+ * Ein Pixel stellt einen Punkt in der Ausgabe dar.
+ * Es wird während des Renderings verwendet, um ein Shape über einen Renderer
  * auszugeben.
+ *
  * @author Robert Giacinto
  */
 public class Pixel {
@@ -27,6 +28,7 @@ public class Pixel {
 
     /**
      * Erzeugt einen neuen Pixel an der Stelle (x,y)
+     *
      * @param x die x-Koordinate des Pixels
      * @param y die y-Koordinate des Pixels
      */
@@ -36,8 +38,9 @@ public class Pixel {
     }
 
     /**
-     * Erzeugt einen neuen Pixel an der Stelle (x,y). 
+     * Erzeugt einen neuen Pixel an der Stelle (x,y).
      * Die doubles werden entsprechend auf die Integerpositionen des Pixels gerundet.
+     *
      * @param x die x-Koordinate des Pixels
      * @param y die y-Koordinate des Pixels
      */
@@ -50,6 +53,7 @@ public class Pixel {
 
     /**
      * Gibt die x-Koordinate des Pixels zurück.
+     *
      * @return die x-Koordinate des Pixels
      */
     public int getX() {
@@ -58,6 +62,7 @@ public class Pixel {
 
     /**
      * Gibt die y-Koordinate des Pixels zurück.
+     *
      * @return die y-Koordinate des Pixels
      */
     public int getY() {

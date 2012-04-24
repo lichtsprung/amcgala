@@ -15,6 +15,7 @@
 package amcgala.framework.camera;
 
 import amcgala.framework.math.Matrix;
+import amcgala.framework.math.Quaternion;
 import amcgala.framework.math.Vector3d;
 
 /**
@@ -27,11 +28,11 @@ public abstract class AbstractCamera implements Camera {
     /**
      * "oben" Vektor
      */
-    protected Vector3d vup;
+    protected Vector3d up;
     /**
      * Position der Kamera
      */
-    protected Vector3d position;
+    protected Vector3d location;
     /**
      * Punkt, zu dem die Kamera blickt
      */
@@ -53,6 +54,10 @@ public abstract class AbstractCamera implements Camera {
      */
     protected Matrix projection;
 
+    protected Quaternion quaternion;
+
+    protected boolean parallel;
+
     /**
      * Gibt die Projektionsmatrix der Kamera zurück.
      *
@@ -67,7 +72,8 @@ public abstract class AbstractCamera implements Camera {
      */
     @Override
     public Vector3d getDirection() {
-        return direction;
+        // return quaternion.getRotationColumn(2);
+    	return direction;
     }
 
     /**
@@ -88,7 +94,7 @@ public abstract class AbstractCamera implements Camera {
      */
     @Override
     public Vector3d getPosition() {
-        return position;
+        return location;
     }
 
     /**
@@ -98,7 +104,7 @@ public abstract class AbstractCamera implements Camera {
      */
     @Override
     public void setPosition(Vector3d position) {
-        this.position = position;
+        this.location = position;
         update();
     }
 
@@ -109,7 +115,7 @@ public abstract class AbstractCamera implements Camera {
      */
     @Override
     public Vector3d getVup() {
-        return vup;
+        return quaternion.getRotationColumn(1);
     }
 
     /**
@@ -119,7 +125,15 @@ public abstract class AbstractCamera implements Camera {
      */
     @Override
     public void setVup(Vector3d vup) {
-        this.vup = vup;
+        this.up = vup;
         update();
+    }
+
+    public Vector3d getLeft(){
+        return quaternion.getRotationColumn(0);
+    }
+
+    public boolean isParallel(){
+        return parallel;
     }
 }

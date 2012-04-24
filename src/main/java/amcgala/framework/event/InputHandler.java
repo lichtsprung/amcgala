@@ -17,8 +17,9 @@ package amcgala.framework.event;
 /**
  * Dieses Interface kann von allen Objekten implementiert werden, die innerhalb des Frameworks auf
  * Keyboard oder Mouse-Events reagieren sollen.
+ *
  * @author Robert Giacinto
  */
 public interface InputHandler {
-    
+
 }

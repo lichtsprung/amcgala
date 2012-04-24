@@ -17,31 +17,30 @@ package amcgala.example.morphing;
 import amcgala.framework.animation.Animation;
 import amcgala.framework.animation.interpolation.Interpolation;
 import amcgala.framework.animation.interpolation.LinearInterpolation;
-import amcgala.framework.camera.AbstractCamera;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
-import amcgala.framework.shape.Line2d;
+import amcgala.framework.shape.BresenhamLine;
 import amcgala.framework.shape.Shape;
 
 /**
  * Eine sich morphende Linie. Es ist auch möglich dieses Prinzip auf beliebige Formen zu erweitern. In dem Fall müssen
  * Startobjekt und Zielobjekt über die gleiche Anzahl von Punkten definiert sein. In dem Fall kann das Startobjekt in das Endobjekt  gemorpht werden.
- * 
+ *
  * @author Robert Giacinto
  */
 public class MorphingItem extends Shape {
 
-    private Line2d line1;
-    private Line2d line2;
+    private BresenhamLine line1;
+    private BresenhamLine line2;
     private int stepcount;
 
-    public MorphingItem(Line2d start, Line2d end, int steps) {
+    public MorphingItem(BresenhamLine start, BresenhamLine end, int steps) {
         line1 = start;
         line2 = end;
         this.stepcount = steps;
 
-        setAnimation(new Animation<Line2d>() {
+        setAnimation(new Animation<BresenhamLine>() {
 
             private Interpolation interpolationX1 = new LinearInterpolation(line1.x1, line2.x1, stepcount, true);
             private Interpolation interpolationX2 = new LinearInterpolation(line1.x2, line2.x2, stepcount, true);
