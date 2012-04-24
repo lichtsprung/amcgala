@@ -24,14 +24,14 @@ import amcgala.framework.shape.Container;
  *
  * @author Sascha Lemke
  */
-public class ContainerBresenhamLine3dMain extends Framework {
+public class ContainerMain extends Framework {
 
-    public ContainerBresenhamLine3dMain(int width, int height) {
+    public ContainerMain(int width, int height) {
         super(width, height);
     }
 
     public static void main(String[] args) {
-        Framework fm = new ContainerBresenhamLine3dMain(800, 600);
+        Framework fm = new ContainerMain(800, 600);
         fm.start();
     }
 
@@ -43,7 +43,7 @@ public class ContainerBresenhamLine3dMain extends Framework {
         linien[2] = new BresenhamLine(new Vector3d(100, 100, -100), new Vector3d(-100, 100, -100));
         linien[3] = new BresenhamLine(new Vector3d(-100, 100, -100), new Vector3d(-100, 0, 0));
 
-        this.getCamera().setPosition(new Vector3d(50, 0, -20));
+        //this.getCamera().setPosition(new Vector3d(50, 0, -20));
 
         BresenhamLine[] linien2 = new BresenhamLine[4];
         linien2[0] = new BresenhamLine(new Vector3d(-100, 0, 0), new Vector3d(100, 0, 0));

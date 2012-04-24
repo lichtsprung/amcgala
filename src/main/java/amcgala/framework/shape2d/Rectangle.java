@@ -22,7 +22,6 @@ import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.BresenhamLine;
 import amcgala.framework.shape.Shape;
-import amcgala.framework.shape3d.Box;
 
 /**
  * Ein 2d-Rechteck.

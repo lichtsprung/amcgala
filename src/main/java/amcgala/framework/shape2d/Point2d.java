@@ -24,7 +24,6 @@ import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Pixel;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Shape;
-import amcgala.framework.shape3d.Box;
 
 /**
  * Ein Punkt in einer Ebene für die Darstellung von 2d Geometrien.

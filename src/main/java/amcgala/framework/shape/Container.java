@@ -26,86 +26,68 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Zeichnet ein Shapeobjekt mit übergebenen Parametern in den Formen: BresenhamLine oder Vector3D <br />
- * Weiter Linien oder Vektoren können auch im nachhinein hinzugefügt werden.<br />
- * Implementiert außerdem den Eventbus.
+ * Container for Shapeobjects.
  *
  * @author Sascha Lemke
  */
 public class Container extends Shape implements InputHandler {
 
-    private ArrayList<BresenhamLine> linien;
+    private ArrayList<Shape> objects;
 
     /**
-     * Erstellt eine "leeres" Shapeobjekt.
+     * Creates an empty Containerobject.
      */
     public Container() {
-        this.linien = new ArrayList<BresenhamLine>();
+        this.objects = new ArrayList<Shape>();
     }
-
+    
     /**
-     * Wird benutzt um ein Shapeobjekt auf Basis eines Arrays zu entwerfen.
-     *
-     * @param koordinaten
+     * Creates an Containobject with the given shapes.
+     * @param object
      */
-    public Container(Vector3d[][] koordinaten) {
-        this.linien = new ArrayList<BresenhamLine>();
-        for (int i = 0; i < koordinaten.length; i++) {
-            this.linien.add(new BresenhamLine(koordinaten[i][0], koordinaten[i][1]));
-        }
+    public Container(Shape[] object) {
+    	this.objects = new ArrayList<Shape>();
+    	for(int i = 0; i < object.length; i++) {
+    		this.objects.add(object[i]);
+    	}
     }
 
     /**
-     * Übernimmt automatisch 3D-Linien um sie mit anderen Linien zu verbinden.
-     *
-     * @param linien
+     * Adds a Shape.
+     * @param object
      */
-    public Container(BresenhamLine[] linien) {
-        this.linien = new ArrayList<BresenhamLine>();
-        for (int i = 0; i < linien.length; i++) {
-            this.linien.add(linien[i]);
-        }
+    public void add(Shape object) {
+    	this.objects.add(object);
     }
-
+    
+    
     /**
-     * Fügt eine Linie am Ende hinzu.
-     *
-     * @param point
-     * @param point1
+     * Adds an array of shapes.
+     * @param object
      */
-    public void add(Vector3d point, Vector3d point1) {
-        this.linien.add(new BresenhamLine(point, point1));
-    }
-
-
-    /**
-     * Übernimmt die übergebenen Linien und bezieht sie in das ShapeObjekt mit ein.
-     *
-     * @param lines
-     */
-    public void add(BresenhamLine[] linien) {
-        for (int i = 0; i < linien.length; i++) {
-            this.linien.add(linien[i]);
-        }
+    public void add(Shape[] object) {
+    	for(int i = 0; i < object.length; i++) {
+    		this.objects.add(object[i]);
+    	}
     }
 
     /**
-     * Entfernt den letzten Eintrag.
+     * Removes the last entry.
      *
      * @return
      */
     public void remove() {
-        this.linien.remove(this.linien.size() - 1);
+    	this.objects.remove(this.objects.size() -1);
     }
 
     /**
-     * Entfernt einen Eintrag an gewählter Stelle.
+     * Removes an selected entry.
      *
-     * @param index Die Stelle des Knotens der gelöscht werden soll (Achtung! Wir zählen von 0 an!)
+     * @param index the selected entry
      * @return
      */
-    public void remove(int index) {
-        this.linien.remove(index);
+    public void remove(Shape object) {
+    	this.objects.remove(object);
     }
 
     /**
@@ -114,23 +96,12 @@ public class Container extends Shape implements InputHandler {
     @Override
     public String toString() {
         String ausgabe = "";
-        Iterator<BresenhamLine> iter = this.linien.iterator();
-
-        int i = 0;
-        while (iter.hasNext()) {
-            BresenhamLine line = iter.next();
-            ausgabe += "" + i + ". Linie: \n";
-            ausgabe += "\t x1: " + line.x1 + "\n";
-            ausgabe += "\t y1: " + line.y1 + "\n";
-            ausgabe += "\t z1: " + line.z1 + "\n\n";
-
-            ausgabe += "\t x1: " + line.x2 + "\n";
-            ausgabe += "\t y1: " + line.y2 + "\n";
-            ausgabe += "\t z1: " + line.z2 + "\n\n";
-            i++;
+        Iterator<Shape> iter = this.objects.iterator();
+        while(iter.hasNext()) {
+        	Shape object = iter.next();
+        	ausgabe += object.toString();
+        	ausgabe += "\n";
         }
-
-        ausgabe += "- Linien insgesamt: " + this.linien.size();
         return ausgabe;
     }
 
@@ -139,11 +110,11 @@ public class Container extends Shape implements InputHandler {
      */
     @Override
     public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        Iterator<BresenhamLine> iter = this.linien.iterator();
+        Iterator<Shape> iter = this.objects.iterator();
         while (iter.hasNext()) {
-            BresenhamLine line = iter.next();
-            line.color = color;
-            line.render(transformation, camera, renderer);
+            Shape object = iter.next();
+            object.color = color;
+            object.render(transformation, camera, renderer);
         }
     }
 

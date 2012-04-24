@@ -18,6 +18,7 @@ import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
+import amcgala.framework.shape.BresenhamLine;
 import amcgala.framework.shape.Container;
 import amcgala.framework.shape.Shape;
 
@@ -58,18 +59,19 @@ public class Box extends Shape {
      * Updates the Box at runtime.
      */
     private void calculate() {
-        lines.add(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x + width, position.y, position.z));
-        lines.add(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x, position.y + height, position.z));
-        lines.add(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x, position.y, position.z - depth));
-        lines.add(new Vector3d(position.x, position.y + height, position.z), new Vector3d(position.x + width, position.y + height, position.z));
-        lines.add(new Vector3d(position.x + width, position.y, position.z), new Vector3d(position.x + width, position.y + height, position.z));
-        lines.add(new Vector3d(position.x, position.y + height, position.z), new Vector3d(position.x, position.y + height, position.z - depth));
-        lines.add(new Vector3d(position.x + width, position.y + height, position.z), new Vector3d(position.x + width, position.y + height, position.z - depth));
-        lines.add(new Vector3d(position.x + width, position.y, position.z), new Vector3d(position.x + width, position.y, position.z - depth));
-        lines.add(new Vector3d(position.x, position.y, position.z - depth), new Vector3d(position.x + width, position.y, position.z - depth));
-        lines.add(new Vector3d(position.x, position.y, position.z - depth), new Vector3d(position.x, position.y + height, position.z - depth));
-        lines.add(new Vector3d(position.x, position.y + height, position.z - depth), new Vector3d(position.x + width, position.y + height, position.z - depth));
-        lines.add(new Vector3d(position.x + width, position.y, position.z - depth), new Vector3d(position.x + width, position.y + height, position.z - depth));
+    	lines.add(new BresenhamLine(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x + width, position.y, position.z)));
+        lines.add(new BresenhamLine(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x + width, position.y, position.z)));
+        lines.add(new BresenhamLine(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x, position.y + height, position.z)));
+        lines.add(new BresenhamLine(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x, position.y, position.z - depth)));
+        lines.add(new BresenhamLine(new Vector3d(position.x, position.y + height, position.z), new Vector3d(position.x + width, position.y + height, position.z)));
+        lines.add(new BresenhamLine(new Vector3d(position.x + width, position.y, position.z), new Vector3d(position.x + width, position.y + height, position.z)));
+        lines.add(new BresenhamLine(new Vector3d(position.x, position.y + height, position.z), new Vector3d(position.x, position.y + height, position.z - depth)));
+        lines.add(new BresenhamLine(new Vector3d(position.x + width, position.y + height, position.z), new Vector3d(position.x + width, position.y + height, position.z - depth)));
+        lines.add(new BresenhamLine(new Vector3d(position.x + width, position.y, position.z), new Vector3d(position.x + width, position.y, position.z - depth)));
+        lines.add(new BresenhamLine(new Vector3d(position.x, position.y, position.z - depth), new Vector3d(position.x + width, position.y, position.z - depth)));
+        lines.add(new BresenhamLine(new Vector3d(position.x, position.y, position.z - depth), new Vector3d(position.x, position.y + height, position.z - depth)));
+        lines.add(new BresenhamLine(new Vector3d(position.x, position.y + height, position.z - depth), new Vector3d(position.x + width, position.y + height, position.z - depth)));
+        lines.add(new BresenhamLine(new Vector3d(position.x + width, position.y, position.z - depth), new Vector3d(position.x + width, position.y + height, position.z - depth)));
     }
 
     /**

@@ -22,7 +22,6 @@ import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
-import amcgala.framework.shape3d.Box;
 
 /**
  * Polygonobjekt fuer die Koerperdarstellung im 3D Raum

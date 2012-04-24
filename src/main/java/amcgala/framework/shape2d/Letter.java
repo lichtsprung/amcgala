@@ -29,7 +29,6 @@ import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Shape;
-import amcgala.framework.shape3d.Box;
 
 /**
  * Ein Zeichen dass an der Stelle (x,y) dargestellt wird. Beim ersten Verwenden

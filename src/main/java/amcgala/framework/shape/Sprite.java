@@ -20,7 +20,6 @@ import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Pixel;
 import amcgala.framework.renderer.Renderer;
-import amcgala.framework.shape3d.Box;
 
 import javax.imageio.ImageIO;
 

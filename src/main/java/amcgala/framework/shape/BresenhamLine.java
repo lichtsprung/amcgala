@@ -146,5 +146,12 @@ public class BresenhamLine extends Shape {
 
     }
     
+    /**
+     * toString method.
+     */
+    public String toString() {
+		return "BresenhamLine { x1: " + this.x1 + ", \ty1: " + this.y1 + ", \tx2: " + this.x2 + ", \ty2: " + this.y2 + " }";
+    }
+    
     private static final Logger log = LoggerFactory.getLogger(BresenhamLine.class.getName());
 }

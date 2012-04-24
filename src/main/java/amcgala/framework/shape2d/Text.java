@@ -21,7 +21,6 @@ import amcgala.framework.camera.Camera;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Shape;
-import amcgala.framework.shape3d.Box;
 
 /**
  * Eine Klasse, die Text darstellen kann. Die grundlegenden Zeichen werden
