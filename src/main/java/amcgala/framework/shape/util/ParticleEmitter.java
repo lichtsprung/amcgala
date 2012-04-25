@@ -24,7 +24,6 @@ public class ParticleEmitter extends Shape implements Updatable {
 	private double width, height;
 	private double x, y, z; // Mittepunkt
 	private Vector3d direction = new Vector3d(0, 1, 0);
-	private Vector3d scale;
 	private ArrayList<Particle> particles = new ArrayList<Particle>();
 	private ArrayList<ParticleManipulation> particleManipulations = new ArrayList<ParticleManipulation>();
 	private RotationZ rectrotation = new RotationZ(Math.PI / 2);
@@ -90,9 +89,6 @@ public class ParticleEmitter extends Shape implements Updatable {
 		this.x = x;
 		this.y = y;
 		this.direction = direction.normalize();
-
-		this.scale = direction.copy().times(width);
-
 	}
 
 	@Override
@@ -105,6 +101,7 @@ public class ParticleEmitter extends Shape implements Updatable {
 		}
 		// display emitterelement 2d
 		if (isVisible()) {
+			Vector3d scale = direction.copy().times(width);
 			// rotate
 			Vector3d rotateScale = rectrotation.getTransformMatrix()
 					.times(scale.toMatrix()).toVector3d();
@@ -154,6 +151,7 @@ public class ParticleEmitter extends Shape implements Updatable {
 	}
 
 	public Vector3d getScale() {
+		Vector3d scale = direction.copy().times(width);
 		return scale;
 	}
 
@@ -177,9 +175,7 @@ public class ParticleEmitter extends Shape implements Updatable {
 		this.z = z;
 	}
 
-	public void setScale(Vector3d scale) {
-		this.scale = scale;
-	}
+
 
 	public void setDirection(Vector3d direction) {
 		this.direction = direction;
