@@ -6,6 +6,7 @@ import amcgala.framework.shape2d.Text;
 
 public class LetterMain extends Framework {
 
+
 	public LetterMain(int width, int height) {
 		super(width, height);
 	}
@@ -17,7 +18,7 @@ public class LetterMain extends Framework {
 
 	@Override
 	public void initGraph() {
-		add(new Text("amCGAla ! Test", -100, 0));
+		add(new Text("amCGAla öäüß +-*/ !? ", -100, 0));
 
 	}
 }

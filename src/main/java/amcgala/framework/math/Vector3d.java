@@ -154,4 +154,9 @@ public class Vector3d {
         Matrix tmp = transformation.times(toMatrix());
         return new Vector3d(tmp.get(0, 0), tmp.get(1, 0), tmp.get(2, 0));
     }
+    
+    public Vector3d copy()
+    {
+    	return new Vector3d(x, y, z);
+    }
 }
