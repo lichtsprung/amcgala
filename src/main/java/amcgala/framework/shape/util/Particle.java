@@ -36,15 +36,14 @@ public class Particle extends Shape implements Updatable {
 		this.direction = direction.normalize();
 
 		this.point2d = new Point2d(x, y);
-
+		Vector3d v  = this.direction.copy();
+		v.times(particleSpeed);
 	}
 
 	@Override
 	public void update() {
-		Vector3d v = direction.copy();
-		v.times(particleSpeed);
-		point2d.x += v.x;
-		point2d.y += v.y;
+		point2d.x += direction.x;
+		point2d.y += direction.y;
 		super.update();
 	}
 
