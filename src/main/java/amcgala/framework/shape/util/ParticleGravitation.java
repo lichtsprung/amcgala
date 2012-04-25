@@ -20,7 +20,7 @@ public class ParticleGravitation extends Shape implements ParticleManipulation {
 	private final double y;
 	private final double width;
 	private final double height;
-	private double gravitation = 0.1;
+	private double gravitation = 0.01;
 	private boolean visible;
 
 	/**
@@ -62,7 +62,7 @@ public class ParticleGravitation extends Shape implements ParticleManipulation {
 	@Override
 	public void manipulate(Particle p) {
 		Vector3d direction = p.getDirection().copy();
-		direction.y -= 0.01;
+		direction.y -= gravitation;
 		p.setDirection(direction.normalize());
 	}
 
