@@ -1,12 +1,14 @@
 package amcgala.example.extendedparticle;
 
 import java.awt.event.KeyEvent;
+import java.util.Collection;
 
 import com.google.common.eventbus.Subscribe;
 
 import amcgala.framework.animation.Updatable;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.event.InputHandler;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
@@ -40,9 +42,9 @@ public class ParticleShip extends Shape implements InputHandler, Updatable {
 	}
 
 	@Override
-	public void render(Matrix transformation, Camera camera, Renderer renderer) {
-		pe.render(transformation, camera, renderer);
-		rectangle.render(transformation, camera, renderer);
+	public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
+		pe.render(transformation, camera, renderer, lights);
+		rectangle.render(transformation, camera, renderer, lights);
 	}
 
 	@Override
