@@ -101,7 +101,7 @@ public class ParticleEmitter extends Shape implements Updatable {
 		}
 		// display emitterelement 2d
 		if (isVisible()) {
-			Vector3d scale = direction.copy().times(width);
+			Vector3d scale = direction.copy().normalize().times(width);
 			// rotate
 			Vector3d rotateScale = rectrotation.getTransformMatrix()
 					.times(scale.toMatrix()).toVector3d();
