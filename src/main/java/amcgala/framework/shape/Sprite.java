@@ -16,6 +16,7 @@ package amcgala.framework.shape;
  */
 
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Pixel;
@@ -30,6 +31,7 @@ import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 
 /**
  * Spriteobjekt zum Darstellen
@@ -130,7 +132,7 @@ public class Sprite extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
         for (int i = 0; i < pixel.length; i++) {
             pixel[i].x = (int) (i % width + x);
             pixel[i].y = (int) ((height - i) / width + y);

@@ -14,7 +14,10 @@
  */
 package amcgala.example.ships;
 
+import java.util.Collection;
+
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.BresenhamLine;
@@ -75,23 +78,23 @@ public class ShipEnd extends Ship {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
         if (Heading.BOTTOM.equals(heading)) {
             for (BresenhamLine line : bottom) {
-                line.render(transformation, camera, renderer);
+                line.render(transformation, camera, renderer, lights);
             }
         } else if (Heading.LEFT.equals(heading)) {
             for (BresenhamLine line : left) {
-                line.render(transformation, camera, renderer);
+                line.render(transformation, camera, renderer, lights);
             }
         } else if (Heading.RIGHT.equals(heading)) {
             for (BresenhamLine line : right) {
-                line.render(transformation, camera, renderer);
+                line.render(transformation, camera, renderer, lights);
             }
 
         } else if (Heading.TOP.equals(heading)) {
             for (BresenhamLine line : top) {
-                line.render(transformation, camera, renderer);
+                line.render(transformation, camera, renderer, lights);
             }
         }
     }

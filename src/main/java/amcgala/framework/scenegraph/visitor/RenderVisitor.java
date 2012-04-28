@@ -15,6 +15,7 @@
 package amcgala.framework.scenegraph.visitor;
 
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.scenegraph.Node;
@@ -22,6 +23,7 @@ import amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.ConcurrentModificationException;
 
 /**
@@ -59,10 +61,12 @@ public class RenderVisitor implements Visitor {
     public void visit(Node node) {
         synchronized (node.getGeometry()) {
             Matrix transform = node.getTransformMatrix();
+            Collection<Light> lights = node.getLights();
             for (Shape shape : node.getGeometry()) {
                 shape.setRendering(true);
                 try {
-                    shape.render(transform, camera, renderer);
+                	// licht muss hier mit übergeben werden!
+                    shape.render(transform, camera, renderer, lights);
                 } catch (ConcurrentModificationException ex) {
                     // Ignore exception since we don't care for thread-safety at this point.
                     log.info("Caught an  exception...");

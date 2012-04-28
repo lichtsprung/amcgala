@@ -14,7 +14,10 @@
  */
 package amcgala.example.pong;
 
+import java.util.Collection;
+
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Plane;
 import amcgala.framework.math.Vector3d;
@@ -98,8 +101,8 @@ public class PongPaddle extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        paddle.render(transformation, camera, renderer);
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
+        paddle.render(transformation, camera, renderer, lights);
 //        c1.render(transformation, camera, renderer);
 //        c2.render(transformation, camera, renderer);
     }

@@ -14,6 +14,7 @@
  */
 package amcgala.framework.scenegraph;
 
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.scenegraph.transform.Transformation;
 import amcgala.framework.scenegraph.transform.Translation;
@@ -52,7 +53,12 @@ public class Node {
      * der Kindsknoten auswirkt.
      */
     private Transformation transformation;
-
+    /**
+     * Die Lichtobjekte, die alle Geometrieobjekte in diesem Knoten beleuchten.
+     */
+    private Collection<Light> lights;
+    
+    
     /**
      * Erstellt eine neue Node mit einem Label, über das die Node innerhalb des
      * Graphens gefunden werden kann.
@@ -64,6 +70,7 @@ public class Node {
         transformation = new Translation(0, 0, 0);
         geometry = new CopyOnWriteArrayList<Shape>();
         children = new CopyOnWriteArrayList<Node>();
+        lights = new CopyOnWriteArrayList<Light>();
     }
 
     /**
@@ -152,6 +159,40 @@ public class Node {
         }
         return true;
     }
+    
+    /**
+     * Fügt ein Licht dem aktuellen Knoten hinzu
+     * 
+     * @param light das Lichtobjekt
+     * @return true, wenn es erfolgreich hinzugefügt wurde
+     */
+    public boolean addLight(Light light) {
+    	synchronized(lights) {
+    		lights.add(light);
+    	}
+    	return true;
+    }
+    
+    /**
+     * Fügt das Licht einem bestimmten Kindknoten hinzu.
+     * 
+     * @param label der Name des Knotens
+     * @param light das Lichtobjekt, das übergeben wird
+     * @return true, wenn es erfolgreich hinzugefügt wurde
+     */
+    public boolean addLight(String label, Light light) {
+    	synchronized(lights) {
+    		if(this.label.equalsIgnoreCase(label)) {
+    			lights.add(light);
+    			return true;
+    		} else {
+    			for(Node n : children) {
+    				n.addLight(label, light);
+    			}
+    		}
+    	}
+    	return false;
+    }
 
     /**
      * Gibt einen Knoten mit einem bestimmten Label zurück.
@@ -221,6 +262,14 @@ public class Node {
      */
     public Collection<Shape> getGeometry() {
         return Collections.unmodifiableCollection(geometry);
+    }
+    
+    /**
+     * Gibt die Lichtobjekte zurück, die an dem Knoten hängen.
+     * 
+     */
+    public Collection<Light> getLights() {
+    	return Collections.unmodifiableCollection(lights);
     }
 
     /**

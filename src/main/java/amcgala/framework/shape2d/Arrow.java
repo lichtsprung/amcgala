@@ -14,10 +14,13 @@
 */
 package amcgala.framework.shape2d;
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Color;
@@ -105,8 +108,8 @@ public class Arrow extends Shape {
 	 * Rendermethod.
 	 */
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        l1.render(transformation, camera, renderer);
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
+        l1.render(transformation, camera, renderer, lights);
     }
 
     /*

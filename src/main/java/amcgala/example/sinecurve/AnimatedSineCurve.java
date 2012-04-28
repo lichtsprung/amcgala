@@ -14,10 +14,13 @@
  */
 package amcgala.example.sinecurve;
 
+import java.util.Collection;
+
 import amcgala.framework.animation.Animation;
 import amcgala.framework.animation.interpolation.Interpolation;
 import amcgala.framework.animation.interpolation.LinearInterpolation;
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.BresenhamLine;
@@ -110,10 +113,10 @@ public class AnimatedSineCurve extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
         for (int i = 0; i < points.length - 1; i++) {
             BresenhamLine line = new BresenhamLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
-            line.render(transformation, camera, renderer);
+            line.render(transformation, camera, renderer, lights);
         }
     }
 }

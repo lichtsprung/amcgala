@@ -17,10 +17,12 @@ package amcgala.framework.shape;
 import amcgala.framework.animation.Animation;
 import amcgala.framework.animation.Updatable;
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
 
+import java.util.Collection;
 import java.util.logging.Logger;
 
 /**
@@ -59,8 +61,9 @@ public abstract class Shape implements Updatable {
      * @param transformation die Transformationsmatrix, die aus den Transformationsgruppen resultiert
      * @param camera         die Kamera der Szene
      * @param renderer       der Renderer
+     * @param lights 		 die Lichter innerhalb der Szene
      */
-    public abstract void render(Matrix transformation, Camera camera, Renderer renderer);
+    public abstract void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights);
 
     /**
      * Setzt die Animation, die auf das Shape angewendet werden soll.

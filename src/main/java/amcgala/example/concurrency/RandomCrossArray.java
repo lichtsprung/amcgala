@@ -16,6 +16,7 @@ package amcgala.example.concurrency;
 
 import amcgala.framework.camera.Camera;
 import amcgala.framework.event.InputHandler;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
@@ -25,6 +26,7 @@ import amcgala.framework.shape2d.Cross;
 import com.google.common.eventbus.Subscribe;
 
 import java.awt.event.KeyEvent;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -50,9 +52,9 @@ public class RandomCrossArray extends Shape implements InputHandler {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
         for (Cross cross : crosses) {
-            cross.render(transformation, camera, renderer);
+            cross.render(transformation, camera, renderer, lights);
         }
     }
 

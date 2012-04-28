@@ -14,10 +14,13 @@
  */
 package amcgala.framework.shape2d;
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.BresenhamLine;
@@ -70,16 +73,16 @@ public class Rectangle extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
         bottom.color = color;
         top.color = color;
         left.color = color;
         right.color = color;
 
-        bottom.render(transformation, camera, renderer);
-        top.render(transformation, camera, renderer);
-        left.render(transformation, camera, renderer);
-        right.render(transformation, camera, renderer);
+        bottom.render(transformation, camera, renderer, lights);
+        top.render(transformation, camera, renderer, lights);
+        left.render(transformation, camera, renderer, lights);
+        right.render(transformation, camera, renderer, lights);
     }
 
     @Override

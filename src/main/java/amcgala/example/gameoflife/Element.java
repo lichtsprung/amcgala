@@ -14,7 +14,10 @@
  */
 package amcgala.example.gameoflife;
 
+import java.util.Collection;
+
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
@@ -34,9 +37,9 @@ public class Element extends Shape {
 	}
 
 	@Override
-	public void render(Matrix arg0, Camera arg1, Renderer arg2) {
+	public void render(Matrix arg0, Camera arg1, Renderer arg2, Collection<Light> lights) {
 		if (this.isAlive) {
-			polygon.render(arg0, arg1, arg2);
+			polygon.render(arg0, arg1, arg2, lights);
 		}
 	}
 

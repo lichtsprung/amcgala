@@ -15,12 +15,14 @@
 package amcgala.framework.shape2d;
 
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.BresenhamLine;
 import amcgala.framework.shape.Shape;
 
+import java.util.Collection;
 import java.util.logging.Logger;
 
 /**
@@ -103,11 +105,11 @@ public class Cross extends Shape {
      *
      */
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
         l1.color = color;
         l2.color = color;
-        l1.render(transformation, camera, renderer);
-        l2.render(transformation, camera, renderer);
+        l1.render(transformation, camera, renderer, lights);
+        l2.render(transformation, camera, renderer, lights);
     }
 
     private static final Logger LOG = Logger.getLogger(Cross.class.getName());

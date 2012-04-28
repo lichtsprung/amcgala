@@ -16,6 +16,7 @@ package amcgala.framework.shape;
 
 import amcgala.framework.camera.Camera;
 import amcgala.framework.event.InputHandler;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
@@ -23,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -109,12 +111,12 @@ public class Container extends Shape implements InputHandler {
      *
      */
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
         Iterator<Shape> iter = this.objects.iterator();
         while (iter.hasNext()) {
             Shape object = iter.next();
             object.color = color;
-            object.render(transformation, camera, renderer);
+            object.render(transformation, camera, renderer, lights);
         }
     }
 

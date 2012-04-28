@@ -14,7 +14,10 @@
  */
 package amcgala.framework.shape3d;
 
+import java.util.Collection;
+
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
@@ -155,9 +158,9 @@ public class Box extends Shape {
      * Rendermethod.
      */
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
         lines.color = color;
-        lines.render(transformation, camera, renderer);
+        lines.render(transformation, camera, renderer, lights);
     }
 
     /**

@@ -1,7 +1,10 @@
 package amcgala.framework.shape.util;
 
+import java.util.Collection;
+
 import amcgala.framework.animation.Updatable;
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
@@ -48,8 +51,8 @@ public class Particle extends Shape implements Updatable {
 	}
 
 	@Override
-	public void render(Matrix transformation, Camera camera, Renderer renderer) {
-		point2d.render(transformation, camera, renderer);
+	public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
+		point2d.render(transformation, camera, renderer, lights);
 	}
 
 	public Vector3d getDirection() {

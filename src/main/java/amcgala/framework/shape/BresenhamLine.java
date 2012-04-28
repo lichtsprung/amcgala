@@ -14,10 +14,14 @@
  */
 package amcgala.framework.shape;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Pixel;
@@ -67,12 +71,17 @@ public class BresenhamLine extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
         // Einbeziehen der Transformationsgruppen. Um Animationen zu beruecksichtigen, die auf die einzelnen Felder zugegriffen
         // haben, werden die start und end Vektoren aktualisiert, bevor sie mit der Transformationsmatrix multipliziert werden.
         start = new Vector3d(x1, y1, z1).transform(transformation);
         end = new Vector3d(x2, y2, z2).transform(transformation);
 
+        Iterator iter = lights.iterator();
+        while(iter.hasNext()) {
+        	Light licht = (Light) iter.next();
+        	System.out.println(licht);
+        }
 
         // Start- und Endpunkt der Linie in Pixeln, mit denen die Linienalgorithmen durchgefuehrt werden.
         Pixel startPixel = camera.getImageSpaceCoordinates(start);

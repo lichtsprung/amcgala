@@ -18,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import javax.imageio.ImageIO;
 
@@ -25,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
@@ -90,10 +92,10 @@ public class Letter extends Shape {
 	}
 
 	@Override
-	public void render(Matrix transformation, Camera camera, Renderer renderer) {
+	public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
 		if (point2ds != null) {
 			for (Point2d p : point2ds) {
-				p.render(transformation, camera, renderer);
+				p.render(transformation, camera, renderer, lights);
 			}
 		}
 	}

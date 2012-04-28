@@ -14,10 +14,13 @@
 */
 package amcgala.framework.shape2d;
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.BresenhamLine;
@@ -40,10 +43,10 @@ public class Triangle extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        a.render(transformation, camera, renderer);
-        b.render(transformation, camera, renderer);
-        c.render(transformation, camera, renderer);
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
+        a.render(transformation, camera, renderer, lights);
+        b.render(transformation, camera, renderer, lights);
+        c.render(transformation, camera, renderer, lights);
     }
     
     private static final Logger log = LoggerFactory.getLogger(Triangle.class.getName());

@@ -14,10 +14,13 @@
 */
 package amcgala.framework.shape2d;
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Color;
@@ -47,7 +50,7 @@ public class Point2d extends Shape {
 	}
 	
 	@Override
-	public void render(Matrix transformation, Camera camera, Renderer renderer) {
+	public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
 		Vector3d point = new Vector3d(x, y, -1).transform(transformation);
 		
 		Pixel pixel = camera.getImageSpaceCoordinates(point);

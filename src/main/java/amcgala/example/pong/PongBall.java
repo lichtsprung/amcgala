@@ -14,7 +14,10 @@
 */
 package amcgala.example.pong;
 
+import java.util.Collection;
+
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
@@ -116,9 +119,9 @@ public class PongBall extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        circle.render(transformation, camera, renderer);
-        arrow.render(transformation, camera, renderer);
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
+        circle.render(transformation, camera, renderer, lights);
+        arrow.render(transformation, camera, renderer, lights);
     }
 
     private Vector3d getRandomDirection() {

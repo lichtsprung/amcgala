@@ -15,6 +15,7 @@
 package amcgala.example.gameoflife;
 
 import java.awt.event.KeyEvent;
+import java.util.Collection;
 import java.util.Random;
 
 import com.google.common.eventbus.Subscribe;
@@ -22,6 +23,7 @@ import com.google.common.eventbus.Subscribe;
 import amcgala.framework.animation.Animation;
 import amcgala.framework.camera.Camera;
 import amcgala.framework.event.InputHandler;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Shape;
@@ -89,10 +91,10 @@ public class Field extends Shape implements InputHandler {
 	}
 
 	@Override
-	public void render(Matrix arg0, Camera arg1, Renderer arg2) {
+	public void render(Matrix arg0, Camera arg1, Renderer arg2, Collection<Light> lights) {
 		for (int x = 0; x < size; x++) {
 			for (int y = 0; y < size; y++) {
-				elements[x][y].render(arg0, arg1, arg2);
+				elements[x][y].render(arg0, arg1, arg2, lights);
 			}
 		}
 	}

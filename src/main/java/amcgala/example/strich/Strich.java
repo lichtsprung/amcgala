@@ -14,7 +14,10 @@
  */
 package amcgala.example.strich;
 
+import java.util.Collection;
+
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.BresenhamLine;
@@ -34,7 +37,7 @@ public class Strich extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        line.render(transformation, camera, renderer);
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
+        line.render(transformation, camera, renderer, lights);
     }
 }

@@ -14,7 +14,10 @@
  */
 package amcgala.example.ships;
 
+import java.util.Collection;
+
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.BresenhamLine;
@@ -72,8 +75,8 @@ public class Ship extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        l1.render(transformation, camera, renderer);
-        l2.render(transformation, camera, renderer);
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
+        l1.render(transformation, camera, renderer, lights);
+        l2.render(transformation, camera, renderer, lights);
     }
 }

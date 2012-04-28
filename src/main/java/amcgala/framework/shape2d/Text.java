@@ -14,10 +14,13 @@
  */
 package amcgala.framework.shape2d;
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Shape;
@@ -73,9 +76,9 @@ public class Text extends Shape {
 	}
 
 	@Override
-	public void render(Matrix transformation, Camera camera, Renderer renderer) {
+	public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
 		for (Shape s : letters) {
-			s.render(transformation, camera, renderer);
+			s.render(transformation, camera, renderer, lights);
 		}
 	}
 	

@@ -15,13 +15,18 @@ package amcgala.framework.shape;
 * the License.
 */
 
+import java.util.Collection;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
+import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
+import amcgala.framework.shape2d.Point2d;
 
 /**
 * Polygonobjekt fuer die Koerperdarstellung im 3D Raum
@@ -35,7 +40,50 @@ public class Polygon extends Shape {
 	private BresenhamLine bl3;
 	private BresenhamLine bl4;
 	private Vector3d norm;
+	private boolean filled = false;
 	
+	/*
+	* Verhindern des Standardkonstruktors.
+	*/
+	private Polygon() {
+	}
+	
+	/**
+	 * 
+	 * @param v1
+	 * @param v2
+	 * @param v3
+	 * @param norm
+	 */
+	public Polygon(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d norm) {
+		bl1 = new BresenhamLine(v1, v2);
+		bl2 = new BresenhamLine(v2, v3);
+		bl3 = new BresenhamLine(v3, v1);
+		this.norm = norm;
+	}
+	
+	/**
+	 * 
+	 * @param v1
+	 * @param v2
+	 * @param v3
+	 * @param v4
+	 * @param norm
+	 */
+	public Polygon(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, Vector3d norm) {
+		bl1 = new BresenhamLine(v1, v2);
+		bl2 = new BresenhamLine(v2, v3);
+		bl3 = new BresenhamLine(v3, v4);
+		bl4 = new BresenhamLine(v4, v1);
+		this.norm = norm;
+	}
+	
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
 	public void move(double x, double y, double z) {
 		if (bl1 != null && bl2 != null && bl3 != null) {
 			bl1.x1 += x;
@@ -58,6 +106,7 @@ public class Polygon extends Shape {
 			bl3.y2 += y;
 			bl3.z1 += z;
 			bl3.z2 += z;
+			
 			if (bl4 != null) {
 				bl4.x1 += x;
 				bl4.x2 += x;
@@ -69,49 +118,50 @@ public class Polygon extends Shape {
 		}
 	}
 	
-	/*
-	* Verhindern des Standardkonstruktors.
-	*/
-	private Polygon() {
+	/**
+	 * 
+	 */
+	public void filled() {
+		this.filled = true;
 	}
-	
-	public Polygon(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d norm) {
-		bl1 = new BresenhamLine(v1, v2);
-		bl2 = new BresenhamLine(v2, v3);
-		bl3 = new BresenhamLine(v3, v1);
-		this.norm = norm;
-	}
-	
-	public Polygon(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, Vector3d norm) {
-		bl1 = new BresenhamLine(v1, v2);
-		bl2 = new BresenhamLine(v2, v3);
-		bl3 = new BresenhamLine(v3, v4);
-		bl4 = new BresenhamLine(v4, v1);
-		this.norm = norm;
-	}
-	
+
+	/**
+	 * 
+	 */
 	@Override
-	public void render(Matrix transformation, Camera camera, Renderer renderer) {
-	
-	if (camera.getDirection().dot(this.norm) < 0) {
-		return;
-	}
-	
-	// rendering
-	if (bl1 != null && bl2 != null && bl3 != null) {
-		bl1.render(transformation, camera, renderer);
-		bl2.render(transformation, camera, renderer);
-		bl3.render(transformation, camera, renderer);
-		if (bl4 != null) {
-			bl4.render(transformation, camera, renderer);
+	public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
+		if (camera.getDirection().dot(this.norm) < 0) {
+			return;
+		}
+		
+		// rendering
+		if(this.filled != true) {
+			// zeichne ein Polygon
+			if (bl1 != null && bl2 != null && bl3 != null) {
+				bl1.render(transformation, camera, renderer, lights);
+				bl2.render(transformation, camera, renderer, lights);
+				bl3.render(transformation, camera, renderer, lights);
+				if (bl4 != null) {
+					bl4.render(transformation, camera, renderer, lights);
+				}
+			}
+		} else {
+			// zeichne ein gefülltest polygon
+			log.info("Zeichne gefülltes Polygon");
+			if(bl4 != null) {
+			} else {
+				// zeichne dreieckiges polygon mit bresenhamline
+			}
 		}
 	}
 	
-	}
-	
+	/**
+	 * 
+	 */
 	@Override
 	public String toString() {
 		return "Polygon{" + "line 1=" + bl1 + ", line 2=" + bl2 + ", line 3=" + bl3 + '}';
 	}
+	
     private static final Logger log = LoggerFactory.getLogger(Polygon.class.getName());
 }

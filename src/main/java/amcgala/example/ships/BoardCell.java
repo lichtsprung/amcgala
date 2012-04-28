@@ -14,7 +14,10 @@
  */
 package amcgala.example.ships;
 
+import java.util.Collection;
+
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
@@ -122,10 +125,10 @@ public class BoardCell extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        bounds.render(transformation, camera, renderer);
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
+        bounds.render(transformation, camera, renderer, lights);
         if (ship != null) {
-            ship.render(transformation, camera, renderer);
+            ship.render(transformation, camera, renderer, lights);
         }
     }
 }

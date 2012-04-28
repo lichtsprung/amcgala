@@ -1,6 +1,9 @@
 package amcgala.framework.shape.util;
 
+import java.util.Collection;
+
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 
@@ -38,5 +41,5 @@ public interface ParticleManipulation {
 	 * @param camera
 	 * @param renderer
 	 */
-	public void render(Matrix transformation, Camera camera, Renderer renderer);
+	public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights);
 }

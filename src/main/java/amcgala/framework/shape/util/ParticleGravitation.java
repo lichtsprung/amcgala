@@ -1,6 +1,9 @@
 package amcgala.framework.shape.util;
 
+import java.util.Collection;
+
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
@@ -47,9 +50,9 @@ public class ParticleGravitation extends Shape implements ParticleManipulation {
 	}
 
 	@Override
-	public void render(Matrix transformation, Camera camera, Renderer renderer) {
+	public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
 		if (isVisible()) {
-			rectangle.render(transformation, camera, renderer);
+			rectangle.render(transformation, camera, renderer, lights);
 		}
 	}
 

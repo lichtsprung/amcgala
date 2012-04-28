@@ -15,10 +15,12 @@
 package amcgala.example.clock;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 
 import amcgala.framework.animation.Animation;
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
@@ -41,15 +43,14 @@ public class Clock extends Shape {
 		new Vector3d(0, 5, 0), new Vector3d(0, 0, 0));
 		
 		this.setAnimation(new ClockAnimation());
-	
 	}
 	
 	@Override
-	public void render(Matrix arg0, Camera arg1, Renderer arg2) {
-		clockFace.render(arg0, arg1, arg2);
-		second.render(arg0, arg1, arg2);
-		minute.render(arg0, arg1, arg2);
-		hour.render(arg0, arg1, arg2);
+	public void render(Matrix arg0, Camera arg1, Renderer arg2, Collection<Light> lights) {
+		clockFace.render(arg0, arg1, arg2, lights);
+		second.render(arg0, arg1, arg2, lights);
+		minute.render(arg0, arg1, arg2, lights);
+		hour.render(arg0, arg1, arg2, lights);
 	}
 	
 	private class ClockAnimation extends Animation<Shape> {

@@ -1,10 +1,12 @@
 package amcgala.framework.shape.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Random;
 
 import amcgala.framework.animation.Updatable;
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
@@ -92,12 +94,12 @@ public class ParticleEmitter extends Shape implements Updatable {
 	}
 
 	@Override
-	public void render(Matrix transformation, Camera camera, Renderer renderer) {
+	public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
 		for (Particle p : particles) {
-			p.render(transformation, camera, renderer);
+			p.render(transformation, camera, renderer, lights);
 		}
 		for (ParticleManipulation pm : particleManipulations) {
-			pm.render(transformation, camera, renderer);
+			pm.render(transformation, camera, renderer, lights);
 		}
 		// display emitterelement 2d
 		if (isVisible()) {
@@ -110,7 +112,7 @@ public class ParticleEmitter extends Shape implements Updatable {
 			rotateScale.y += y;
 			// display
 			new BresenhamLine(new Vector3d(x, y, 1), rotateScale).render(
-					transformation, camera, renderer);
+					transformation, camera, renderer, lights);
 		}
 	}
 

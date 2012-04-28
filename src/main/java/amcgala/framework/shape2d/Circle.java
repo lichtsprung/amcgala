@@ -14,7 +14,10 @@
  */
 package amcgala.framework.shape2d;
 
+import java.util.Collection;
+
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Pixel;
@@ -98,7 +101,7 @@ public class Circle extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
         /*
            * Einbeziehen der Transformationsgruppen. Um Animationen zu
            * beruecksichtigen, die auf die einzelnen Felder zugegriffen

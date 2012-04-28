@@ -14,6 +14,7 @@
  */
 package amcgala.framework.scenegraph;
 
+import amcgala.framework.lighting.Light;
 import amcgala.framework.scenegraph.transform.Transformation;
 import amcgala.framework.scenegraph.visitor.Visitor;
 import amcgala.framework.shape.Shape;
@@ -106,6 +107,23 @@ public class SceneGraph {
      */
     public void addShape(Shape shape) {
         addShape("root", shape);
+    }
+    
+    /**
+     * Fügt dem Wurzelknoten ein neues Lichtobjekt hinzu.
+     * @param light
+     */
+    public void addLight(Light light)  {
+    	root.addLight(light);
+    }
+    
+    /**
+     * Fügt einem bestimmten Knoten innerhalb des Scenegraph ein neues Lightobjekt hinzu.
+     * @param label
+     * @param light
+     */
+    public void addLight(String label, Light light) {
+    	addLight(label, light);
     }
 
     /**

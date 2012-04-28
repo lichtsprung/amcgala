@@ -20,6 +20,7 @@ import amcgala.framework.camera.Camera;
 import amcgala.framework.camera.SimplePerspectiveCamera;
 import amcgala.framework.event.InputHandler;
 import amcgala.framework.event.WASDController;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.scenegraph.Node;
@@ -202,6 +203,14 @@ public abstract class Framework {
     public void add(Shape shape) {
         scenegraph.addShape(shape);
     }
+    
+    /**
+     * Fügt der Szene eine neue Lichtquelle hinzu. Diese wird an den Root-Knoten angehängt.
+     * @param light das Lichtobjekt, das der Szene hinzugefügt wird.
+     */
+    public void add(Light light) {
+    	scenegraph.addLight(light);
+    }
 
     /**
      * Fügt dem Szenengraph einen neuen Knoten hinzu.
@@ -281,6 +290,23 @@ public abstract class Framework {
     public void setScreenWidth(int screenWidth) {
         this.screenWidth = screenWidth;
         setAspectRatio(screenWidth / screenHeight);
+    }
+    
+    
+    /**
+     * Ändert die Hintergrundfarbe.
+     */
+    
+    public void setBackgroundColor(java.awt.Color backgroundcolor) {
+    	frame.setBackground(backgroundcolor);
+    }
+    
+    /**
+     * Gibt die aktuelle Hintergrundfarbe zurück.
+     * @return
+     */
+    public java.awt.Color getBackgroundColor() {
+    	return frame.getBackground();
     }
 
     /**

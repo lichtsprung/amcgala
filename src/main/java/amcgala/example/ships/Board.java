@@ -14,7 +14,10 @@
  */
 package amcgala.example.ships;
 
+import java.util.Collection;
+
 import amcgala.framework.camera.Camera;
+import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Shape;
@@ -108,10 +111,10 @@ public class Board extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
         for (int i = 0; i < boardArray.length; i++) {
             for (int k = 0; k < boardArray[0].length; k++) {
-                boardArray[i][k].render(transformation, camera, renderer);
+                boardArray[i][k].render(transformation, camera, renderer, lights);
             }
         }
     }
