@@ -63,7 +63,7 @@ public class ParticleGravitation extends Shape implements ParticleManipulation {
 	public void manipulate(Particle p) {
 		Vector3d direction = p.getDirection().copy();
 		direction.y -= gravitation;
-		p.setDirection(direction.normalize());
+		p.setDirection(direction);
 	}
 
 	public void setVisible(boolean visible) {
