@@ -20,7 +20,7 @@ import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Shape;
-import amcgala.framework.shape2d.Cross;
+import amcgala.framework.shape.shape2d.Cross;
 
 import com.google.common.eventbus.Subscribe;
 

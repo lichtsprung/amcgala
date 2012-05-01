@@ -20,8 +20,8 @@ import amcgala.framework.math.Plane;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Shape;
-import amcgala.framework.shape2d.Cross;
-import amcgala.framework.shape2d.Rectangle;
+import amcgala.framework.shape.shape2d.Cross;
+import amcgala.framework.shape.shape2d.Rectangle;
 
 /**
  * Das Paddle, mit dem man den Ball treffen muss.

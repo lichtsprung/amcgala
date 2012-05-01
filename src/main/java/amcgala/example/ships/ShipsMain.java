@@ -15,7 +15,7 @@
 package amcgala.example.ships;
 
 import amcgala.Framework;
-import amcgala.framework.shape2d.Text;
+import amcgala.framework.shape.shape2d.Text;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;

@@ -22,7 +22,7 @@ import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.BresenhamLine;
 import amcgala.framework.shape.Shape;
-import amcgala.framework.shape2d.Point2d;
+import amcgala.framework.shape.shape2d.Point2d;
 
 /**
  * Eine animierte Sinuskurve.

@@ -19,7 +19,7 @@ import amcgala.framework.math.Matrix;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Shape;
-import amcgala.framework.shape2d.Rectangle;
+import amcgala.framework.shape.shape2d.Rectangle;
 
 /**
  * Ein Feld auf dem Spielbrett. Es speichert den aktuellen Zustand für diese

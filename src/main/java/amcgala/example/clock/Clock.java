@@ -24,7 +24,7 @@ import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Polygon;
 import amcgala.framework.shape.Shape;
-import amcgala.framework.shape3d.Circle;
+import amcgala.framework.shape.shape3d.Circle;
 
 public class Clock extends Shape {
 

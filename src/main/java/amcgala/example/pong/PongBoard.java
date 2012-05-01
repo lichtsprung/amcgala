@@ -17,7 +17,7 @@ package amcgala.example.pong;
 import amcgala.framework.math.Plane;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.scenegraph.Node;
-import amcgala.framework.shape2d.Rectangle;
+import amcgala.framework.shape.shape2d.Rectangle;
 
 /**
  * Das Board, in dem das Spiel stattfindet. Es definiert die Grenzen, in denen

@@ -1,7 +1,7 @@
 package amcgala.example.letter;
 
 import amcgala.Framework;
-import amcgala.framework.shape2d.Text;
+import amcgala.framework.shape.shape2d.Text;
 
 
 public class LetterMain extends Framework {
