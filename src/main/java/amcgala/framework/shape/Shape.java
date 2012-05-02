@@ -83,7 +83,7 @@ public abstract class Shape implements Updatable {
      */
     public Animation getAnimation() {
         return animation;
-    }
+    }	
 
     @Override
     public void update() {

@@ -18,7 +18,6 @@ import amcgala.framework.camera.Camera;
 import amcgala.framework.event.InputHandler;
 import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
-import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

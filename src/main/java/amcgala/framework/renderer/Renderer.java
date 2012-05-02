@@ -15,10 +15,16 @@
 package amcgala.framework.renderer;
 
 import javax.swing.*;
+
+import amcgala.framework.lighting.Light;
+import amcgala.framework.math.Vector3d;
+import amcgala.framework.shape.Appearance;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.MouseAdapter;
 import java.awt.image.BufferStrategy;
+import java.util.Collection;
 
 /**
  * Wird von jedem Renderer erweitert und stellt die Funktionen putPixel und show
@@ -39,6 +45,7 @@ public class Renderer {
     private int offsetY;
     private JFrame frame;
     private Graphics g;
+    private Robot robot;
 
     /**
      * Erzeugt einen neuen Renderer und initialisiert die gemeinsamen Felder
@@ -58,7 +65,13 @@ public class Renderer {
 
         frame.createBufferStrategy(2);
         bs = frame.getBufferStrategy();
-        g = bs.getDrawGraphics();
+        g = bs.getDrawGraphics();    	
+        
+        try {
+    		robot = new Robot();
+    	} catch(AWTException e) {
+    		e.printStackTrace();
+    	}
     }
 
     /**
@@ -103,6 +116,17 @@ public class Renderer {
         g.setColor(color.color);
         g.fillRect(offsetX + pixel.x, -pixel.y + offsetY, 1, 1);
     }
+    
+    /**
+     * 
+     * @param x
+     * @param y
+     * @return
+     */
+    public Color getPixel(int x, int y) {
+    		java.awt.Color farbe = robot.getPixelColor(x, y);
+    		return new Color(farbe);
+    }
 
     /**
      * Weist den Renderer an, den Buffer auszugeben.
@@ -112,6 +136,17 @@ public class Renderer {
         g = bs.getDrawGraphics();
         g.clearRect(0, 0, frame.getWidth(), frame.getHeight());
     }
+    
+    /**
+     * Gibt einen Pixel des Shapes zurück, 
+     * @param position
+     * @param lights
+     * @param appearance
+     * @return
+     */
+	public Pixel interpolate(Vector3d position, Collection<Light> lights, Appearance appearance) {
+		return null;
+	}
 
     /**
      * Fügt dem JFrame der Ausgabe einen MouseListener hinzu, mit dem

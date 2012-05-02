@@ -15,7 +15,6 @@
 package amcgala.framework.shape;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +25,6 @@ import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Pixel;
 import amcgala.framework.renderer.Renderer;
-import amcgala.framework.shape3d.Box;
 
 /**
  * Eine Linie im 3d Raum.
@@ -77,12 +75,7 @@ public class BresenhamLine extends Shape {
         start = new Vector3d(x1, y1, z1).transform(transformation);
         end = new Vector3d(x2, y2, z2).transform(transformation);
 
-        Iterator iter = lights.iterator();
-        while(iter.hasNext()) {
-        	Light licht = (Light) iter.next();
-        	System.out.println(licht);
-        }
-
+        
         // Start- und Endpunkt der Linie in Pixeln, mit denen die Linienalgorithmen durchgefuehrt werden.
         Pixel startPixel = camera.getImageSpaceCoordinates(start);
         Pixel endPixel = camera.getImageSpaceCoordinates(end);
@@ -93,6 +86,7 @@ public class BresenhamLine extends Shape {
             startPixel = endPixel;
             endPixel = tmp;
         }
+        
 
         /*
          * Beginn des Bresenham Algorithmus
