@@ -45,7 +45,6 @@ public class Renderer {
     private int offsetY;
     private JFrame frame;
     private Graphics g;
-    private Robot robot;
 
     /**
      * Erzeugt einen neuen Renderer und initialisiert die gemeinsamen Felder
@@ -65,13 +64,7 @@ public class Renderer {
 
         frame.createBufferStrategy(2);
         bs = frame.getBufferStrategy();
-        g = bs.getDrawGraphics();    	
-        
-        try {
-    		robot = new Robot();
-    	} catch(AWTException e) {
-    		e.printStackTrace();
-    	}
+        g = bs.getDrawGraphics();
     }
 
     /**
@@ -115,17 +108,6 @@ public class Renderer {
     public void putPixel(Pixel pixel, amcgala.framework.renderer.Color color) {
         g.setColor(color.color);
         g.fillRect(offsetX + pixel.x, -pixel.y + offsetY, 1, 1);
-    }
-    
-    /**
-     * 
-     * @param x
-     * @param y
-     * @return
-     */
-    public Color getPixel(int x, int y) {
-    		java.awt.Color farbe = robot.getPixelColor(x, y);
-    		return new Color(farbe);
     }
 
     /**
