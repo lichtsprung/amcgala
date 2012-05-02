@@ -1,7 +1,7 @@
 package amcgala.example.extendedparticle;
 
 import amcgala.Framework;
-import amcgala.framework.shape2d.Text;
+import amcgala.framework.shape.shape2d.Text;
 
 /**
  * Komplexeres Partikelbeispiel.
