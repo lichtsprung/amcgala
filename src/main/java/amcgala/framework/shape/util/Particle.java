@@ -9,7 +9,7 @@ import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Shape;
-import amcgala.framework.shape2d.Point2d;
+import amcgala.framework.shape.shape2d.Point2d;
 
 /**
  * Partikel Element fuer den ParticleEmitter. TODO: Es sollte hier moeglich sein

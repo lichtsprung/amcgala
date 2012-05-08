@@ -21,7 +21,7 @@ import amcgala.framework.event.InputHandler;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.scenegraph.Node;
 import amcgala.framework.scenegraph.transform.RotationY;
-import amcgala.framework.shape3d.Box;
+import amcgala.framework.shape.shape3d.Box;
 
 import com.google.common.eventbus.Subscribe;
 import org.slf4j.Logger;

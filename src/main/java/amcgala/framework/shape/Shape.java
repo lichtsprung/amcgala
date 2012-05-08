@@ -36,6 +36,7 @@ public abstract class Shape implements Updatable {
     private Animation animation;
     public Color color = Color.BLACK;
     private boolean rendering;
+    private Appearance appearance;
 
     /**
      * Gibt den Renderstatus des Shapes zurück.
@@ -83,7 +84,23 @@ public abstract class Shape implements Updatable {
      */
     public Animation getAnimation() {
         return animation;
-    }	
+    }
+    
+    /**
+     * Gibt die aktuelle Eigenschaft des Objekts zurück.
+     * @return Das Eigenschaftsobjekt des Shapes.
+     */
+    public Appearance getAppearance() {
+    	return this.appearance;
+    }
+    
+    /**
+     * Setzt die Eigenschaft des Shapeobjekts.
+     * @param Das Eigenschaftsobjekt.
+     */
+    public void setApperance(Appearance app) {
+    	this.appearance = app;
+    }
 
     @Override
     public void update() {

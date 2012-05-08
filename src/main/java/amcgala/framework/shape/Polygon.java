@@ -26,7 +26,6 @@ import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
-import amcgala.framework.shape2d.Point2d;
 
 /**
 * Polygonobjekt fuer die Koerperdarstellung im 3D Raum

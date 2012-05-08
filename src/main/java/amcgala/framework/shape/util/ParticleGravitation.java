@@ -8,7 +8,7 @@ import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Shape;
-import amcgala.framework.shape2d.Rectangle;
+import amcgala.framework.shape.shape2d.Rectangle;
 
 /**
  * Partikel sollen im definierten Bereich mehr Gravitation bekommen.

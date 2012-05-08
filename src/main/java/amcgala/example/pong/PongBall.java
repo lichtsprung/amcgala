@@ -22,8 +22,8 @@ import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.Shape;
-import amcgala.framework.shape2d.Arrow;
-import amcgala.framework.shape2d.Circle;
+import amcgala.framework.shape.shape2d.Arrow;
+import amcgala.framework.shape.shape2d.Circle;
 
 /**
 * Der Ball, der vom Spieler getroffen werden muss.

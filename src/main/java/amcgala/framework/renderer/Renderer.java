@@ -127,7 +127,7 @@ public class Renderer {
      * @return
      */
 	public Pixel interpolate(Vector3d position, Collection<Light> lights, Appearance appearance) {
-		return null;
+		return new Pixel(position.x, position.y);
 	}
 
     /**

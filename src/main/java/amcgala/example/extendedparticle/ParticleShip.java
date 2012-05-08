@@ -16,7 +16,7 @@ import amcgala.framework.scenegraph.transform.RotationZ;
 import amcgala.framework.shape.Shape;
 import amcgala.framework.shape.util.ParticleEmitter;
 import amcgala.framework.shape.util.ParticleGravitation;
-import amcgala.framework.shape2d.Rectangle;
+import amcgala.framework.shape.shape2d.Rectangle;
 
 public class ParticleShip extends Shape implements InputHandler, Updatable {
 
