@@ -211,6 +211,24 @@ public abstract class Framework {
     public void add(Node node) {
         scenegraph.addNode(node);
     }
+    
+    /**
+     * Fügt einen Knoten an einen anderen bestimmten Knoten hinzu.
+     * @param label der Name des Knotens
+     * @param node der Knoten der angehängt wird
+     */
+    public void add(String label, Node node) {
+    	scenegraph.addNode(node, label);
+    }
+    
+    /**
+     * Fügt dem benannten Knoten das Shapeobjekt hinzu.
+     * @param label der name des Knotens
+     * @param shape das Shapeobjekt
+     */
+    public void add(String label, Shape shape) {
+    	scenegraph.addShape(label, shape);
+    }
 
     /**
      * Ändert den Renderer des Frameworks. Damit ist es möglich die Ausgabe des
