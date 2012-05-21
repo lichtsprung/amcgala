@@ -4,9 +4,45 @@
     <modelVersion>4.0.0</modelVersion>
     <version>1.0.12</version>
     <packaging>jar</packaging>
-    <url>http://maven.apache.org</url>
+    <url>http://www.amcgala.org</url>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+
+    <developers>
+        <developer>
+            <id>lichtsprung</id>
+            <name>Robert Giacinto</name>
+            <email>robert.giacinto@gmail.com</email>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>Educational Community License, Version 2.0</name>
+            <url>http://www.osedu.org/licenses/ECL-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git@github.com:amcgala/amcgala.git</connection>
+        <url>scm:git:git@github.com:amcgala/amcgala.git</url>
+        <developerConnection>scm:git@github.com:amcgala/amcgala.git</developerConnection>
+    </scm>
+
+
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.2.2</version>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -92,7 +128,7 @@
             <version>1.6.4</version>
         </dependency>
     </dependencies>
-    <groupId>amCGAla</groupId>
-    <artifactId>amCGAla</artifactId>
-    <name>amCGAla</name>
+    <groupId>amcgala</groupId>
+    <artifactId>amcgala</artifactId>
+    <name>amcgala</name>
 </project>
