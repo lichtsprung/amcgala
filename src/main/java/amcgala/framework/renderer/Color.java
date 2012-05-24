@@ -30,6 +30,15 @@ public class Color {
     private int g;
     private int b;
     protected java.awt.Color color;
+    
+    /**
+     * Erzeugt eine neue Farbe basierend auf einem intwert.
+     * @param rgb
+     */
+    public Color(int rgb) {
+    	this.color = new java.awt.Color(rgb);
+    }
+    
 
     /**
      * Erzeugt eine neue Farbe von einer java.awt.Color.

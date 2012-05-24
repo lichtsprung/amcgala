@@ -17,7 +17,6 @@ package amcgala.framework.renderer;
 import javax.swing.*;
 
 import amcgala.framework.lighting.Light;
-import amcgala.framework.math.Vector3d;
 import amcgala.framework.shape.Appearance;
 
 import java.awt.*;
@@ -118,17 +117,6 @@ public class Renderer {
         g = bs.getDrawGraphics();
         g.clearRect(0, 0, frame.getWidth(), frame.getHeight());
     }
-    
-    /**
-     * Gibt einen Pixel des Shapes zurück, 
-     * @param position
-     * @param lights
-     * @param appearance
-     * @return
-     */
-	public Pixel interpolate(Vector3d position, Collection<Light> lights, Appearance appearance) {
-		return new Pixel(position.x, position.y);
-	}
 
     /**
      * Fügt dem JFrame der Ausgabe einen MouseListener hinzu, mit dem
