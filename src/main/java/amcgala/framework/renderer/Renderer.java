@@ -17,7 +17,6 @@ package amcgala.framework.renderer;
 import javax.swing.*;
 
 import amcgala.framework.lighting.Light;
-import amcgala.framework.shape.Appearance;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -104,7 +103,10 @@ public class Renderer {
      * @param pixel der Pixel, der dargestellt werden soll
      * @param color die Farbe des Pixels
      */
-    public void putPixel(Pixel pixel, amcgala.framework.renderer.Color color) {
+    public void putPixel(Pixel pixel, amcgala.framework.renderer.Color color, Collection<Light> lights) {
+        for(Light light : lights) {
+        	color = light.interpolate(color);
+        }
         g.setColor(color.color);
         g.fillRect(offsetX + pixel.x, -pixel.y + offsetY, 1, 1);
     }

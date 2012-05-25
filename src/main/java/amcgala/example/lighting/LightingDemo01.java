@@ -66,7 +66,7 @@ public class LightingDemo01 extends Framework {
         add(n);
         
         // licht
-        Light l = new Light("light1", 0.79, 0.99);
+        Light l = new Light("light1", 0.75, 0.99);
         System.out.println(l.toString());
         n.addLight(l);
 	}
