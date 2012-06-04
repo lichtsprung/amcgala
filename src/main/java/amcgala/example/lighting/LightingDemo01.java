@@ -14,21 +14,30 @@
  */
 package amcgala.example.lighting;
 
+import java.awt.event.KeyEvent;
+
+
 import amcgala.Framework;
 import amcgala.framework.animation.interpolation.LinearInterpolation;
-import amcgala.framework.lighting.Light;
+import amcgala.framework.event.InputHandler;
 import amcgala.framework.math.Vector3d;
-import amcgala.framework.renderer.Color;
 import amcgala.framework.scenegraph.Node;
 import amcgala.framework.scenegraph.transform.RotationY;
+
+import amcgala.framework.lighting.AmbientLight;
+import amcgala.framework.renderer.Color;
 import amcgala.framework.shape.shape3d.Mesh;
+
+import com.google.common.eventbus.Subscribe;
 
 /**
  * Beispielklasse für Beleuchtung in amCGAla. Zeigt ein Objekt das von einer Lichtquelle beleuchtet wird.
  * @author Sascha Lemke
  */
-public class LightingDemo01 extends Framework {
+public class LightingDemo01 extends Framework implements InputHandler {
 
+	private AmbientLight ambient;
+	
 	/**
 	 * Konstruktormethode.
 	 * @param width Die Breite des Frames
@@ -45,7 +54,7 @@ public class LightingDemo01 extends Framework {
 	public static void main(String[] args) {
 		Framework fm = new LightingDemo01(800, 600);
 		fm.start();
-		fm.setBackgroundColor(new java.awt.Color(161, 217, 240)); // setzt die Hintergrundfarbe für den Frame
+		fm.setBackgroundColor(new java.awt.Color(212, 212, 212)); // setzt die Hintergrundfarbe für den Frame
 	}
 
 	/**
@@ -53,6 +62,7 @@ public class LightingDemo01 extends Framework {
 	 */
 	@Override
 	public void initGraph() {
+		this.registerInputEventHandler(this);
 		
 		Node n = new Node("rotating box");
         RotationY rotY = new RotationY();
@@ -65,10 +75,18 @@ public class LightingDemo01 extends Framework {
         n.addShape(m);
         add(n);
         
+        
         // licht
-        Light l = new Light("light1", 0.79, 0.99);
-        System.out.println(l.toString());
-        n.addLight(l);
+        this.ambient = new AmbientLight("TestAmbientLight", 0.1, new Color(255, 255, 255));
+        n.addLight(ambient);
 	}
 
+	@Subscribe
+	public void changeIntensity(KeyEvent e) {
+		if(e.getKeyCode() == KeyEvent.VK_UP) {
+			this.ambient.setIntensity(this.ambient.getIntensity() + 0.05);
+		} else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+			this.ambient.setIntensity(this.ambient.getIntensity() - 0.05);
+		}
+	}
 }

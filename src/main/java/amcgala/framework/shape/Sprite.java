@@ -136,7 +136,7 @@ public class Sprite extends Shape {
         for (int i = 0; i < pixel.length; i++) {
             pixel[i].x = (int) (i % width + x);
             pixel[i].y = (int) ((height - i) / width + y);
-            renderer.putPixel(pixel[i], color[i]);
+            renderer.putPixel(pixel[i], color[i], lights);
         }
     }
 

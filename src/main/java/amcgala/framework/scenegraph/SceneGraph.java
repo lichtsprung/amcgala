@@ -14,10 +14,11 @@
  */
 package amcgala.framework.scenegraph;
 
-import amcgala.framework.lighting.Light;
 import amcgala.framework.scenegraph.transform.Transformation;
 import amcgala.framework.scenegraph.visitor.Visitor;
 import amcgala.framework.shape.Shape;
+
+import amcgala.framework.lighting.Light;
 
 /**
  * Szenengraph des Frameworks.

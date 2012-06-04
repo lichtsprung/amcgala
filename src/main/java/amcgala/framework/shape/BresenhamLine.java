@@ -15,17 +15,16 @@
 package amcgala.framework.shape;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import amcgala.framework.camera.Camera;
-import amcgala.framework.lighting.Light;
 import amcgala.framework.math.Matrix;
 import amcgala.framework.math.Vector3d;
-import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Pixel;
+
+import amcgala.framework.lighting.Light;
 import amcgala.framework.renderer.Renderer;
 
 /**
@@ -77,7 +76,6 @@ public class BresenhamLine extends Shape {
         start = new Vector3d(x1, y1, z1).transform(transformation);
         end = new Vector3d(x2, y2, z2).transform(transformation);
 
-        
         // Start- und Endpunkt der Linie in Pixeln, mit denen die Linienalgorithmen durchgefuehrt werden.
         Pixel startPixel = camera.getImageSpaceCoordinates(start);
         Pixel endPixel = camera.getImageSpaceCoordinates(end);
@@ -101,16 +99,13 @@ public class BresenhamLine extends Shape {
         double e;
         double y = startPixel.y;
         double x = startPixel.x;
+        double z = start.z;
+        
+        double dz = end.z - start.z;
+        
         int i = 1;
-        
-        Color c2 = color;
-        Iterator<Light> iter = lights.iterator();
-        while(iter.hasNext()) {
-        	Light l = iter.next();
-        	c2 = l.interpolate(c2);
-        }
-        
-        renderer.putPixel(new Pixel(x, y), c2);
+        Vector3d v = new Vector3d(-x, -y, -start.z);
+        renderer.putPixel(v, color, lights);
 
         //1.+8. Oktant
         if (dy <= dx && -dy <= dx) {
@@ -129,14 +124,10 @@ public class BresenhamLine extends Shape {
                 x++;
                 i++;
                 e += Math.abs(dy2);
+                z += (dz / dx);
+                v = new Vector3d(-x, -y, -z);
                 
-                c2= color;
-                iter = lights.iterator();
-                while(iter.hasNext()) {
-                	Light l = iter.next();
-                	c2 = l.interpolate(c2);
-                }
-                renderer.putPixel(new Pixel(x, y), c2);
+                renderer.putPixel(v, color, lights);
             }
         }
 
@@ -155,13 +146,9 @@ public class BresenhamLine extends Shape {
                 }
                 i++;
                 e += dx2;
-                c2 = color;
-                iter = lights.iterator();
-                while(iter.hasNext()) {
-                	Light l = iter.next();
-                	c2 = l.interpolate(c2);
-                }
-                renderer.putPixel(new Pixel(x, y), c2);
+                z += (dz / dx);
+                v = new Vector3d(-x, -y, -z);
+                renderer.putPixel(v, color, lights);
             }
         }
 

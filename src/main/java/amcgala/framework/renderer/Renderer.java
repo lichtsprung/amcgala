@@ -16,8 +16,9 @@ package amcgala.framework.renderer;
 
 import javax.swing.*;
 
+import amcgala.framework.math.Vector3d;
+
 import amcgala.framework.lighting.Light;
-import amcgala.framework.shape.Appearance;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -104,11 +105,25 @@ public class Renderer {
      * @param pixel der Pixel, der dargestellt werden soll
      * @param color die Farbe des Pixels
      */
-    public void putPixel(Pixel pixel, amcgala.framework.renderer.Color color) {
+    public void putPixel(Pixel pixel, Color color, Collection<Light> lights) {
+        for(Light light : lights) {
+        	color = light.interpolate(color, new Vector3d(pixel.x, pixel.y, 0));
+        }
         g.setColor(color.color);
         g.fillRect(offsetX + pixel.x, -pixel.y + offsetY, 1, 1);
     }
 
+    public void putPixel(Vector3d position, Color color, Collection<Light> lights) {
+    	Vector3d n = new Vector3d(position.x, position.y, position.z);
+        for(Light light : lights) {
+        	System.out.println(light.toString());
+        	color = light.interpolate(color, n);
+        }
+        g.setColor(color.color);
+        g.fillRect(offsetX + (int) position.x, (int) -position.y + offsetY, 1, 1);
+    }    
+    
+    
     /**
      * Weist den Renderer an, den Buffer auszugeben.
      */

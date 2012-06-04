@@ -16,17 +16,19 @@ package amcgala.framework.shape.shape3d;
 
 import java.util.Collection;
 
+import amcgala.framework.camera.Camera;
+import amcgala.framework.math.Matrix;
+import amcgala.framework.math.Vector3d;
+import amcgala.framework.shape.Container;
+import amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import amcgala.framework.camera.Camera;
 import amcgala.framework.lighting.Light;
-import amcgala.framework.math.Matrix;
-import amcgala.framework.math.Vector3d;
+import amcgala.framework.renderer.Color;
 import amcgala.framework.renderer.Renderer;
 import amcgala.framework.shape.BresenhamLine;
-import amcgala.framework.shape.Container;
-import amcgala.framework.shape.Shape;
+
 
 /**
  * Ein gefülltes "Objekt" das aus Polygonen besteht.
@@ -41,33 +43,45 @@ public class Mesh extends Shape {
 		c = new Container();
 		// rechts
 		for(int i = 0; i < height; i++) {
-			c.add(new BresenhamLine(new Vector3d(position.x, position.y + i, position.z), new Vector3d(width, position.y + i, position.z)));
+			BresenhamLine b = new BresenhamLine(new Vector3d(position.x, position.y + i, position.z), new Vector3d(width, position.y + i, position.z));
+			b.color = new Color(0, 0, 0);
+			c.add(b);
 		}
 		// hinten
 		for(int i = 0; i < height; i++) {
-			c.add(new BresenhamLine(new Vector3d(position.x, position.y + i, position.z), new Vector3d(position.x, position.y + i, depth)));
+			BresenhamLine b = new BresenhamLine(new Vector3d(position.x, position.y + i, position.z), new Vector3d(position.x, position.y + i, depth));
+			b.color = new Color(0, 0, 0);
+			c.add(b);
 		}
 		// vorn
 		for(int i = 0; i < height; i++) {
-			c.add(new BresenhamLine(new Vector3d(width, position.y + i, position.z), new Vector3d(width, position.y + i, depth)));
+			BresenhamLine b = new BresenhamLine(new Vector3d(width, position.y + i, position.z), new Vector3d(width, position.y + i, depth));
+			b.color = new Color(0, 0, 0);
+			c.add(b);
 		}
 		// links
 		for(int i = 0; i < height; i++) {
-			c.add(new BresenhamLine(new Vector3d(position.x, position.y + i, depth), new Vector3d(width, position.y + i, depth)));
+			BresenhamLine b = new BresenhamLine(new Vector3d(position.x, position.y + i, depth), new Vector3d(width, position.y + i, depth));
+			b.color = new Color(0, 0, 0);
+			c.add(b);
+			
 		}
 		// oben
 		for(int i = 0; i < depth; i++) {
-			c.add(new BresenhamLine(new Vector3d(position.x, position.y + height, i), new Vector3d(width, position.y + height,i)));
+			BresenhamLine b = new BresenhamLine(new Vector3d(position.x, position.y + height, i), new Vector3d(width, position.y + height,i));
+			b.color = new Color(0 ,0 ,0);
+			c.add(b);
 		}
 		// unten
 		for(int i = 0; i < depth; i++) {
-			c.add(new BresenhamLine(new Vector3d(position.x, position.y, i), new Vector3d(width,position.y,i)));
+			BresenhamLine b = new BresenhamLine(new Vector3d(position.x, position.y, i), new Vector3d(width,position.y,i));
+			b.color = new Color(0, 0, 0);
+			c.add(b);
 		}
 	}
 
 	@Override
 	public void render(Matrix transformation, Camera camera, Renderer renderer, Collection<Light> lights) {
-		c.color = color;
 		c.render(transformation, camera, renderer, lights);
 	}
 
