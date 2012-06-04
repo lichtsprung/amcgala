@@ -19,7 +19,6 @@ package org.amcgala.example.lighting;
 import java.awt.event.KeyEvent;
 
 import org.amcgala.framework.lighting.AmbientLight;
-import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.shape.shape3d.Mesh;
 
 import org.amcgala.Framework;

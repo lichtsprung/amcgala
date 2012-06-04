@@ -71,7 +71,7 @@ public class AmbientLight implements Light {
 	public void setIntensity(double intensity) {
 		if(intensity >= 1) {
 			this.intensity = 1.0;
-		} else if(intensity >= 0) {
+		} else if(intensity <= 0) {
 			this.intensity = 0;
 		} else {
 			this.intensity = intensity;
