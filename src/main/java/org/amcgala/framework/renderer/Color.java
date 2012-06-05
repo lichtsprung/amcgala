@@ -39,7 +39,11 @@ public class Color {
     	this.color = new java.awt.Color(rgb);
     }
     
-
+    public Color(float r, float g, float b) {
+    	this.color = new java.awt.Color(r, g, b);
+    }
+    
+    
     /**
      * Erzeugt eine neue Farbe von einer java.awt.Color.
      *

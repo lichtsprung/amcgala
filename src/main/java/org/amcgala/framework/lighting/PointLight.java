@@ -1,3 +1,17 @@
+/* 
+ * Copyright 2011 Cologne University of Applied Sciences Licensed under the
+ * Educational Community License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may
+ * obtain a copy of the License at
+ *
+ * http://www.osedu.org/licenses/ECL-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an "AS IS"
+ * BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
 package org.amcgala.framework.lighting;
 
 import org.amcgala.framework.math.Vector3d;
@@ -8,7 +22,7 @@ public class PointLight implements Light {
 
 	// ambientlight variables
 	private String name;
-	private double ambientIntensity = 1;
+	private double ambientIntensity = 0.9;
 
 	private double reflexionskoeffizient = 1; // in appearance packen
 	private Color ambientColor = new Color(255, 255, 255);
@@ -16,10 +30,10 @@ public class PointLight implements Light {
 	// pointlight variables
 	private Vector3d position;
 	private Color pointColor = new Color(255, 255, 255);
-	private double pointIntensity = 0.8;
+	private double pointIntensity = 1;
 	private double constantAttenuation = 0;
 	private double linearAttenuation = 0;
-	private double exponentialAttenuation = 0.8;
+	private double exponentialAttenuation = 1;
 	
 	
 	/**
@@ -66,7 +80,11 @@ public class PointLight implements Light {
 	 * @param ambientIntensity Die neue Intensität
 	 */
 	public void setAmbientIntensity(double ambientIntensity) {
-		this.ambientIntensity = ambientIntensity;
+		if(ambientIntensity > 1 || ambientIntensity < 0) {
+			throw new IllegalArgumentException();
+		} else {
+			this.ambientIntensity = ambientIntensity;
+		}
 	}
 	
 	/**
@@ -82,7 +100,11 @@ public class PointLight implements Light {
 	 * @param reflexionskoeffizient Der Reflexionskoeffizient
 	 */
 	public void setReflexionskoeffizient(double reflexionskoeffizient) {
-		this.reflexionskoeffizient = reflexionskoeffizient;
+		if(reflexionskoeffizient > 1 || reflexionskoeffizient < 0) {
+			throw new IllegalArgumentException();
+		} else {
+			this.reflexionskoeffizient = reflexionskoeffizient;
+		}
 	}
 
 	/**
@@ -130,10 +152,8 @@ public class PointLight implements Light {
 	 * @param pointIntensity Die Intensität des Pointlights
 	 */
 	public void setPointIntensity(double pointIntensity) {
-		if(pointIntensity >= 1) {
-			this.pointIntensity = 1;
-		} else if(pointIntensity <= 0) {
-			this.pointIntensity = 0;
+		if(pointIntensity > 1 || pointIntensity < 0) {
+			throw new IllegalArgumentException();
 		} else {
 			this.pointIntensity = pointIntensity;
 		}
@@ -182,13 +202,15 @@ public class PointLight implements Light {
 	}
 	
 	/**
-	 * @return the constantAttenuation
+	 * Gibt die konstante Lichtabschwächung zurück.
+	 * @return the constantAttenuation die konstante Lichtabschwächung
 	 */
 	public double getConstantAttenuation() {
 		return constantAttenuation;
 	}
 
 	/**
+	 * Setzt die konstante Lichtabschächung auf den übergebenen Wert.
 	 * @param constantAttenuation the constantAttenuation to set
 	 */
 	public void setConstantAttenuation(double constantAttenuation) {
@@ -196,13 +218,15 @@ public class PointLight implements Light {
 	}
 
 	/**
-	 * @return the linearAttenuation
+	 * Gibt die lineare Lichtabschwächung zurück.
+	 * @return the linearAttenuation die lineare Lichtabschwächung
 	 */
 	public double getLinearAttenuation() {
 		return linearAttenuation;
 	}
 
 	/**
+	 * Setzt die lineare Lichtabschwächung auf den übergebenen Wert.
 	 * @param linearAttenuation the linearAttenuation to set
 	 */
 	public void setLinearAttenuation(double linearAttenuation) {
@@ -210,21 +234,29 @@ public class PointLight implements Light {
 	}
 
 	/**
-	 * @return the exponentialAttenuation
+	 * Gibt die exponentielle Lichtabschwächung zurück.
+	 * @return the exponentialAttenuation die exponentielle Lichtabschwächung
 	 */
 	public double getExponentialAttenuation() {
 		return exponentialAttenuation;
 	}
 
 	/**
+	 * Setzt die exponentielle Lichtabschwächung auf den übergebenen Wert.
 	 * @param exponentialAttenuation the exponentialAttenuation to set
 	 */
 	public void setExponentialAttenuation(double exponentialAttenuation) {
-		this.exponentialAttenuation = exponentialAttenuation;
+		if(exponentialAttenuation < this.pointIntensity) {
+			throw new IllegalArgumentException("Die exponentielle Abschwächung muss größer als die Intensität des Punktlichts sein.");
+		} else {
+			this.exponentialAttenuation = exponentialAttenuation;
+		}
 	}
 
 	@Override
 	public Color interpolate(Color color, Vector3d n) {
+		Vector3d a = n.copy();
+		a.normalize();
 		double angle = this.position.dot(n);
 		
 		if(angle > 0) {
@@ -242,21 +274,19 @@ public class PointLight implements Light {
 			double pointIntensityBlue = ((this.pointColor.getB() / 2.55) * this.pointIntensity) / 100;
 			
 			
-			Vector3d distance = this.position.sub(n);
+			Vector3d distance = this.position.sub(a);
 			double d = Math.sqrt(Math.pow(distance.x, 2) + Math.pow(distance.x, 2) + Math.pow(distance.z, 2));
 			
 			double c = Math.min(1.0, 1 / (this.constantAttenuation + this.linearAttenuation * d + this.exponentialAttenuation * Math.pow(d, 2)));
 
-			int r = (int) (color.getR() * (ambientIntensityRed * reflectionRed + pointIntensityRed * reflectionRed * angle * c));
+			float r = (float) ((ambientIntensityRed * reflectionRed + pointIntensityRed * reflectionRed * angle * c));
 			
-			int g = (int) (color.getG() * (ambientIntensityGreen * reflectionGreen + pointIntensityGreen * reflectionGreen * angle * c));
+			float g = (float) ((ambientIntensityGreen * reflectionGreen + pointIntensityGreen * reflectionGreen * angle * c));
 			
-			int b = (int) (color.getB() * (ambientIntensityBlue * reflectionBlue + pointIntensityBlue * reflectionBlue * angle * c));
+			float b = (float) ((ambientIntensityBlue * reflectionBlue + pointIntensityBlue * reflectionBlue * angle * c));
+			//System.out.println(r);
+			return new Color( r,  g,  b);
 			
-			if(r > 255) {
-				r = 255;
-			}
-			return new Color(r, g, b);
 		} else {
 			double ambientIntensityRed = ((this.ambientColor.getR() / 2.55) * this.ambientIntensity) / 100;
 			double ambientIntensityGreen = ((this.ambientColor.getG() / 2.55) * this.ambientIntensity) / 100;
@@ -266,18 +296,25 @@ public class PointLight implements Light {
 			double reflectionGreen = ((color.getG() / 2.55) * this.reflexionskoeffizient) / 100;
 			double reflectionBlue = ((color.getB() / 2.55) * this.reflexionskoeffizient) / 100;
 			
-			int r = (int) (color.getR() * ambientIntensityRed * reflectionRed);
-			int g = (int) (color.getG() * ambientIntensityGreen * reflectionGreen);
-			int b = (int) (color.getB() * ambientIntensityBlue * reflectionBlue);
+			float r = (float) (ambientIntensityRed * reflectionRed);
+			float g = (float) (ambientIntensityGreen * reflectionGreen);
+			float b = (float) (ambientIntensityBlue * reflectionBlue);
 			
 			return new Color(r,g,b);
 		}
 	}
 
 	/**
-	 * 
+	 * Gibt die Werte des Pointlights als String aus.
 	 */
 	public String toString() {
-		return "blub";
+		String output = "";
+		output += "Punktlicht: " + this.name;
+		output += " { ambiente Intensität: " + this.ambientIntensity + "; ";
+		output += "Reflexionskoeffizient: " + this.reflexionskoeffizient + "; ";
+		output += "ambiente Farbe: " + this.ambientColor.toString() + "; ";
+		output += "Position: " + this.position.toString() + " ";
+		output += "Farbe des Punktlichts" + this.pointColor.toString() + "; ";
+		return output;
 	}
 }

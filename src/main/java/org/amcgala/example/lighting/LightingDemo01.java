@@ -12,8 +12,6 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-
 package org.amcgala.example.lighting;
 
 import java.awt.event.KeyEvent;
@@ -71,7 +69,7 @@ public class LightingDemo01 extends Framework implements InputHandler {
         
         // mesh
         Mesh m = new Mesh(new Vector3d(0,0,0), 100, 50, 50);
-        m.color = new Color(255, 0, 0);
+        m.color = new Color(0, 255, 0);
         n.addShape(m);
         add(n);
         

@@ -60,7 +60,7 @@ public class LightingDemo02 extends Framework implements InputHandler {
 	public void initGraph() {
 		this.registerInputEventHandler(this);
 		
-		Vector3d lp = new Vector3d(-150, 50, 0);
+		Vector3d lp = new Vector3d(-150, -20, 0);
 		
 		Node n = new Node("rotating box");
         RotationY rotY = new RotationY();
@@ -77,9 +77,10 @@ public class LightingDemo02 extends Framework implements InputHandler {
         add(c);
         
         // licht
-        AmbientLight ambient = new AmbientLight("TestAmbientLight", 0.5, new Color(255, 255, 255));
+        AmbientLight ambient = new AmbientLight("TestAmbientLight", 0.6, new Color(255, 255, 255));
         l2 = new PointLight("Pointlight", ambient, lp, new Color(255, 255, 255));
         n.addLight(l2);
+        System.out.println(l2.toString());
 	}
 
 	@Subscribe
