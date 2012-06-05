@@ -14,21 +14,19 @@
  */
 package org.amcgala.framework.shape.shape2d;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
-
+import org.amcgala.framework.camera.Camera;
+import org.amcgala.framework.math.Matrix;
+import org.amcgala.framework.renderer.Color;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
-import org.amcgala.framework.renderer.Color;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 /**
  * Ein Zeichen dass an der Stelle (x,y) dargestellt wird. Beim ersten Verwenden
@@ -38,7 +36,7 @@ import org.amcgala.framework.renderer.Color;
  * @author Robert Giacinto, Steffen Troester
  */
 public class Letter extends Shape {
-	private static final String AMCGALA_FONT_GIF = "amcgala/font.gif";
+	private static final String AMCGALA_FONT_GIF = "org/amcgala/font.gif";
 	private ArrayList<Point2d> point2ds;
 	private static int[] fontResources = null;
 	private static final Logger log = LoggerFactory.getLogger(Letter.class);

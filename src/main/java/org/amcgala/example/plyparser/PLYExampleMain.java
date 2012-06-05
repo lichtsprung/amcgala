@@ -33,7 +33,7 @@ public class PLYExampleMain extends Framework implements InputHandler {
 
     @Override
     public void initGraph() {
-        InputStream inputStream = ClassLoader.getSystemResourceAsStream("amcgala/example/plyparser/monkey.ply");
+        InputStream inputStream = ClassLoader.getSystemResourceAsStream("org/amcgala/example/plyparser/monkey.ply");
         try {
             for (Polygon p : PLYPolygonParser.parseAsPolygonList(inputStream,
                     150)) {

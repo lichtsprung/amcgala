@@ -18,7 +18,7 @@ public class SpriteExampleMain extends Framework {
     public void initGraph() {
         try {
             InputStream inputStream = ClassLoader
-                    .getSystemResourceAsStream("amcgala/example/spriteshape/image.jpg");
+                    .getSystemResourceAsStream("org/amcgala/example/spriteshape/image.jpg");
             final Sprite a = new Sprite(inputStream, -200, 50);
             a.setAnimation(new Animation<Sprite>() {
                 @Override
