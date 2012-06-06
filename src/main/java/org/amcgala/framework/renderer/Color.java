@@ -126,4 +126,11 @@ public class Color {
         this.r = r;
         color = new java.awt.Color(r, g, b);
     }
+    
+    /**
+     * Gibt die aktuellen Werte der Farbkanäle als String zurück.
+     */
+    public String toString() {
+    	return "Color: {Red: " + this.getR() + "; Green: " + this.getG() + "; Blue: " + this.getB() + "}";
+    }
 }
