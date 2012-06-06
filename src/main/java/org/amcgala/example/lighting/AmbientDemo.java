@@ -34,7 +34,7 @@ import com.google.common.eventbus.Subscribe;
  * @author Sascha Lemke
  */
 
-public class LightingDemo01 extends Framework implements InputHandler {
+public class AmbientDemo extends Framework implements InputHandler {
 
 	private AmbientLight ambient;
 	/**
@@ -42,7 +42,7 @@ public class LightingDemo01 extends Framework implements InputHandler {
 	 * @param width Die Breite des Frames
 	 * @param height Die Höhe des Frames
 	 */
-	public LightingDemo01(int width, int height) {
+	public AmbientDemo(int width, int height) {
 		super(width, height);
 	}
 
@@ -51,7 +51,7 @@ public class LightingDemo01 extends Framework implements InputHandler {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Framework fm = new LightingDemo01(800, 600);
+		Framework fm = new AmbientDemo(800, 600);
 		fm.start();
 		fm.setBackgroundColor(new java.awt.Color(212, 212, 212)); // setzt die Hintergrundfarbe für den Frame
 	}
@@ -75,7 +75,7 @@ public class LightingDemo01 extends Framework implements InputHandler {
         
         
         // licht
-        this.ambient = new AmbientLight("TestAmbientLight", 0.1, new Color(255, 255, 255));
+        this.ambient = new AmbientLight("TestAmbientLight", 0.5, new Color(255, 255, 255));
         n.addLight(ambient);
 	}
 

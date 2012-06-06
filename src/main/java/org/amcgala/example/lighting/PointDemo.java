@@ -30,7 +30,7 @@ import org.amcgala.framework.shape.shape3d.Mesh;
 
 import com.google.common.eventbus.Subscribe;
 
-public class LightingDemo02 extends Framework implements InputHandler {
+public class PointDemo extends Framework implements InputHandler {
 
 	private PointLight l2;
 	
@@ -39,7 +39,7 @@ public class LightingDemo02 extends Framework implements InputHandler {
 	 * @param width Die Breite des Frames
 	 * @param height Die Höhe des Frames
 	 */
-	public LightingDemo02(int width, int height) {
+	public PointDemo(int width, int height) {
 		super(width, height);
 	}
 
@@ -48,7 +48,7 @@ public class LightingDemo02 extends Framework implements InputHandler {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Framework fm = new LightingDemo02(800, 600);
+		Framework fm = new PointDemo(800, 600);
 		fm.start();
 		fm.setBackgroundColor(new java.awt.Color(212, 212, 212)); // setzt die Hintergrundfarbe für den Frame
 	}
@@ -59,6 +59,8 @@ public class LightingDemo02 extends Framework implements InputHandler {
 	@Override
 	public void initGraph() {
 		this.registerInputEventHandler(this);
+		
+		//TODO: Soll für die finale version 2 "räume" darstellen mit jeweils einem licht um die scenegraph implementierung zu verdeutlichen
 		
 		Vector3d lp = new Vector3d(-150, -20, 0);
 		
