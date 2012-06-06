@@ -18,6 +18,13 @@ import org.amcgala.framework.math.Vector3d;
 
 import org.amcgala.framework.renderer.Color;
 
+/**
+ * Klasse für das Punktlicht, dient zur Berechnung einer Lichtquelle die in 
+ * alle Richtungen von einem bestimmten Punkt aus Licht abstrahlt und das 
+ * mit der Entfernung schwächer wird.
+ * @author Sascha Lemke
+ *
+ */
 public class PointLight implements Light {
 
 	// ambientlight variables
@@ -254,40 +261,59 @@ public class PointLight implements Light {
 	}
 
 	@Override
-	public Color interpolate(Color color, Vector3d n) {
-		Vector3d a = n.copy();
-		a.normalize();
-		double angle = this.position.dot(n);
+	public Color interpolate(Color color, Vector3d oberflaechennormale) {
+		
+		Vector3d normiert = oberflaechennormale.copy();
+		normiert.normalize();
+		double angle = this.position.dot(oberflaechennormale);
 		
 		if(angle > 0) {
-			// ambient + diffuse 
+			/*
+			 * Berechnung der ambienten Intensität.
+			 */
 			double ambientIntensityRed = ((this.ambientColor.getR() / 2.55) * this.ambientIntensity) / 100;
 			double ambientIntensityGreen = ((this.ambientColor.getG() / 2.55) * this.ambientIntensity) / 100;
 			double ambientIntensityBlue = ((this.ambientColor.getB() / 2.55) * this.ambientIntensity) / 100;
 	
+			/*
+			 * Berechnung der Reflexion.
+			 */
 			double reflectionRed = ((color.getR() / 2.55) * this.reflexionskoeffizient) / 100;
 			double reflectionGreen = ((color.getG() / 2.55) * this.reflexionskoeffizient) / 100;
 			double reflectionBlue = ((color.getB() / 2.55) * this.reflexionskoeffizient) / 100;
 	
+			/*
+			 * Berechnung der Punktlichtintensität.
+			 */
 			double pointIntensityRed = ((this.pointColor.getR() / 2.55) * this.pointIntensity) / 100;
 			double pointIntensityGreen = ((this.pointColor.getG() / 2.55) * this.pointIntensity) / 100;
 			double pointIntensityBlue = ((this.pointColor.getB() / 2.55) * this.pointIntensity) / 100;
 			
-			
-			Vector3d distance = this.position.sub(a);
+			/*
+			 * Berechnung der Distanz von dem Pixel zur Lichtquelle.
+			 */
+			Vector3d distance = this.position.sub(normiert);
 			double d = Math.sqrt(Math.pow(distance.x, 2) + Math.pow(distance.x, 2) + Math.pow(distance.z, 2));
 			
+			/*
+			 * Berechnung der Abschwächung.
+			 */
 			double c = Math.min(1.0, 1 / (this.constantAttenuation + this.linearAttenuation * d + this.exponentialAttenuation * Math.pow(d, 2)));
 
+			/*
+			 * Berechnung der finalen Kanalwerte.
+			 */
 			float r = (float) ((ambientIntensityRed * reflectionRed + pointIntensityRed * reflectionRed * angle * c));
-			
 			float g = (float) ((ambientIntensityGreen * reflectionGreen + pointIntensityGreen * reflectionGreen * angle * c));
-			
 			float b = (float) ((ambientIntensityBlue * reflectionBlue + pointIntensityBlue * reflectionBlue * angle * c));
-			//System.out.println(r);
-			return new Color( r,  g,  b);
+			
+			return new Color(r, g, b);
 			
 		} else {
+			/*
+			 * Berechnung der Farbwerte für die nicht dem Licht zugewandeten Seite.
+			 * Ambientes Licht wird hier verwendet.
+			 */
 			double ambientIntensityRed = ((this.ambientColor.getR() / 2.55) * this.ambientIntensity) / 100;
 			double ambientIntensityGreen = ((this.ambientColor.getG() / 2.55) * this.ambientIntensity) / 100;
 			double ambientIntensityBlue = ((this.ambientColor.getB() / 2.55) * this.ambientIntensity) / 100;
@@ -300,21 +326,27 @@ public class PointLight implements Light {
 			float g = (float) (ambientIntensityGreen * reflectionGreen);
 			float b = (float) (ambientIntensityBlue * reflectionBlue);
 			
-			return new Color(r,g,b);
+			return new Color(r, g, b);
 		}
 	}
 
 	/**
 	 * Gibt die Werte des Pointlights als String aus.
+	 * @return Die Werte des Pointlights als String
 	 */
 	public String toString() {
 		String output = "";
 		output += "Punktlicht: " + this.name;
-		output += " { ambiente Intensität: " + this.ambientIntensity + "; ";
-		output += "Reflexionskoeffizient: " + this.reflexionskoeffizient + "; ";
-		output += "ambiente Farbe: " + this.ambientColor.toString() + "; ";
-		output += "Position: " + this.position.toString() + " ";
-		output += "Farbe des Punktlichts" + this.pointColor.toString() + "; ";
+		output += " { \n";
+		output += "\t ambiente Intensität: " + this.ambientIntensity + "; \n";
+		output += "\t Reflexionskoeffizient: " + this.reflexionskoeffizient + "; \n";
+		output += "\t ambiente Farbe: " + this.ambientColor.toString() + "; \n";
+		output += "\t Position: " + this.position.toString() + " \n";
+		output += "\t Farbe des Punktlichts: " + this.pointColor.toString() + "; \n";
+		output += "\t Intensität des Punktlichts: " + this.pointIntensity + "; \n";
+		output += "\t Konstante Abschwächung: " + this.constantAttenuation + "; \n";
+		output += "\t Lineare Abschwächung: " + this.linearAttenuation + "; \n";
+		output += "\t Exponentielle Abschwächung: " + this.exponentialAttenuation + "; \n}";
 		return output;
 	}
 }
