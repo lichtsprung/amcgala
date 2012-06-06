@@ -18,11 +18,16 @@ import org.amcgala.framework.math.Vector3d;
 
 import org.amcgala.framework.renderer.Color;
 
+/**
+ * Klasse zur Berechnung des ambienten Lichts.
+ * Ambientes Licht fällt von allen Richtungen gleichstark auf ein Objekt.
+ * @author Sascha Lemke
+ */
 public class AmbientLight implements Light {
 
 	private String name;
 	private double intensity = 0.9;
-	private double reflexionskoeffizient = 0.9; // in appearance packen
+	private double reflexionskoeffizient = 0.9;
 	private Color lightcolor = new Color(255, 255, 255);
 	
 	/**
@@ -32,7 +37,6 @@ public class AmbientLight implements Light {
 	 * @param reflexion Die Reflexionsstärke des Objektes
 	 */
 	public AmbientLight(String name, double intensity, Color color) {
-		//TODO: Werte prüfen!
 		this.name = name;
 		this.intensity = intensity;
 		this.lightcolor = color;
@@ -49,16 +53,16 @@ public class AmbientLight implements Light {
 	}
 	
 	/**
-	 * 
-	 * @param color
+	 * Setzt die Farbe des ambienten Lichts.
+	 * @param color die neue Farbe
 	 */
 	public void setColor(Color color) {
 		this.lightcolor = color;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Gibt die Farbe des ambienten Lichts zurück.
+	 * @return die Farbe
 	 */
 	public Color getColor() {
 		return this.lightcolor;
@@ -66,13 +70,11 @@ public class AmbientLight implements Light {
 
 	/**
 	 * Sets the intensity for this ambientlight.
-	 * @param intensity
+	 * @param intensity die intensität
 	 */
 	public void setIntensity(double intensity) {
-		if(intensity >= 1) {
-			this.intensity = 1.0;
-		} else if(intensity <= 0) {
-			this.intensity = 0;
+		if(intensity > 1 || intensity < 0) {
+			throw new IllegalArgumentException();
 		} else {
 			this.intensity = intensity;
 		}
@@ -80,35 +82,44 @@ public class AmbientLight implements Light {
 	
 	/**
 	 * Returns the intensity for the ambientlight.
-	 * @return
+	 * @return die Intensität
 	 */
 	public double getIntensity() {
 		return this.intensity;
 	}
 	
-	/**
-	 * 
-	 */
 	@Override
 	public Color interpolate(Color color, Vector3d pixelposition) {
-		// die position des pixels wird hier nicht benötigt
-	
+		/*
+		 * Berechnung des ambienten Lichts, die pixelposition wird hier nicht benötigt.
+		 * 
+		 * Berechnet die Intensität der Farbkanäle.
+		 */
 		double intensityRed = ((this.lightcolor.getR() / 2.55) * this.intensity) / 100;
 		double intensityGreen = ((this.lightcolor.getG() / 2.55) * this.intensity) / 100;
 		double intensityBlue = ((this.lightcolor.getB() / 2.55) * this.intensity) / 100;
 
+		/*
+		 * Berechnung des Reflexionskoeffzienten.
+		 */
 		double reflectionRed = ((color.getR() / 2.55) * this.reflexionskoeffizient) / 100;
 		double reflectionGreen = ((color.getG() / 2.55) * this.reflexionskoeffizient) / 100;
 		double reflectionBlue = ((color.getB() / 2.55) * this.reflexionskoeffizient) / 100;
 
-		int r = (int) (color.getR() * intensityRed * reflectionRed);
-		int g = (int) (color.getG() * intensityGreen * reflectionGreen);
-		int b = (int) (color.getB() * intensityBlue * reflectionBlue);
+		/*
+		 * Berechnung der finalen Werte für die Farbkanäle.
+		 */
+		float r = (float) (intensityRed * reflectionRed);
+		float g = (float) (intensityGreen * reflectionGreen);
+		float b = (float) (intensityBlue * reflectionBlue);
 		
-		// returns the color for the pixel
 		return new Color(r,g,b);
 	}
 	
+	/**
+	 * Gibt die Werte des ambienten Lichts als String zurück.
+	 * @return die Werte des ambienten Lichts als String
+	 */
 	public String toString() {
 		return "AmbientLight: " + this.name + " { intensity: " + this.intensity + "; " + this.lightcolor.toString() + " }";
 	}
