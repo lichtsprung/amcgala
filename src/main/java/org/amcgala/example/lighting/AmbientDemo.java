@@ -30,10 +30,9 @@ import org.amcgala.framework.scenegraph.transform.RotationY;
 import com.google.common.eventbus.Subscribe;
 
 /**
- * Beispielklasse für Beleuchtung in amCGAla. Zeigt ein Objekt das von einer Lichtquelle beleuchtet wird.
+ * Beispiel für die Verwendung des ambienten Lichts.
  * @author Sascha Lemke
  */
-
 public class AmbientDemo extends Framework implements InputHandler {
 
 	private AmbientLight ambient;

@@ -14,6 +14,7 @@
  */
 package org.amcgala.framework.lighting;
 
+import org.amcgala.framework.appearance.Appearance;
 import org.amcgala.framework.math.Vector3d;
 
 import org.amcgala.framework.renderer.Color;
@@ -29,9 +30,8 @@ public class PointLight implements Light {
 
 	// ambientlight variables
 	private String name;
-	private double ambientIntensity = 0.9;
-
-	private double reflexionskoeffizient = 1; // in appearance packen
+	private AmbientLight ambient;
+	private double ambientIntensity = 0.5;
 	private Color ambientColor = new Color(255, 255, 255);
 	
 	// pointlight variables
@@ -40,7 +40,19 @@ public class PointLight implements Light {
 	private double pointIntensity = 1;
 	private double constantAttenuation = 1;
 	private double linearAttenuation = 0;
-	private double exponentialAttenuation = 0.5;
+	private double exponentialAttenuation = 0.4;
+	
+	/**
+	 * QuickKonstruktor, erstellt ein Licht mit den Basiseinstellungen und möglichst wenig Parametern.
+	 * @param name Der Name der Lichtquelle
+	 * @param ambient Das ambiente Licht
+	 * @param position Die Position der Lichtquelle
+	 */
+	public PointLight(String name, AmbientLight ambient, Vector3d position) {
+		this.name = name;
+		this.ambient = ambient;
+		this.position = position;
+	}
 	
 	
 	/**
@@ -62,28 +74,13 @@ public class PointLight implements Light {
 		this.position = position;
 		this.pointColor = pointLightColor;
 	}
-	
-	/**
-	 * Konstruktor.
-	 * @param name Der Name der Lichtquelle
-	 * @param ambient Das Ambientelicht für diese Lichtquelle
-	 * @param position Die Position der Lichtquelle
-	 * @param pointLightColor Die Farbe der Lichtquelle
-	 */
-	public PointLight(String name, AmbientLight ambient, Vector3d position, Color pointLightColor) {
-		this.name = name;
-		this.ambientIntensity = ambient.getIntensity();
-		this.ambientColor = ambient.getColor();
-		this.position = position;
-		this.pointColor = pointLightColor;
-	}
 
 	/**
 	 * Gibt die Intensität des ambienten Lichts zurück.
 	 * @return Die Intensität des ambienten Lichts.
 	 */
 	public double getAmbientIntensity() {
-		return ambientIntensity;
+		return ambient.getIntensity();
 	}
 
 	/**
@@ -92,29 +89,9 @@ public class PointLight implements Light {
 	 */
 	public void setAmbientIntensity(double ambientIntensity) {
 		if(ambientIntensity > 1 || ambientIntensity < 0) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Die ambiente Intensität muss zwischen 0.0 und 1.0 liegen!");
 		} else {
-			this.ambientIntensity = ambientIntensity;
-		}
-	}
-	
-	/**
-	 * Gibt den Reflexionskoeffizient zurück.
-	 * @return der Reflexionskoeffizient.
-	 */
-	public double getReflexionskoeffizient() {
-		return reflexionskoeffizient;
-	}
-
-	/**
-	 * Setzt den Reflexionskoeffizienten auf den übergebenen Wert.
-	 * @param reflexionskoeffizient Der Reflexionskoeffizient
-	 */
-	public void setReflexionskoeffizient(double reflexionskoeffizient) {
-		if(reflexionskoeffizient > 1 || reflexionskoeffizient < 0) {
-			throw new IllegalArgumentException();
-		} else {
-			this.reflexionskoeffizient = reflexionskoeffizient;
+			this.ambient.setIntensity(ambientIntensity);
 		}
 	}
 
@@ -265,7 +242,7 @@ public class PointLight implements Light {
 	}
 
 	@Override
-	public Color interpolate(Color color, Vector3d oberflaechennormale) {
+	public Color interpolate(Color color, Vector3d oberflaechennormale, Appearance app) {
 		
 		Vector3d normiert = oberflaechennormale.copy();
 		normiert.normalize();
@@ -281,9 +258,9 @@ public class PointLight implements Light {
 			/*
 			 * Berechnung der Reflexion.
 			 */
-			double reflectionRed = ((color.getR() / 2.55) * this.reflexionskoeffizient) / 100;
-			double reflectionGreen = ((color.getG() / 2.55) * this.reflexionskoeffizient) / 100;
-			double reflectionBlue = ((color.getB() / 2.55) * this.reflexionskoeffizient) / 100;
+			double reflectionRed = ((color.getR() / 2.55) * app.getReflection()) / 100;
+			double reflectionGreen = ((color.getG() / 2.55) * app.getReflection()) / 100;
+			double reflectionBlue = ((color.getB() / 2.55) * app.getReflection()) / 100;
 	
 			/*
 			 * Berechnung der Punktlichtintensität.
@@ -329,9 +306,9 @@ public class PointLight implements Light {
 			double ambientIntensityGreen = ((this.ambientColor.getG() / 2.55) * this.ambientIntensity) / 100;
 			double ambientIntensityBlue = ((this.ambientColor.getB() / 2.55) * this.ambientIntensity) / 100;
 			
-			double reflectionRed = ((color.getR() / 2.55) * this.reflexionskoeffizient) / 100;
-			double reflectionGreen = ((color.getG() / 2.55) * this.reflexionskoeffizient) / 100;
-			double reflectionBlue = ((color.getB() / 2.55) * this.reflexionskoeffizient) / 100;
+			double reflectionRed = ((color.getR() / 2.55) * app.getReflection()) / 100;
+			double reflectionGreen = ((color.getG() / 2.55) * app.getReflection()) / 100;
+			double reflectionBlue = ((color.getB() / 2.55) * app.getReflection()) / 100;
 			
 			float r = (float) (ambientIntensityRed * reflectionRed);
 			float g = (float) (ambientIntensityGreen * reflectionGreen);
@@ -350,7 +327,6 @@ public class PointLight implements Light {
 		output += "Punktlicht: " + this.name;
 		output += " { \n";
 		output += "\t ambiente Intensität: " + this.ambientIntensity + "; \n";
-		output += "\t Reflexionskoeffizient: " + this.reflexionskoeffizient + "; \n";
 		output += "\t ambiente Farbe: " + this.ambientColor.toString() + "; \n";
 		output += "\t Position: " + this.position.toString() + " \n";
 		output += "\t Farbe des Punktlichts: " + this.pointColor.toString() + "; \n";

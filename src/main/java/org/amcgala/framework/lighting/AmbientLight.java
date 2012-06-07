@@ -14,6 +14,7 @@
  */
 package org.amcgala.framework.lighting;
 
+import org.amcgala.framework.appearance.Appearance;
 import org.amcgala.framework.math.Vector3d;
 
 import org.amcgala.framework.renderer.Color;
@@ -25,9 +26,8 @@ import org.amcgala.framework.renderer.Color;
  */
 public class AmbientLight implements Light {
 
-	private String name;
-	private double intensity = 0.9;
-	private double reflexionskoeffizient = 0.9;
+	private String name = "AmbientLight";
+	private double intensity = 1;
 	private Color lightcolor = new Color(255, 255, 255);
 	
 	/**
@@ -38,7 +38,11 @@ public class AmbientLight implements Light {
 	 */
 	public AmbientLight(String name, double intensity, Color color) {
 		this.name = name;
-		this.intensity = intensity;
+		if(intensity > 1 || intensity < 0) {
+			throw new IllegalArgumentException("Die ambiente Intensität muss zwischen 0.0 und 1.0 liegen!");
+		} else {
+			this.intensity = intensity;
+		}
 		this.lightcolor = color;
 	}
 
@@ -74,7 +78,7 @@ public class AmbientLight implements Light {
 	 */
 	public void setIntensity(double intensity) {
 		if(intensity > 1 || intensity < 0) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Die ambiente Intensität muss zwischen 0.0 und 1.0 liegen!");
 		} else {
 			this.intensity = intensity;
 		}
@@ -89,7 +93,7 @@ public class AmbientLight implements Light {
 	}
 	
 	@Override
-	public Color interpolate(Color color, Vector3d pixelposition) {
+	public Color interpolate(Color color, Vector3d pixelposition, Appearance app) {
 		/*
 		 * Berechnung des ambienten Lichts, die pixelposition wird hier nicht benötigt.
 		 * 
@@ -102,9 +106,9 @@ public class AmbientLight implements Light {
 		/*
 		 * Berechnung des Reflexionskoeffzienten.
 		 */
-		double reflectionRed = ((color.getR() / 2.55) * this.reflexionskoeffizient) / 100;
-		double reflectionGreen = ((color.getG() / 2.55) * this.reflexionskoeffizient) / 100;
-		double reflectionBlue = ((color.getB() / 2.55) * this.reflexionskoeffizient) / 100;
+		double reflectionRed = ((color.getR() / 2.55) * app.getReflection()) / 100;
+		double reflectionGreen = ((color.getG() / 2.55) * app.getReflection()) / 100;
+		double reflectionBlue = ((color.getB() / 2.55) * app.getReflection()) / 100;
 
 		/*
 		 * Berechnung der finalen Werte für die Farbkanäle.

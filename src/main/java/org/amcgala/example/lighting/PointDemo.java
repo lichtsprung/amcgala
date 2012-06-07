@@ -30,6 +30,10 @@ import org.amcgala.framework.shape.shape3d.Mesh;
 
 import com.google.common.eventbus.Subscribe;
 
+/**
+ * Beispiel für die Verwendung des Pointlights.
+ * @author Sascha Lemke
+ */
 public class PointDemo extends Framework implements InputHandler {
 
 	private PointLight l2;
@@ -62,7 +66,7 @@ public class PointDemo extends Framework implements InputHandler {
 		
 		//TODO: Soll für die finale version 2 "räume" darstellen mit jeweils einem licht um die scenegraph implementierung zu verdeutlichen
 		
-		Vector3d lp = new Vector3d(-150, -20, 0);
+		Vector3d lp = new Vector3d(150, 100, 0);
 		
 		Node n = new Node("rotating box");
         RotationY rotY = new RotationY();
@@ -80,7 +84,7 @@ public class PointDemo extends Framework implements InputHandler {
         
         // licht
         AmbientLight ambient = new AmbientLight("TestAmbientLight", 0.5, new Color(255, 255, 255));
-        l2 = new PointLight("Pointlight", ambient, lp, new Color(255, 255, 255));
+        l2 = new PointLight("Pointlight", ambient, lp);
         n.addLight(l2);
 	}
 
