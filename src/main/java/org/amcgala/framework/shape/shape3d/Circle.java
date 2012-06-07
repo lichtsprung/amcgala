@@ -113,10 +113,10 @@ public class Circle extends Shape {
         double y1 = radius;
 
         // Eckpunkte zeichnen
-        renderer.putPixel(new Pixel(x, y + radius), this.color, lights);
-        renderer.putPixel(new Pixel(x, y - radius), this.color, lights);
-        renderer.putPixel(new Pixel(x + radius, y), this.color, lights);
-        renderer.putPixel(new Pixel(x - radius, y), this.color, lights);
+        renderer.putPixel(new Pixel(x, y + radius), this.color);
+        renderer.putPixel(new Pixel(x, y - radius), this.color);
+        renderer.putPixel(new Pixel(x + radius, y), this.color);
+        renderer.putPixel(new Pixel(x - radius, y), this.color);
 
         while (x1 < y1) {
             if (f >= 0) {
@@ -129,14 +129,14 @@ public class Circle extends Shape {
             f += ddF_x + 1;
 
             // Zeichne jeweiligen Randsegmente
-            renderer.putPixel(new Pixel(this.x + x1, this.y + y1), this.color, lights);
-            renderer.putPixel(new Pixel(this.x - x1, this.y + y1), this.color, lights);
-            renderer.putPixel(new Pixel(this.x + x1, this.y - y1), this.color, lights);
-            renderer.putPixel(new Pixel(this.x - x1, this.y - y1), this.color, lights);
-            renderer.putPixel(new Pixel(this.x + y1, this.y + x1), this.color, lights);
-            renderer.putPixel(new Pixel(this.x - y1, this.y + x1), this.color, lights);
-            renderer.putPixel(new Pixel(this.x + y1, this.y - x1), this.color, lights);
-            renderer.putPixel(new Pixel(this.x - y1, this.y - x1), this.color, lights);
+            renderer.putPixel(new Pixel(this.x + x1, this.y + y1), this.color);
+            renderer.putPixel(new Pixel(this.x - x1, this.y + y1), this.color);
+            renderer.putPixel(new Pixel(this.x + x1, this.y - y1), this.color);
+            renderer.putPixel(new Pixel(this.x - x1, this.y - y1), this.color);
+            renderer.putPixel(new Pixel(this.x + y1, this.y + x1), this.color);
+            renderer.putPixel(new Pixel(this.x - y1, this.y + x1), this.color);
+            renderer.putPixel(new Pixel(this.x + y1, this.y - x1), this.color);
+            renderer.putPixel(new Pixel(this.x - y1, this.y - x1), this.color);
         }
 
         /*

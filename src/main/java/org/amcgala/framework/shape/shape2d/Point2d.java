@@ -55,7 +55,7 @@ public class Point2d extends Shape {
 		Vector3d point = new Vector3d(x, y, -1).transform(transformation);
 		
 		Pixel pixel = camera.getImageSpaceCoordinates(point);
-		renderer.putPixel(pixel, color, lights);
+		renderer.putPixel(pixel, color);
 	}
 	
 	@Override

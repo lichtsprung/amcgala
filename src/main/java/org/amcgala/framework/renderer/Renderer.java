@@ -16,6 +16,7 @@ package org.amcgala.framework.renderer;
 
 import javax.swing.*;
 
+import org.amcgala.framework.appearance.Appearance;
 import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Vector3d;
 
@@ -104,18 +105,24 @@ public class Renderer {
      * @param pixel der Pixel, der dargestellt werden soll
      * @param color die Farbe des Pixels
      */
-    public void putPixel(Pixel pixel, Color color, Collection<Light> lights) {
-        for(Light light : lights) {
-        	color = light.interpolate(color, new Vector3d(pixel.x, pixel.y, 0));
-        }
+    public void putPixel(Pixel pixel, Color color) {
         g.setColor(color.color);
         g.fillRect(offsetX + pixel.x, -pixel.y + offsetY, 1, 1);
     }
 
-    public void putPixel(Vector3d position, Color color, Collection<Light> lights) {
+    /**
+     * Stellt einen beleuchteten Pixel über den Renderer auf der Ausgabe dar.
+     * Die Darstellung hängt von der jeweiligen Implementierung, sowie den 
+     * Lichtern und der Oberflächeneingeschaften ab.
+     * @param position Die Position des Pixels
+     * @param color Die Farbe des Pixels
+     * @param lights Die Lichter innerhalb der Szene
+     * @param app Die Eigenschaften der Oberläche
+     */
+    public void putPixel(Vector3d position, Color color, Collection<Light> lights, Appearance app) {
     	Vector3d n = new Vector3d(position.x, position.y, position.z);
         for(Light light : lights) {
-        	color = light.interpolate(color, n);
+        	color = light.interpolate(color, n, app);
         }
         g.setColor(color.color);
         g.fillRect(offsetX + (int) position.x, (int) -position.y + offsetY, 1, 1);

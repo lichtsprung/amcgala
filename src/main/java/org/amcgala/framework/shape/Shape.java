@@ -16,6 +16,8 @@ package org.amcgala.framework.shape;
 
 import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.animation.Updatable;
+import org.amcgala.framework.appearance.Appearance;
+import org.amcgala.framework.appearance.BasicAppearance;
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Matrix;
@@ -36,6 +38,7 @@ public abstract class Shape implements Updatable {
     private Animation animation;
     public Color color = Color.BLACK;
     private boolean rendering;
+    protected Appearance appearance = new BasicAppearance();
 
     /**
      * Gibt den Renderstatus des Shapes zurück.
@@ -87,5 +90,21 @@ public abstract class Shape implements Updatable {
 
     @Override
     public void update() {
+    }
+    
+    /**
+     * Übernimmt die übergebenen Oberflächeneigenschaften für dieses Shapeobjekt.
+     * @param app Das Appearance-Objekt das die Oberflächeneigenschaften enthält.
+     */
+    public void setAppearance(Appearance app) {
+    	this.appearance = app;
+    }
+    
+    /**
+     * Gibt das Appearance-Objekt zurück, das die Oberflächeneigenschaften für dieses Shapeobjekt enthält.
+     * @return Das Appearance-Objekt das die Oberflächeneigenschaften enthält.
+     */
+    public Appearance getAppearance() {
+    	return this.appearance;
     }
 }

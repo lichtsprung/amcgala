@@ -104,8 +104,8 @@ public class BresenhamLine extends Shape {
         dz = Math.round(dz);
         
         int i = 1;
-        Vector3d v = new Vector3d(-x, -y, -z);
-        renderer.putPixel(v, color, lights);
+        Vector3d v = new Vector3d(x, y, z);
+        renderer.putPixel(v, color, lights, appearance);
 
         //1.+8. Oktant
         if (dy <= dx && -dy <= dx) {
@@ -126,9 +126,9 @@ public class BresenhamLine extends Shape {
                 e += Math.abs(dy2);
                 
                 z += (dz / dx);
-                v = new Vector3d(-x, -y, -z);
+                v = new Vector3d(x, y, z);
                 
-                renderer.putPixel(v, color, lights);
+                renderer.putPixel(v, color, lights, appearance);
             }
         }
 
@@ -148,8 +148,8 @@ public class BresenhamLine extends Shape {
                 i++;
                 e += dx2;
                 z += (dz / dx);
-                v = new Vector3d(-x, -y, -z);
-                renderer.putPixel(v, color, lights);
+                v = new Vector3d(x, y, z);
+                renderer.putPixel(v, color, lights, appearance);
             }
         }
         /*
