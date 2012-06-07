@@ -101,9 +101,10 @@ public class BresenhamLine extends Shape {
         double z = start.z;
         
         double dz = end.z - start.z;
+        dz = Math.round(dz);
         
         int i = 1;
-        Vector3d v = new Vector3d(-x, -y, -start.z);
+        Vector3d v = new Vector3d(-x, -y, -z);
         renderer.putPixel(v, color, lights);
 
         //1.+8. Oktant
@@ -151,12 +152,9 @@ public class BresenhamLine extends Shape {
                 renderer.putPixel(v, color, lights);
             }
         }
-
         /*
          * Ende Bresenham Algorithmus
          */
-
-
     }
     
     /**

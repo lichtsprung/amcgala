@@ -75,7 +75,7 @@ public class AmbientDemo extends Framework implements InputHandler {
         
         
         // licht
-        this.ambient = new AmbientLight("TestAmbientLight", 0.5, new Color(255, 255, 255));
+        this.ambient = new AmbientLight("TestAmbientLight", 1, new Color(255, 255, 255));
         n.addLight(ambient);
 	}
 

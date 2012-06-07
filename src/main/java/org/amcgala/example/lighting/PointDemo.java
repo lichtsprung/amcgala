@@ -67,7 +67,7 @@ public class PointDemo extends Framework implements InputHandler {
 		Node n = new Node("rotating box");
         RotationY rotY = new RotationY();
         rotY.setInterpolationPhi(new LinearInterpolation(0, 4 * Math.PI, 250, true));
-        n.setTransformation(rotY);
+        //n.setTransformation(rotY);
         
         // mesh
         Mesh m = new Mesh(new Vector3d(0,0,0), 100, 50, 50);
@@ -79,10 +79,9 @@ public class PointDemo extends Framework implements InputHandler {
         add(c);
         
         // licht
-        AmbientLight ambient = new AmbientLight("TestAmbientLight", 0.6, new Color(255, 255, 255));
+        AmbientLight ambient = new AmbientLight("TestAmbientLight", 0.5, new Color(255, 255, 255));
         l2 = new PointLight("Pointlight", ambient, lp, new Color(255, 255, 255));
         n.addLight(l2);
-        System.out.println(l2.toString());
 	}
 
 	@Subscribe

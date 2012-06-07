@@ -38,9 +38,9 @@ public class PointLight implements Light {
 	private Vector3d position;
 	private Color pointColor = new Color(255, 255, 255);
 	private double pointIntensity = 1;
-	private double constantAttenuation = 0;
+	private double constantAttenuation = 1;
 	private double linearAttenuation = 0;
-	private double exponentialAttenuation = 1;
+	private double exponentialAttenuation = 0.5;
 	
 	
 	/**
@@ -53,7 +53,11 @@ public class PointLight implements Light {
 	 */
 	public PointLight(String name, double ambientItensity, Color ambientColor, Vector3d position, Color pointLightColor) {
 		this.name = name;
-		this.ambientIntensity = ambientItensity;
+		if(ambientIntensity > 1 || ambientIntensity < 0) {
+			throw new IllegalArgumentException("Die ambiente Intensität muss zwischen 0.0 und 1.0 liegen!");
+		} else {
+			this.ambientIntensity = ambientItensity;
+		}
 		this.ambientColor = ambientColor;
 		this.position = position;
 		this.pointColor = pointLightColor;
@@ -266,7 +270,6 @@ public class PointLight implements Light {
 		Vector3d normiert = oberflaechennormale.copy();
 		normiert.normalize();
 		double angle = this.position.dot(oberflaechennormale);
-		
 		if(angle > 0) {
 			/*
 			 * Berechnung der ambienten Intensität.
@@ -298,14 +301,22 @@ public class PointLight implements Light {
 			/*
 			 * Berechnung der Abschwächung.
 			 */
-			double c = Math.min(1.0, 1 / (this.constantAttenuation + this.linearAttenuation * d + this.exponentialAttenuation * Math.pow(d, 2)));
-
+			double c = Math.min(1,  1 / (this.constantAttenuation + this.linearAttenuation * d + this.exponentialAttenuation * Math.pow(d, 2)));
+			
 			/*
 			 * Berechnung der finalen Kanalwerte.
 			 */
-			float r = (float) ((ambientIntensityRed * reflectionRed + pointIntensityRed * reflectionRed * angle * c));
-			float g = (float) ((ambientIntensityGreen * reflectionGreen + pointIntensityGreen * reflectionGreen * angle * c));
-			float b = (float) ((ambientIntensityBlue * reflectionBlue + pointIntensityBlue * reflectionBlue * angle * c));
+			
+			float r = (float) ((ambientIntensityRed * reflectionRed) + (pointIntensityRed * reflectionRed) * angle * c);
+			float g = (float) ((ambientIntensityGreen * reflectionGreen) + (pointIntensityGreen * reflectionGreen) * angle * c);
+			float b = (float) ((ambientIntensityBlue * reflectionBlue) + (pointIntensityBlue * reflectionBlue) * angle * c);
+			
+			/*
+			 * Abfrage, damit die Kanäle nicht > 1 werden, vermutlich irgendwo ein Rundungsfehler innerhalb der rechnung
+			 */
+			if(r > 1) r = 1;
+			if(g > 1) g = 1;
+			if(b > 1) b = 1;
 			
 			return new Color(r, g, b);
 			
