@@ -30,8 +30,6 @@ public class PointLight implements Light {
 	// ambientlight variables
 	private String name;
 	private AmbientLight ambient;
-	private double ambientIntensity = 0.5;
-	private Color ambientColor = new Color(255, 255, 255);
 	
 	// pointlight variables
 	private Vector3d position;
@@ -61,14 +59,14 @@ public class PointLight implements Light {
 	 * @param position Die Position des Pointlights
 	 * @param pointLightColor Die Farbe des Pointlights
 	 */
-	public PointLight(String name, double ambientItensity, Color ambientColor, Vector3d position, Color pointLightColor) {
+	public PointLight(String name, double ambientIntensity, Color ambientColor, Vector3d position, Color pointLightColor) {
 		this.name = name;
 		if(ambientIntensity > 1 || ambientIntensity < 0) {
 			throw new IllegalArgumentException("Die ambiente Intensität muss zwischen 0.0 und 1.0 liegen!");
 		} else {
-			this.ambientIntensity = ambientItensity;
+			this.ambient.setIntensity(ambientIntensity);
 		}
-		this.ambientColor = ambientColor;
+		this.ambient.setColor(ambientColor);
 		this.position = position;
 		this.pointColor = pointLightColor;
 	}
@@ -160,7 +158,7 @@ public class PointLight implements Light {
 	 * @param color Die neue Farbe
 	 */
 	public void setAmbientColor(Color color) {
-		this.ambientColor = color;
+		this.ambient.setColor(color);
 	}
 	
 	/**
@@ -168,7 +166,7 @@ public class PointLight implements Light {
 	 * @return Die Farbe
 	 */
 	public Color getAmbientColor() {
-		return this.ambientColor;
+		return this.ambient.getColor();
 	}
 	
 	/**
@@ -236,25 +234,27 @@ public class PointLight implements Light {
 	}
 
 	@Override
-	public Color interpolate(Color color, Vector3d oberflaechennormale, Vector3d camera, Appearance app) {
+	public Color interpolate(Color color, Vector3d oberflaechennormale, Vector3d camera, Appearance appearance) {
 		
 		Vector3d normiert = oberflaechennormale.copy();
 		normiert.normalize();
 		double angle = this.position.dot(oberflaechennormale);
+		
+		/*
+		 * Berechnung der ambienten Intensität.
+		 */
+		double ambientIntensityRed = ((this.ambient.getColor().getR() / 2.55) * this.ambient.getIntensity()) / 100;
+		double ambientIntensityGreen = ((this.ambient.getColor().getG() / 2.55) * this.ambient.getIntensity()) / 100;
+		double ambientIntensityBlue = ((this.ambient.getColor().getB() / 2.55) * this.ambient.getIntensity()) / 100;
+
+		/*
+		 * Berechnung der Reflexion.
+		 */
+		double reflectionRed = ((color.getR() / 2.55) * appearance.getReflectionCoefficient()) / 100;
+		double reflectionGreen = ((color.getG() / 2.55) * appearance.getReflectionCoefficient()) / 100;
+		double reflectionBlue = ((color.getB() / 2.55) * appearance.getReflectionCoefficient()) / 100;
+		
 		if(angle > 0) {
-			/*
-			 * Berechnung der ambienten Intensität.
-			 */
-			double ambientIntensityRed = ((this.ambientColor.getR() / 2.55) * this.ambientIntensity) / 100;
-			double ambientIntensityGreen = ((this.ambientColor.getG() / 2.55) * this.ambientIntensity) / 100;
-			double ambientIntensityBlue = ((this.ambientColor.getB() / 2.55) * this.ambientIntensity) / 100;
-	
-			/*
-			 * Berechnung der Reflexion.
-			 */
-			double reflectionRed = ((color.getR() / 2.55) * app.getReflection()) / 100;
-			double reflectionGreen = ((color.getG() / 2.55) * app.getReflection()) / 100;
-			double reflectionBlue = ((color.getB() / 2.55) * app.getReflection()) / 100;
 	
 			/*
 			 * Berechnung der Punktlichtintensität.
@@ -264,36 +264,37 @@ public class PointLight implements Light {
 			double pointIntensityBlue = ((this.pointColor.getB() / 2.55) * this.pointIntensity) / 100;
 			
 			/*
-			 * Berechnung des austrittswinkels
+			 * Berechnung des Austrittsvektors
 			 */
 			Vector3d rj = normiert.times(normiert.dot(this.position));
+			rj.times(2);
 			
-			//System.out.println(normiert.z);
 			/*
 			 * Berechnung der Spiegelreflexion 
 			 */
-			double sr = pointIntensityRed * app.getSpiegelkoeffizient() * Math.pow(rj.dot(camera), app.getSpiegelReflectionExponent());
-			double sg = pointIntensityGreen * app.getSpiegelkoeffizient() * Math.pow(rj.dot(camera),  app.getSpiegelReflectionExponent());
-			double sb = pointIntensityBlue * app.getSpiegelkoeffizient() * Math.pow(rj.dot(camera),  app.getSpiegelReflectionExponent());
+			double result = Math.pow(rj.dot(camera), appearance.getSpecularExponent());
+			
+			double specularRed = pointIntensityRed * appearance.getSpecularCoefficient() * result;
+			double specularGreen = pointIntensityGreen * appearance.getSpecularCoefficient() * result;
+			double specularBlue = pointIntensityBlue * appearance.getSpecularCoefficient() * result;
 			
 			/*
 			 * Berechnung der Distanz von dem Pixel zur Lichtquelle.
 			 */
-			Vector3d distance = this.position.sub(normiert);
-			double d = Math.sqrt(Math.pow(distance.x, 2) + Math.pow(distance.x, 2) + Math.pow(distance.z, 2));
+			Vector3d distanceVector = this.position.sub(normiert);
+			double distance = Math.sqrt(Math.pow(distanceVector.x, 2) + Math.pow(distanceVector.x, 2) + Math.pow(distanceVector.z, 2));
 			
 			/*
 			 * Berechnung der Abschwächung.
 			 */
-			double c = Math.min(1,  1 / (this.constantAttenuation + this.linearAttenuation * d + this.exponentialAttenuation * Math.pow(d, 2)));
+			double attenuation = Math.min(1,  1 / (this.constantAttenuation + this.linearAttenuation * distance + this.exponentialAttenuation * Math.pow(distance, 2)));
 			
 			/*
-			 * Berechnung der finalen Kanalwerte.
+			 * Berechnung der finalen Farbwerte.
 			 */
-			
-			float r = (float) ((ambientIntensityRed * reflectionRed) + ((pointIntensityRed * reflectionRed) * angle + sr) *c );
-			float g = (float) ((ambientIntensityGreen * reflectionGreen) + ((pointIntensityGreen * reflectionGreen) * angle + sg) *c);
-			float b = (float) ((ambientIntensityBlue * reflectionBlue) + + ((pointIntensityBlue * reflectionBlue) * angle + sb) *c);
+			float r = (float) ((ambientIntensityRed * reflectionRed) + ( (pointIntensityRed * reflectionRed) * angle + specularRed) * attenuation );
+			float g = (float) ((ambientIntensityGreen * reflectionGreen) + ( (pointIntensityGreen * reflectionGreen) * angle + specularGreen) * attenuation);
+			float b = (float) ((ambientIntensityBlue * reflectionBlue) + + ( (pointIntensityBlue * reflectionBlue) * angle + specularBlue) * attenuation);
 			
 			/*
 			 * Abfangen möglicher Rundungsfehler.
@@ -305,18 +306,6 @@ public class PointLight implements Light {
 			return new Color(r, g, b);
 			
 		} else {
-			/*
-			 * Berechnung der Farbwerte für die nicht dem Licht zugewandeten Seite.
-			 * Ambientes Licht wird hier verwendet.
-			 */
-			
-			double ambientIntensityRed = ((this.ambientColor.getR() / 2.55) * this.ambientIntensity) / 100;
-			double ambientIntensityGreen = ((this.ambientColor.getG() / 2.55) * this.ambientIntensity) / 100;
-			double ambientIntensityBlue = ((this.ambientColor.getB() / 2.55) * this.ambientIntensity) / 100;
-			
-			double reflectionRed = ((color.getR() / 2.55) * app.getReflection()) / 100;
-			double reflectionGreen = ((color.getG() / 2.55) * app.getReflection()) / 100;
-			double reflectionBlue = ((color.getB() / 2.55) * app.getReflection()) / 100;
 			
 			float r = (float) (ambientIntensityRed * reflectionRed);
 			float g = (float) (ambientIntensityGreen * reflectionGreen);
@@ -334,8 +323,8 @@ public class PointLight implements Light {
 		String output = "";
 		output += "Punktlicht: " + this.name;
 		output += " { \n";
-		output += "\t ambiente Intensität: " + this.ambientIntensity + "; \n";
-		output += "\t ambiente Farbe: " + this.ambientColor.toString() + "; \n";
+		output += "\t ambiente Intensität: " + this.ambient.getIntensity() + "; \n";
+		output += "\t ambiente Farbe: " + this.ambient.getColor().toString() + "; \n";
 		output += "\t Position: " + this.position.toString() + " \n";
 		output += "\t Farbe des Punktlichts: " + this.pointColor.toString() + "; \n";
 		output += "\t Intensität des Punktlichts: " + this.pointIntensity + "; \n";

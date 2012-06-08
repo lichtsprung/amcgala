@@ -27,17 +27,17 @@ public class BasicAppearance implements Appearance {
 	private double spiegelReflexionsExponent = 2;
 	
 	@Override
-	public double getReflection() {
+	public double getReflectionCoefficient() {
 		return this.reflexionsKoeffizient;
 	}
 
 	@Override
-	public double getSpiegelkoeffizient() {
+	public double getSpecularCoefficient() {
 		return this.spiegelReflexionsKoeffizient;
 	}
 
 	@Override
-	public double getSpiegelReflectionExponent() {
+	public double getSpecularExponent() {
 		return this.spiegelReflexionsExponent;
 	}
 

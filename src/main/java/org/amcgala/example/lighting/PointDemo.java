@@ -66,7 +66,7 @@ public class PointDemo extends Framework implements InputHandler {
 		
 		//TODO: Soll für die finale version 2 "räume" darstellen mit jeweils einem licht um die scenegraph implementierung zu verdeutlichen
 		
-		Vector3d lp = new Vector3d(-150, 100, 1);
+		Vector3d lp = new Vector3d(-100, 100, 1);
 		
 		Node n = new Node("rotating box");
         

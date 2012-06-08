@@ -106,9 +106,9 @@ public class AmbientLight implements Light {
 		/*
 		 * Berechnung des Reflexionskoeffzienten.
 		 */
-		double reflectionRed = ((color.getR() / 2.55) * app.getReflection()) / 100;
-		double reflectionGreen = ((color.getG() / 2.55) * app.getReflection()) / 100;
-		double reflectionBlue = ((color.getB() / 2.55) * app.getReflection()) / 100;
+		double reflectionRed = ((color.getR() / 2.55) * app.getReflectionCoefficient()) / 100;
+		double reflectionGreen = ((color.getG() / 2.55) * app.getReflectionCoefficient()) / 100;
+		double reflectionBlue = ((color.getB() / 2.55) * app.getReflectionCoefficient()) / 100;
 
 		/*
 		 * Berechnung der finalen Werte für die Farbkanäle.
