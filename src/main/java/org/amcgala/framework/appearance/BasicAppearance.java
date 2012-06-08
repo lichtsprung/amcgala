@@ -23,7 +23,7 @@ package org.amcgala.framework.appearance;
 public class BasicAppearance implements Appearance {
 
 	private double reflexionsKoeffizient = 1;
-	private double spiegelReflexionsKoeffizient = 0.5;
+	private double spiegelReflexionsKoeffizient = 1;
 	private double spiegelReflexionsExponent = 2;
 	
 	@Override

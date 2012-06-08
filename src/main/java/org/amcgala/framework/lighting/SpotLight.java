@@ -43,11 +43,12 @@ public class SpotLight implements Light {
 	private double linearAttenuation = 0;
 	private double exponentialAttenuation = 0.4;
 	
-	/**
-	 * Konstruktor.
-	 */
-	public SpotLight() {
-		
+
+	public SpotLight(String name, AmbientLight ambient, Vector3d position, Vector3d direction) {
+		this.name = name;
+		this.ambient = ambient;
+		this.position = position;
+		this.direction = direction;
 	}
 	
 	@Override
@@ -145,10 +146,27 @@ public class SpotLight implements Light {
 	}
 
 	@Override
-	public Color interpolate(Color color, Vector3d pixelposition, Vector3d camera, Appearance app) {
-		// mächtige interpolate methode für das spotlight
+	public Color interpolate(Color color, Vector3d pixelposition, Vector3d camera, Appearance appearance) {
+		/*
+		 * Berechnung der ambienten Intensität.
+		 */
+		double ambientIntensityRed = ((this.ambient.getColor().getR() / 2.55) * this.ambient.getIntensity()) / 100;
+		double ambientIntensityGreen = ((this.ambient.getColor().getG() / 2.55) * this.ambient.getIntensity()) / 100;
+		double ambientIntensityBlue = ((this.ambient.getColor().getB() / 2.55) * this.ambient.getIntensity()) / 100;
+
+		/*
+		 * Berechnung der Reflexion.
+		 */
+		double reflectionRed = ((color.getR() / 2.55) * appearance.getReflectionCoefficient()) / 100;
+		double reflectionGreen = ((color.getG() / 2.55) * appearance.getReflectionCoefficient()) / 100;
+		double reflectionBlue = ((color.getB() / 2.55) * appearance.getReflectionCoefficient()) / 100;
 		
-		return new Color(0, 0 ,0);
+		float r = (float) (ambientIntensityRed * reflectionRed);
+		float g = (float) (ambientIntensityGreen * reflectionGreen);
+		float b = (float) (ambientIntensityBlue * reflectionBlue);
+		
+		
+		return new Color(r, g, b);
 	}
 
 }

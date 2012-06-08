@@ -33,8 +33,8 @@ public class PointLight implements Light {
 	
 	// pointlight variables
 	private Vector3d position;
-	private Color pointColor = new Color(255, 255, 255);
-	private double pointIntensity = 1;
+	private Color color = new Color(255, 255, 255);
+	private double intensity = 1;
 	private double constantAttenuation = 0;
 	private double linearAttenuation = 0;
 	private double exponentialAttenuation = 1;
@@ -59,7 +59,7 @@ public class PointLight implements Light {
 	 * @param position Die Position des Pointlights
 	 * @param pointLightColor Die Farbe des Pointlights
 	 */
-	public PointLight(String name, double ambientIntensity, Color ambientColor, Vector3d position, Color pointLightColor) {
+	public PointLight(String name, double ambientIntensity, Color ambientColor, Vector3d position, Color color) {
 		this.name = name;
 		if(ambientIntensity > 1 || ambientIntensity < 0) {
 			throw new IllegalArgumentException("Die ambiente Intensität muss zwischen 0.0 und 1.0 liegen!");
@@ -68,27 +68,7 @@ public class PointLight implements Light {
 		}
 		this.ambient.setColor(ambientColor);
 		this.position = position;
-		this.pointColor = pointLightColor;
-	}
-
-	/**
-	 * Gibt die Intensität des ambienten Lichts zurück.
-	 * @return Die Intensität des ambienten Lichts.
-	 */
-	public double getAmbientIntensity() {
-		return ambient.getIntensity();
-	}
-
-	/**
-	 * Setzt die Intensität des ambienten Lichts auf den übergebenen Wert.
-	 * @param ambientIntensity Die neue Intensität
-	 */
-	public void setAmbientIntensity(double ambientIntensity) {
-		if(ambientIntensity > 1 || ambientIntensity < 0) {
-			throw new IllegalArgumentException("Die ambiente Intensität muss zwischen 0.0 und 1.0 liegen!");
-		} else {
-			this.ambient.setIntensity(ambientIntensity);
-		}
+		this.color = color;
 	}
 
 	/**
@@ -98,48 +78,32 @@ public class PointLight implements Light {
 	public Vector3d getPosition() {
 		return position;
 	}
-
+	
 	/**
-	 * Setzt die Position des Pointlights
-	 * @param position Die Position des Pointlights
+	 * 
+	 * @param position
 	 */
 	public void setPosition(Vector3d position) {
 		this.position = position;
 	}
 
 	/**
-	 * Gibt die Farbe des Pointlights zurück.
-	 * @return Die Farbe
-	 */
-	public Color getPointColor() {
-		return pointColor;
-	}
-
-	/**
-	 * Setzt die Farbe des Pointlight auf den übergebenen Wert.
-	 * @param pointColor Die Farbe
-	 */
-	public void setPointColor(Color pointColor) {
-		this.pointColor = pointColor;
-	}
-
-	/**
 	 * Gibt die Intensiät des Pointlights zurück.
 	 * @return Die Intensität des Pointlights
 	 */
-	public double getPointIntensity() {
-		return pointIntensity;
+	public double getIntensity() {
+		return intensity;
 	}
 
 	/**
 	 * Setzt die Intensität des Pointlights auf den übergebenen Wert.
 	 * @param pointIntensity Die Intensität des Pointlights
 	 */
-	public void setPointIntensity(double pointIntensity) {
+	public void setIntensity(double pointIntensity) {
 		if(pointIntensity > 1 || pointIntensity < 0) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Die ambiente Intensität muss zwischen 0.0 und 1.0 liegen!");
 		} else {
-			this.pointIntensity = pointIntensity;
+			this.intensity = pointIntensity;
 		}
 	}
 	
@@ -152,29 +116,13 @@ public class PointLight implements Light {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	/**
-	 * Setzt die Farbe des ambienten Lichts.
-	 * @param color Die neue Farbe
-	 */
-	public void setAmbientColor(Color color) {
-		this.ambient.setColor(color);
-	}
-	
-	/**
-	 * Gibt die Farbe des ambienten Lichts zurück.
-	 * @return Die Farbe
-	 */
-	public Color getAmbientColor() {
-		return this.ambient.getColor();
-	}
 	
 	/**
 	 * Gibt die Farbe des Pointlights zurück.
 	 * @return Die Farbe
 	 */
 	public Color getColor() {
-		return this.pointColor;
+		return this.color;
 	}
 
 	/**
@@ -182,7 +130,7 @@ public class PointLight implements Light {
 	 * @param color Die Farbe
 	 */
 	public void setColor(Color color) {
-		this.pointColor = color;
+		this.color = color;
 	}
 	
 	/**
@@ -235,9 +183,9 @@ public class PointLight implements Light {
 
 	@Override
 	public Color interpolate(Color color, Vector3d oberflaechennormale, Vector3d camera, Appearance appearance) {
-		
 		Vector3d normiert = oberflaechennormale.copy();
 		normiert.normalize();
+		
 		double angle = this.position.dot(oberflaechennormale);
 		
 		/*
@@ -259,15 +207,14 @@ public class PointLight implements Light {
 			/*
 			 * Berechnung der Punktlichtintensität.
 			 */
-			double pointIntensityRed = ((this.pointColor.getR() / 2.55) * this.pointIntensity) / 100;
-			double pointIntensityGreen = ((this.pointColor.getG() / 2.55) * this.pointIntensity) / 100;
-			double pointIntensityBlue = ((this.pointColor.getB() / 2.55) * this.pointIntensity) / 100;
+			double pointIntensityRed = ((this.color.getR() / 2.55) * this.intensity) / 100;
+			double pointIntensityGreen = ((this.color.getG() / 2.55) * this.intensity) / 100;
+			double pointIntensityBlue = ((this.color.getB() / 2.55) * this.intensity) / 100;
 			
 			/*
 			 * Berechnung des Austrittsvektors
 			 */
 			Vector3d rj = normiert.times(normiert.dot(this.position));
-			rj.times(2);
 			
 			/*
 			 * Berechnung der Spiegelreflexion 
@@ -294,7 +241,7 @@ public class PointLight implements Light {
 			 */
 			float r = (float) ((ambientIntensityRed * reflectionRed) + ( (pointIntensityRed * reflectionRed) * angle + specularRed) * attenuation );
 			float g = (float) ((ambientIntensityGreen * reflectionGreen) + ( (pointIntensityGreen * reflectionGreen) * angle + specularGreen) * attenuation);
-			float b = (float) ((ambientIntensityBlue * reflectionBlue) + + ( (pointIntensityBlue * reflectionBlue) * angle + specularBlue) * attenuation);
+			float b = (float) ((ambientIntensityBlue * reflectionBlue) + ( (pointIntensityBlue * reflectionBlue) * angle + specularBlue) * attenuation);
 			
 			/*
 			 * Abfangen möglicher Rundungsfehler.
@@ -307,6 +254,9 @@ public class PointLight implements Light {
 			
 		} else {
 			
+			/*
+			 * ambientes Licht für die Seite die dem Licht nicht zugewandt ist.
+			 */
 			float r = (float) (ambientIntensityRed * reflectionRed);
 			float g = (float) (ambientIntensityGreen * reflectionGreen);
 			float b = (float) (ambientIntensityBlue * reflectionBlue);
@@ -326,8 +276,8 @@ public class PointLight implements Light {
 		output += "\t ambiente Intensität: " + this.ambient.getIntensity() + "; \n";
 		output += "\t ambiente Farbe: " + this.ambient.getColor().toString() + "; \n";
 		output += "\t Position: " + this.position.toString() + " \n";
-		output += "\t Farbe des Punktlichts: " + this.pointColor.toString() + "; \n";
-		output += "\t Intensität des Punktlichts: " + this.pointIntensity + "; \n";
+		output += "\t Farbe des Punktlichts: " + this.color.toString() + "; \n";
+		output += "\t Intensität des Punktlichts: " + this.intensity + "; \n";
 		output += "\t Konstante Abschwächung: " + this.constantAttenuation + "; \n";
 		output += "\t Lineare Abschwächung: " + this.linearAttenuation + "; \n";
 		output += "\t Exponentielle Abschwächung: " + this.exponentialAttenuation + "; \n}";

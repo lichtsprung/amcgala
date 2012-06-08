@@ -52,7 +52,7 @@ public class AmbientDemo extends Framework implements InputHandler {
 	public static void main(String[] args) {
 		Framework fm = new AmbientDemo(800, 600);
 		fm.start();
-		fm.setBackgroundColor(new java.awt.Color(212, 212, 212)); // setzt die Hintergrundfarbe für den Frame
+		fm.setBackgroundColor(new java.awt.Color(212, 212, 212));
 	}
 
 	/**
@@ -61,19 +61,17 @@ public class AmbientDemo extends Framework implements InputHandler {
 	@Override
 	public void initGraph() {
 		this.registerInputEventHandler(this);
-		Node n = new Node("rotating box");
+		
+		Node n = new Node("light");
         RotationY rotY = new RotationY();
         rotY.setInterpolationPhi(new LinearInterpolation(0, 4 * Math.PI, 250, true));
         n.setTransformation(rotY);
         
-        // mesh
-        Mesh m = new Mesh(new Vector3d(0,0,0), 100, 50, 50);
-        m.color = new Color(0, 255, 0);
+        Mesh m = new Mesh(new Vector3d(-100, -100, 0), 200, 200, 50);
+        m.color = new Color(0, 0, 255);
         n.addShape(m);
         add(n);
         
-        
-        // licht
         this.ambient = new AmbientLight("TestAmbientLight", 1, new Color(255, 255, 255));
         n.addLight(ambient);
 	}
@@ -81,9 +79,13 @@ public class AmbientDemo extends Framework implements InputHandler {
 	@Subscribe
 	public void changeIntensity(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_UP) {
-			this.ambient.setIntensity(this.ambient.getIntensity() + 0.05);
+			double i = this.ambient.getIntensity() + 0.025;
+			if( i > 1 ) i = 1;
+			this.ambient.setIntensity(i);
 		} else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-			this.ambient.setIntensity(this.ambient.getIntensity() - 0.05);
+			double i = this.ambient.getIntensity() - 0.05;
+			if( i < 0 ) i = 0;
+			this.ambient.setIntensity(i);
 		}
 	}
 }
