@@ -1,5 +1,6 @@
 package org.amcgala.example.plyparser;
 
+import com.google.common.eventbus.Subscribe;
 import org.amcgala.Framework;
 import org.amcgala.framework.camera.SimplePerspectiveCamera;
 import org.amcgala.framework.event.InputHandler;
@@ -9,8 +10,6 @@ import org.amcgala.framework.shape.util.PLYPolygonParser;
 
 import java.awt.event.MouseEvent;
 import java.io.InputStream;
-
-import com.google.common.eventbus.Subscribe;
 
 /**
  * Beispiel, das die Verwendung des PLYParsers demonstriert.

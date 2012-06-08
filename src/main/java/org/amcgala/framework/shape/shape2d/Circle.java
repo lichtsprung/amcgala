@@ -14,13 +14,9 @@
  */
 package org.amcgala.framework.shape.shape2d;
 
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
-import org.amcgala.framework.renderer.Pixel;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.Shape;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,53 +94,16 @@ public class Circle extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Renderer renderer) {
         /*
            * Einbeziehen der Transformationsgruppen. Um Animationen zu
            * beruecksichtigen, die auf die einzelnen Felder zugegriffen
            * haben, wird der pos Vektor aktualisiert, bevor er mit
            * der Transformationsmatrix multipliziert wird.
            */
-        pos = new Vector3d(x, y, -1).transform(transformation);
-        x = pos.x;
-        y = pos.y;
+        pos = new Vector3d(x, y, -1);
 
-        double f = 1 - radius;
-        double ddF_x = 0;
-        double ddF_y = -2 * radius;
-        double x1 = 0;
-        double y1 = radius;
-
-        // Eckpunkte zeichnen
-        renderer.putPixel(new Pixel(x, y + radius), this.color);
-        renderer.putPixel(new Pixel(x, y - radius), this.color);
-        renderer.putPixel(new Pixel(x + radius, y), this.color);
-        renderer.putPixel(new Pixel(x - radius, y), this.color);
-
-        while (x1 < y1) {
-            if (f >= 0) {
-                y1--;
-                ddF_y += 2;
-                f += ddF_y;
-            }
-            x1++;
-            ddF_x += 2;
-            f += ddF_x + 1;
-
-            // Zeichne jeweiligen Randsegmente
-            renderer.putPixel(new Pixel(this.x + x1, this.y + y1), this.color);
-            renderer.putPixel(new Pixel(this.x - x1, this.y + y1), this.color);
-            renderer.putPixel(new Pixel(this.x + x1, this.y - y1), this.color);
-            renderer.putPixel(new Pixel(this.x - x1, this.y - y1), this.color);
-            renderer.putPixel(new Pixel(this.x + y1, this.y + x1), this.color);
-            renderer.putPixel(new Pixel(this.x - y1, this.y + x1), this.color);
-            renderer.putPixel(new Pixel(this.x + y1, this.y - x1), this.color);
-            renderer.putPixel(new Pixel(this.x - y1, this.y - x1), this.color);
-        }
-
-        /*
-         * Ende Bresenham Algorithmus
-         */
+        renderer.drawCircle(pos, radius);
     }
 
     @Override

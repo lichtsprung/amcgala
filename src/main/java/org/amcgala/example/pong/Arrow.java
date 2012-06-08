@@ -12,18 +12,19 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package org.amcgala.framework.shape.shape2d;
+package org.amcgala.example.pong;
 
+import org.amcgala.framework.camera.Camera;
+import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
+import org.amcgala.framework.shape.BresenhamLine;
 import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
-import org.amcgala.framework.renderer.Color;
-import org.amcgala.framework.shape.BresenhamLine;
+import java.awt.Color;
+
 
 /**
  * Draws a 2D Arrow.
@@ -38,7 +39,8 @@ public class Arrow extends Shape {
     private BresenhamLine l1;
 
     /**
-     * Constructor. 
+     * Constructor.
+     *
      * @param position
      * @param direction
      * @param length
@@ -59,6 +61,7 @@ public class Arrow extends Shape {
 
     /**
      * Sets the direction.
+     *
      * @param direction
      */
     public void setDirection(Vector3d direction) {
@@ -68,6 +71,7 @@ public class Arrow extends Shape {
 
     /**
      * Returns the length.
+     *
      * @return
      */
     public double getLength() {
@@ -76,6 +80,7 @@ public class Arrow extends Shape {
 
     /**
      * Sets the length.
+     *
      * @param length
      */
     public void setLength(double length) {
@@ -86,6 +91,7 @@ public class Arrow extends Shape {
 
     /**
      * Returns the current position in form of a 3D Vector.
+     *
      * @return
      */
     public Vector3d getPosition() {
@@ -94,6 +100,7 @@ public class Arrow extends Shape {
 
     /**
      * Sets the Position.
+     *
      * @param position
      */
     public void setPosition(Vector3d position) {
@@ -105,8 +112,8 @@ public class Arrow extends Shape {
      * Rendermethod.
      */
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        l1.render(transformation, camera, renderer);
+    public void render(Renderer renderer) {
+        l1.render(renderer);
     }
 
     /*
@@ -116,6 +123,6 @@ public class Arrow extends Shape {
         l1 = new BresenhamLine(position.x, position.y, position.x + direction.x, position.y + direction.y);
         l1.color = Color.RED;
     }
-    
+
     private static final Logger log = LoggerFactory.getLogger(Arrow.class.getName());
 }

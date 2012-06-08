@@ -108,10 +108,10 @@ public class Board extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Renderer renderer) {
         for (int i = 0; i < boardArray.length; i++) {
             for (int k = 0; k < boardArray[0].length; k++) {
-                boardArray[i][k].render(transformation, camera, renderer);
+                boardArray[i][k].render(renderer);
             }
         }
     }

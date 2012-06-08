@@ -59,13 +59,16 @@ public class RenderVisitor implements Visitor {
     public void visit(Node node) {
         synchronized (node.getGeometry()) {
             Matrix transform = node.getTransformMatrix();
+            renderer.setCamera(camera);
+            renderer.setTransformationMatrix(transform);
+
             for (Shape shape : node.getGeometry()) {
                 shape.setRendering(true);
                 try {
-                    shape.render(transform, camera, renderer);
+                    shape.render(renderer);
                 } catch (ConcurrentModificationException ex) {
                     // Ignore exception since we don't care for thread-safety at this point.
-                    log.info("Caught an  exception...");
+                    log.info("Caught an exception...");
                 }
                 shape.setRendering(false);
             }

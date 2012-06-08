@@ -15,13 +15,10 @@
 package org.amcgala.framework.shape.shape2d;
 
 import org.amcgala.framework.renderer.Renderer;
+import org.amcgala.framework.shape.BresenhamLine;
 import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
-import org.amcgala.framework.shape.BresenhamLine;
 
 /**
  * Ein 2d-Rechteck.
@@ -70,22 +67,22 @@ public class Rectangle extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Renderer renderer) {
         bottom.color = color;
         top.color = color;
         left.color = color;
         right.color = color;
 
-        bottom.render(transformation, camera, renderer);
-        top.render(transformation, camera, renderer);
-        left.render(transformation, camera, renderer);
-        right.render(transformation, camera, renderer);
+        bottom.render(renderer);
+        top.render(renderer);
+        left.render(renderer);
+        right.render(renderer);
     }
 
     @Override
     public String toString() {
         return "Rectangle2d{" + "bottom =" + bottom + ", top =" + top + ", left =" + left + ", right =" + right + '}';
     }
-    
+
     private static final Logger log = LoggerFactory.getLogger(Rectangle.class.getName());
 }

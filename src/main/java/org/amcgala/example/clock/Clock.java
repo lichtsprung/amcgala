@@ -45,11 +45,11 @@ public class Clock extends Shape {
 	}
 
 	@Override
-	public void render(Matrix arg0, Camera arg1, Renderer arg2) {
-		clockFace.render(arg0, arg1, arg2);
-		second.render(arg0, arg1, arg2);
-		minute.render(arg0, arg1, arg2);
-		hour.render(arg0, arg1, arg2);
+	public void render(Renderer renderer) {
+		clockFace.render(renderer);
+		second.render(renderer);
+		minute.render(renderer);
+		hour.render(renderer);
 	}
 
 	private class ClockAnimation extends Animation<Shape> {

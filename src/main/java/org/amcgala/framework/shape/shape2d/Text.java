@@ -14,70 +14,66 @@
  */
 package org.amcgala.framework.shape.shape2d;
 
+import org.amcgala.framework.camera.Camera;
+import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
-
 /**
  * Eine Klasse, die Text darstellen kann. Die grundlegenden Zeichen werden
  * unterstützt und als Vektorbuchstaben ausgegeben.
- * 
+ *
  * @author Robert Giacinto, Steffen Troester
  */
 public class Text extends Shape {
 
-	private static final double SPACING = 14;
-	private double x;
-	private double y;
-	private Letter[] letters;
+    private static final double SPACING = 14;
+    private double x;
+    private double y;
+    private Letter[] letters;
 
-	/**
-	 * Erzeugt ein Text-Shape, das den Text an der Position (x,y) darstellt.
-	 * Dabei wird ein Zeichen als Sprite mit 16x16 Pixel gezaehlt.
-	 * 
-	 * @param text
-	 *            der Text
-	 * @param x
-	 *            die x-Koordinate der Position
-	 * @param y
-	 *            die y-Kootdinate der Position
-	 */
-	public Text(String text, double x, double y) {
-		this.x = x;
-		this.y = y;
-		this.letters = new Letter[text.length()];
-		for (int i = 0; i < letters.length; i++) {
-			char c = text.charAt(i);
-			letters[i] = new Letter(x + i * SPACING, y, c);
-		}
-	}
+    /**
+     * Erzeugt ein Text-Shape, das den Text an der Position (x,y) darstellt.
+     * Dabei wird ein Zeichen als Sprite mit 16x16 Pixel gezaehlt.
+     *
+     * @param text der Text
+     * @param x    die x-Koordinate der Position
+     * @param y    die y-Kootdinate der Position
+     */
+    public Text(String text, double x, double y) {
+        this.x = x;
+        this.y = y;
+        this.letters = new Letter[text.length()];
+        for (int i = 0; i < letters.length; i++) {
+            char c = text.charAt(i);
+            letters[i] = new Letter(x + i * SPACING, y, c);
+        }
+    }
 
-	public void setX(double x) {
-		this.x = x;
-	}
+    public void setX(double x) {
+        this.x = x;
+    }
 
-	public void setY(double y) {
-		this.y = y;
-	}
+    public void setY(double y) {
+        this.y = y;
+    }
 
-	public double getY() {
-		return y;
-	}
+    public double getY() {
+        return y;
+    }
 
-	public double getX() {
-		return x;
-	}
+    public double getX() {
+        return x;
+    }
 
-	@Override
-	public void render(Matrix transformation, Camera camera, Renderer renderer) {
-		for (Shape s : letters) {
-			s.render(transformation, camera, renderer);
-		}
-	}
-	
+    @Override
+    public void render(Renderer renderer) {
+        for (Shape s : letters) {
+            s.render(renderer);
+        }
+    }
+
     private static final Logger log = LoggerFactory.getLogger(Text.class.getName());
 }

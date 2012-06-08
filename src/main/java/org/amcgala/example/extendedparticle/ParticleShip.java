@@ -40,9 +40,9 @@ public class ParticleShip extends Shape implements InputHandler, Updatable {
 	}
 
 	@Override
-	public void render(Matrix transformation, Camera camera, Renderer renderer) {
-		pe.render(transformation, camera, renderer);
-		rectangle.render(transformation, camera, renderer);
+	public void render(Renderer renderer) {
+		pe.render(renderer);
+		rectangle.render(renderer);
 	}
 
 	@Override

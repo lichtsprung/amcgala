@@ -89,10 +89,10 @@ public class Field extends Shape implements InputHandler {
 	}
 
 	@Override
-	public void render(Matrix arg0, Camera arg1, Renderer arg2) {
+	public void render(Renderer renderer) {
 		for (int x = 0; x < size; x++) {
 			for (int y = 0; y < size; y++) {
-				elements[x][y].render(arg0, arg1, arg2);
+				elements[x][y].render(renderer);
 			}
 		}
 	}

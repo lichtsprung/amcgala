@@ -12,7 +12,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package org.amcgala.framework.shape.shape2d;
+package org.amcgala.example.pong;
 
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.math.Matrix;
@@ -103,11 +103,11 @@ public class Cross extends Shape {
      *
      */
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Renderer renderer) {
         l1.color = color;
         l2.color = color;
-        l1.render(transformation, camera, renderer);
-        l2.render(transformation, camera, renderer);
+        l1.render(renderer);
+        l2.render(renderer);
     }
 
     private static final Logger LOG = Logger.getLogger(Cross.class.getName());

@@ -17,15 +17,13 @@ package org.amcgala.framework.shape;
 
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.math.Matrix;
-import org.amcgala.framework.renderer.Color;
 import org.amcgala.framework.renderer.Pixel;
 import org.amcgala.framework.renderer.Renderer;
-
-import javax.imageio.ImageIO;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -130,7 +128,7 @@ public class Sprite extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Renderer renderer) {
         for (int i = 0; i < pixel.length; i++) {
             pixel[i].x = (int) (i % width + x);
             pixel[i].y = (int) ((height - i) / width + y);

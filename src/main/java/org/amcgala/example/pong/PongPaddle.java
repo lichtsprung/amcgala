@@ -20,7 +20,6 @@ import org.amcgala.framework.math.Plane;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.Shape;
-import org.amcgala.framework.shape.shape2d.Cross;
 import org.amcgala.framework.shape.shape2d.Rectangle;
 
 /**
@@ -98,8 +97,8 @@ public class PongPaddle extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        paddle.render(transformation, camera, renderer);
+    public void render(Renderer renderer) {
+        paddle.render(renderer);
 //        c1.render(transformation, camera, renderer);
 //        c2.render(transformation, camera, renderer);
     }

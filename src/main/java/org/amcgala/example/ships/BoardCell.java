@@ -16,10 +16,11 @@ package org.amcgala.example.ships;
 
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.math.Matrix;
-import org.amcgala.framework.renderer.Color;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.Shape;
 import org.amcgala.framework.shape.shape2d.Rectangle;
+
+import java.awt.Color;
 
 /**
  * Ein Feld auf dem Spielbrett. Es speichert den aktuellen Zustand für diese
@@ -122,10 +123,10 @@ public class BoardCell extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        bounds.render(transformation, camera, renderer);
+    public void render(Renderer renderer) {
+        bounds.render(renderer);
         if (ship != null) {
-            ship.render(transformation, camera, renderer);
+            ship.render(renderer);
         }
     }
 }

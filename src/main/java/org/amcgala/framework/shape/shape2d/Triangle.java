@@ -15,13 +15,10 @@
 package org.amcgala.framework.shape.shape2d;
 
 import org.amcgala.framework.renderer.Renderer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.shape.BresenhamLine;
 import org.amcgala.framework.shape.Shape;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Triangle extends Shape {
 
@@ -40,11 +37,11 @@ public class Triangle extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        a.render(transformation, camera, renderer);
-        b.render(transformation, camera, renderer);
-        c.render(transformation, camera, renderer);
+    public void render(Renderer renderer) {
+        a.render(renderer);
+        b.render(renderer);
+        c.render(renderer);
     }
-    
+
     private static final Logger log = LoggerFactory.getLogger(Triangle.class.getName());
 }

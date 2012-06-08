@@ -80,13 +80,13 @@ public class Container extends Shape implements InputHandler {
     }
 
     /**
-     * Removes an selected entry.
+     * Entfernt ein Shape aus dem Container.
      *
-     * @param index the selected entry
+     * @param shape das Shape, das entfernt werden soll
      * @return
      */
-    public void remove(Shape object) {
-    	this.objects.remove(object);
+    public void remove(Shape shape) {
+    	this.objects.remove(shape);
     }
 
     /**
@@ -108,12 +108,12 @@ public class Container extends Shape implements InputHandler {
      *
      */
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Renderer renderer) {
         Iterator<Shape> iter = this.objects.iterator();
         while (iter.hasNext()) {
             Shape object = iter.next();
             object.color = color;
-            object.render(transformation, camera, renderer);
+            object.render(renderer);
         }
     }
 

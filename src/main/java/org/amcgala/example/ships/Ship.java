@@ -72,8 +72,8 @@ public class Ship extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        l1.render(transformation, camera, renderer);
-        l2.render(transformation, camera, renderer);
+    public void render(Renderer renderer) {
+        l1.render(renderer);
+        l2.render(renderer);
     }
 }

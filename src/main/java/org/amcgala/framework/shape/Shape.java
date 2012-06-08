@@ -18,9 +18,10 @@ import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.animation.Updatable;
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.math.Matrix;
-import org.amcgala.framework.renderer.Color;
+import org.amcgala.framework.renderer.Renderable;
 import org.amcgala.framework.renderer.Renderer;
 
+import java.awt.Color;
 import java.util.logging.Logger;
 
 /**
@@ -28,7 +29,7 @@ import java.util.logging.Logger;
  *
  * @author Robert Giacinto
  */
-public abstract class Shape implements Updatable {
+public abstract class Shape implements Updatable, Renderable {
 
     private static final Logger logger = Logger.getLogger(Shape.class.getName());
     private Animation animation;
@@ -53,14 +54,6 @@ public abstract class Shape implements Updatable {
         this.rendering = rendering;
     }
 
-    /**
-     * Diese Methode gibt das Shapeobjekt aus. Es wird von allen Unterklassen implementiert.
-     *
-     * @param transformation die Transformationsmatrix, die aus den Transformationsgruppen resultiert
-     * @param camera         die Kamera der Szene
-     * @param renderer       der Renderer
-     */
-    public abstract void render(Matrix transformation, Camera camera, Renderer renderer);
 
     /**
      * Setzt die Animation, die auf das Shape angewendet werden soll.

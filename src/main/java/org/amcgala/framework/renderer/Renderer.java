@@ -14,15 +14,19 @@
  */
 package org.amcgala.framework.renderer;
 
+import org.amcgala.framework.camera.Camera;
+import org.amcgala.framework.math.Matrix;
+import org.amcgala.framework.math.Vector3d;
+import org.amcgala.framework.scenegraph.transform.Transformation;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.MouseAdapter;
 import java.awt.image.BufferStrategy;
 
 /**
  * Wird von jedem Renderer erweitert und stellt die Funktionen putPixel und show
  * zur Verfügung.
+ * TODO Renderer sollte die wichtigsten, primitiven Funtionatlitäten zum Zeichnen zur Verfügung stellen. drawLine etc.
  */
 public class Renderer {
 
@@ -39,6 +43,8 @@ public class Renderer {
     private int offsetY;
     private JFrame frame;
     private Graphics g;
+    private Camera camera;
+    private Matrix transformationMatrix;
 
     /**
      * Erzeugt einen neuen Renderer und initialisiert die gemeinsamen Felder
@@ -79,6 +85,22 @@ public class Renderer {
         return height;
     }
 
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+
+    public void setTransformationMatrix(Matrix transformationMatrix) {
+        this.transformationMatrix = transformationMatrix;
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+    public Matrix getTransformationMatrix() {
+        return transformationMatrix;
+    }
+
     /**
      * Diese Methode stellt einen Pixel über den Renderer auf der Ausgabe dar.
      * Die genaue Art und Weise wie der Pixel dargestellt wird, hängt von der
@@ -100,8 +122,41 @@ public class Renderer {
      * @param color die Farbe des Pixels
      */
     public void putPixel(Pixel pixel, Color color) {
-        g.setColor(color.color);
+        setColor(color);
         g.fillRect(offsetX + pixel.x, -pixel.y + offsetY, 1, 1);
+    }
+
+    /**
+     * Setzt eine neue Farbe, mit der die weiteren Zeichenbefehle ausgeführt werden.
+     *
+     * @param color die neue Farbe
+     */
+    public void setColor(Color color) {
+        g.setColor(color);
+    }
+
+    /**
+     * Zeichnet eine Linie von einem Startpunkt (x1, y1) zu einem Endpunkt (x2, y2).
+     *
+     * @param x1 der x1 Wert
+     * @param y1 der y1 Wert
+     * @param x2 der x2 Wert
+     * @param y2 der y2 Wert
+     */
+    public void drawLine(int x1, int y1, int x2, int y2) {
+        g.drawLine(offsetX + x1, -y1 + offsetY, offsetX + x2, -y2 + offsetY);
+    }
+
+    public void drawCircle(int x, int y, int radius) {
+        int r2 = (int) (radius);
+        g.drawOval(offsetX + x + r2, -y - r2 + offsetY, r2, r2);
+    }
+
+    public void drawCircle(double x, double y, double radius) {
+        int r2 = (int) (radius);
+        int xi = (int) Math.round(x);
+        int yi = (int) Math.round(y);
+        g.drawOval(offsetX + xi + r2, -yi - r2 + offsetY, r2, r2);
     }
 
     /**
@@ -113,27 +168,23 @@ public class Renderer {
         g.clearRect(0, 0, frame.getWidth(), frame.getHeight());
     }
 
-    /**
-     * Fügt dem JFrame der Ausgabe einen MouseListener hinzu, mit dem
-     * Interaktionen implementiert werden können.
-     *
-     * @param mouseAdapter der MouseListener
-     * @deprecated
-     */
-    public void addMouseListener(MouseAdapter mouseAdapter) {
-        frame.addMouseListener(mouseAdapter);
-        frame.addMouseMotionListener(mouseAdapter);
-        frame.addMouseWheelListener(mouseAdapter);
+    public void drawLine(Vector3d start, Vector3d end) {
+        Vector3d s = start.transform(transformationMatrix);
+        Vector3d e = end.transform(transformationMatrix);
+        Pixel sp = camera.getImageSpaceCoordinates(s);
+        Pixel ep = camera.getImageSpaceCoordinates(e);
+        drawLine(sp.x, sp.y, ep.x, ep.y);
     }
 
-    /**
-     * Fügt dem JFrame einen KeyListener hinzu, mit dem Interaktionen über das
-     * Keyboard implementiert werden können .
-     *
-     * @param keyAdapter der KeyListener
-     * @deprecated
-     */
-    public void addKeyListener(KeyAdapter keyAdapter) {
-        frame.addKeyListener(keyAdapter);
+    public void drawCircle(Vector3d pos, double radius) {
+        Vector3d tv = pos.transform(transformationMatrix);
+        Pixel p = camera.getImageSpaceCoordinates(tv);
+        drawCircle(p.x, p.y, radius);
+    }
+
+    public void putPixel(Vector3d point, Color color) {
+        Vector3d tv = point.transform(transformationMatrix);
+        Pixel p = camera.getImageSpaceCoordinates(tv);
+        putPixel(p, color);
     }
 }

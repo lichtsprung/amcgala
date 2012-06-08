@@ -2,6 +2,7 @@ package org.amcgala.framework.shape.util;
 
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.math.Matrix;
+import org.amcgala.framework.renderer.Renderable;
 import org.amcgala.framework.renderer.Renderer;
 
 /**
@@ -11,7 +12,7 @@ import org.amcgala.framework.renderer.Renderer;
  * @author Steffen Troester
  * 
  */
-public interface ParticleManipulation {
+public interface ParticleManipulation extends Renderable{
 	/**
 	 * Befindet sich der Partikel im Bereich ?
 	 * 
@@ -31,12 +32,4 @@ public interface ParticleManipulation {
 	 */
 	public void manipulate(Particle p);
 
-	/**
-	 * Rendermethode falls benoetigt
-	 * 
-	 * @param transformation
-	 * @param camera
-	 * @param renderer
-	 */
-	public void render(Matrix transformation, Camera camera, Renderer renderer);
 }

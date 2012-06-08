@@ -34,9 +34,9 @@ public class Element extends Shape {
 	}
 
 	@Override
-	public void render(Matrix arg0, Camera arg1, Renderer arg2) {
+	public void render(Renderer renderer) {
 		if (this.isAlive) {
-			polygon.render(arg0, arg1, arg2);
+			polygon.render(renderer);
 		}
 	}
 

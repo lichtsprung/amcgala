@@ -14,16 +14,15 @@
  */
 package org.amcgala.example.concurrency;
 
+import com.google.common.eventbus.Subscribe;
+import org.amcgala.example.pong.Cross;
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.event.InputHandler;
 import org.amcgala.framework.math.Matrix;
-import org.amcgala.framework.renderer.Color;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.Shape;
-import org.amcgala.framework.shape.shape2d.Cross;
 
-import com.google.common.eventbus.Subscribe;
-
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.Random;
@@ -50,9 +49,9 @@ public class RandomCrossArray extends Shape implements InputHandler {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Renderer renderer) {
         for (Cross cross : crosses) {
-            cross.render(transformation, camera, renderer);
+            cross.render(renderer);
         }
     }
 

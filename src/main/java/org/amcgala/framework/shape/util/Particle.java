@@ -48,8 +48,8 @@ public class Particle extends Shape implements Updatable {
 	}
 
 	@Override
-	public void render(Matrix transformation, Camera camera, Renderer renderer) {
-		point2d.render(transformation, camera, renderer);
+	public void render(Renderer renderer) {
+		point2d.render(renderer);
 	}
 
 	public Vector3d getDirection() {

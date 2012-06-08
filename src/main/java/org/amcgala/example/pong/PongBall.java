@@ -19,7 +19,6 @@ import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.Shape;
-import org.amcgala.framework.shape.shape2d.Arrow;
 import org.amcgala.framework.shape.shape2d.Circle;
 
 /**
@@ -116,9 +115,9 @@ public class PongBall extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        circle.render(transformation, camera, renderer);
-        arrow.render(transformation, camera, renderer);
+    public void render(Renderer renderer) {
+        circle.render(renderer);
+        arrow.render(renderer);
     }
 
     private Vector3d getRandomDirection() {

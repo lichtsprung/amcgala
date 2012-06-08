@@ -14,8 +14,6 @@
  */
 package org.amcgala.example.ships;
 
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.BresenhamLine;
 
@@ -28,7 +26,7 @@ import org.amcgala.framework.shape.BresenhamLine;
 public class ShipEnd extends Ship {
 
     private static final BresenhamLine[] bottom = {
-            new BresenhamLine(0,1, 0, 0.4),
+            new BresenhamLine(0, 1, 0, 0.4),
             new BresenhamLine(0, 0.4, 0.4, 0),
             new BresenhamLine(0.4, 0, 0.6, 0),
             new BresenhamLine(0.6, 0, 1, 0.4),
@@ -75,23 +73,23 @@ public class ShipEnd extends Ship {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Renderer renderer) {
         if (Heading.BOTTOM.equals(heading)) {
             for (BresenhamLine line : bottom) {
-                line.render(transformation, camera, renderer);
+                line.render(renderer);
             }
         } else if (Heading.LEFT.equals(heading)) {
             for (BresenhamLine line : left) {
-                line.render(transformation, camera, renderer);
+                line.render(renderer);
             }
         } else if (Heading.RIGHT.equals(heading)) {
             for (BresenhamLine line : right) {
-                line.render(transformation, camera, renderer);
+                line.render(renderer);
             }
 
         } else if (Heading.TOP.equals(heading)) {
             for (BresenhamLine line : top) {
-                line.render(transformation, camera, renderer);
+                line.render(renderer);
             }
         }
     }

@@ -66,83 +66,12 @@ public class BresenhamLine extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Renderer renderer) {
         // Einbeziehen der Transformationsgruppen. Um Animationen zu beruecksichtigen, die auf die einzelnen Felder zugegriffen
         // haben, werden die start und end Vektoren aktualisiert, bevor sie mit der Transformationsmatrix multipliziert werden.
-        start = new Vector3d(x1, y1, z1).transform(transformation);
-        end = new Vector3d(x2, y2, z2).transform(transformation);
-
-
-        // Start- und Endpunkt der Linie in Pixeln, mit denen die Linienalgorithmen durchgefuehrt werden.
-        Pixel startPixel = camera.getImageSpaceCoordinates(start);
-        Pixel endPixel = camera.getImageSpaceCoordinates(end);
-
-        // Wir zeichnen von links nach rechts. Sollte der Startpixel rechts vom Endpixel liegen, dann tauschen wir die Pixel.
-        if (startPixel.x > endPixel.x) {
-            Pixel tmp = startPixel;
-            startPixel = endPixel;
-            endPixel = tmp;
-        }
-
-        /*
-         * Beginn des Bresenham Algorithmus
-         */
-        double dx = endPixel.x - startPixel.x;
-        double dy = endPixel.y - startPixel.y;
-        double dx2 = 2 * dx;
-        double dy2 = 2 * dy;
-
-        double e;
-        double y = startPixel.y;
-        double x = startPixel.x;
-        int i = 1;
-        renderer.putPixel(new Pixel(x, y), color);
-
-        //1.+8. Oktant
-        if (dy <= dx && -dy <= dx) {
-            e = Math.abs(dy2) - dx;
-            while (i <= dx) {
-                if (e >= 0) { /*
-                     * Diagonalschritt
-                     */
-                    if (dy <= 0) {
-                        y--;
-                    } else {
-                        y++;
-                    }
-                    e -= dx2;
-                }
-                x++;
-                i++;
-                e += Math.abs(dy2);
-                renderer.putPixel(new Pixel(x, y), color);
-            }
-        }
-
-        //2.+7. Oktant
-        if (Math.abs(dy) > dx) {
-            e = dx2 - Math.abs(dy);
-            while (i <= Math.abs(dy)) {
-                if (e >= 0) {
-                    x++;
-                    e -= Math.abs(dy2);
-                }
-                if (dy > 0) {
-                    y++;
-                } else {
-                    y--;
-                }
-                i++;
-                e += dx2;
-                renderer.putPixel(new Pixel(x, y), color);
-            }
-        }
-
-        /*
-         * Ende Bresenham Algorithmus
-         */
-
-
+        start = new Vector3d(x1, y1, z1);
+        end = new Vector3d(x2, y2, z2);
+        renderer.drawLine(start, end);
     }
     
     /**

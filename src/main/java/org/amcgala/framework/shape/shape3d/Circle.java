@@ -91,53 +91,9 @@ public class Circle extends Shape {
      *
      */
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        /*
-           * Einbeziehen der Transformationsgruppen. Um Animationen zu
-           * beruecksichtigen, die auf die einzelnen Felder zugegriffen
-           * haben, wird der pos Vektor aktualisiert, bevor er mit
-           * der Transformationsmatrix multipliziert wird.
-           */
-        pos = new Vector3d(x, y, z).transform(transformation);
-        x = pos.x;
-        y = pos.y;
-
-        double f = 1 - radius;
-        double ddF_x = 0;
-        double ddF_y = -2 * radius;
-        double x1 = 0;
-        double y1 = radius;
-
-        // Eckpunkte zeichnen
-        renderer.putPixel(new Pixel(x, y + radius), this.color);
-        renderer.putPixel(new Pixel(x, y - radius), this.color);
-        renderer.putPixel(new Pixel(x + radius, y), this.color);
-        renderer.putPixel(new Pixel(x - radius, y), this.color);
-
-        while (x1 < y1) {
-            if (f >= 0) {
-                y1--;
-                ddF_y += 2;
-                f += ddF_y;
-            }
-            x1++;
-            ddF_x += 2;
-            f += ddF_x + 1;
-
-            // Zeichne jeweiligen Randsegmente
-            renderer.putPixel(new Pixel(this.x + x1, this.y + y1), this.color);
-            renderer.putPixel(new Pixel(this.x - x1, this.y + y1), this.color);
-            renderer.putPixel(new Pixel(this.x + x1, this.y - y1), this.color);
-            renderer.putPixel(new Pixel(this.x - x1, this.y - y1), this.color);
-            renderer.putPixel(new Pixel(this.x + y1, this.y + x1), this.color);
-            renderer.putPixel(new Pixel(this.x - y1, this.y + x1), this.color);
-            renderer.putPixel(new Pixel(this.x + y1, this.y - x1), this.color);
-            renderer.putPixel(new Pixel(this.x - y1, this.y - x1), this.color);
-        }
-
-        /*
-         * Ende Bresenham Algorithmus
-         */
+    public void render( Renderer renderer) {
+        pos = new Vector3d(x, y, z);
+        renderer.drawCircle(pos, radius);
     }
 
     /**

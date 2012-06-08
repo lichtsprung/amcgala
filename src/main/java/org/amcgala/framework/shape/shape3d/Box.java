@@ -155,9 +155,9 @@ public class Box extends Shape {
      * Rendermethod.
      */
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
+    public void render(Renderer renderer) {
         lines.color = color;
-        lines.render(transformation, camera, renderer);
+        lines.render(renderer);
     }
 
     /**

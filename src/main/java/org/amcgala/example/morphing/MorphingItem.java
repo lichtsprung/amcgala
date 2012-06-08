@@ -58,7 +58,7 @@ public class MorphingItem extends Shape {
     }
 
     @Override
-    public void render(Matrix transformation, Camera camera, Renderer renderer) {
-        line1.render(transformation, camera, renderer);
+    public void render(Renderer renderer) {
+        line1.render(renderer);
     }
 }
