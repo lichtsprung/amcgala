@@ -66,34 +66,35 @@ public class PointDemo extends Framework implements InputHandler {
 		
 		//TODO: Soll für die finale version 2 "räume" darstellen mit jeweils einem licht um die scenegraph implementierung zu verdeutlichen
 		
-		Vector3d lp = new Vector3d(150, 100, 0);
+		Vector3d lp = new Vector3d(-150, 100, 1);
 		
 		Node n = new Node("rotating box");
-        RotationY rotY = new RotationY();
-        rotY.setInterpolationPhi(new LinearInterpolation(0, 4 * Math.PI, 250, true));
-        //n.setTransformation(rotY);
         
         // mesh
-        Mesh m = new Mesh(new Vector3d(0,0,0), 100, 50, 50);
-        m.color = new Color(255, 0, 0);
+        Mesh m = new Mesh(new Vector3d(-50, -50,0), 100, 100, 50);
+        m.color = new Color(0, 0, 0);
         n.addShape(m);
         add(n);
         
         Circle c = new Circle(lp.x, lp.y, lp.z, 10);
-        add(c);
-        
         // licht
-        AmbientLight ambient = new AmbientLight("TestAmbientLight", 0.5, new Color(255, 255, 255));
+        AmbientLight ambient = new AmbientLight("TestAmbientLight", 0.2, new Color(255, 255, 255));
         l2 = new PointLight("Pointlight", ambient, lp);
         n.addLight(l2);
+        System.out.println(l2.toString());
+        n.addShape(c);
 	}
 
 	@Subscribe
 	public void setIntensity(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_UP) {
-			this.l2.setPointIntensity(this.l2.getPointIntensity() + 0.05);
+			double i = this.l2.getPointIntensity() + 0.05;
+			if( i > 1 ) i = 1;
+			this.l2.setPointIntensity(i);
 		} else if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-			this.l2.setPointIntensity(this.l2.getPointIntensity() - 0.05);
+			double i = this.l2.getPointIntensity() - 0.05;
+			if( i < 0 ) i = 0;
+			this.l2.setPointIntensity(i);
 		}
 	}
 }

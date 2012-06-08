@@ -25,4 +25,16 @@ public interface Appearance {
 	 * @return Der Reflexionskoeffizient
 	 */
 	public double getReflection();
+
+	/**
+	 * Gibt den Spiegelkoeffizienten zurück.
+	 * @return der Spiegelkoeffizient
+	 */
+	public double getSpiegelkoeffizient();
+	
+	/**
+	 * Gibt den Spiegelreflexionskoeffizient.
+	 * @return der Spiegelreflexionskoeffizient.
+	 */
+	public double getSpiegelReflectionExponent();
 }

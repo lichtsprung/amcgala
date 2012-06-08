@@ -16,15 +16,29 @@ package org.amcgala.framework.appearance;
 
 /**
  * Die Basisoberflächenklasse für alle Shapeobjekte.
+ * Definiert die Oberflächeneigenschaften für ein ganzes Shapeobjekt,
+ * würde normalerweise nur für ein Pixel gelten.
  * @author Sascha Lemke
  */
 public class BasicAppearance implements Appearance {
 
-	private double Reflexionskoeffizient = 1.0;
+	private double reflexionsKoeffizient = 1;
+	private double spiegelReflexionsKoeffizient = 0.5;
+	private double spiegelReflexionsExponent = 2;
 	
 	@Override
 	public double getReflection() {
-		return this.Reflexionskoeffizient;
+		return this.reflexionsKoeffizient;
+	}
+
+	@Override
+	public double getSpiegelkoeffizient() {
+		return this.spiegelReflexionsKoeffizient;
+	}
+
+	@Override
+	public double getSpiegelReflectionExponent() {
+		return this.spiegelReflexionsExponent;
 	}
 
 }

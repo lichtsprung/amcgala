@@ -93,7 +93,7 @@ public class AmbientLight implements Light {
 	}
 	
 	@Override
-	public Color interpolate(Color color, Vector3d pixelposition, Appearance app) {
+	public Color interpolate(Color color, Vector3d pixelposition, Vector3d camera, Appearance app) {
 		/*
 		 * Berechnung des ambienten Lichts, die pixelposition wird hier nicht benötigt.
 		 * 

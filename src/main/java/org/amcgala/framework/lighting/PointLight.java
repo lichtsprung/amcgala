@@ -24,7 +24,6 @@ import org.amcgala.framework.renderer.Color;
  * alle Richtungen von einem bestimmten Punkt aus Licht abstrahlt und das 
  * mit der Entfernung schwächer wird.
  * @author Sascha Lemke
- *
  */
 public class PointLight implements Light {
 
@@ -38,9 +37,9 @@ public class PointLight implements Light {
 	private Vector3d position;
 	private Color pointColor = new Color(255, 255, 255);
 	private double pointIntensity = 1;
-	private double constantAttenuation = 1;
+	private double constantAttenuation = 0;
 	private double linearAttenuation = 0;
-	private double exponentialAttenuation = 0.4;
+	private double exponentialAttenuation = 1;
 	
 	/**
 	 * QuickKonstruktor, erstellt ein Licht mit den Basiseinstellungen und möglichst wenig Parametern.
@@ -50,10 +49,9 @@ public class PointLight implements Light {
 	 */
 	public PointLight(String name, AmbientLight ambient, Vector3d position) {
 		this.name = name;
-		this.ambient = ambient;
+		this.ambient = ambient; // muss nicht geprüft werde, da dies schon beim ambienten Licht passiert.
 		this.position = position;
 	}
-	
 	
 	/**
 	 * Konstruktor.
@@ -234,15 +232,11 @@ public class PointLight implements Light {
 	 * @param exponentialAttenuation the exponentialAttenuation to set
 	 */
 	public void setExponentialAttenuation(double exponentialAttenuation) {
-		if(exponentialAttenuation < this.pointIntensity) {
-			throw new IllegalArgumentException("Die exponentielle Abschwächung muss größer als die Intensität des Punktlichts sein.");
-		} else {
 			this.exponentialAttenuation = exponentialAttenuation;
-		}
 	}
 
 	@Override
-	public Color interpolate(Color color, Vector3d oberflaechennormale, Appearance app) {
+	public Color interpolate(Color color, Vector3d oberflaechennormale, Vector3d camera, Appearance app) {
 		
 		Vector3d normiert = oberflaechennormale.copy();
 		normiert.normalize();
@@ -270,6 +264,19 @@ public class PointLight implements Light {
 			double pointIntensityBlue = ((this.pointColor.getB() / 2.55) * this.pointIntensity) / 100;
 			
 			/*
+			 * Berechnung des austrittswinkels
+			 */
+			Vector3d rj = normiert.times(normiert.dot(this.position));
+			
+			//System.out.println(normiert.z);
+			/*
+			 * Berechnung der Spiegelreflexion 
+			 */
+			double sr = pointIntensityRed * app.getSpiegelkoeffizient() * Math.pow(rj.dot(camera), app.getSpiegelReflectionExponent());
+			double sg = pointIntensityGreen * app.getSpiegelkoeffizient() * Math.pow(rj.dot(camera),  app.getSpiegelReflectionExponent());
+			double sb = pointIntensityBlue * app.getSpiegelkoeffizient() * Math.pow(rj.dot(camera),  app.getSpiegelReflectionExponent());
+			
+			/*
 			 * Berechnung der Distanz von dem Pixel zur Lichtquelle.
 			 */
 			Vector3d distance = this.position.sub(normiert);
@@ -284,12 +291,12 @@ public class PointLight implements Light {
 			 * Berechnung der finalen Kanalwerte.
 			 */
 			
-			float r = (float) ((ambientIntensityRed * reflectionRed) + (pointIntensityRed * reflectionRed) * angle * c);
-			float g = (float) ((ambientIntensityGreen * reflectionGreen) + (pointIntensityGreen * reflectionGreen) * angle * c);
-			float b = (float) ((ambientIntensityBlue * reflectionBlue) + (pointIntensityBlue * reflectionBlue) * angle * c);
+			float r = (float) ((ambientIntensityRed * reflectionRed) + ((pointIntensityRed * reflectionRed) * angle + sr) *c );
+			float g = (float) ((ambientIntensityGreen * reflectionGreen) + ((pointIntensityGreen * reflectionGreen) * angle + sg) *c);
+			float b = (float) ((ambientIntensityBlue * reflectionBlue) + + ((pointIntensityBlue * reflectionBlue) * angle + sb) *c);
 			
 			/*
-			 * Abfrage, damit die Kanäle nicht > 1 werden, vermutlich irgendwo ein Rundungsfehler innerhalb der rechnung
+			 * Abfangen möglicher Rundungsfehler.
 			 */
 			if(r > 1) r = 1;
 			if(g > 1) g = 1;
@@ -302,6 +309,7 @@ public class PointLight implements Light {
 			 * Berechnung der Farbwerte für die nicht dem Licht zugewandeten Seite.
 			 * Ambientes Licht wird hier verwendet.
 			 */
+			
 			double ambientIntensityRed = ((this.ambientColor.getR() / 2.55) * this.ambientIntensity) / 100;
 			double ambientIntensityGreen = ((this.ambientColor.getG() / 2.55) * this.ambientIntensity) / 100;
 			double ambientIntensityBlue = ((this.ambientColor.getB() / 2.55) * this.ambientIntensity) / 100;
@@ -314,7 +322,7 @@ public class PointLight implements Light {
 			float g = (float) (ambientIntensityGreen * reflectionGreen);
 			float b = (float) (ambientIntensityBlue * reflectionBlue);
 			
-			return new Color(r, g, b);
+			return new Color(r,g, b);
 		}
 	}
 

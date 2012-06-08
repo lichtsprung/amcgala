@@ -37,9 +37,10 @@ public interface Light {
 	 * Berechnet die Farbe eines Pixels.
 	 * @param color Die aktuelle Farbe des Pixels
 	 * @param pixelposition Die aktuelle Position des Pixels
+	 * @param camera 
 	 * @param app 
 	 * @return die neue Farbe des Pixels auf Basis des Lichts
 	 */
-	public abstract Color interpolate(Color color, Vector3d pixelposition, Appearance app);
+	public abstract Color interpolate(Color color, Vector3d pixelposition, Vector3d camera, Appearance app);
 
 }

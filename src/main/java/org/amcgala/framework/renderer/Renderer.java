@@ -119,11 +119,11 @@ public class Renderer {
      * @param lights Die Lichter innerhalb der Szene
      * @param app Die Eigenschaften der Oberläche
      */
-    public void putPixel(Vector3d position, Color color, Collection<Light> lights, Appearance app) {
+    public void putPixel(Vector3d position, Color color, Collection<Light> lights, Vector3d camera, Appearance app) {
     	Vector3d n = new Vector3d(position.x, position.y, position.z);
-        for(Light light : lights) {
-        	color = light.interpolate(color, n, app);
-        }
+    	for(Light light : lights) {
+        	color = light.interpolate(color, n, camera, app);
+    	}
         g.setColor(color.color);
         g.fillRect(offsetX + (int) position.x, (int) -position.y + offsetY, 1, 1);
     }    

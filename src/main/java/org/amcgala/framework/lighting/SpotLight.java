@@ -29,6 +29,7 @@ public class SpotLight implements Light {
 	private String name;
 	
 	// ambiente elemente
+	private AmbientLight ambient;
 	
 	// pointelemente
 	private Vector3d position;
@@ -144,7 +145,7 @@ public class SpotLight implements Light {
 	}
 
 	@Override
-	public Color interpolate(Color color, Vector3d pixelposition, Appearance app) {
+	public Color interpolate(Color color, Vector3d pixelposition, Vector3d camera, Appearance app) {
 		// mächtige interpolate methode für das spotlight
 		
 		return new Color(0, 0 ,0);

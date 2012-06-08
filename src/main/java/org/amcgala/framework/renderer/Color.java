@@ -37,10 +37,16 @@ public class Color {
      */
     public Color(int rgb) {
     	this.color = new java.awt.Color(rgb);
+    	this.r = color.getRed();
+    	this.g = color.getGreen();
+    	this.b = color.getBlue();
     }
     
     public Color(float r, float g, float b) {
     	this.color = new java.awt.Color(r, g, b);
+    	this.r = color.getRed();
+    	this.g = color.getGreen();
+    	this.b = color.getBlue();
     }
     
     
