@@ -143,7 +143,7 @@ public final class PerspectiveCamera extends AbstractCamera {
     /**
      * Erzeugt eine neue Kamera an einer Position mit einem bestimmten Blickpunkt.
      *
-     * @param up       Das Oben der Kamera
+     * @param up        Das Oben der Kamera
      * @param location  Die Position der Kamera
      * @param direction Der Punkt, zu dem die Kamera blickt
      * @param fov       Der Öffnungswinkel der Kamera
@@ -180,11 +180,11 @@ public final class PerspectiveCamera extends AbstractCamera {
          */
         u = up.cross(n).normalize();
         view = Matrix.getView(location, direction, up, u);
-       
+
 
         /*
-         * Zweite Transformation: Kamerakoordinaten -> Bildkoordinaten
-         */
+        * Zweite Transformation: Kamerakoordinaten -> Bildkoordinaten
+        */
 
         projection = Matrix.identity(4, 4);
     }

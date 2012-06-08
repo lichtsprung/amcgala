@@ -16,10 +16,7 @@ package org.amcgala.framework.shape;
 
 import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.animation.Updatable;
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.renderer.Renderable;
-import org.amcgala.framework.renderer.Renderer;
 
 import java.awt.Color;
 import java.util.logging.Logger;

@@ -14,16 +14,13 @@
  */
 package org.amcgala.framework.shape.shape2d;
 
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
-import org.amcgala.framework.renderer.Pixel;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * Ein Punkt in einer Ebene für die Darstellung von 2d Geometrien.

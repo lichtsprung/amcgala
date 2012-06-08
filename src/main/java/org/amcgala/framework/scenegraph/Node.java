@@ -14,6 +14,7 @@
  */
 package org.amcgala.framework.scenegraph;
 
+import org.amcgala.framework.animation.Updatable;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.scenegraph.transform.Transformation;
 import org.amcgala.framework.scenegraph.transform.Translation;
@@ -29,7 +30,7 @@ import java.util.logging.Logger;
  * Eine Node ist Teil des Scenegraphs und kann beliebig viele Kindsknoten und
  * Geometrieobjekte zugewiesen bekommen.
  */
-public class Node {
+public class Node implements Updatable {
 
     private static final Logger logger = Logger.getLogger(Node.class.getName());
     private String label = "none";
@@ -46,7 +47,7 @@ public class Node {
      * Die Geometrieobjekte, die an diesem Knoten hängen und von dem Renderer
      * dargestellt werden.
      */
-    private final Collection<Shape> geometry;
+    private final Collection<Shape> shapes;
     /**
      * Ein Transformationsobjekt, das sich auf die Geometrie dieses Knotens und
      * der Kindsknoten auswirkt.
@@ -62,7 +63,7 @@ public class Node {
     public Node(String label) {
         this.label = label;
         transformation = new Translation(0, 0, 0);
-        geometry = new CopyOnWriteArrayList<Shape>();
+        shapes = new CopyOnWriteArrayList<Shape>();
         children = new CopyOnWriteArrayList<Node>();
     }
 
@@ -127,9 +128,9 @@ public class Node {
      * @return true, wenn es hinzugefügt werden konnte
      */
     public boolean addShape(String label, Shape newShape) {
-        synchronized (geometry) {
+        synchronized (shapes) {
             if (this.label.equalsIgnoreCase(label)) {
-                geometry.add(newShape);
+                shapes.add(newShape);
                 return true;
             } else {
                 for (Node n : children) {
@@ -147,8 +148,8 @@ public class Node {
      * @return true, wenn es erfolgreich hinzugefügt wurde
      */
     public boolean addShape(Shape shape) {
-        synchronized (geometry) {
-            geometry.add(shape);
+        synchronized (shapes) {
+            shapes.add(shape);
         }
         return true;
     }
@@ -219,8 +220,8 @@ public class Node {
      *
      * @return die Geometrieobjekte
      */
-    public Collection<Shape> getGeometry() {
-        return Collections.unmodifiableCollection(geometry);
+    public Collection<Shape> getShapes() {
+        return Collections.unmodifiableCollection(shapes);
     }
 
     /**
@@ -265,5 +266,18 @@ public class Node {
         return "Node{"
                 + "label='" + label + '\''
                 + '}';
+    }
+
+    @Override
+    public void update() {
+        if (transformation != null) {
+            transformation.update();
+            for (Shape shape : shapes) {
+                shape.update();
+                if(shape.getAnimation() != null){
+                    shape.getAnimation().animate();
+                }
+            }
+        }
     }
 }

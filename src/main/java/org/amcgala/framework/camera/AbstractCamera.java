@@ -73,7 +73,7 @@ public abstract class AbstractCamera implements Camera {
     @Override
     public Vector3d getDirection() {
         // return quaternion.getRotationColumn(2);
-    	return direction;
+        return direction;
     }
 
     /**
@@ -129,11 +129,11 @@ public abstract class AbstractCamera implements Camera {
         update();
     }
 
-    public Vector3d getLeft(){
+    public Vector3d getLeft() {
         return quaternion.getRotationColumn(0);
     }
 
-    public boolean isParallel(){
+    public boolean isParallel() {
         return parallel;
     }
 }

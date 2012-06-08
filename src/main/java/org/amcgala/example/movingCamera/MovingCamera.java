@@ -14,6 +14,7 @@
  */
 package org.amcgala.example.movingCamera;
 
+import com.google.common.eventbus.Subscribe;
 import org.amcgala.Framework;
 import org.amcgala.framework.animation.interpolation.LinearInterpolation;
 import org.amcgala.framework.camera.SimplePerspectiveCamera;
@@ -22,8 +23,6 @@ import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.scenegraph.transform.RotationY;
 import org.amcgala.framework.shape.shape3d.Box;
-
-import com.google.common.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

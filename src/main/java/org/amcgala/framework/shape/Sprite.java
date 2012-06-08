@@ -15,8 +15,6 @@ package org.amcgala.framework.shape;
  * the License.
  */
 
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.renderer.Pixel;
 import org.amcgala.framework.renderer.Renderer;
 import org.slf4j.Logger;
@@ -157,6 +155,6 @@ public class Sprite extends Shape {
         return "Sprite from:" + filepath + " width:" + width + " height:"
                 + height;
     }
-    
+
     private static final Logger log = LoggerFactory.getLogger(Sprite.class.getName());
 }

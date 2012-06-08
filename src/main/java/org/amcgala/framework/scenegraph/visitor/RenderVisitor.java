@@ -57,12 +57,12 @@ public class RenderVisitor implements Visitor {
 
     @Override
     public void visit(Node node) {
-        synchronized (node.getGeometry()) {
+        synchronized (node.getShapes()) {
             Matrix transform = node.getTransformMatrix();
             renderer.setCamera(camera);
             renderer.setTransformationMatrix(transform);
 
-            for (Shape shape : node.getGeometry()) {
+            for (Shape shape : node.getShapes()) {
                 shape.setRendering(true);
                 try {
                     shape.render(renderer);

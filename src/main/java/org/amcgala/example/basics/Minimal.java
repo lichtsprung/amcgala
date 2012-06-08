@@ -36,7 +36,7 @@ public class Minimal extends Framework {
 
     @Override
     public void initGraph() {
-        add(new BresenhamLine(0,0,100,100));
+        add(new BresenhamLine(0, 0, 100, 100));
     }
 
     public static void main(String[] args) {

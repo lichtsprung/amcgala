@@ -17,10 +17,10 @@ package org.amcgala.framework.renderer;
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
-import org.amcgala.framework.scenegraph.transform.Transformation;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 
 /**

@@ -17,8 +17,6 @@ package org.amcgala.example.morphing;
 import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.animation.interpolation.Interpolation;
 import org.amcgala.framework.animation.interpolation.LinearInterpolation;
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.BresenhamLine;
 import org.amcgala.framework.shape.Shape;

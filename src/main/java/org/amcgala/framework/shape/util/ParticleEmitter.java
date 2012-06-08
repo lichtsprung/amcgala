@@ -1,16 +1,14 @@
 package org.amcgala.framework.shape.util;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import org.amcgala.framework.animation.Updatable;
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.transform.RotationZ;
 import org.amcgala.framework.shape.BresenhamLine;
 import org.amcgala.framework.shape.Shape;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Emitter Klasse die ParticleContainer mit den gegebenen Eigenschaften ausgibt.

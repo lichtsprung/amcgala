@@ -16,27 +16,27 @@ package org.amcgala.example.gameoflife;
 
 import org.amcgala.Framework;
 
-public class GameOfLifeMain extends Framework{
+public class GameOfLifeMain extends Framework {
 
-	public GameOfLifeMain(int width, int height) {
-		super(width, height);
-	}
+    public GameOfLifeMain(int width, int height) {
+        super(width, height);
+    }
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		GameOfLifeMain gol = new GameOfLifeMain(250, 250);
-		gol.start();
-		gol.show();
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+        GameOfLifeMain gol = new GameOfLifeMain(250, 250);
+        gol.start();
+        gol.show();
 
-	}
+    }
 
-	@Override
-	public void initGraph() {
-		Field field = new Field(10,-110,-120);
-		registerInputEventHandler(field);
-		add(field);
-	}
+    @Override
+    public void initGraph() {
+        Field field = new Field(10, -110, -120);
+        registerInputEventHandler(field);
+        add(field);
+    }
 
 }

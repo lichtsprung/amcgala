@@ -29,8 +29,8 @@ public final class Quaternion {
     private double x, y, z, w;
 
 
-    public Quaternion(){
-        w=1;
+    public Quaternion() {
+        w = 1;
     }
 
     public Quaternion(double x, double y, double z, double w) {
@@ -330,7 +330,7 @@ public final class Quaternion {
         return Matrix.constructWithCopy(vals);
     }
 
-    public Quaternion lookAt(Vector3d vup, Vector3d direction){
+    public Quaternion lookAt(Vector3d vup, Vector3d direction) {
         Vector3d v3 = direction.normalize();
         Vector3d v1 = vup.cross(direction).normalize();
         Vector3d v2 = direction.cross(v1).normalize();

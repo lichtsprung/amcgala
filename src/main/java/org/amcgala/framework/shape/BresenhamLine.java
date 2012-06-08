@@ -14,14 +14,10 @@
  */
 package org.amcgala.framework.shape;
 
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.amcgala.framework.renderer.Pixel;
 
 /**
  * Eine Linie im 3d Raum.
@@ -33,7 +29,7 @@ public class BresenhamLine extends Shape {
     public double x1, y1, z1;
     public double x2, y2, z2;
     private Vector3d start, end;
-    
+
     public BresenhamLine(double x1, double y1, double x2, double y2) {
         this.x1 = x1;
         this.y1 = y1;
@@ -73,13 +69,13 @@ public class BresenhamLine extends Shape {
         end = new Vector3d(x2, y2, z2);
         renderer.drawLine(start, end);
     }
-    
+
     /**
      * toString method.
      */
     public String toString() {
-		return "BresenhamLine { x1: " + this.x1 + ", \ty1: " + this.y1 + ", \tx2: " + this.x2 + ", \ty2: " + this.y2 + " }";
+        return "BresenhamLine { x1: " + this.x1 + ", \ty1: " + this.y1 + ", \tx2: " + this.x2 + ", \ty2: " + this.y2 + " }";
     }
-    
+
     private static final Logger log = LoggerFactory.getLogger(BresenhamLine.class.getName());
 }

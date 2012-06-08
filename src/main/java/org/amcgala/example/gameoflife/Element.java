@@ -14,8 +14,6 @@
  */
 package org.amcgala.example.gameoflife;
 
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.Polygon;
@@ -23,21 +21,21 @@ import org.amcgala.framework.shape.Shape;
 
 public class Element extends Shape {
 
-	private Polygon polygon;
-	public boolean isAlive;
+    private Polygon polygon;
+    public boolean isAlive;
 
-	public Element(int width, int height, double x, double y) {
-		this.isAlive = false;
-		polygon = new Polygon(new Vector3d(x, y, 0), new Vector3d(x + width, y,
-				0), new Vector3d(x+width, y + height, 0), new Vector3d(x , y
-				+ height, 0), new Vector3d(0, 0, 0));
-	}
+    public Element(int width, int height, double x, double y) {
+        this.isAlive = false;
+        polygon = new Polygon(new Vector3d(x, y, 0), new Vector3d(x + width, y,
+                0), new Vector3d(x + width, y + height, 0), new Vector3d(x, y
+                + height, 0), new Vector3d(0, 0, 0));
+    }
 
-	@Override
-	public void render(Renderer renderer) {
-		if (this.isAlive) {
-			polygon.render(renderer);
-		}
-	}
+    @Override
+    public void render(Renderer renderer) {
+        if (this.isAlive) {
+            polygon.render(renderer);
+        }
+    }
 
 }

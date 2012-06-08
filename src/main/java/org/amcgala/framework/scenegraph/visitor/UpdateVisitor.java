@@ -15,7 +15,6 @@
 package org.amcgala.framework.scenegraph.visitor;
 
 import org.amcgala.framework.scenegraph.Node;
-import org.amcgala.framework.shape.Shape;
 
 /**
  * Der UpdateVisitor traversiert den Szenengraph und ruft die update Methode
@@ -27,10 +26,6 @@ public class UpdateVisitor implements Visitor {
 
     @Override
     public void visit(Node node) {
-        synchronized (node.getGeometry()) {
-            for (Shape shape : node.getGeometry()) {
-                shape.update();
-            }
-        }
+        node.update();
     }
 }

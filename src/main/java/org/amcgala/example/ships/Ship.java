@@ -14,8 +14,6 @@
  */
 package org.amcgala.example.ships;
 
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.BresenhamLine;
 import org.amcgala.framework.shape.Shape;

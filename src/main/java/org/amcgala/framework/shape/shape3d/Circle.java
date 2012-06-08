@@ -14,13 +14,9 @@
  */
 package org.amcgala.framework.shape.shape3d;
 
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
-import org.amcgala.framework.renderer.Pixel;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.Shape;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,7 +87,7 @@ public class Circle extends Shape {
      *
      */
     @Override
-    public void render( Renderer renderer) {
+    public void render(Renderer renderer) {
         pos = new Vector3d(x, y, z);
         renderer.drawCircle(pos, radius);
     }

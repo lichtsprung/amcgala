@@ -14,6 +14,7 @@
  */
 package org.amcgala;
 
+import com.google.common.eventbus.EventBus;
 import org.amcgala.framework.animation.Animator;
 import org.amcgala.framework.camera.AbstractCamera;
 import org.amcgala.framework.camera.Camera;
@@ -21,15 +22,17 @@ import org.amcgala.framework.camera.SimplePerspectiveCamera;
 import org.amcgala.framework.event.InputHandler;
 import org.amcgala.framework.event.WASDController;
 import org.amcgala.framework.math.Vector3d;
+import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.scenegraph.SceneGraph;
+import org.amcgala.framework.scenegraph.visitor.RenderVisitor;
+import org.amcgala.framework.scenegraph.visitor.UpdateVisitor;
+import org.amcgala.framework.scenegraph.visitor.Visitor;
 import org.amcgala.framework.shape.Shape;
-import com.google.common.eventbus.EventBus;
-import org.amcgala.framework.scenegraph.visitor.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -95,17 +98,14 @@ public abstract class Framework {
         frame.setVisible(true);
 
 
-        camera = new SimplePerspectiveCamera(Vector3d.UNIT_Y, Vector3d.UNIT_Z, Vector3d.ZERO,2000);
+        camera = new SimplePerspectiveCamera(Vector3d.UNIT_Y, Vector3d.UNIT_Z, Vector3d.ZERO, 2000);
         wasdController = new WASDController(camera);
         registerInputEventHandler(wasdController);
 
-        renderer = new org.amcgala.framework.renderer.Renderer(width, height, frame);
+        renderer = new Renderer(width, height, frame);
 
-        visitors.add(new InterpolationVisitor());
 
         animator = new Animator(60, 60);
-        AnimationVisitor animationVisitor = new AnimationVisitor();
-        visitors.add(animationVisitor);
 
         UpdateVisitor updateVisitor = new UpdateVisitor();
         visitors.add(updateVisitor);
@@ -210,23 +210,25 @@ public abstract class Framework {
     public void add(Node node) {
         scenegraph.addNode(node);
     }
-    
+
     /**
      * Fügt einen Knoten an einen anderen bestimmten Knoten hinzu.
+     *
      * @param label der Name des Knotens
-     * @param node der Knoten der angehängt wird
+     * @param node  der Knoten der angehängt wird
      */
     public void add(String label, Node node) {
-    	scenegraph.addNode(node, label);
+        scenegraph.addNode(node, label);
     }
-    
+
     /**
      * Fügt dem benannten Knoten das Shapeobjekt hinzu.
+     *
      * @param label der name des Knotens
      * @param shape das Shapeobjekt
      */
     public void add(String label, Shape shape) {
-    	scenegraph.addShape(label, shape);
+        scenegraph.addShape(label, shape);
     }
 
     /**

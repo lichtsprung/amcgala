@@ -95,14 +95,7 @@ public class Circle extends Shape {
 
     @Override
     public void render(Renderer renderer) {
-        /*
-           * Einbeziehen der Transformationsgruppen. Um Animationen zu
-           * beruecksichtigen, die auf die einzelnen Felder zugegriffen
-           * haben, wird der pos Vektor aktualisiert, bevor er mit
-           * der Transformationsmatrix multipliziert wird.
-           */
         pos = new Vector3d(x, y, -1);
-
         renderer.drawCircle(pos, radius);
     }
 

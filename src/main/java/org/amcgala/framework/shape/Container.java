@@ -14,9 +14,7 @@
  */
 package org.amcgala.framework.shape;
 
-import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.event.InputHandler;
-import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.renderer.Renderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,35 +37,38 @@ public class Container extends Shape implements InputHandler {
     public Container() {
         this.objects = new ArrayList<Shape>();
     }
-    
+
     /**
      * Creates an Containobject with the given shapes.
+     *
      * @param object
      */
     public Container(Shape[] object) {
-    	this.objects = new ArrayList<Shape>();
-    	for(int i = 0; i < object.length; i++) {
-    		this.objects.add(object[i]);
-    	}
+        this.objects = new ArrayList<Shape>();
+        for (int i = 0; i < object.length; i++) {
+            this.objects.add(object[i]);
+        }
     }
 
     /**
      * Adds a Shape.
+     *
      * @param object
      */
     public void add(Shape object) {
-    	this.objects.add(object);
+        this.objects.add(object);
     }
-    
-    
+
+
     /**
      * Adds an array of shapes.
+     *
      * @param object
      */
     public void add(Shape[] object) {
-    	for(int i = 0; i < object.length; i++) {
-    		this.objects.add(object[i]);
-    	}
+        for (int i = 0; i < object.length; i++) {
+            this.objects.add(object[i]);
+        }
     }
 
     /**
@@ -76,7 +77,7 @@ public class Container extends Shape implements InputHandler {
      * @return
      */
     public void remove() {
-    	this.objects.remove(this.objects.size() -1);
+        this.objects.remove(this.objects.size() - 1);
     }
 
     /**
@@ -86,7 +87,7 @@ public class Container extends Shape implements InputHandler {
      * @return
      */
     public void remove(Shape shape) {
-    	this.objects.remove(shape);
+        this.objects.remove(shape);
     }
 
     /**
@@ -96,10 +97,10 @@ public class Container extends Shape implements InputHandler {
     public String toString() {
         String ausgabe = "";
         Iterator<Shape> iter = this.objects.iterator();
-        while(iter.hasNext()) {
-        	Shape object = iter.next();
-        	ausgabe += object.toString();
-        	ausgabe += "\n";
+        while (iter.hasNext()) {
+            Shape object = iter.next();
+            ausgabe += object.toString();
+            ausgabe += "\n";
         }
         return ausgabe;
     }

@@ -16,9 +16,7 @@ package org.amcgala.example.concurrency;
 
 import com.google.common.eventbus.Subscribe;
 import org.amcgala.example.pong.Cross;
-import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.event.InputHandler;
-import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.Shape;
 
