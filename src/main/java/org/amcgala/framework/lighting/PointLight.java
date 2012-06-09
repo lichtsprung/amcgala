@@ -181,6 +181,10 @@ public class PointLight implements Light {
 			this.exponentialAttenuation = exponentialAttenuation;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.amcgala.framework.lighting.Light#interpolate(org.amcgala.framework.renderer.Color, org.amcgala.framework.math.Vector3d, org.amcgala.framework.math.Vector3d, org.amcgala.framework.appearance.Appearance)
+	 */
 	@Override
 	public Color interpolate(Color color, Vector3d oberflaechennormale, Vector3d camera, Appearance appearance) {
 		Vector3d normiert = oberflaechennormale.copy();
@@ -265,9 +269,9 @@ public class PointLight implements Light {
 		}
 	}
 
-	/**
-	 * Gibt die Werte des Pointlights als String aus.
-	 * @return Die Werte des Pointlights als String
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
 		String output = "";

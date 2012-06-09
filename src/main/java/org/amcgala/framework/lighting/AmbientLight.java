@@ -46,11 +46,19 @@ public class AmbientLight implements Light {
 		this.lightcolor = color;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.amcgala.framework.lighting.Light#getName()
+	 */
 	@Override
 	public String getName() {
 		return name;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.amcgala.framework.lighting.Light#setName(java.lang.String)
+	 */
 	@Override
 	public void setName(String name) {
 		this.name = name;
@@ -60,6 +68,7 @@ public class AmbientLight implements Light {
 	 * Setzt die Farbe des ambienten Lichts.
 	 * @param color die neue Farbe
 	 */
+	@Override
 	public void setColor(Color color) {
 		this.lightcolor = color;
 	}
@@ -68,6 +77,7 @@ public class AmbientLight implements Light {
 	 * Gibt die Farbe des ambienten Lichts zurück.
 	 * @return die Farbe
 	 */
+	@Override
 	public Color getColor() {
 		return this.lightcolor;
 	}
@@ -92,6 +102,10 @@ public class AmbientLight implements Light {
 		return this.intensity;
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.amcgala.framework.lighting.Light#interpolate(org.amcgala.framework.renderer.Color, org.amcgala.framework.math.Vector3d, org.amcgala.framework.math.Vector3d, org.amcgala.framework.appearance.Appearance)
+	 */
 	@Override
 	public Color interpolate(Color color, Vector3d pixelposition, Vector3d camera, Appearance app) {
 		/*
@@ -120,9 +134,9 @@ public class AmbientLight implements Light {
 		return new Color(r,g,b);
 	}
 	
-	/**
-	 * Gibt die Werte des ambienten Lichts als String zurück.
-	 * @return die Werte des ambienten Lichts als String
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
 		return "AmbientLight: " + this.name + " { intensity: " + this.intensity + "; " + this.lightcolor.toString() + " }";

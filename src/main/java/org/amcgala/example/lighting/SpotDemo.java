@@ -39,11 +39,12 @@ public class SpotDemo extends Framework {
 	@Override
 	public void initGraph() {
 		AmbientLight ambient = new AmbientLight("TestAmbientLight", 0.4, new Color(255, 255, 255));
-		SpotLight l1 = new SpotLight("Spotlight", ambient, new Vector3d(0, 0, 100), new Vector3d(0, 0, 1));
+		SpotLight l1 = new SpotLight("Spotlight", ambient, 1.0, new Vector3d(0, 0, 100), new Vector3d(0, 0, 1));
 		add(l1);
 		
         Mesh m = new Mesh(new Vector3d(-400, -300, 0), 800, 600, 100);
         m.color = new Color(255, 0, 0);
         add(m);
+        System.out.println(l1.toString());
 	}
 }

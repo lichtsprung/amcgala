@@ -45,24 +45,45 @@ public class SpotLight implements Light {
 	private double exponentialAttenuation = 1;
 	
 
-	public SpotLight(String name, AmbientLight ambient, Vector3d position, Vector3d direction) {
+	/**
+	 * Konstruktor.
+	 * @param name
+	 * @param ambient
+	 * @param position
+	 * @param direction
+	 */
+	public SpotLight(String name, AmbientLight ambient, double intensity, Vector3d position, Vector3d direction) {
 		this.name = name;
 		this.ambient = ambient;
 		this.position = position;
 		this.direction = direction;
+		if(intensity > 1 || intensity < 0) {
+			throw new IllegalArgumentException("Die ambiente Intensität muss zwischen 0.0 und 1.0 liegen!");
+		} else {
+			this.intensity = intensity;
+		}
 	}
 	
+	/*
+	 * (non-Javadoc)
+	 * @see org.amcgala.framework.lighting.Light#getName()
+	 */
 	@Override
 	public String getName() {
 		return name;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.amcgala.framework.lighting.Light#setName(java.lang.String)
+	 */
 	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
+	 * Gibt die Position der Lichtquelle zurück.
 	 * @return the position
 	 */
 	public Vector3d getPosition() {
@@ -70,6 +91,7 @@ public class SpotLight implements Light {
 	}
 
 	/**
+	 * Setzt die Position der Lichtquelle auf den übergebenen Wert.
 	 * @param position the position to set
 	 */
 	public void setPosition(Vector3d position) {
@@ -77,6 +99,7 @@ public class SpotLight implements Light {
 	}
 
 	/**
+	 * Gibt die Richtung zurück, in die die Lichtquelle strahlt.
 	 * @return the direction
 	 */
 	public Vector3d getDirection() {
@@ -84,20 +107,59 @@ public class SpotLight implements Light {
 	}
 
 	/**
+	 * Setzt die Richtung, in die die Lichtquelle strahlt, auf den übergebenen Wert.
 	 * @param direction the direction to set
 	 */
 	public void setDirection(Vector3d direction) {
 		this.direction = direction;
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.amcgala.framework.lighting.Light#getColor()
+	 */
+	@Override
+	public Color getColor() {
+		return this.color;
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.amcgala.framework.lighting.Light#setColor(org.amcgala.framework.renderer.Color)
+	 */
+	@Override
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.amcgala.framework.lighting.Light#getIntensity()
+	 */
+	@Override
+	public double getIntensity() {
+		return this.intensity;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.amcgala.framework.lighting.Light#setIntensity(double)
+	 */
+	@Override
+	public void setIntensity(double intensity) {
+		this.intensity = intensity;
+	}
+	
 	/**
-	 * @return the constantAttenuation
+	 * Gibt die konstante Lichtabschwächung zurück.
+	 * @return the constantAttenuation die konstante Lichtabschwächung
 	 */
 	public double getConstantAttenuation() {
 		return constantAttenuation;
 	}
 
 	/**
+	 * Setzt die konstante Lichtabschächung auf den übergebenen Wert.
 	 * @param constantAttenuation the constantAttenuation to set
 	 */
 	public void setConstantAttenuation(double constantAttenuation) {
@@ -105,13 +167,15 @@ public class SpotLight implements Light {
 	}
 
 	/**
-	 * @return the linearAttenuation
+	 * Gibt die lineare Lichtabschwächung zurück.
+	 * @return the linearAttenuation die lineare Lichtabschwächung
 	 */
 	public double getLinearAttenuation() {
 		return linearAttenuation;
 	}
 
 	/**
+	 * Setzt die lineare Lichtabschwächung auf den übergebenen Wert.
 	 * @param linearAttenuation the linearAttenuation to set
 	 */
 	public void setLinearAttenuation(double linearAttenuation) {
@@ -119,19 +183,25 @@ public class SpotLight implements Light {
 	}
 
 	/**
-	 * @return the exponentialAttenuation
+	 * Gibt die exponentielle Lichtabschwächung zurück.
+	 * @return the exponentialAttenuation die exponentielle Lichtabschwächung
 	 */
 	public double getExponentialAttenuation() {
 		return exponentialAttenuation;
 	}
 
 	/**
+	 * Setzt die exponentielle Lichtabschwächung auf den übergebenen Wert.
 	 * @param exponentialAttenuation the exponentialAttenuation to set
 	 */
 	public void setExponentialAttenuation(double exponentialAttenuation) {
-		this.exponentialAttenuation = exponentialAttenuation;
+			this.exponentialAttenuation = exponentialAttenuation;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.amcgala.framework.lighting.Light#interpolate(org.amcgala.framework.renderer.Color, org.amcgala.framework.math.Vector3d, org.amcgala.framework.math.Vector3d, org.amcgala.framework.appearance.Appearance)
+	 */
 	@Override
 	public Color interpolate(Color color, Vector3d pixelposition, Vector3d camera, Appearance appearance) {
 		pixelposition.normalize();
@@ -229,5 +299,17 @@ public class SpotLight implements Light {
 			return new Color(r,g, b);
 		}
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "SpotLight [name=" + name + ", ambient=" + ambient
+				+ ", position=" + position + ", intensity=" + intensity
+				+ ", direction=" + direction + ", color=" + color
+				+ ", constantAttenuation=" + constantAttenuation
+				+ ", linearAttenuation=" + linearAttenuation
+				+ ", exponentialAttenuation=" + exponentialAttenuation + "]";
+	}
 }

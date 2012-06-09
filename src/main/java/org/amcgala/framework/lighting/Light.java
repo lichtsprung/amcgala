@@ -34,6 +34,30 @@ public interface Light {
 	public abstract void setName(String name);
 	
 	/**
+	 * Gibt die Farbe der Lichtquelle zurück.
+	 * @return die Farbe
+	 */
+	public abstract Color getColor();
+	
+	/**
+	 * Setzt die Farbe der Lichtquelle auf den übergebenen Wert.
+	 * @param color die neue Farbe
+	 */
+	public abstract void setColor(Color color);
+	
+	/**
+	 * Gibt die aktuelle Intensität der Lichtquelle zurück.
+	 * @return die Intensität der Lichtquelle
+	 */
+	public abstract double getIntensity();
+	
+	/**
+	 * Setzt die Intensität der Lichtquelle auf den übergebenen Wert.
+	 * @param intensity die Intensität
+	 */
+	public abstract void setIntensity(double intensity);
+	
+	/**
 	 * Berechnet die Farbe eines Pixels.
 	 * @param color Die aktuelle Farbe des Pixels
 	 * @param pixelposition Die aktuelle Position des Pixels
