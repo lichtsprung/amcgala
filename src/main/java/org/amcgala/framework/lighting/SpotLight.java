@@ -33,15 +33,16 @@ public class SpotLight implements Light {
 	
 	// pointelemente
 	private Vector3d position;
+	private double intensity = 1;
 	
 	// Spotlight werte
 	private Vector3d direction;
-	private double spotIntensity;
+	private Color color = new Color(255, 255, 255);
 	
 	// Attenuation
-	private double constantAttenuation = 1;
+	private double constantAttenuation = 0;
 	private double linearAttenuation = 0;
-	private double exponentialAttenuation = 0.4;
+	private double exponentialAttenuation = 1;
 	
 
 	public SpotLight(String name, AmbientLight ambient, Vector3d position, Vector3d direction) {
@@ -90,20 +91,6 @@ public class SpotLight implements Light {
 	}
 
 	/**
-	 * @return the spotIntensity
-	 */
-	public double getSpotIntensity() {
-		return spotIntensity;
-	}
-
-	/**
-	 * @param spotIntensity the spotIntensity to set
-	 */
-	public void setSpotIntensity(double spotIntensity) {
-		this.spotIntensity = spotIntensity;
-	}
-
-	/**
 	 * @return the constantAttenuation
 	 */
 	public double getConstantAttenuation() {
@@ -147,6 +134,12 @@ public class SpotLight implements Light {
 
 	@Override
 	public Color interpolate(Color color, Vector3d pixelposition, Vector3d camera, Appearance appearance) {
+		pixelposition.normalize();
+		direction.normalize();
+		double angle = this.position.dot(pixelposition);
+		double spotFactor = pixelposition.dot(direction);
+		double cutOff = Math.cos(spotFactor);
+			
 		/*
 		 * Berechnung der ambienten Intensität.
 		 */
@@ -160,13 +153,81 @@ public class SpotLight implements Light {
 		double reflectionRed = ((color.getR() / 2.55) * appearance.getReflectionCoefficient()) / 100;
 		double reflectionGreen = ((color.getG() / 2.55) * appearance.getReflectionCoefficient()) / 100;
 		double reflectionBlue = ((color.getB() / 2.55) * appearance.getReflectionCoefficient()) / 100;
-		
-		float r = (float) (ambientIntensityRed * reflectionRed);
-		float g = (float) (ambientIntensityGreen * reflectionGreen);
-		float b = (float) (ambientIntensityBlue * reflectionBlue);
-		
-		
-		return new Color(r, g, b);
-	}
 
+		if(spotFactor >= cutOff) {
+			if(angle > 0) {
+		
+				/*
+				 * Berechnung der Punktlichtintensität.
+				 */
+				double pointIntensityRed = ((this.color.getR() / 2.55) * this.intensity) / 100;
+				double pointIntensityGreen = ((this.color.getG() / 2.55) * this.intensity) / 100;
+				double pointIntensityBlue = ((this.color.getB() / 2.55) * this.intensity) / 100;
+				
+				/*
+				 * Berechnung des Austrittsvektors
+				 */
+				Vector3d rj = pixelposition.times(pixelposition.dot(this.position));
+				
+				/*
+				 * Berechnung der Spiegelreflexion 
+				 */
+				double result = Math.pow(rj.dot(camera), appearance.getSpecularExponent());
+				
+				double specularRed = pointIntensityRed * appearance.getSpecularCoefficient() * result;
+				double specularGreen = pointIntensityGreen * appearance.getSpecularCoefficient() * result;
+				double specularBlue = pointIntensityBlue * appearance.getSpecularCoefficient() * result;
+				
+				/*
+				 * Berechnung der Distanz von dem Pixel zur Lichtquelle.
+				 */
+				Vector3d distanceVector = this.position.sub(pixelposition);
+				double distance = Math.sqrt(Math.pow(distanceVector.x, 2) + Math.pow(distanceVector.x, 2) + Math.pow(distanceVector.z, 2));
+				
+				/*
+				 * Berechnung der Abschwächung.
+				 */
+				double attenuation = Math.min(1,  1 / (this.constantAttenuation + this.linearAttenuation * distance + this.exponentialAttenuation * Math.pow(distance, 2)));
+				
+				double spotAttenuation = 1.0 - (1.0 - spotFactor) * 1.0 / (1.0 - cutOff);
+				
+				/*
+				 * Berechnung der finalen Farbwerte.
+				 */
+				float r = (float) ((ambientIntensityRed * reflectionRed) + ( (pointIntensityRed * reflectionRed) * angle + specularRed) * attenuation * spotAttenuation);
+				float g = (float) ((ambientIntensityGreen * reflectionGreen) + ( (pointIntensityGreen * reflectionGreen) * angle + specularGreen) * attenuation * spotAttenuation);
+				float b = (float) ((ambientIntensityBlue * reflectionBlue) + ( (pointIntensityBlue * reflectionBlue) * angle + specularBlue) * attenuation * spotAttenuation);
+				
+				/*
+				 * Abfangen möglicher Rundungsfehler.
+				 */
+				if(r > 1) r = 1;
+				if(g > 1) g = 1;
+				if(b > 1) b = 1;
+				
+				return new Color(r, g, b);
+				
+			} else {
+				
+				/*
+				 * ambientes Licht für die Seite die dem Licht nicht zugewandt ist.
+				 */
+				float r = (float) (ambientIntensityRed * reflectionRed);
+				float g = (float) (ambientIntensityGreen * reflectionGreen);
+				float b = (float) (ambientIntensityBlue * reflectionBlue);
+				
+				return new Color(r,g, b);
+			}
+		} else {
+			/*
+			 * Berechne ambientes Licht, falls nicht vom spotlight angestrahlt
+			 */
+			float r = (float) (ambientIntensityRed * reflectionRed);
+			float g = (float) (ambientIntensityGreen * reflectionGreen);
+			float b = (float) (ambientIntensityBlue * reflectionBlue);
+			
+			return new Color(r,g, b);
+		}
+	}
+	
 }

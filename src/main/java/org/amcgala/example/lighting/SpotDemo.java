@@ -15,6 +15,11 @@
 package org.amcgala.example.lighting;
 
 import org.amcgala.Framework;
+import org.amcgala.framework.lighting.AmbientLight;
+import org.amcgala.framework.lighting.SpotLight;
+import org.amcgala.framework.math.Vector3d;
+import org.amcgala.framework.renderer.Color;
+import org.amcgala.framework.shape.shape3d.Mesh;
 
 /**
  * Beispiel für die Verwendung des Spotlights.
@@ -33,6 +38,12 @@ public class SpotDemo extends Framework {
 	
 	@Override
 	public void initGraph() {
-		// Spotlight demo
+		AmbientLight ambient = new AmbientLight("TestAmbientLight", 0.4, new Color(255, 255, 255));
+		SpotLight l1 = new SpotLight("Spotlight", ambient, new Vector3d(0, 0, 100), new Vector3d(0, 0, 1));
+		add(l1);
+		
+        Mesh m = new Mesh(new Vector3d(-400, -300, 0), 800, 600, 100);
+        m.color = new Color(255, 0, 0);
+        add(m);
 	}
 }
