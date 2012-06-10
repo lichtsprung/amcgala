@@ -16,275 +16,287 @@ package org.amcgala.framework.lighting;
 
 import org.amcgala.framework.appearance.Appearance;
 import org.amcgala.framework.math.Vector3d;
-
 import org.amcgala.framework.renderer.Color;
 
 /**
- * Klasse für das Punktlicht, dient zur Berechnung einer Lichtquelle die in 
- * alle Richtungen von einem bestimmten Punkt aus Licht abstrahlt und das 
+ * Klasse für das Punktlicht, dient zur Berechnung einer Lichtquelle die in
+ * alle Richtungen von einem bestimmten Punkt aus Licht abstrahlt und das
  * mit der Entfernung schwächer wird.
+ *
  * @author Sascha Lemke
  */
 public class PointLight implements Light {
 
-	// ambientlight variables
-	private String name;
-	private AmbientLight ambient;
-	
-	// pointlight variables
-	private Vector3d position;
-	private Color color = new Color(255, 255, 255);
-	private double intensity = 1;
-	private double constantAttenuation = 0;
-	private double linearAttenuation = 0;
-	private double exponentialAttenuation = 1;
-	
-	/**
-	 * QuickKonstruktor, erstellt ein Licht mit den Basiseinstellungen und möglichst wenig Parametern.
-	 * @param name Der Name der Lichtquelle
-	 * @param ambient Das ambiente Licht
-	 * @param position Die Position der Lichtquelle
-	 */
-	public PointLight(String name, AmbientLight ambient, Vector3d position) {
-		this.name = name;
-		this.ambient = ambient; // muss nicht geprüft werde, da dies schon beim ambienten Licht passiert.
-		this.position = position;
-	}
-	
-	/**
-	 * Konstruktor.
-	 * @param name Der Name der Lichtquelle
-	 * @param ambientItensity Die Intensität des ambienten Lichts
-	 * @param ambientColor Die Farbe des ambienten Lichts
-	 * @param position Die Position des Pointlights
-	 * @param pointLightColor Die Farbe des Pointlights
-	 */
-	public PointLight(String name, double ambientIntensity, Color ambientColor, Vector3d position, Color color) {
-		this.name = name;
-		if(ambientIntensity > 1 || ambientIntensity < 0) {
-			throw new IllegalArgumentException("Die ambiente Intensität muss zwischen 0.0 und 1.0 liegen!");
-		} else {
-			this.ambient.setIntensity(ambientIntensity);
-		}
-		this.ambient.setColor(ambientColor);
-		this.position = position;
-		this.color = color;
-	}
+    // ambientlight variables
+    private String name;
+    private AmbientLight ambient;
 
-	/**
-	 * Gibt die Position des Pointlights zurück.
-	 * @return Die Position des Pointlights
-	 */
-	public Vector3d getPosition() {
-		return position;
-	}
-	
-	/**
-	 * 
-	 * @param position
-	 */
-	public void setPosition(Vector3d position) {
-		this.position = position;
-	}
+    // pointlight variables
+    private Vector3d position;
+    private Color color = new Color(255, 255, 255);
+    private double intensity = 1;
+    private double constantAttenuation = 0;
+    private double linearAttenuation = 0;
+    private double exponentialAttenuation = 1;
 
-	/**
-	 * Gibt die Intensiät des Pointlights zurück.
-	 * @return Die Intensität des Pointlights
-	 */
-	public double getIntensity() {
-		return intensity;
-	}
+    /**
+     * QuickKonstruktor, erstellt ein Licht mit den Basiseinstellungen und möglichst wenig Parametern.
+     *
+     * @param name     Der Name der Lichtquelle
+     * @param ambient  Das ambiente Licht
+     * @param position Die Position der Lichtquelle
+     */
+    public PointLight(String name, AmbientLight ambient, Vector3d position) {
+        this.name = name;
+        this.ambient = ambient; // muss nicht geprüft werde, da dies schon beim ambienten Licht passiert.
+        this.position = position;
+    }
 
-	/**
-	 * Setzt die Intensität des Pointlights auf den übergebenen Wert.
-	 * @param pointIntensity Die Intensität des Pointlights
-	 */
-	public void setIntensity(double pointIntensity) {
-		if(pointIntensity > 1 || pointIntensity < 0) {
-			throw new IllegalArgumentException("Die ambiente Intensität muss zwischen 0.0 und 1.0 liegen!");
-		} else {
-			this.intensity = pointIntensity;
-		}
-	}
-	
-	@Override
-	public String getName() {
-		return this.name;
-	}
+    /**
+     * Konstruktor.
+     *
+     * @param name             Der Name der Lichtquelle
+     * @param ambientIntensity Die Intensität des ambienten Lichts
+     * @param ambientColor     Die Farbe des ambienten Lichts
+     * @param position         Die Position des Pointlights
+     * @param color            Die Farbe des Pointlights
+     */
+    public PointLight(String name, double ambientIntensity, Color ambientColor, Vector3d position, Color color) {
+        this.name = name;
+        if (ambientIntensity > 1 || ambientIntensity < 0) {
+            throw new IllegalArgumentException("Die ambiente Intensität muss zwischen 0.0 und 1.0 liegen!");
+        } else {
+            this.ambient.setIntensity(ambientIntensity);
+        }
+        this.ambient.setColor(ambientColor);
+        this.position = position;
+        this.color = color;
+    }
 
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	/**
-	 * Gibt die Farbe des Pointlights zurück.
-	 * @return Die Farbe
-	 */
-	public Color getColor() {
-		return this.color;
-	}
+    /**
+     * Gibt die Position des Pointlights zurück.
+     *
+     * @return Die Position des Pointlights
+     */
+    public Vector3d getPosition() {
+        return position;
+    }
 
-	/**
-	 * Setzt die Farbe des Pointlights.
-	 * @param color Die Farbe
-	 */
-	public void setColor(Color color) {
-		this.color = color;
-	}
-	
-	/**
-	 * Gibt die konstante Lichtabschwächung zurück.
-	 * @return the constantAttenuation die konstante Lichtabschwächung
-	 */
-	public double getConstantAttenuation() {
-		return constantAttenuation;
-	}
+    /**
+     * @param position
+     */
+    public void setPosition(Vector3d position) {
+        this.position = position;
+    }
 
-	/**
-	 * Setzt die konstante Lichtabschächung auf den übergebenen Wert.
-	 * @param constantAttenuation the constantAttenuation to set
-	 */
-	public void setConstantAttenuation(double constantAttenuation) {
-		this.constantAttenuation = constantAttenuation;
-	}
+    /**
+     * Gibt die Intensiät des Pointlights zurück.
+     *
+     * @return Die Intensität des Pointlights
+     */
+    public double getIntensity() {
+        return intensity;
+    }
 
-	/**
-	 * Gibt die lineare Lichtabschwächung zurück.
-	 * @return the linearAttenuation die lineare Lichtabschwächung
-	 */
-	public double getLinearAttenuation() {
-		return linearAttenuation;
-	}
+    /**
+     * Setzt die Intensität des Pointlights auf den übergebenen Wert.
+     *
+     * @param pointIntensity Die Intensität des Pointlights
+     */
+    public void setIntensity(double pointIntensity) {
+        if (pointIntensity > 1 || pointIntensity < 0) {
+            throw new IllegalArgumentException("Die ambiente Intensität muss zwischen 0.0 und 1.0 liegen!");
+        } else {
+            this.intensity = pointIntensity;
+        }
+    }
 
-	/**
-	 * Setzt die lineare Lichtabschwächung auf den übergebenen Wert.
-	 * @param linearAttenuation the linearAttenuation to set
-	 */
-	public void setLinearAttenuation(double linearAttenuation) {
-		this.linearAttenuation = linearAttenuation;
-	}
+    @Override
+    public String getName() {
+        return this.name;
+    }
 
-	/**
-	 * Gibt die exponentielle Lichtabschwächung zurück.
-	 * @return the exponentialAttenuation die exponentielle Lichtabschwächung
-	 */
-	public double getExponentialAttenuation() {
-		return exponentialAttenuation;
-	}
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * Setzt die exponentielle Lichtabschwächung auf den übergebenen Wert.
-	 * @param exponentialAttenuation the exponentialAttenuation to set
-	 */
-	public void setExponentialAttenuation(double exponentialAttenuation) {
-			this.exponentialAttenuation = exponentialAttenuation;
-	}
+    /**
+     * Gibt die Farbe des Pointlights zurück.
+     *
+     * @return Die Farbe
+     */
+    public Color getColor() {
+        return this.color;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.amcgala.framework.lighting.Light#interpolate(org.amcgala.framework.renderer.Color, org.amcgala.framework.math.Vector3d, org.amcgala.framework.math.Vector3d, org.amcgala.framework.appearance.Appearance)
-	 */
-	@Override
-	public Color interpolate(Color color, Vector3d oberflaechennormale, Vector3d camera, Appearance appearance) {
-		Vector3d normiert = oberflaechennormale.copy();
-		normiert.normalize();
-		
-		double angle = this.position.dot(oberflaechennormale);
-		
-		/*
-		 * Berechnung der ambienten Intensität.
-		 */
-		double ambientIntensityRed = ((this.ambient.getColor().getR() / 2.55) * this.ambient.getIntensity()) / 100;
-		double ambientIntensityGreen = ((this.ambient.getColor().getG() / 2.55) * this.ambient.getIntensity()) / 100;
-		double ambientIntensityBlue = ((this.ambient.getColor().getB() / 2.55) * this.ambient.getIntensity()) / 100;
+    /**
+     * Setzt die Farbe des Pointlights.
+     *
+     * @param color Die Farbe
+     */
+    public void setColor(Color color) {
+        this.color = color;
+    }
 
-		/*
-		 * Berechnung der Reflexion.
-		 */
-		double reflectionRed = ((color.getR() / 2.55) * appearance.getReflectionCoefficient()) / 100;
-		double reflectionGreen = ((color.getG() / 2.55) * appearance.getReflectionCoefficient()) / 100;
-		double reflectionBlue = ((color.getB() / 2.55) * appearance.getReflectionCoefficient()) / 100;
-		
-		if(angle > 0) {
-	
-			/*
-			 * Berechnung der Punktlichtintensität.
-			 */
-			double pointIntensityRed = ((this.color.getR() / 2.55) * this.intensity) / 100;
-			double pointIntensityGreen = ((this.color.getG() / 2.55) * this.intensity) / 100;
-			double pointIntensityBlue = ((this.color.getB() / 2.55) * this.intensity) / 100;
-			
-			/*
-			 * Berechnung des Austrittsvektors
-			 */
-			Vector3d rj = normiert.times(normiert.dot(this.position));
-			
-			/*
-			 * Berechnung der Spiegelreflexion 
-			 */
-			double result = Math.pow(rj.dot(camera), appearance.getSpecularExponent());
-			
-			double specularRed = pointIntensityRed * appearance.getSpecularCoefficient() * result;
-			double specularGreen = pointIntensityGreen * appearance.getSpecularCoefficient() * result;
-			double specularBlue = pointIntensityBlue * appearance.getSpecularCoefficient() * result;
-			
-			/*
-			 * Berechnung der Distanz von dem Pixel zur Lichtquelle.
-			 */
-			Vector3d distanceVector = this.position.sub(normiert);
-			double distance = Math.sqrt(Math.pow(distanceVector.x, 2) + Math.pow(distanceVector.x, 2) + Math.pow(distanceVector.z, 2));
-			
-			/*
-			 * Berechnung der Abschwächung.
-			 */
-			double attenuation = Math.min(1,  1 / (this.constantAttenuation + this.linearAttenuation * distance + this.exponentialAttenuation * Math.pow(distance, 2)));
-			
-			/*
-			 * Berechnung der finalen Farbwerte.
-			 */
-			float r = (float) ((ambientIntensityRed * reflectionRed) + ( (pointIntensityRed * reflectionRed) * angle + specularRed) * attenuation );
-			float g = (float) ((ambientIntensityGreen * reflectionGreen) + ( (pointIntensityGreen * reflectionGreen) * angle + specularGreen) * attenuation);
-			float b = (float) ((ambientIntensityBlue * reflectionBlue) + ( (pointIntensityBlue * reflectionBlue) * angle + specularBlue) * attenuation);
-			
-			/*
-			 * Abfangen möglicher Rundungsfehler.
-			 */
-			if(r > 1) r = 1;
-			if(g > 1) g = 1;
-			if(b > 1) b = 1;
-			
-			return new Color(r, g, b);
-			
-		} else {
-			
-			/*
-			 * ambientes Licht für die Seite die dem Licht nicht zugewandt ist.
-			 */
-			float r = (float) (ambientIntensityRed * reflectionRed);
-			float g = (float) (ambientIntensityGreen * reflectionGreen);
-			float b = (float) (ambientIntensityBlue * reflectionBlue);
-			
-			return new Color(r,g, b);
-		}
-	}
+    /**
+     * Gibt die konstante Lichtabschwächung zurück.
+     *
+     * @return the constantAttenuation die konstante Lichtabschwächung
+     */
+    public double getConstantAttenuation() {
+        return constantAttenuation;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		String output = "";
-		output += "Punktlicht: " + this.name;
-		output += " { \n";
-		output += "\t ambiente Intensität: " + this.ambient.getIntensity() + "; \n";
-		output += "\t ambiente Farbe: " + this.ambient.getColor().toString() + "; \n";
-		output += "\t Position: " + this.position.toString() + " \n";
-		output += "\t Farbe des Punktlichts: " + this.color.toString() + "; \n";
-		output += "\t Intensität des Punktlichts: " + this.intensity + "; \n";
-		output += "\t Konstante Abschwächung: " + this.constantAttenuation + "; \n";
-		output += "\t Lineare Abschwächung: " + this.linearAttenuation + "; \n";
-		output += "\t Exponentielle Abschwächung: " + this.exponentialAttenuation + "; \n}";
-		return output;
-	}
+    /**
+     * Setzt die konstante Lichtabschächung auf den übergebenen Wert.
+     *
+     * @param constantAttenuation the constantAttenuation to set
+     */
+    public void setConstantAttenuation(double constantAttenuation) {
+        this.constantAttenuation = constantAttenuation;
+    }
+
+    /**
+     * Gibt die lineare Lichtabschwächung zurück.
+     *
+     * @return the linearAttenuation die lineare Lichtabschwächung
+     */
+    public double getLinearAttenuation() {
+        return linearAttenuation;
+    }
+
+    /**
+     * Setzt die lineare Lichtabschwächung auf den übergebenen Wert.
+     *
+     * @param linearAttenuation the linearAttenuation to set
+     */
+    public void setLinearAttenuation(double linearAttenuation) {
+        this.linearAttenuation = linearAttenuation;
+    }
+
+    /**
+     * Gibt die exponentielle Lichtabschwächung zurück.
+     *
+     * @return the exponentialAttenuation die exponentielle Lichtabschwächung
+     */
+    public double getExponentialAttenuation() {
+        return exponentialAttenuation;
+    }
+
+    /**
+     * Setzt die exponentielle Lichtabschwächung auf den übergebenen Wert.
+     *
+     * @param exponentialAttenuation the exponentialAttenuation to set
+     */
+    public void setExponentialAttenuation(double exponentialAttenuation) {
+        this.exponentialAttenuation = exponentialAttenuation;
+    }
+
+    /*
+      * (non-Javadoc)
+      * @see org.amcgala.framework.lighting.Light#interpolate(org.amcgala.framework.renderer.Color, org.amcgala.framework.math.Vector3d, org.amcgala.framework.math.Vector3d, org.amcgala.framework.appearance.Appearance)
+      */
+    @Override
+    public Color interpolate(Color color, Vector3d oberflaechennormale, Vector3d camera, Appearance appearance) {
+        Vector3d normiert = oberflaechennormale.copy();
+        normiert.normalize();
+
+        double angle = this.position.dot(oberflaechennormale);
+
+        /*
+           * Berechnung der ambienten Intensität.
+           */
+        double ambientIntensityRed = ((this.ambient.getColor().getR() / 2.55) * this.ambient.getIntensity()) / 100;
+        double ambientIntensityGreen = ((this.ambient.getColor().getG() / 2.55) * this.ambient.getIntensity()) / 100;
+        double ambientIntensityBlue = ((this.ambient.getColor().getB() / 2.55) * this.ambient.getIntensity()) / 100;
+
+        /*
+           * Berechnung der Reflexion.
+           */
+        double reflectionRed = ((color.getR() / 2.55) * appearance.getReflectionCoefficient()) / 100;
+        double reflectionGreen = ((color.getG() / 2.55) * appearance.getReflectionCoefficient()) / 100;
+        double reflectionBlue = ((color.getB() / 2.55) * appearance.getReflectionCoefficient()) / 100;
+
+        if (angle > 0) {
+
+            /*
+                * Berechnung der Punktlichtintensität.
+                */
+            double pointIntensityRed = ((this.color.getR() / 2.55) * this.intensity) / 100;
+            double pointIntensityGreen = ((this.color.getG() / 2.55) * this.intensity) / 100;
+            double pointIntensityBlue = ((this.color.getB() / 2.55) * this.intensity) / 100;
+
+            /*
+                * Berechnung des Austrittsvektors
+                */
+            Vector3d rj = normiert.times(normiert.dot(this.position));
+
+            /*
+                * Berechnung der Spiegelreflexion
+                */
+            double result = Math.pow(rj.dot(camera), appearance.getSpecularExponent());
+
+            double specularRed = pointIntensityRed * appearance.getSpecularCoefficient() * result;
+            double specularGreen = pointIntensityGreen * appearance.getSpecularCoefficient() * result;
+            double specularBlue = pointIntensityBlue * appearance.getSpecularCoefficient() * result;
+
+            /*
+                * Berechnung der Distanz von dem Pixel zur Lichtquelle.
+                */
+            Vector3d distanceVector = this.position.sub(normiert);
+            double distance = Math.sqrt(Math.pow(distanceVector.x, 2) + Math.pow(distanceVector.x, 2) + Math.pow(distanceVector.z, 2));
+
+            /*
+                * Berechnung der Abschwächung.
+                */
+            double attenuation = Math.min(1, 1 / (this.constantAttenuation + this.linearAttenuation * distance + this.exponentialAttenuation * Math.pow(distance, 2)));
+
+            /*
+                * Berechnung der finalen Farbwerte.
+                */
+            float r = (float) ((ambientIntensityRed * reflectionRed) + ((pointIntensityRed * reflectionRed) * angle + specularRed) * attenuation);
+            float g = (float) ((ambientIntensityGreen * reflectionGreen) + ((pointIntensityGreen * reflectionGreen) * angle + specularGreen) * attenuation);
+            float b = (float) ((ambientIntensityBlue * reflectionBlue) + ((pointIntensityBlue * reflectionBlue) * angle + specularBlue) * attenuation);
+
+            /*
+                * Abfangen möglicher Rundungsfehler.
+                */
+            if (r > 1) r = 1;
+            if (g > 1) g = 1;
+            if (b > 1) b = 1;
+
+            return new Color(r, g, b);
+
+        } else {
+
+            /*
+                * ambientes Licht für die Seite die dem Licht nicht zugewandt ist.
+                */
+            float r = (float) (ambientIntensityRed * reflectionRed);
+            float g = (float) (ambientIntensityGreen * reflectionGreen);
+            float b = (float) (ambientIntensityBlue * reflectionBlue);
+
+            return new Color(r, g, b);
+        }
+    }
+
+    /*
+      * (non-Javadoc)
+      * @see java.lang.Object#toString()
+      */
+    public String toString() {
+        String output = "";
+        output += "Punktlicht: " + this.name;
+        output += " { \n";
+        output += "\t ambiente Intensität: " + this.ambient.getIntensity() + "; \n";
+        output += "\t ambiente Farbe: " + this.ambient.getColor().toString() + "; \n";
+        output += "\t Position: " + this.position.toString() + " \n";
+        output += "\t Farbe des Punktlichts: " + this.color.toString() + "; \n";
+        output += "\t Intensität des Punktlichts: " + this.intensity + "; \n";
+        output += "\t Konstante Abschwächung: " + this.constantAttenuation + "; \n";
+        output += "\t Lineare Abschwächung: " + this.linearAttenuation + "; \n";
+        output += "\t Exponentielle Abschwächung: " + this.exponentialAttenuation + "; \n}";
+        return output;
+    }
 }
