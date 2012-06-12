@@ -35,7 +35,7 @@ public class Point2d extends Shape {
 
     public Point2d(double x, double y, Color c) {
         this(x, y);
-        this.color = c;
+        this.setColor(c);
     }
 
     public Point2d(double x, double y) {
@@ -46,7 +46,7 @@ public class Point2d extends Shape {
     @Override
     public void render(Renderer renderer) {
         Vector3d point = new Vector3d(x, y, -1);
-        renderer.putPixel(point, color);
+        renderer.putPixel(point, getColor());
     }
 
     @Override

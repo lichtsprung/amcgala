@@ -16,7 +16,7 @@ package org.amcgala.example.pong;
 
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.shape.BresenhamLine;
+import org.amcgala.framework.shape.Line;
 import org.amcgala.framework.shape.Shape;
 
 import java.util.logging.Logger;
@@ -30,7 +30,7 @@ public class Cross extends Shape {
 
     private Vector3d position;
     private int size;
-    private BresenhamLine l1, l2;
+    private Line l1, l2;
 
     /**
      * @param position
@@ -93,8 +93,8 @@ public class Cross extends Shape {
      * 
      */
     private void init() {
-        l1 = new BresenhamLine(position.x - size, position.y - size, position.x + size, position.y + size);
-        l2 = new BresenhamLine(position.x - size, position.y + size, position.x + size, position.y - size);
+        l1 = new Line(position.x - size, position.y - size, position.x + size, position.y + size);
+        l2 = new Line(position.x - size, position.y + size, position.x + size, position.y - size);
     }
 
     /**
@@ -102,8 +102,8 @@ public class Cross extends Shape {
      */
     @Override
     public void render(Renderer renderer) {
-        l1.color = color;
-        l2.color = color;
+        l1.setColor(getColor());
+        l2.setColor(getColor());
         l1.render(renderer);
         l2.render(renderer);
     }

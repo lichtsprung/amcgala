@@ -15,10 +15,13 @@ package org.amcgala.framework.shape;
  * the License.
  */
 
+import com.google.common.base.Objects;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Polygonobjekt fuer die Koerperdarstellung im 3D Raum
@@ -27,41 +30,42 @@ import org.slf4j.LoggerFactory;
  */
 public class Polygon extends Shape {
 
-    private BresenhamLine bl1;
-    private BresenhamLine bl2;
-    private BresenhamLine bl3;
-    private BresenhamLine bl4;
+    private Line line1;
+    private Line line2;
+    private Line line3;
+    private Line line4;
     private Vector3d norm;
 
     public void move(double x, double y, double z) {
-        if (bl1 != null && bl2 != null && bl3 != null) {
-            bl1.x1 += x;
-            bl1.x2 += x;
-            bl1.y1 += y;
-            bl1.y2 += y;
-            bl1.z1 += z;
-            bl1.z2 += z;
+        if (line1 != null && line2 != null && line3 != null) {
+            line1.x1 += x;
+            line1.x2 += x;
+            line1.y1 += y;
+            line1.y2 += y;
+            line1.z1 += z;
+            line1.z2 += z;
 
-            bl2.x1 += x;
-            bl2.x2 += x;
-            bl2.y1 += y;
-            bl2.y2 += y;
-            bl2.z1 += z;
-            bl2.z2 += z;
+            line2.x1 += x;
+            line2.x2 += x;
+            line2.y1 += y;
+            line2.y2 += y;
+            line2.z1 += z;
+            line2.z2 += z;
 
-            bl3.x1 += x;
-            bl3.x2 += x;
-            bl3.y1 += y;
-            bl3.y2 += y;
-            bl3.z1 += z;
-            bl3.z2 += z;
-            if (bl4 != null) {
-                bl4.x1 += x;
-                bl4.x2 += x;
-                bl4.y1 += y;
-                bl4.y2 += y;
-                bl4.z1 += z;
-                bl4.z2 += z;
+            line3.x1 += x;
+            line3.x2 += x;
+            line3.y1 += y;
+            line3.y2 += y;
+            line3.z1 += z;
+            line3.z2 += z;
+
+            if (line4 != null) {
+                line4.x1 += x;
+                line4.x2 += x;
+                line4.y1 += y;
+                line4.y2 += y;
+                line4.z1 += z;
+                line4.z2 += z;
             }
         }
     }
@@ -73,18 +77,27 @@ public class Polygon extends Shape {
     }
 
     public Polygon(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d norm) {
-        bl1 = new BresenhamLine(v1, v2);
-        bl2 = new BresenhamLine(v2, v3);
-        bl3 = new BresenhamLine(v3, v1);
+        checkNotNull(v1);
+        checkNotNull(v2);
+        checkNotNull(v3);
+        checkNotNull(norm);
+        line1 = new Line(v1, v2);
+        line2 = new Line(v2, v3);
+        line3 = new Line(v3, v1);
         this.norm = norm;
     }
 
     public Polygon(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4,
                    Vector3d norm) {
-        bl1 = new BresenhamLine(v1, v2);
-        bl2 = new BresenhamLine(v2, v3);
-        bl3 = new BresenhamLine(v3, v4);
-        bl4 = new BresenhamLine(v4, v1);
+        checkNotNull(v1);
+        checkNotNull(v2);
+        checkNotNull(v3);
+        checkNotNull(v4);
+        checkNotNull(norm);
+        line1 = new Line(v1, v2);
+        line2 = new Line(v2, v3);
+        line3 = new Line(v3, v4);
+        line4 = new Line(v4, v1);
         this.norm = norm;
     }
 
@@ -97,12 +110,12 @@ public class Polygon extends Shape {
         }
 
         // rendering
-        if (bl1 != null && bl2 != null && bl3 != null) {
-            bl1.render(renderer);
-            bl2.render(renderer);
-            bl3.render(renderer);
-            if (bl4 != null) {
-                bl4.render(renderer);
+        if (line1 != null && line2 != null && line3 != null) {
+            line1.render(renderer);
+            line2.render(renderer);
+            line3.render(renderer);
+            if (line4 != null) {
+                line4.render(renderer);
             }
         }
 
@@ -110,8 +123,7 @@ public class Polygon extends Shape {
 
     @Override
     public String toString() {
-        return "Polygon{" + "line 1=" + bl1 + ", line 2=" + bl2 + ", line 3="
-                + bl3 + '}';
+        return Objects.toStringHelper(getClass()).add("line1", line1).add("line2", line2).add("line3", line3).add("line4", line4).toString();
     }
 
     private static final Logger log = LoggerFactory.getLogger(Polygon.class.getName());

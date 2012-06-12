@@ -16,8 +16,8 @@ package org.amcgala.example.container;
 
 import org.amcgala.Framework;
 import org.amcgala.framework.math.Vector3d;
-import org.amcgala.framework.shape.BresenhamLine;
-import org.amcgala.framework.shape.Container;
+import org.amcgala.framework.shape.CompositeShape;
+import org.amcgala.framework.shape.Line;
 
 /**
  * Zeigt die funktionsweise der Klasse <i>Paint</i> mit Koordinaten.
@@ -37,22 +37,22 @@ public class ContainerMain extends Framework {
 
     @Override
     public void initGraph() {
-        BresenhamLine[] linien = new BresenhamLine[4];
-        linien[0] = new BresenhamLine(new Vector3d(-100, 0, 0), new Vector3d(100, 0, 0));
-        linien[1] = new BresenhamLine(new Vector3d(100, 0, 0), new Vector3d(100, 100, -100));
-        linien[2] = new BresenhamLine(new Vector3d(100, 100, -100), new Vector3d(-100, 100, -100));
-        linien[3] = new BresenhamLine(new Vector3d(-100, 100, -100), new Vector3d(-100, 0, 0));
+        Line[] linien = new Line[4];
+        linien[0] = new Line(new Vector3d(-100, 0, 0), new Vector3d(100, 0, 0));
+        linien[1] = new Line(new Vector3d(100, 0, 0), new Vector3d(100, 100, -100));
+        linien[2] = new Line(new Vector3d(100, 100, -100), new Vector3d(-100, 100, -100));
+        linien[3] = new Line(new Vector3d(-100, 100, -100), new Vector3d(-100, 0, 0));
 
         //this.getCamera().setPosition(new Vector3d(50, 0, -20));
 
-        BresenhamLine[] linien2 = new BresenhamLine[4];
-        linien2[0] = new BresenhamLine(new Vector3d(-100, 0, 0), new Vector3d(100, 0, 0));
-        linien2[1] = new BresenhamLine(new Vector3d(100, 0, 0), new Vector3d(100, 100, 0));
-        linien2[2] = new BresenhamLine(new Vector3d(100, 100, 0), new Vector3d(-100, 100, 0));
-        linien2[3] = new BresenhamLine(new Vector3d(-100, 100, 0), new Vector3d(-100, 0, 0));
+        Line[] linien2 = new Line[4];
+        linien2[0] = new Line(new Vector3d(-100, 0, 0), new Vector3d(100, 0, 0));
+        linien2[1] = new Line(new Vector3d(100, 0, 0), new Vector3d(100, 100, 0));
+        linien2[2] = new Line(new Vector3d(100, 100, 0), new Vector3d(-100, 100, 0));
+        linien2[3] = new Line(new Vector3d(-100, 100, 0), new Vector3d(-100, 0, 0));
 
 
-        Container viereck = new Container(linien);
+        CompositeShape viereck = new CompositeShape(linien);
         viereck.add(linien2);
         System.out.println(viereck.toString());
         add(viereck);

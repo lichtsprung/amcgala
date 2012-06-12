@@ -16,7 +16,7 @@ package org.amcgala.example.pong;
 
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.shape.BresenhamLine;
+import org.amcgala.framework.shape.Line;
 import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class Arrow extends Shape {
     private Vector3d position;
     private Vector3d direction;
     private double length;
-    private BresenhamLine l1;
+    private Line l1;
 
     /**
      * Constructor.
@@ -118,8 +118,8 @@ public class Arrow extends Shape {
      * Updates the shape at runtime.
      */
     private void init() {
-        l1 = new BresenhamLine(position.x, position.y, position.x + direction.x, position.y + direction.y);
-        l1.color = Color.RED;
+        l1 = new Line(position.x, position.y, position.x + direction.x, position.y + direction.y);
+        l1.setColor(Color.RED);
     }
 
     private static final Logger log = LoggerFactory.getLogger(Arrow.class.getName());

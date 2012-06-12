@@ -15,7 +15,7 @@
 package org.amcgala.example.morphing;
 
 import org.amcgala.Framework;
-import org.amcgala.framework.shape.BresenhamLine;
+import org.amcgala.framework.shape.Line;
 
 /**
  * Dieses Programm morpht zwischen zwei Bildern.
@@ -30,7 +30,7 @@ public class MorphingMain extends Framework {
 
     @Override
     public void initGraph() {
-        add(new MorphingItem(new BresenhamLine(0, 0, 0, 200), new BresenhamLine(0, 200, 200, -100), 200));
+        add(new MorphingItem(new Line(0, 0, 0, 200), new Line(0, 200, 200, -100), 200));
     }
 
     public static void main(String[] args) {

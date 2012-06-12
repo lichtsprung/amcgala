@@ -57,7 +57,7 @@ public class RandomCrossArray extends Shape implements InputHandler {
     public void handleKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.VK_SPACE) {
             Cross c2d = new Cross(random.nextInt(800) - 400, random.nextInt(600) - 300, random.nextInt(50));
-            c2d.color = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255));
+            c2d.setColor(new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)));
             addCross(c2d);
         }
     }

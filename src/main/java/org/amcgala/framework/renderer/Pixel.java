@@ -14,6 +14,10 @@
  */
 package org.amcgala.framework.renderer;
 
+import com.google.common.base.Objects;
+
+import java.awt.Color;
+
 /**
  * Ein Pixel stellt einen Punkt in der Ausgabe dar.
  * Es wird während des Renderings verwendet, um ein Shape über einen Renderer
@@ -25,6 +29,7 @@ public class Pixel {
 
     public int x;
     public int y;
+    public Color color = Color.BLACK;
 
     /**
      * Erzeugt einen neuen Pixel an der Stelle (x,y)
@@ -51,6 +56,32 @@ public class Pixel {
         this.x = Math.round(nx);
     }
 
+
+    /**
+     * Erzeugt einen neuen Pixel an der Stelle (x,y)
+     *
+     * @param x     die x-Koordinate des Pixels
+     * @param y     die y-Koordinate des Pixels
+     * @param color die Farbe des Pixels
+     */
+    public Pixel(int x, int y, Color color) {
+        this(x, y);
+        this.color = color;
+    }
+
+    /**
+     * Erzeugt einen neuen Pixel an der Stelle (x,y).
+     * Die doubles werden entsprechend auf die Integerpositionen des Pixels gerundet.
+     *
+     * @param x     die x-Koordinate des Pixels
+     * @param y     die y-Koordinate des Pixels
+     * @param color die Farbe des Pixels
+     */
+    public Pixel(double x, double y, Color color) {
+        this(x, y);
+        this.color = color;
+    }
+
     /**
      * Gibt die x-Koordinate des Pixels zurück.
      *
@@ -71,9 +102,6 @@ public class Pixel {
 
     @Override
     public String toString() {
-        return "Pixel{"
-                + "x=" + x
-                + ", y=" + y
-                + '}';
+        return Objects.toStringHelper(getClass()).add("x", x).add("y", y).add("Color", color).toString();
     }
 }

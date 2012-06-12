@@ -16,7 +16,7 @@ package org.amcgala.example.animation;
 
 import org.amcgala.Framework;
 import org.amcgala.framework.animation.Animation;
-import org.amcgala.framework.shape.BresenhamLine;
+import org.amcgala.framework.shape.Line;
 
 import java.util.Random;
 
@@ -30,7 +30,7 @@ import java.util.Random;
  */
 public class SimpleAnimationMain extends Framework {
 
-    private BresenhamLine[] lines;
+    private Line[] lines;
     private Random random;
 
     /**
@@ -45,11 +45,11 @@ public class SimpleAnimationMain extends Framework {
 
     @Override
     public void initGraph() {
-        lines = new BresenhamLine[100];
+        lines = new Line[100];
         random = new Random(System.nanoTime());
 
         for (int i = 0; i < lines.length; i++) {
-            lines[i] = new BresenhamLine(
+            lines[i] = new Line(
                     Math.pow(-1, random.nextInt(2)) * random.nextInt(getScreenWidth() / 2),
                     Math.pow(-1, random.nextInt(2)) * random.nextInt(getScreenHeight() / 2),
                     Math.pow(-1, random.nextInt(2)) * random.nextInt(getScreenWidth() / 2),
@@ -72,10 +72,10 @@ public class SimpleAnimationMain extends Framework {
         framework.start();
     }
 
-    private class SimpleAnimation extends Animation<BresenhamLine> {
+    private class SimpleAnimation extends Animation<Line> {
 
         @Override
-        public void animate() {
+        public void update() {
             /*
              * Erzeugen von vier Zufallswerten zwischen -1 und 1.
              */
@@ -84,28 +84,28 @@ public class SimpleAnimationMain extends Framework {
             int dx2 = (int) (Math.pow(-1, random.nextInt(2)) * random.nextInt(2));
             int dy2 = (int) (Math.pow(-1, random.nextInt(2)) * random.nextInt(2));
 
-            getShape().x1 += dx;
-            getShape().x2 += dx2;
-            getShape().y1 += dy;
-            getShape().y2 += dy2;
+            shape.x1 += dx;
+            shape.x2 += dx2;
+            shape.y1 += dy;
+            shape.y2 += dy2;
 
             /*
              * Wenn ein Punkt der Linie an den Rand der Anzeige stößt wird dieser zufällig an eine andere Stelle gesetzt. 
              */
-            if (getShape().x1 < -getScreenWidth() / 2 || getShape().x1 > getScreenWidth() / 2) {
-                getShape().x1 = random.nextInt(getScreenWidth());
+            if (shape.x1 < -getScreenWidth() / 2 || shape.x1 > getScreenWidth() / 2) {
+                shape.x1 = random.nextInt(getScreenWidth());
             }
 
-            if (getShape().x2 < -getScreenWidth() / 2 || getShape().x2 > getScreenWidth() / 2) {
-                getShape().x2 = random.nextInt(getScreenWidth());
+            if (shape.x2 < -getScreenWidth() / 2 || shape.x2 > getScreenWidth() / 2) {
+                shape.x2 = random.nextInt(getScreenWidth());
             }
 
-            if (getShape().y1 < -getScreenWidth() / 2 || getShape().y1 > getScreenWidth() / 2) {
-                getShape().y1 = random.nextInt(getScreenWidth());
+            if (shape.y1 < -getScreenWidth() / 2 || shape.y1 > getScreenWidth() / 2) {
+                shape.y1 = random.nextInt(getScreenWidth());
             }
 
-            if (getShape().y2 < -getScreenWidth() / 2 || getShape().y2 > getScreenWidth() / 2) {
-                getShape().y2 = random.nextInt(getScreenWidth());
+            if (shape.y2 < -getScreenWidth() / 2 || shape.y2 > getScreenWidth() / 2) {
+                shape.y2 = random.nextInt(getScreenWidth());
             }
         }
     }

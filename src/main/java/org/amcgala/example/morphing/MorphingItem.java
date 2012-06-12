@@ -18,7 +18,7 @@ import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.animation.interpolation.Interpolation;
 import org.amcgala.framework.animation.interpolation.LinearInterpolation;
 import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.shape.BresenhamLine;
+import org.amcgala.framework.shape.Line;
 import org.amcgala.framework.shape.Shape;
 
 /**
@@ -29,16 +29,16 @@ import org.amcgala.framework.shape.Shape;
  */
 public class MorphingItem extends Shape {
 
-    private BresenhamLine line1;
-    private BresenhamLine line2;
+    private Line line1;
+    private Line line2;
     private int stepcount;
 
-    public MorphingItem(BresenhamLine start, BresenhamLine end, int steps) {
+    public MorphingItem(Line start, Line end, int steps) {
         line1 = start;
         line2 = end;
         this.stepcount = steps;
 
-        setAnimation(new Animation<BresenhamLine>() {
+        setAnimation(new Animation<Line>() {
 
             private Interpolation interpolationX1 = new LinearInterpolation(line1.x1, line2.x1, stepcount, true);
             private Interpolation interpolationX2 = new LinearInterpolation(line1.x2, line2.x2, stepcount, true);
@@ -46,7 +46,7 @@ public class MorphingItem extends Shape {
             private Interpolation interpolationY2 = new LinearInterpolation(line1.y2, line2.y2, stepcount, true);
 
             @Override
-            public void animate() {
+            public void update() {
                 line1.x1 = interpolationX1.nextValue();
                 line1.x2 = interpolationX2.nextValue();
                 line1.y1 = interpolationY1.nextValue();

@@ -14,17 +14,19 @@
  */
 package org.amcgala.framework.scenegraph;
 
+import com.google.common.base.Objects;
 import org.amcgala.framework.animation.Updatable;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.scenegraph.transform.Transformation;
 import org.amcgala.framework.scenegraph.transform.Translation;
 import org.amcgala.framework.scenegraph.visitor.Visitor;
 import org.amcgala.framework.shape.Shape;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Logger;
 
 /**
  * Eine Node ist Teil des Scenegraphs und kann beliebig viele Kindsknoten und
@@ -32,7 +34,7 @@ import java.util.logging.Logger;
  */
 public class Node implements Updatable {
 
-    private static final Logger logger = Logger.getLogger(Node.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(Node.class);
     private String label = "none";
     /**
      * Der übergeordnete Knoten, an dem dieser Knoten hängt. {@code null}, wenn es sich
@@ -234,9 +236,8 @@ public class Node implements Updatable {
     }
 
     /**
-     * Setzt die aktuelle Transformationsmatrix dieses Knotens. TODO Die
-     * Reihenfolge der Transformation spielt eine Rolle - ist es sinnvoll, das
-     * so zu gestalten, dass man nur eine Transformation pro Node zulässt?
+     * Setzt die aktuelle Transformationsmatrix dieses Knotens.
+     * TODO Die Reihenfolge der Transformation spielt eine Rolle - ist es sinnvoll, das so zu gestalten, dass man nur eine Transformation pro Node zulässt?
      *
      * @param transformation die neue Transformationsmatrix
      */
@@ -263,21 +264,17 @@ public class Node implements Updatable {
 
     @Override
     public String toString() {
-        return "Node{"
-                + "label='" + label + '\''
-                + '}';
+        return Objects.toStringHelper(getClass()).add("label", label).toString();
     }
 
     @Override
     public void update() {
         if (transformation != null) {
             transformation.update();
-            for (Shape shape : shapes) {
-                shape.update();
-                if(shape.getAnimation() != null){
-                    shape.getAnimation().animate();
-                }
-            }
+        }
+
+        for (Shape shape : shapes) {
+            shape.update();
         }
     }
 }

@@ -17,7 +17,7 @@ package org.amcgala.framework.scenegraph;
 import org.amcgala.framework.scenegraph.transform.Transformation;
 import org.amcgala.framework.scenegraph.visitor.Visitor;
 import org.amcgala.framework.shape.Shape;
-
+import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Szenengraph des Frameworks.
  */
@@ -32,11 +32,7 @@ public class SceneGraph {
      * @param node der neue Knoten
      */
     public void addNode(Node node) {
-        if (node != null) {
-            root.addChild(node);
-        } else {
-            throw new IllegalArgumentException("Node darf nicht null sein!");
-        }
+        root.addChild(checkNotNull(node));
     }
 
     /**
@@ -46,11 +42,7 @@ public class SceneGraph {
      * @param label der Name des Knoten, an den der Kindsknoten gehängt werden soll
      */
     public void addNode(Node node, String label) {
-        if (node == null || label == null) {
-            throw new IllegalArgumentException("node oder label dürfen nicht null sein!");
-        } else {
-            root.findNode(label).addChild(node);
-        }
+        root.findNode(checkNotNull(label)).addChild(checkNotNull(node));
     }
 
     /**
@@ -59,11 +51,7 @@ public class SceneGraph {
      * @param node der Knoten,der entfernt werden soll
      */
     public void removeNode(Node node) {
-        if (node != null) {
-            root.removeNode(node.getLabel());
-        } else {
-            throw new IllegalArgumentException("node darf nicht null sein!");
-        }
+        root.removeNode(checkNotNull(node).getLabel());
     }
 
     /**
@@ -72,11 +60,7 @@ public class SceneGraph {
      * @param label der Name des Knotens, der entfernt werden soll
      */
     public void removeNode(String label) {
-        if (label != null) {
-            root.removeNode(label);
-        } else {
-            throw new IllegalArgumentException("label darf nicht null sein!");
-        }
+        root.removeNode(checkNotNull(label));
     }
 
     /**

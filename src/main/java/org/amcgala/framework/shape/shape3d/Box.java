@@ -16,8 +16,8 @@ package org.amcgala.framework.shape.shape3d;
 
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.shape.BresenhamLine;
-import org.amcgala.framework.shape.Container;
+import org.amcgala.framework.shape.Line;
+import org.amcgala.framework.shape.CompositeShape;
 import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Box extends Shape {
 
-    private Container lines;
+    private CompositeShape lines;
     private Vector3d position;
     private double width;
     private double height;
@@ -48,7 +48,7 @@ public class Box extends Shape {
         this.width = width;
         this.height = height;
         this.depth = depth;
-        lines = new Container();
+        lines = new CompositeShape();
         this.calculate();
     }
 
@@ -56,19 +56,19 @@ public class Box extends Shape {
      * Updates the Box at runtime.
      */
     private void calculate() {
-        lines.add(new BresenhamLine(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x + width, position.y, position.z)));
-        lines.add(new BresenhamLine(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x + width, position.y, position.z)));
-        lines.add(new BresenhamLine(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x, position.y + height, position.z)));
-        lines.add(new BresenhamLine(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x, position.y, position.z - depth)));
-        lines.add(new BresenhamLine(new Vector3d(position.x, position.y + height, position.z), new Vector3d(position.x + width, position.y + height, position.z)));
-        lines.add(new BresenhamLine(new Vector3d(position.x + width, position.y, position.z), new Vector3d(position.x + width, position.y + height, position.z)));
-        lines.add(new BresenhamLine(new Vector3d(position.x, position.y + height, position.z), new Vector3d(position.x, position.y + height, position.z - depth)));
-        lines.add(new BresenhamLine(new Vector3d(position.x + width, position.y + height, position.z), new Vector3d(position.x + width, position.y + height, position.z - depth)));
-        lines.add(new BresenhamLine(new Vector3d(position.x + width, position.y, position.z), new Vector3d(position.x + width, position.y, position.z - depth)));
-        lines.add(new BresenhamLine(new Vector3d(position.x, position.y, position.z - depth), new Vector3d(position.x + width, position.y, position.z - depth)));
-        lines.add(new BresenhamLine(new Vector3d(position.x, position.y, position.z - depth), new Vector3d(position.x, position.y + height, position.z - depth)));
-        lines.add(new BresenhamLine(new Vector3d(position.x, position.y + height, position.z - depth), new Vector3d(position.x + width, position.y + height, position.z - depth)));
-        lines.add(new BresenhamLine(new Vector3d(position.x + width, position.y, position.z - depth), new Vector3d(position.x + width, position.y + height, position.z - depth)));
+        lines.add(new Line(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x + width, position.y, position.z)));
+        lines.add(new Line(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x + width, position.y, position.z)));
+        lines.add(new Line(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x, position.y + height, position.z)));
+        lines.add(new Line(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x, position.y, position.z - depth)));
+        lines.add(new Line(new Vector3d(position.x, position.y + height, position.z), new Vector3d(position.x + width, position.y + height, position.z)));
+        lines.add(new Line(new Vector3d(position.x + width, position.y, position.z), new Vector3d(position.x + width, position.y + height, position.z)));
+        lines.add(new Line(new Vector3d(position.x, position.y + height, position.z), new Vector3d(position.x, position.y + height, position.z - depth)));
+        lines.add(new Line(new Vector3d(position.x + width, position.y + height, position.z), new Vector3d(position.x + width, position.y + height, position.z - depth)));
+        lines.add(new Line(new Vector3d(position.x + width, position.y, position.z), new Vector3d(position.x + width, position.y, position.z - depth)));
+        lines.add(new Line(new Vector3d(position.x, position.y, position.z - depth), new Vector3d(position.x + width, position.y, position.z - depth)));
+        lines.add(new Line(new Vector3d(position.x, position.y, position.z - depth), new Vector3d(position.x, position.y + height, position.z - depth)));
+        lines.add(new Line(new Vector3d(position.x, position.y + height, position.z - depth), new Vector3d(position.x + width, position.y + height, position.z - depth)));
+        lines.add(new Line(new Vector3d(position.x + width, position.y, position.z - depth), new Vector3d(position.x + width, position.y + height, position.z - depth)));
     }
 
     /**
@@ -87,7 +87,7 @@ public class Box extends Shape {
      */
     public void setPosition(Vector3d position) {
         this.position = position;
-        lines = new Container();
+        lines = new CompositeShape();
         calculate();
     }
 
@@ -153,7 +153,7 @@ public class Box extends Shape {
      */
     @Override
     public void render(Renderer renderer) {
-        lines.color = color;
+        lines.setColor(getColor());
         lines.render(renderer);
     }
 

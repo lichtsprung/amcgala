@@ -97,7 +97,7 @@ public class Field extends Shape implements InputHandler {
     private class FieldAnimation extends Animation<Field> {
 
         @Override
-        public void animate() {
+        public void update() {
 
         }
     }

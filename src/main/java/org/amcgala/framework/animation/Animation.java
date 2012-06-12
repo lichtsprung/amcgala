@@ -15,8 +15,9 @@
 package org.amcgala.framework.animation;
 
 import org.amcgala.framework.shape.Shape;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.logging.Logger;
 
 /**
  * Eine Animation, die das Verhalten eines Shapes beeinflussen kann.
@@ -26,8 +27,15 @@ import java.util.logging.Logger;
  */
 public abstract class Animation<T extends Shape> {
 
-    private static final Logger logger = Logger.getLogger(Animation.class.getName());
-    private T shape;
+    public static final Animation EMPTY_ANIMATION = new Animation() {
+        @Override
+        public void update() {
+
+        }
+    };
+
+    protected static final Logger logger = LoggerFactory.getLogger(Animation.class);
+    protected T shape;
 
     /**
      * Gibt das Shape zurück, das von der Animation beeinflusst wird.
@@ -51,5 +59,5 @@ public abstract class Animation<T extends Shape> {
      * Diese Methode wird in jedem Aktualisierungsdurchlauf aufgerufen. In dieser Methode wird der spezifische Code implementiert,
      * der das Shapeobjekt verändert bzw. animiert.
      */
-    public abstract void animate();
+    public abstract void update();
 }

@@ -21,6 +21,8 @@ import org.amcgala.framework.renderer.Renderable;
 import java.awt.Color;
 import java.util.logging.Logger;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Diese Klasse stellt die Oberklasse aller darstellbaren Objekte dar.
  *
@@ -29,27 +31,8 @@ import java.util.logging.Logger;
 public abstract class Shape implements Updatable, Renderable {
 
     private static final Logger logger = Logger.getLogger(Shape.class.getName());
-    private Animation animation;
-    public Color color = Color.BLACK;
-    private boolean rendering;
-
-    /**
-     * Gibt den Renderstatus des Shapes zurück.
-     *
-     * @return <code>true</code> wenn Shape gerade gerendert wird
-     */
-    public boolean isRendering() {
-        return rendering;
-    }
-
-    /**
-     * Wird vom Framework verwendet, um anzuzeigen, dass dieses Shape gerade gerendert wird.
-     *
-     * @param rendering der Renderstatus dieses Shapes
-     */
-    public void setRendering(boolean rendering) {
-        this.rendering = rendering;
-    }
+    private Animation animation = Animation.EMPTY_ANIMATION;
+    private Color color = Color.BLACK;
 
 
     /**
@@ -58,13 +41,13 @@ public abstract class Shape implements Updatable, Renderable {
      * @param animation die Animation
      */
     public void setAnimation(Animation animation) {
-        this.animation = animation;
+        this.animation = checkNotNull(animation);
         this.animation.setShape(this);
+
     }
 
     /**
-     * Gibt die Animation zurück, die in dem Shape registriert ist. Animation kann <code>null</code> sein, wenn das Shape keine Animation besitzt.
-     * TODO Sollte vielleicht eine leere Animation statt <code>null</code> zurückgegeben werden?
+     * Gibt die Animation zurück, die in dem Shape registriert ist.
      *
      * @return die aktuelle Animation
      */
@@ -74,5 +57,14 @@ public abstract class Shape implements Updatable, Renderable {
 
     @Override
     public void update() {
+        animation.update();
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = checkNotNull(color);
     }
 }

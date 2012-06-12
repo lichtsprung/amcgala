@@ -63,14 +63,12 @@ public class RenderVisitor implements Visitor {
             renderer.setTransformationMatrix(transform);
 
             for (Shape shape : node.getShapes()) {
-                shape.setRendering(true);
                 try {
                     shape.render(renderer);
                 } catch (ConcurrentModificationException ex) {
                     // Ignore exception since we don't care for thread-safety at this point.
                     log.info("Caught an exception...");
                 }
-                shape.setRendering(false);
             }
         }
     }

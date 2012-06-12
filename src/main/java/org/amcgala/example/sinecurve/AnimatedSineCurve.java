@@ -18,7 +18,7 @@ import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.animation.interpolation.Interpolation;
 import org.amcgala.framework.animation.interpolation.LinearInterpolation;
 import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.shape.BresenhamLine;
+import org.amcgala.framework.shape.Line;
 import org.amcgala.framework.shape.Shape;
 import org.amcgala.framework.shape.shape2d.Point2d;
 
@@ -52,7 +52,7 @@ public class AnimatedSineCurve extends Shape {
         setAnimation(new Animation<AnimatedSineCurve>() {
 
             @Override
-            public void animate() {
+            public void update() {
                 if (interpolationAmp != null) {
                     setAmplitude(interpolationAmp.nextValue());
                 }
@@ -110,7 +110,7 @@ public class AnimatedSineCurve extends Shape {
     @Override
     public void render(Renderer renderer) {
         for (int i = 0; i < points.length - 1; i++) {
-            BresenhamLine line = new BresenhamLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
+            Line line = new Line(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
             line.render(renderer);
         }
     }

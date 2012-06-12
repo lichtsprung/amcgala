@@ -14,6 +14,7 @@
  */
 package org.amcgala.framework.shape;
 
+import com.google.common.base.Objects;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
 import org.slf4j.Logger;
@@ -24,13 +25,13 @@ import org.slf4j.LoggerFactory;
  *
  * @author Robert Giacinto
  */
-public class BresenhamLine extends Shape {
+public class Line extends Shape {
 
     public double x1, y1, z1;
     public double x2, y2, z2;
     private Vector3d start, end;
 
-    public BresenhamLine(double x1, double y1, double x2, double y2) {
+    public Line(double x1, double y1, double x2, double y2) {
         this.x1 = x1;
         this.y1 = y1;
         this.x2 = x2;
@@ -52,7 +53,7 @@ public class BresenhamLine extends Shape {
         end = new Vector3d(x2, y2, -1);
     }
 
-    public BresenhamLine(Vector3d start, Vector3d end) {
+    public Line(Vector3d start, Vector3d end) {
         this.x1 = start.x;
         this.y1 = start.y;
         this.z1 = start.z;
@@ -74,8 +75,9 @@ public class BresenhamLine extends Shape {
      * toString method.
      */
     public String toString() {
-        return "BresenhamLine { x1: " + this.x1 + ", \ty1: " + this.y1 + ", \tx2: " + this.x2 + ", \ty2: " + this.y2 + " }";
+
+        return Objects.toStringHelper(getClass()).add("x1",x1).add("y1",y1).add("x2",x2).add("y2",y2).toString();
     }
 
-    private static final Logger log = LoggerFactory.getLogger(BresenhamLine.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(Line.class.getName());
 }

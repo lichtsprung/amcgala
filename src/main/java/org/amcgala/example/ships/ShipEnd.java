@@ -15,7 +15,7 @@
 package org.amcgala.example.ships;
 
 import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.shape.BresenhamLine;
+import org.amcgala.framework.shape.Line;
 
 /**
  * Ein Schiffsendstück, das zum Zusammensetzen eines Schiffs benutzt werden
@@ -25,33 +25,33 @@ import org.amcgala.framework.shape.BresenhamLine;
  */
 public class ShipEnd extends Ship {
 
-    private static final BresenhamLine[] bottom = {
-            new BresenhamLine(0, 1, 0, 0.4),
-            new BresenhamLine(0, 0.4, 0.4, 0),
-            new BresenhamLine(0.4, 0, 0.6, 0),
-            new BresenhamLine(0.6, 0, 1, 0.4),
-            new BresenhamLine(1, 0.4, 1, 1)
+    private static final Line[] BOTTOM = {
+            new Line(0, 1, 0, 0.4),
+            new Line(0, 0.4, 0.4, 0),
+            new Line(0.4, 0, 0.6, 0),
+            new Line(0.6, 0, 1, 0.4),
+            new Line(1, 0.4, 1, 1)
     };
-    private static final BresenhamLine[] left = {
-            new BresenhamLine(1, 0, 0.4, 0.0),
-            new BresenhamLine(0.4, 0, 0, 0.4),
-            new BresenhamLine(0, 0.4, 0, 0.6),
-            new BresenhamLine(0, 0.6, 0.4, 1),
-            new BresenhamLine(0.4, 1, 1, 1)
+    private static final Line[] LEFT = {
+            new Line(1, 0, 0.4, 0.0),
+            new Line(0.4, 0, 0, 0.4),
+            new Line(0, 0.4, 0, 0.6),
+            new Line(0, 0.6, 0.4, 1),
+            new Line(0.4, 1, 1, 1)
     };
-    private static final BresenhamLine[] right = {
-            new BresenhamLine(1 - 1, 0, 1 - 0.4, 0.0),
-            new BresenhamLine(1 - 0.4, 0, 1 - 0, 0.4),
-            new BresenhamLine(1 - 0, 0.4, 1 - 0, 0.6),
-            new BresenhamLine(1 - 0, 0.6, 1 - 0.4, 1),
-            new BresenhamLine(1 - 0.4, 1, 1 - 1, 1)
+    private static final Line[] RIGHT = {
+            new Line(1 - 1, 0, 1 - 0.4, 0.0),
+            new Line(1 - 0.4, 0, 1 - 0, 0.4),
+            new Line(1 - 0, 0.4, 1 - 0, 0.6),
+            new Line(1 - 0, 0.6, 1 - 0.4, 1),
+            new Line(1 - 0.4, 1, 1 - 1, 1)
     };
-    private static final BresenhamLine[] top = {
-            new BresenhamLine(0, 1 - 1, 0, 1 - 0.4),
-            new BresenhamLine(0, 1 - 0.4, 0.4, 1 - 0),
-            new BresenhamLine(0.4, 1 - 0, 0.6, 1 - 0),
-            new BresenhamLine(0.6, 1 - 0, 1, 1 - 0.4),
-            new BresenhamLine(1, 1 - 0.4, 1, 1 - 1)
+    private static final Line[] TOP = {
+            new Line(0, 1 - 1, 0, 1 - 0.4),
+            new Line(0, 1 - 0.4, 0.4, 1 - 0),
+            new Line(0.4, 1 - 0, 0.6, 1 - 0),
+            new Line(0.6, 1 - 0, 1, 1 - 0.4),
+            new Line(1, 1 - 0.4, 1, 1 - 1)
     };
 
     /**
@@ -75,20 +75,20 @@ public class ShipEnd extends Ship {
     @Override
     public void render(Renderer renderer) {
         if (Heading.BOTTOM.equals(heading)) {
-            for (BresenhamLine line : bottom) {
+            for (Line line : BOTTOM) {
                 line.render(renderer);
             }
         } else if (Heading.LEFT.equals(heading)) {
-            for (BresenhamLine line : left) {
+            for (Line line : LEFT) {
                 line.render(renderer);
             }
         } else if (Heading.RIGHT.equals(heading)) {
-            for (BresenhamLine line : right) {
+            for (Line line : RIGHT) {
                 line.render(renderer);
             }
 
         } else if (Heading.TOP.equals(heading)) {
-            for (BresenhamLine line : top) {
+            for (Line line : TOP) {
                 line.render(renderer);
             }
         }

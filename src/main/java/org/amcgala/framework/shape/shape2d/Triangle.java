@@ -15,25 +15,25 @@
 package org.amcgala.framework.shape.shape2d;
 
 import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.shape.BresenhamLine;
+import org.amcgala.framework.shape.Line;
 import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Triangle extends Shape {
 
-    public BresenhamLine a, b, c;
+    public Line a, b, c;
 
-    public Triangle(BresenhamLine a, BresenhamLine b, BresenhamLine c) {
+    public Triangle(Line a, Line b, Line c) {
         this.a = a;
         this.b = b;
         this.c = c;
     }
 
     public Triangle(double ax, double ay, double bx, double by, double cx, double cy) {
-        a = new BresenhamLine(cx, cy, bx, by);
-        b = new BresenhamLine(ax, ay, cx, cy);
-        c = new BresenhamLine(ax, ay, bx, by);
+        a = new Line(cx, cy, bx, by);
+        b = new Line(ax, ay, cx, cy);
+        c = new Line(ax, ay, bx, by);
     }
 
     @Override

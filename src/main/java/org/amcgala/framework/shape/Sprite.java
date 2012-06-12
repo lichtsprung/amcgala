@@ -15,6 +15,7 @@ package org.amcgala.framework.shape;
  * the License.
  */
 
+import com.google.common.base.Objects;
 import org.amcgala.framework.renderer.Pixel;
 import org.amcgala.framework.renderer.Renderer;
 import org.slf4j.Logger;
@@ -24,8 +25,11 @@ import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Spriteobjekt zum Darstellen
@@ -33,70 +37,54 @@ import java.io.InputStream;
  * @author Steffen Troester
  */
 public class Sprite extends Shape {
-    /**
-     * Position des Sprites
-     */
+    private static final Logger log = LoggerFactory.getLogger(Sprite.class.getName());
+
     private double x, y;
-    /**
-     * Groesse des Sprites
-     */
     private int width, height;
-    /**
-     * Pixelarray
-     */
-    private Pixel[] pixel;
-    private Color[] color;
-    /**
-     * geoeffnete Datei
-     */
-    private String filepath;
+    private Pixel[] pixels;
+    private String path;
 
     /**
      * Spriteobjekt aus einer Datei (jpeg,png,gif)
      *
-     * @param filepath
+     * @param path
      * @param x
      * @param y
+     *
      * @throws IOException
      */
-    public Sprite(String filepath, double x, double y) throws IOException {
-        this(filepath);
+    public Sprite(String path, double x, double y) throws IOException {
+        this(path);
         this.x = x;
         this.y = y;
-
     }
 
     /**
      * Spriteobjekt aus einer Datei (jpeg,png,gif)
      *
      * @param inputStream
-     * @throws IOException
      */
-    public void loadImage(InputStream inputStream) throws IOException {
-
-        // Imagefile auslesen
-        BufferedImage image = ImageIO.read(inputStream);
-        // Groesse definieren
-        width = image.getWidth();
-        height = image.getHeight();
-        // Farbwerte auslesen
-        int[] rgbs = new int[width * height];
-        image.getRGB(0, 0, width, height, rgbs, 0, width);
-        // Pixel erzeugen (Point2d's)
-        pixel = new Pixel[rgbs.length];
-        color = new Color[rgbs.length];
-        for (int i = 0; i < width * height; i++) {
-            pixel[i] = new Pixel(i % width, (height - i) / width);
-
-
-            // Farbwerte auswerfen (Shiftenaufgrund von RGBintValues)
-            int red = (rgbs[i] >> 16) & 0xFF;
-            int green = (rgbs[i] >> 8) & 0xFF;
-            int blue = (rgbs[i]) & 0xFF;
-
-            color[i] = new Color(red, green, blue);
+    public void loadImage(InputStream inputStream) {
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(inputStream);
+        } catch (IOException e) {
+            log.error("Konnte Bild nicht laden!", e);
         }
 
+        width = checkNotNull(image).getWidth();
+        height = checkNotNull(image).getHeight();
+
+        // Farbwerte auslesen
+        int[] colorValues = new int[width * height];
+        image.getRGB(0, 0, width, height, colorValues, 0, width);
+
+        // Pixel erzeugen (Point2d's)
+        pixels = new Pixel[colorValues.length];
+
+        for (int i = 0; i < width * height; i++) {
+            pixels[i] = new Pixel(i % width + x, (height - i) / width + y, new Color(colorValues[i]));
+        }
     }
 
     /**
@@ -105,6 +93,7 @@ public class Sprite extends Shape {
      * @param inputStream
      * @param x
      * @param y
+     *
      * @throws IOException
      */
     public Sprite(InputStream inputStream, int x, int y) throws IOException {
@@ -116,21 +105,26 @@ public class Sprite extends Shape {
     /**
      * Spriteobjekt aus einer Datei (jpeg,png,gif)
      *
-     * @param filepath
+     * @param path
+     *
      * @throws IOException
      */
-    public Sprite(String filepath) throws IOException {
-        this.filepath = filepath;
-        FileInputStream f = new FileInputStream(filepath);
-        loadImage(f);
+    public Sprite(String path) {
+
+        this.path = checkNotNull(path);
+        FileInputStream f = null;
+        try {
+            f = new FileInputStream(path);
+            loadImage(f);
+        } catch (FileNotFoundException e) {
+            log.error("Datei {} konnte nicht geladen werden!", path);
+        }
     }
 
     @Override
     public void render(Renderer renderer) {
-        for (int i = 0; i < pixel.length; i++) {
-            pixel[i].x = (int) (i % width + x);
-            pixel[i].y = (int) ((height - i) / width + y);
-            renderer.putPixel(pixel[i], color[i]);
+        for (Pixel pixel : pixels) {
+            renderer.putPixel(pixel);
         }
     }
 
@@ -152,9 +146,6 @@ public class Sprite extends Shape {
 
     @Override
     public String toString() {
-        return "Sprite from:" + filepath + " width:" + width + " height:"
-                + height;
+        return Objects.toStringHelper(getClass()).add("Path", path).add("x", x).add("y", y).toString();
     }
-
-    private static final Logger log = LoggerFactory.getLogger(Sprite.class.getName());
 }

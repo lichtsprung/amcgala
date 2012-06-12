@@ -15,7 +15,7 @@
 package org.amcgala.framework.shape.shape2d;
 
 import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.shape.BresenhamLine;
+import org.amcgala.framework.shape.Line;
 import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +29,10 @@ public class Rectangle extends Shape {
 
     public double width;
     public double height;
-    public BresenhamLine bottom;
-    public BresenhamLine top;
-    public BresenhamLine left;
-    public BresenhamLine right;
+    public Line bottom;
+    public Line top;
+    public Line left;
+    public Line right;
 
     /**
      * Erzeugt ein neues Rechteck, über die Position der linken unteren Ecke und
@@ -44,10 +44,10 @@ public class Rectangle extends Shape {
      * @param height die Höhe des Rechtecks
      */
     public Rectangle(double x, double y, double width, double height) {
-        bottom = new BresenhamLine(x, y, x + width, y);
-        top = new BresenhamLine(x, y + height, x + width, y + height);
-        left = new BresenhamLine(x, y, x, y + height);
-        right = new BresenhamLine(x + width, y, x + width, y + height);
+        bottom = new Line(x, y, x + width, y);
+        top = new Line(x, y + height, x + width, y + height);
+        left = new Line(x, y, x, y + height);
+        right = new Line(x + width, y, x + width, y + height);
     }
 
     /**
@@ -59,7 +59,7 @@ public class Rectangle extends Shape {
      * @param right  die rechte Seite des Rechtecks
      * @deprecated
      */
-    public Rectangle(BresenhamLine bottom, BresenhamLine left, BresenhamLine top, BresenhamLine right) {
+    public Rectangle(Line bottom, Line left, Line top, Line right) {
         this.top = top;
         this.bottom = bottom;
         this.left = left;
@@ -68,10 +68,10 @@ public class Rectangle extends Shape {
 
     @Override
     public void render(Renderer renderer) {
-        bottom.color = color;
-        top.color = color;
-        left.color = color;
-        right.color = color;
+        bottom.setColor(getColor());
+        top.setColor(getColor());
+        left.setColor(getColor());
+        right.setColor(getColor());
 
         bottom.render(renderer);
         top.render(renderer);

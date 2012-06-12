@@ -22,7 +22,7 @@ public class SpriteExampleMain extends Framework {
             final Sprite a = new Sprite(inputStream, -200, 50);
             a.setAnimation(new Animation<Sprite>() {
                 @Override
-                public void animate() {
+                public void update() {
                     if ((a.getX() + 2) < -100) {
                         a.setX((a.getX() + 2));
                     } else {

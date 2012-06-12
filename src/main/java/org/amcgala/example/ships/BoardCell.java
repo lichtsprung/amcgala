@@ -96,13 +96,13 @@ public class BoardCell extends Shape {
 
         this.state = state;
         if (state == State.HIT) {
-            bounds.color = Color.RED;
+            bounds.setColor(Color.RED);
         } else if (state == State.MISS) {
-            bounds.color = Color.BLUE;
+            bounds.setColor(Color.BLUE);
         } else if (state == State.SELECTED) {
-            bounds.color = Color.GREEN;
+            bounds.setColor(Color.GREEN);
         } else if (state == State.NOTHING) {
-            bounds.color = Color.BLACK;
+            bounds.setColor(Color.BLACK);
         }
     }
 
@@ -110,13 +110,13 @@ public class BoardCell extends Shape {
         this.state = previousState;
 
         if (state == State.HIT) {
-            bounds.color = Color.RED;
+            bounds.setColor(Color.RED);
         } else if (state == State.MISS) {
-            bounds.color = Color.BLUE;
+            bounds.setColor(Color.BLUE);
         } else if (state == State.SELECTED) {
-            bounds.color = Color.GREEN;
+            bounds.setColor(Color.GREEN);
         } else if (state == State.NOTHING) {
-            bounds.color = Color.BLACK;
+            bounds.setColor(Color.BLACK);
         }
     }
 

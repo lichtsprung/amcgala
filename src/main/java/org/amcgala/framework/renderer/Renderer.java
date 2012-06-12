@@ -23,10 +23,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Wird von jedem Renderer erweitert und stellt die Funktionen putPixel und show
  * zur Verfügung.
- * TODO Renderer sollte die wichtigsten, primitiven Funtionatlitäten zum Zeichnen zur Verfügung stellen. drawLine etc.
  */
 public class Renderer {
 
@@ -54,13 +56,12 @@ public class Renderer {
      * @param height die Höhe der Ausgabe des Renderers
      */
     public Renderer(int width, int height, JFrame frame) {
-        this.width = width;
-        this.height = height;
-        this.width = width;
-        this.height = height;
+        checkArgument(width > 0, "Breite des Fensters muss größer 0 sein!");
+        checkArgument(height > 0, "Höhe des Fensters muss größer 0 sein!");
+        this.frame = checkNotNull(frame);
+
         this.offsetX = width >> 1;
         this.offsetY = height >> 1;
-        this.frame = frame;
 
         frame.createBufferStrategy(2);
         bs = frame.getBufferStrategy();
@@ -86,11 +87,11 @@ public class Renderer {
     }
 
     public void setCamera(Camera camera) {
-        this.camera = camera;
+        this.camera = checkNotNull(camera);
     }
 
     public void setTransformationMatrix(Matrix transformationMatrix) {
-        this.transformationMatrix = transformationMatrix;
+        this.transformationMatrix = checkNotNull(transformationMatrix);
     }
 
     public Camera getCamera() {
@@ -109,7 +110,8 @@ public class Renderer {
      * @param pixel der Pixel, der dargestellt werden soll
      */
     public void putPixel(Pixel pixel) {
-        g.setColor(java.awt.Color.BLACK);
+        checkNotNull(pixel);
+        g.setColor(pixel.color);
         g.fillRect(offsetX + pixel.x, -pixel.y + offsetY, 1, 1);
     }
 
@@ -122,6 +124,8 @@ public class Renderer {
      * @param color die Farbe des Pixels
      */
     public void putPixel(Pixel pixel, Color color) {
+        checkNotNull(pixel);
+        checkNotNull(color);
         setColor(color);
         g.fillRect(offsetX + pixel.x, -pixel.y + offsetY, 1, 1);
     }
@@ -132,7 +136,7 @@ public class Renderer {
      * @param color die neue Farbe
      */
     public void setColor(Color color) {
-        g.setColor(color);
+        g.setColor(checkNotNull(color));
     }
 
     /**
@@ -169,22 +173,22 @@ public class Renderer {
     }
 
     public void drawLine(Vector3d start, Vector3d end) {
-        Vector3d s = start.transform(transformationMatrix);
-        Vector3d e = end.transform(transformationMatrix);
+        Vector3d s = checkNotNull(start).transform(transformationMatrix);
+        Vector3d e = checkNotNull(end).transform(transformationMatrix);
         Pixel sp = camera.getImageSpaceCoordinates(s);
         Pixel ep = camera.getImageSpaceCoordinates(e);
         drawLine(sp.x, sp.y, ep.x, ep.y);
     }
 
     public void drawCircle(Vector3d pos, double radius) {
-        Vector3d tv = pos.transform(transformationMatrix);
+        Vector3d tv = checkNotNull(pos).transform(transformationMatrix);
         Pixel p = camera.getImageSpaceCoordinates(tv);
         drawCircle(p.x, p.y, radius);
     }
 
     public void putPixel(Vector3d point, Color color) {
-        Vector3d tv = point.transform(transformationMatrix);
+        Vector3d tv = checkNotNull(point).transform(transformationMatrix);
         Pixel p = camera.getImageSpaceCoordinates(tv);
-        putPixel(p, color);
+        putPixel(p, checkNotNull(color));
     }
 }

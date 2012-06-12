@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 /**
  * Interface, das alle Klassen implementieren, die eine Interpolation
  * darstellen.
- * <p/>
  *
  * @author Robert Giacinto
  */

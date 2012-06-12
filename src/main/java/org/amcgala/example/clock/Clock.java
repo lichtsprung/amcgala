@@ -53,7 +53,7 @@ public class Clock extends Shape {
     private class ClockAnimation extends Animation<Shape> {
 
         @Override
-        public void animate() {
+        public void update() {
             Date dt = new Date();
             SimpleDateFormat microFormat = new SimpleDateFormat("S");
             SimpleDateFormat secondFormat = new SimpleDateFormat("ss");

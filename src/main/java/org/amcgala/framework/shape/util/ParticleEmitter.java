@@ -4,7 +4,7 @@ import org.amcgala.framework.animation.Updatable;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.transform.RotationZ;
-import org.amcgala.framework.shape.BresenhamLine;
+import org.amcgala.framework.shape.Line;
 import org.amcgala.framework.shape.Shape;
 
 import java.util.ArrayList;
@@ -106,7 +106,7 @@ public class ParticleEmitter extends Shape implements Updatable {
             rotateScale.x += x;
             rotateScale.y += y;
             // display
-            new BresenhamLine(new Vector3d(x, y, 1), rotateScale).render(renderer);
+            new Line(new Vector3d(x, y, 1), rotateScale).render(renderer);
         }
     }
 
