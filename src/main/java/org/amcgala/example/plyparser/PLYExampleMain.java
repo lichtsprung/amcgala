@@ -1,16 +1,18 @@
 package org.amcgala.example.plyparser;
 
+import com.google.common.eventbus.Subscribe;
 import org.amcgala.Framework;
 import org.amcgala.framework.camera.SimplePerspectiveCamera;
 import org.amcgala.framework.event.InputHandler;
+import org.amcgala.framework.lighting.AmbientLight;
+import org.amcgala.framework.lighting.PointLight;
 import org.amcgala.framework.math.Vector3d;
+import org.amcgala.framework.renderer.Color;
 import org.amcgala.framework.shape.Polygon;
 import org.amcgala.framework.shape.util.PLYPolygonParser;
 
 import java.awt.event.MouseEvent;
 import java.io.InputStream;
-
-import com.google.common.eventbus.Subscribe;
 
 /**
  * Beispiel, das die Verwendung des PLYParsers demonstriert.
@@ -33,6 +35,10 @@ public class PLYExampleMain extends Framework implements InputHandler {
 
     @Override
     public void initGraph() {
+        AmbientLight ambient = new AmbientLight("tolles licht", 0.4, Color.WHITE);
+        PointLight pointLight = new PointLight("tolles point light", ambient, new Vector3d(150, 100, 1));
+        add(pointLight);
+
         InputStream inputStream = ClassLoader.getSystemResourceAsStream("amcgala/example/plyparser/monkey.ply");
         try {
             for (Polygon p : PLYPolygonParser.parseAsPolygonList(inputStream,

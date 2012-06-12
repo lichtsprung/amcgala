@@ -15,15 +15,16 @@ package org.amcgala.framework.shape;
 * the License.
 */
 
-import java.util.Collection;
-
-import org.amcgala.framework.renderer.Renderer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
+import org.amcgala.framework.renderer.Color;
+import org.amcgala.framework.renderer.Renderer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
 
 /**
 * Polygonobjekt fuer die Koerperdarstellung im 3D Raum
@@ -130,26 +131,21 @@ public class Polygon extends Shape {
 		if (camera.getDirection().dot(this.norm) < 0) {
 			return;
 		}
-		
-		// rendering
-		if(this.filled != true) {
-			// zeichne ein Polygon
-			if (bl1 != null && bl2 != null && bl3 != null) {
-				bl1.render(transformation, camera, renderer, lights);
-				bl2.render(transformation, camera, renderer, lights);
-				bl3.render(transformation, camera, renderer, lights);
-				if (bl4 != null) {
-					bl4.render(transformation, camera, renderer, lights);
-				}
-			}
-		} else {
-			// zeichne ein gefülltest polygon
-			log.info("Zeichne gefülltes Polygon");
-			if(bl4 != null) {
-			} else {
-				// zeichne dreieckiges polygon mit bresenhamline
-			}
-		}
+
+        bl1.color = Color.RED;
+        bl2.color = Color.RED;
+        bl3.color = Color.RED;
+
+
+        if (bl1 != null && bl2 != null && bl3 != null) {
+            bl1.render(transformation, camera, renderer, lights);
+            bl2.render(transformation, camera, renderer, lights);
+            bl3.render(transformation, camera, renderer, lights);
+            if (bl4 != null) {
+                bl4.color = Color.RED;
+                bl4.render(transformation, camera, renderer, lights);
+            }
+        }
 	}
 	
 	/**
