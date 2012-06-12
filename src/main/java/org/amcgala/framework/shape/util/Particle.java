@@ -15,6 +15,7 @@ import org.amcgala.framework.shape.shape2d.Point2d;
 public class Particle extends Shape implements Updatable {
 
     private double particleSpeed;
+    private int life = 100;
     private Vector3d direction;
 
     private Point2d point2d;
@@ -39,9 +40,10 @@ public class Particle extends Shape implements Updatable {
 
     @Override
     public void update() {
+        super.update();
         point2d.x += direction.x;
         point2d.y += direction.y;
-        super.update();
+        life--;
     }
 
     @Override
@@ -73,4 +75,7 @@ public class Particle extends Shape implements Updatable {
         return point2d.y;
     }
 
+    public int getLife() {
+        return life;
+    }
 }

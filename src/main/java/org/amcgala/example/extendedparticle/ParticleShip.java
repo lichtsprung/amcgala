@@ -15,10 +15,8 @@ import java.awt.event.KeyEvent;
 
 public class ParticleShip extends Shape implements InputHandler, Updatable {
 
-    private ParticleEmitter pe = new ParticleEmitter(20, 0, 0, new Vector3d(0,
-            -1, 0));
-    private ParticleGravitation pg = new ParticleGravitation(-250, -250, 500,
-            500);
+    private ParticleEmitter pe = new ParticleEmitter(20, 0, 0, new Vector3d(0, -1, 0));
+    private ParticleGravitation pg = new ParticleGravitation(-250, -250, 500, 500);
 
     private Vector3d direction = Vector3d.ZERO.copy();
     private Vector3d rotation = Vector3d.UNIT_Y.copy();
@@ -89,7 +87,6 @@ public class ParticleShip extends Shape implements InputHandler, Updatable {
             case KeyEvent.VK_SPACE:
                 if (e.getID() == KeyEvent.KEY_PRESSED) {
                     pe.setEnabled(true);
-
                 } else {
                     pe.setEnabled(false);
                 }
@@ -119,5 +116,4 @@ public class ParticleShip extends Shape implements InputHandler, Updatable {
     public void setDirection(Vector3d direction) {
         this.direction = direction;
     }
-
 }

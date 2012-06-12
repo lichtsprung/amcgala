@@ -7,22 +7,24 @@ import org.amcgala.framework.scenegraph.transform.RotationZ;
 import org.amcgala.framework.shape.Line;
 import org.amcgala.framework.shape.Shape;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Emitter Klasse die ParticleContainer mit den gegebenen Eigenschaften ausgibt.
- * Emitter kannt dis/enabled werden. TODO: Bis jetzt erst 2d moeglich !
+ * Emitter kann dis/enabled werden. TODO: Bis jetzt erst 2d moeglich !
  *
  * @author Steffen Troester
  */
 public class ParticleEmitter extends Shape implements Updatable {
+
     private boolean enabled = true;
     private double width, height;
     private double x, y, z; // Mittepunkt
     private Vector3d direction = new Vector3d(0, 1, 0);
-    private ArrayList<Particle> particles = new ArrayList<Particle>();
-    private ArrayList<ParticleManipulation> particleManipulations = new ArrayList<ParticleManipulation>();
+    private final List<Particle> particles = new CopyOnWriteArrayList<Particle>();
+    private final List<ParticleManipulation> particleManipulations = new CopyOnWriteArrayList<ParticleManipulation>();
     private RotationZ rectrotation = new RotationZ(Math.PI / 2);
     private boolean visible;
     // Emitting Settings
@@ -34,6 +36,8 @@ public class ParticleEmitter extends Shape implements Updatable {
 
     @Override
     public void update() {
+        super.update();
+
         if (timeStamp == 0 || !enabled) {
             setTimeStamp();
         } else {
@@ -41,8 +45,7 @@ public class ParticleEmitter extends Shape implements Updatable {
             if (getTimeStampDifference() > timeIntervalMs) {
                 setTimeStamp();
                 // rotate direction
-                Vector3d rot = rectrotation.getTransformMatrix()
-                        .times(direction.copy().toMatrix()).toVector3d();
+                Vector3d rot = rectrotation.getTransformMatrix().times(direction.copy().toMatrix()).toVector3d();
                 // scale
                 rot.times(r.nextDouble() * width);
                 // translate
@@ -56,13 +59,16 @@ public class ParticleEmitter extends Shape implements Updatable {
         // Partikel updaten und gegebenenfalls manipulieren
         for (Particle p : particles) {
             p.update();
-            for (ParticleManipulation pm : particleManipulations) {
-                if (pm.fitInRange(p.getX(), p.getY())) {
-                    pm.manipulate(p);
+            if (p.getLife() < 0) {
+                particles.remove(p);
+            } else {
+                for (ParticleManipulation pm : particleManipulations) {
+                    if (pm.fitInRange(p.getX(), p.getY())) {
+                        pm.manipulate(p);
+                    }
                 }
             }
         }
-        super.update();
     }
 
     public void setTimeStamp() {
@@ -100,8 +106,7 @@ public class ParticleEmitter extends Shape implements Updatable {
         if (isVisible()) {
             Vector3d scale = direction.copy().normalize().times(width);
             // rotate
-            Vector3d rotateScale = rectrotation.getTransformMatrix()
-                    .times(scale.toMatrix()).toVector3d();
+            Vector3d rotateScale = rectrotation.getTransformMatrix().times(scale.toMatrix()).toVector3d();
             // translate
             rotateScale.x += x;
             rotateScale.y += y;
@@ -170,7 +175,6 @@ public class ParticleEmitter extends Shape implements Updatable {
     public void setZ(double z) {
         this.z = z;
     }
-
 
     public void setDirection(Vector3d direction) {
         this.direction = direction;

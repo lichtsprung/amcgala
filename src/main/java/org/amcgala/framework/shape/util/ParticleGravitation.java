@@ -5,6 +5,8 @@ import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.Shape;
 import org.amcgala.framework.shape.shape2d.Rectangle;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  * Partikel sollen im definierten Bereich mehr Gravitation bekommen.
  *
@@ -29,9 +31,8 @@ public class ParticleGravitation extends Shape implements ParticleManipulation {
      * @param height groesser 0 !
      */
     public ParticleGravitation(double x, double y, double width, double height) {
-        if (width <= 0 || height <= 0) {
-            throw new IllegalArgumentException();
-        }
+        checkArgument(width > 0);
+        checkArgument(height > 0);
         this.x = x;
         this.y = y;
         this.width = width;

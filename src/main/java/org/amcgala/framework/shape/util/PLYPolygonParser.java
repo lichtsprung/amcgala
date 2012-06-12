@@ -30,29 +30,29 @@ import java.util.Scanner;
 
 /**
  * Statischer PLY File Parser zum laden von Polygonen. Export von komplexen
- * Objekten aus Blender moeglich (siehe exsample Paket) <br/>
+ * Objekten aus Blender moeglich (siehe example Paket) <br/>
  * <br/>
  *
  * @author Steffen Tröster
  */
 public class PLYPolygonParser {
 
-    private static final Logger log = LoggerFactory
-            .getLogger(PLYPolygonParser.class);
+    private static final Logger log = LoggerFactory.getLogger(PLYPolygonParser.class);
 
     /**
      * Parst .ply File und gibt Polygone zurueck<br/>
      * <br/>
      *
-     * @param filePath Pfad zur .ply Datei
-     * @param scale    Skalierung des Objektes (zB 100)
+     * @param path  Pfad zur .ply Datei
+     * @param scale Skalierung des Objektes (zB 100)
+     *
      * @return ArrayList von allen Polygonen
+     *
      * @throws IOException
      */
-    public static List<Polygon> parseAsPolygonList(String filePath, double scale)
+    public static List<Polygon> parseAsPolygonList(String path, double scale)
             throws Exception {
-        // Stream öffnen (Exception!)
-        InputStream inputStream = new FileInputStream(filePath);
+        InputStream inputStream = new FileInputStream(path);
         return parseAsPolygonList(inputStream, scale);
     }
 
@@ -62,21 +62,23 @@ public class PLYPolygonParser {
      *
      * @param inputStream to File
      * @param scale       Skalierung des Objektes (zB 100)
+     *
      * @return ArrayList von allen Polygonen
+     *
      * @throws IOException
      */
     public static List<Polygon> parseAsPolygonList(InputStream inputStream,
                                                    double scale) throws Exception {
         // resultierende Polygone
-        ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+        List<Polygon> polygons = new ArrayList<Polygon>();
         // resultierende Normalen
-        ArrayList<Vector3d> normals = new ArrayList<Vector3d>();
+        List<Vector3d> normals = new ArrayList<Vector3d>();
         // Koordinaten Anzahl
         int vertexCount = 0;
         // Polygone Anzahl
         int faceCount = 0;
         // Koordinaten
-        ArrayList<Vector3d> vertices = new ArrayList<Vector3d>();
+        List<Vector3d> vertices = new ArrayList<Vector3d>();
         // Stream in Scanner legen
         final Scanner scanner = new Scanner(inputStream).useLocale(Locale.US);
 
@@ -122,13 +124,11 @@ public class PLYPolygonParser {
                         vertices.get(scanner.nextInt()), normals.get(index)));
             } else {
                 throw new IOException();
-
             }
         }
 
         log.info("loaded " + vertexCount + " vertexes and " + faceCount
                 + " faces");
         return polygons;
-
     }
 }

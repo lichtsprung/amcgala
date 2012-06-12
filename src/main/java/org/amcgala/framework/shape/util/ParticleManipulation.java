@@ -14,6 +14,7 @@ public interface ParticleManipulation extends Renderable {
      *
      * @param x Position
      * @param y Position
+     *
      * @return
      */
     public boolean fitInRange(double x, double y);
@@ -24,5 +25,4 @@ public interface ParticleManipulation extends Renderable {
      * @param p Particle
      */
     public void manipulate(Particle p);
-
 }
