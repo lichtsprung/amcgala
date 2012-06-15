@@ -1,4 +1,4 @@
-package org.amcgala.framework.shape;
+package org.amcgala.framework.shape.shape2d;
 
 /*
  * Copyright 2011 Cologne University of Applied Sciences Licensed under the
@@ -18,6 +18,7 @@ package org.amcgala.framework.shape;
 import com.google.common.base.Objects;
 import org.amcgala.framework.renderer.Pixel;
 import org.amcgala.framework.renderer.Renderer;
+import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

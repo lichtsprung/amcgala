@@ -17,13 +17,36 @@ package org.amcgala.framework.scenegraph;
 import org.amcgala.framework.scenegraph.transform.Transformation;
 import org.amcgala.framework.scenegraph.visitor.Visitor;
 import org.amcgala.framework.shape.Shape;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Szenengraph des Frameworks.
  */
 public class SceneGraph {
 
-    private Node root = new Node("root");
+    private Node root;
+    private Map<String, Node> namedNodes;
+    private Map<String, Shape> namedShapes;
+    private List<Node> nodes;
+    private List<Shape> shapes;
+
+    public SceneGraph() {
+        root = new Node("root");
+        namedNodes = new HashMap<String, Node>();
+        namedShapes = new HashMap<String, Shape>();
+        nodes = new ArrayList<Node>();
+        shapes = new ArrayList<Shape>();
+
+        namedNodes.put(root.getLabel(), root);
+        nodes.add(root);
+    }
 
     /**
      * Fügt dem Szenengraph einen Knoten hinzu.
@@ -31,8 +54,9 @@ public class SceneGraph {
      *
      * @param node der neue Knoten
      */
-    public void addNode(Node node) {
-        root.addChild(checkNotNull(node));
+    public void add(Node node) {
+        root.add(checkNotNull(node));
+        nodes.add(node);
     }
 
     /**
@@ -41,8 +65,9 @@ public class SceneGraph {
      * @param node  der Kindsknoten, der hinzugefügt werden soll
      * @param label der Name des Knoten, an den der Kindsknoten gehängt werden soll
      */
-    public void addNode(Node node, String label) {
-        root.findNode(checkNotNull(label)).addChild(checkNotNull(node));
+    public void add(Node node, String label) {
+        checkArgument(namedNodes.containsKey(label), "Key nicht im Szenengraph vorhanden!");
+        addNamedNode(checkNotNull(node), label);
     }
 
     /**
@@ -50,7 +75,7 @@ public class SceneGraph {
      *
      * @param node der Knoten,der entfernt werden soll
      */
-    public void removeNode(Node node) {
+    public void remove(Node node) {
         root.removeNode(checkNotNull(node).getLabel());
     }
 
@@ -59,7 +84,7 @@ public class SceneGraph {
      *
      * @param label der Name des Knotens, der entfernt werden soll
      */
-    public void removeNode(String label) {
+    public void remove(String label) {
         root.removeNode(checkNotNull(label));
     }
 
@@ -67,10 +92,11 @@ public class SceneGraph {
      * Gibt den Knoten mit einem gegebenen Namen zurück.
      *
      * @param label der Name des gesuchten Knotens
+     *
      * @return der gesuchte Knoten
      */
-    public Node findNode(String label) {
-        return root.findNode(label);
+    public Node getNode(String label) {
+        return namedNodes.get(label);
     }
 
     /**
@@ -79,8 +105,8 @@ public class SceneGraph {
      * @param label der Name des Knotens
      * @param shape das Shapeobjekt
      */
-    public void addShape(String label, Shape shape) {
-        root.addShape(label, shape);
+    public void add(Shape shape, String label) {
+        namedNodes.get(label).add(shape);
     }
 
     /**
@@ -88,8 +114,8 @@ public class SceneGraph {
      *
      * @param shape das Shapeobjekt
      */
-    public void addShape(Shape shape) {
-        addShape("root", shape);
+    public void add(Shape shape) {
+        add(shape, "root");
     }
 
     /**
@@ -106,7 +132,7 @@ public class SceneGraph {
      *
      * @param transformation die neue Transformation
      */
-    public void addTransformation(Transformation transformation) {
+    public void add(Transformation transformation) {
         root.setTransformation(transformation);
     }
 
@@ -116,9 +142,21 @@ public class SceneGraph {
      * @param transformation die neue Transformation
      * @param label          die Bezeichnung des gesuchten Knotens
      */
-    public void addTransformation(Transformation transformation, String label) {
-        findNode(label).setTransformation(transformation);
+    public void add(Transformation transformation, String label) {
+        namedNodes.get(label).setTransformation(transformation);
     }
 
+    public Shape getShape(String label) {
+        return namedShapes.get(label);
+    }
 
+    private void addNamedNode(Node node, String label) {
+        namedNodes.get(label).add(node);
+        nodes.add(node);
+    }
+
+    private void removeNamedNode(Node node, String label) {
+        namedNodes.remove(label);
+        nodes.remove(node);
+    }
 }

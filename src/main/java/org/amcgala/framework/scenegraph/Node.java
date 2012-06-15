@@ -79,17 +79,18 @@ public class Node implements Updatable {
     public Node(String label, Node parent) {
         this(label);
         this.parent = parent;
-        this.parent.addChild(this);
+        this.parent.add(this);
     }
 
     /**
      * Fügt dem Knoten einen neuen Kindsknoten hinzu.
      *
      * @param childNode der neue Knoten
+     *
      * @return gibt Referenz auf sich selbst zurück um verschachtelte Aufrufe zu
      *         ermöglichen
      */
-    public Node addChild(Node childNode) {
+    public Node add(Node childNode) {
         childNode.parent = this;
         synchronized (children) {
             children.add(childNode);
@@ -101,6 +102,7 @@ public class Node implements Updatable {
      * Entfernt einen Kindsknoten mit einem gegebenen Label.
      *
      * @param label das Label des zu löschenden Knoten
+     *
      * @return true, wenn Knoten gefunden und entfernt wurde
      */
     public boolean removeNode(String label) {
@@ -126,17 +128,18 @@ public class Node implements Updatable {
      *
      * @param label    das Label des Knoten, dem das neue Objekt hinzugefügt werden
      *                 soll
-     * @param newShape das neue Geometrieobjekt
+     * @param shape das neue Geometrieobjekt
+     *
      * @return true, wenn es hinzugefügt werden konnte
      */
-    public boolean addShape(String label, Shape newShape) {
+    public boolean add(Shape shape, String label) {
         synchronized (shapes) {
             if (this.label.equalsIgnoreCase(label)) {
-                shapes.add(newShape);
+                shapes.add(shape);
                 return true;
             } else {
                 for (Node n : children) {
-                    n.addShape(label, newShape);
+                    n.add(shape, label);
                 }
             }
         }
@@ -147,9 +150,10 @@ public class Node implements Updatable {
      * Fügt ein neues Geometrieobjekt dieser Node hinzu.
      *
      * @param shape das neue Objekt
+     *
      * @return true, wenn es erfolgreich hinzugefügt wurde
      */
-    public boolean addShape(Shape shape) {
+    public boolean add(Shape shape) {
         synchronized (shapes) {
             shapes.add(shape);
         }
@@ -160,15 +164,16 @@ public class Node implements Updatable {
      * Gibt einen Knoten mit einem bestimmten Label zurück.
      *
      * @param label Label des Knoten, der gefunden werden soll
+     *
      * @return true, wenn Knoten gefunden wurde
      */
-    public Node findNode(String label) {
+    public Node getNode(String label) {
         synchronized (children) {
             if (this.label.equalsIgnoreCase(label)) {
                 return this;
             } else {
                 for (Node n : children) {
-                    return n.findNode(label);
+                    return n.getNode(label);
                 }
             }
         }
@@ -209,7 +214,7 @@ public class Node implements Updatable {
 
     /**
      * Gibt die Kindsknoten zurück.
-     * Die zurückgegebene ist read-only. Um einen neuen Kindsknoten hinzuzufügen sollte die entsprochende Methode {@code addChild} verwendet werden.
+     * Die zurückgegebene ist read-only. Um einen neuen Kindsknoten hinzuzufügen sollte die entsprochende Methode {@code add} verwendet werden.
      *
      * @return die Kindsknoten
      */
@@ -276,5 +281,10 @@ public class Node implements Updatable {
         for (Shape shape : shapes) {
             shape.update();
         }
+    }
+
+    public Shape getShape(String label) {
+
+        return null;
     }
 }

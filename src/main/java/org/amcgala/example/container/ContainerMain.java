@@ -16,7 +16,7 @@ package org.amcgala.example.container;
 
 import org.amcgala.Framework;
 import org.amcgala.framework.math.Vector3d;
-import org.amcgala.framework.shape.CompositeShape;
+import org.amcgala.framework.shape.util.CompositeShape;
 import org.amcgala.framework.shape.Line;
 
 /**

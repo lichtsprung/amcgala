@@ -34,7 +34,6 @@ public abstract class Shape implements Updatable, Renderable {
     private Animation animation = Animation.EMPTY_ANIMATION;
     private Color color = Color.BLACK;
 
-
     /**
      * Setzt die Animation, die auf das Shape angewendet werden soll.
      *

@@ -58,11 +58,11 @@ public class PongBoard extends Node {
         // Die äußeren Grenzen des Spielfeldes.
         boundaries = new Rectangle(x, y, width, height); // rechts
 
-        addShape(boundaries);
+        add(boundaries);
         ball = new PongBall(this);
-        addShape(ball);
+        add(ball);
         paddle = new PongPaddle(5, 20, ball, this);
-        addShape(paddle);
+        add(paddle);
     }
 
     public double getBallStart() {

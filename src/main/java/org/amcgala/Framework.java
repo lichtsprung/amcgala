@@ -61,7 +61,6 @@ public abstract class Framework {
     private int screenHeight;
     private JFrame frame;
     private EventBus inputEventBus;
-    private String id;
 
     /**
      * Erstellt ein neues Framework, das eine grafische Ausgabe in der Auflösung
@@ -199,7 +198,7 @@ public abstract class Framework {
      * @param shape das Grafikobjekt, das der Szene hinzugefügt wird
      */
     public void add(Shape shape) {
-        scenegraph.addShape(shape);
+        scenegraph.add(shape);
     }
 
     /**
@@ -208,7 +207,7 @@ public abstract class Framework {
      * @param node der neue Knoten
      */
     public void add(Node node) {
-        scenegraph.addNode(node);
+        scenegraph.add(node);
     }
 
     /**
@@ -218,7 +217,7 @@ public abstract class Framework {
      * @param node  der Knoten der angehängt wird
      */
     public void add(String label, Node node) {
-        scenegraph.addNode(node, label);
+        scenegraph.add(node, label);
     }
 
     /**
@@ -228,7 +227,7 @@ public abstract class Framework {
      * @param shape das Shapeobjekt
      */
     public void add(String label, Shape shape) {
-        scenegraph.addShape(label, shape);
+        scenegraph.add(shape, label);
     }
 
     /**

@@ -18,6 +18,8 @@ import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 
 /**
  * Eine Animation, die das Verhalten eines Shapes beeinflussen kann.
@@ -29,9 +31,7 @@ public abstract class Animation<T extends Shape> {
 
     public static final Animation EMPTY_ANIMATION = new Animation() {
         @Override
-        public void update() {
-
-        }
+        public void update() {}
     };
 
     protected static final Logger logger = LoggerFactory.getLogger(Animation.class);
@@ -52,7 +52,7 @@ public abstract class Animation<T extends Shape> {
      * @param shape
      */
     public void setShape(T shape) {
-        this.shape = shape;
+        this.shape = checkNotNull(shape);
     }
 
     /**

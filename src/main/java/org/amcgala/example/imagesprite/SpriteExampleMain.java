@@ -2,7 +2,7 @@ package org.amcgala.example.imagesprite;
 
 import org.amcgala.Framework;
 import org.amcgala.framework.animation.Animation;
-import org.amcgala.framework.shape.Sprite;
+import org.amcgala.framework.shape.shape2d.Sprite;
 
 import java.io.IOException;
 import java.io.InputStream;

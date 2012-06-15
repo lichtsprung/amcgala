@@ -12,11 +12,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package org.amcgala.framework.shape;
+package org.amcgala.framework.shape.util;
 
 import com.google.common.base.Objects;
 import org.amcgala.framework.event.InputHandler;
 import org.amcgala.framework.renderer.Renderer;
+import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

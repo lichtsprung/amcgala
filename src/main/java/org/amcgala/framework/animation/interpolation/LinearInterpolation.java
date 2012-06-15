@@ -14,7 +14,9 @@
  */
 package org.amcgala.framework.animation.interpolation;
 
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Eine lineare Interpolation zwischen zwei Werten.
@@ -23,7 +25,7 @@ import java.util.logging.Logger;
  */
 public class LinearInterpolation extends Interpolation {
 
-    private static final Logger logger = Logger.getLogger(LinearInterpolation.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(LinearInterpolation.class);
 
     /**
      * Erzeugt einen neuen LinearInterpolator.

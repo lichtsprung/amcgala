@@ -56,9 +56,9 @@ public class MovingCamera extends Framework implements InputHandler {
         RotationY rotY = new RotationY();
         rotY.setInterpolationPhi(new LinearInterpolation(0, 4 * Math.PI, 250, true));
         n.setTransformation(rotY);
-        n.addShape(new Box(new Vector3d(0, 0, 0), 40, 40, 40));
-        n.addShape(new Box(new Vector3d(0, 100, 0), 40, 40, 40));
-        n.addShape(new Box(new Vector3d(0, 200, 0), 40, 40, 40));
+        n.add(new Box(new Vector3d(0, 0, 0), 40, 40, 40));
+        n.add(new Box(new Vector3d(0, 100, 0), 40, 40, 40));
+        n.add(new Box(new Vector3d(0, 200, 0), 40, 40, 40));
         add(n);
     }
 

@@ -17,6 +17,8 @@ package org.amcgala.framework.animation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 /**
  * Ein einfacher Timer, der einen Zeitraum messen kann. Diese Klasse wird zur
  * Animation und Aktualisierung des Frameworks benötigt.
@@ -26,7 +28,7 @@ import org.slf4j.LoggerFactory;
 public class Timer {
 
     private static final Logger log = LoggerFactory.getLogger(Timer.class);
-    private double framesPerSecond;
+    private int framesPerSecond;
     private double startTime;
     private double stopTime;
     private double timePerFrame;
@@ -38,7 +40,9 @@ public class Timer {
      * @param framesPerSecond die Anzahl von Frames, die pro Sekunde berechnet
      *                        werden sollen.
      */
-    public Timer(double framesPerSecond) {
+    public Timer(int framesPerSecond) {
+        checkArgument(framesPerSecond > 0, "FPS muss größer 0 sein!");
+
         this.framesPerSecond = framesPerSecond;
         timePerFrame = 1000 * 1000000 / framesPerSecond;
     }

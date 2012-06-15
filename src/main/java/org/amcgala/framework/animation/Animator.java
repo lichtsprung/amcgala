@@ -14,9 +14,13 @@
  */
 package org.amcgala.framework.animation;
 
+import com.google.common.base.Preconditions;
 import org.amcgala.Framework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Diese Klasse kümmert sich um das Timing der Animation. Sie ruft in
@@ -43,6 +47,9 @@ public class Animator {
      * @param updatesPerSecond die Anzahl der Aktualisierungen pro Sekunde
      */
     public Animator(int framesPerSecond, int updatesPerSecond) {
+        checkArgument(framesPerSecond > 0, "FPS muss größer 0 sein!");
+        checkArgument(updatesPerSecond > 0, "UPS muss größer 0 sein!");
+
         this.framesPerSecond = framesPerSecond;
         this.updatesPerSecond = updatesPerSecond;
         fpsTimer = new Timer(framesPerSecond);
@@ -55,7 +62,7 @@ public class Animator {
      * @param framework das neue Framework
      */
     public void setFramework(Framework framework) {
-        this.framework = framework;
+        this.framework = checkNotNull(framework);
     }
 
     /**
@@ -73,6 +80,8 @@ public class Animator {
      * @param framesPerSecond die neue Anzahl von Aktualisierungen pro Sekunde
      */
     public void setFramesPerSecond(int framesPerSecond) {
+        checkArgument(framesPerSecond > 0, "FPS muss größer 0 sein!");
+
         this.framesPerSecond = framesPerSecond;
         fpsTimer = new Timer(framesPerSecond);
     }
