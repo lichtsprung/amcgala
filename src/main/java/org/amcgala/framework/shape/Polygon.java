@@ -118,7 +118,6 @@ public class Polygon extends Shape {
                 line4.render(renderer);
             }
         }
-
     }
 
     @Override

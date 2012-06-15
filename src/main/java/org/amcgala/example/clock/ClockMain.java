@@ -32,5 +32,4 @@ public class ClockMain extends Framework {
         m.start();
         m.show();
     }
-
 }

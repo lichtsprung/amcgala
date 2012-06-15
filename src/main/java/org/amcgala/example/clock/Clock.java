@@ -30,7 +30,7 @@ public class Clock extends Shape {
     private Circle clockFace;
 
     public Clock() {
-        this.clockFace = new Circle(0, 0, 1, 120);
+        clockFace = new Circle(0, 0, 1, 120);
         second = new Polygon(new Vector3d(-5, 0, 0), new Vector3d(5, 0, 0),
                 new Vector3d(0, 5, 0), new Vector3d(0, 0, 0));
         minute = new Polygon(new Vector3d(-5, 0, 0), new Vector3d(5, 0, 0),
@@ -39,7 +39,6 @@ public class Clock extends Shape {
                 new Vector3d(0, 5, 0), new Vector3d(0, 0, 0));
 
         this.setAnimation(new ClockAnimation());
-
     }
 
     @Override
@@ -99,7 +98,5 @@ public class Clock extends Shape {
                     new Vector3d(50 * Math.sin(hourRadian), 50 * Math
                             .cos(hourRadian), 0), new Vector3d(0, 0, 0));
         }
-
     }
-
 }

@@ -14,6 +14,7 @@
  */
 package org.amcgala.framework.shape;
 
+import com.google.common.hash.Hashing;
 import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.animation.Updatable;
 import org.amcgala.framework.renderer.Renderable;
@@ -33,6 +34,7 @@ public abstract class Shape implements Updatable, Renderable {
     private static final Logger logger = Logger.getLogger(Shape.class.getName());
     private Animation animation = Animation.EMPTY_ANIMATION;
     private Color color = Color.BLACK;
+    protected String label = getClass().getSimpleName() + System.nanoTime();
 
     /**
      * Setzt die Animation, die auf das Shape angewendet werden soll.
@@ -42,7 +44,6 @@ public abstract class Shape implements Updatable, Renderable {
     public void setAnimation(Animation animation) {
         this.animation = checkNotNull(animation);
         this.animation.setShape(this);
-
     }
 
     /**
@@ -65,5 +66,9 @@ public abstract class Shape implements Updatable, Renderable {
 
     public void setColor(Color color) {
         this.color = checkNotNull(color);
+    }
+
+    public String getLabel() {
+        return label;
     }
 }

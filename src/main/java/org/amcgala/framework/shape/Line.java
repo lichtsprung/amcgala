@@ -76,7 +76,7 @@ public class Line extends Shape {
      */
     public String toString() {
 
-        return Objects.toStringHelper(getClass()).add("x1",x1).add("y1",y1).add("x2",x2).add("y2",y2).toString();
+        return Objects.toStringHelper(getClass()).add("x1", x1).add("y1", y1).add("x2", x2).add("y2", y2).toString();
     }
 
     private static final Logger log = LoggerFactory.getLogger(Line.class.getName());

@@ -17,8 +17,8 @@ package org.amcgala.framework.shape.shape3d;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.Line;
-import org.amcgala.framework.shape.util.CompositeShape;
 import org.amcgala.framework.shape.Shape;
+import org.amcgala.framework.shape.util.CompositeShape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

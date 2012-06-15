@@ -24,9 +24,13 @@ import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Eine Node ist Teil des Scenegraphs und kann beliebig viele Kindsknoten und
@@ -35,7 +39,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Node implements Updatable {
 
     private static final Logger logger = LoggerFactory.getLogger(Node.class);
-    private String label = "none";
+    private String label = null;
     /**
      * Der übergeordnete Knoten, an dem dieser Knoten hängt. {@code null}, wenn es sich
      * um den Rootknoten handelt.
@@ -44,12 +48,12 @@ public class Node implements Updatable {
     /**
      * Die Kindsknoten, die an diesem Knoten hängen.
      */
-    private final Collection<Node> children;
+    private final List<Node> children;
     /**
      * Die Geometrieobjekte, die an diesem Knoten hängen und von dem Renderer
      * dargestellt werden.
      */
-    private final Collection<Shape> shapes;
+    private final List<Shape> shapes;
     /**
      * Ein Transformationsobjekt, das sich auf die Geometrie dieses Knotens und
      * der Kindsknoten auswirkt.
@@ -101,50 +105,15 @@ public class Node implements Updatable {
     /**
      * Entfernt einen Kindsknoten mit einem gegebenen Label.
      *
-     * @param label das Label des zu löschenden Knoten
+     * @param node der Knoten, der entfernt werden soll.
      *
      * @return true, wenn Knoten gefunden und entfernt wurde
      */
-    public boolean removeNode(String label) {
-        synchronized (children) {
-            for (Node n : children) {
-                if (n.label.equalsIgnoreCase(label)) {
-                    children.remove(n);
-                    return true;
-                }
-            }
-
-            for (Node n : children) {
-                return n.removeNode(label);
-            }
-        }
-
-        return false;
+    public boolean removeNode(Node node) {
+        checkArgument(children.contains(node), "Node mit Label " + node.getLabel() + " konnte nicht gefunden werden.");
+        return children.remove(node);
     }
 
-    /**
-     * Fügt einem Knoten mit einem bestimmten Label ein neues Geometrieobjekt
-     * hinzu.
-     *
-     * @param label    das Label des Knoten, dem das neue Objekt hinzugefügt werden
-     *                 soll
-     * @param shape das neue Geometrieobjekt
-     *
-     * @return true, wenn es hinzugefügt werden konnte
-     */
-    public boolean add(Shape shape, String label) {
-        synchronized (shapes) {
-            if (this.label.equalsIgnoreCase(label)) {
-                shapes.add(shape);
-                return true;
-            } else {
-                for (Node n : children) {
-                    n.add(shape, label);
-                }
-            }
-        }
-        return false;
-    }
 
     /**
      * Fügt ein neues Geometrieobjekt dieser Node hinzu.
@@ -219,8 +188,25 @@ public class Node implements Updatable {
      * @return die Kindsknoten
      */
     public Collection<Node> getChildren() {
+
         return Collections.unmodifiableCollection(children);
     }
+
+    public Collection<Node> getAllChildren() {
+        List<Node> nodes = new ArrayList<Node>();
+        getAllChildren(this, nodes);
+        return nodes;
+    }
+
+    private static void getAllChildren(Node node, Collection<Node> children) {
+        if (node.children.size() > 0) {
+            children.addAll(node.children);
+            for (Node child : node.children) {
+                getAllChildren(child, children);
+            }
+        }
+    }
+
 
     /**
      * Gibt die Geometrieobjekt zurück, die an dem Knoten hängen.
@@ -243,6 +229,7 @@ public class Node implements Updatable {
     /**
      * Setzt die aktuelle Transformationsmatrix dieses Knotens.
      * TODO Die Reihenfolge der Transformation spielt eine Rolle - ist es sinnvoll, das so zu gestalten, dass man nur eine Transformation pro Node zulässt?
+     * TODO Durch Varargs ersetzen.
      *
      * @param transformation die neue Transformationsmatrix
      */
@@ -252,6 +239,7 @@ public class Node implements Updatable {
 
     /**
      * Gibt die gesamte Transformationsmatrix zurück.
+     * TODO die Verwendung von varargs ermöglichen.
      *
      * @return
      */
@@ -272,6 +260,9 @@ public class Node implements Updatable {
         return Objects.toStringHelper(getClass()).add("label", label).toString();
     }
 
+    /**
+     * TODO Verwendung von varargs berücksichtigen
+     */
     @Override
     public void update() {
         if (transformation != null) {
@@ -281,10 +272,5 @@ public class Node implements Updatable {
         for (Shape shape : shapes) {
             shape.update();
         }
-    }
-
-    public Shape getShape(String label) {
-
-        return null;
     }
 }

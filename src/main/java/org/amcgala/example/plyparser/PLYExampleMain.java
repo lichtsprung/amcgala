@@ -38,11 +38,9 @@ public class PLYExampleMain extends Framework implements InputHandler {
                     150)) {
                 add(p);
             }
-
         } catch (Exception e) {
             System.out.println("Fehler beim Laden der Polygone! Bitte ueberpruefen Sie die Exporteigenschaften!");
         }
-
     }
 
     @Subscribe

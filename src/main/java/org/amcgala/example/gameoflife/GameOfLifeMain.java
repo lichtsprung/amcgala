@@ -29,7 +29,6 @@ public class GameOfLifeMain extends Framework {
         GameOfLifeMain gol = new GameOfLifeMain(250, 250);
         gol.start();
         gol.show();
-
     }
 
     @Override
@@ -38,5 +37,4 @@ public class GameOfLifeMain extends Framework {
         registerInputEventHandler(field);
         add(field);
     }
-
 }

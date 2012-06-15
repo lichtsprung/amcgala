@@ -110,6 +110,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Construct a matrix from a 2-D array.
      *
      * @param A Two-dimensional array of doubles.
+     *
      * @throws IllegalArgumentException All rows must have the same length
      * @see #constructWithCopy
      */
@@ -143,6 +144,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param vals One-dimensional array of doubles, packed by columns (ala
      *             Fortran).
      * @param m    Number of rows.
+     *
      * @throws IllegalArgumentException Array length must be a multiple of m.
      */
     public Matrix(double vals[], int m) {
@@ -167,6 +169,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Construct a matrix from a copy of a 2-D array.
      *
      * @param A Two-dimensional array of doubles.
+     *
      * @throws IllegalArgumentException All rows must have the same length
      */
     public static Matrix constructWithCopy(double[][] A) {
@@ -288,7 +291,9 @@ public class Matrix implements Cloneable, java.io.Serializable {
      *
      * @param i Row index.
      * @param j Column index.
+     *
      * @return A(i, j)
+     *
      * @throws ArrayIndexOutOfBoundsException
      */
     public double get(int i, int j) {
@@ -302,7 +307,9 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param i1 Final row index
      * @param j0 Initial column index
      * @param j1 Final column index
+     *
      * @return A(i0:i1, j0:j1)
+     *
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
     public Matrix getMatrix(int i0, int i1, int j0, int j1) {
@@ -325,7 +332,9 @@ public class Matrix implements Cloneable, java.io.Serializable {
      *
      * @param r Array of row indices.
      * @param c Array of column indices.
+     *
      * @return A(r(:), c(:))
+     *
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
     public Matrix getMatrix(int[] r, int[] c) {
@@ -349,7 +358,9 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param i0 Initial row index
      * @param i1 Final row index
      * @param c  Array of column indices.
+     *
      * @return A(i0:i1, c(:))
+     *
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
     public Matrix getMatrix(int i0, int i1, int[] c) {
@@ -373,7 +384,9 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param r  Array of row indices.
      * @param j0 Initial column index
      * @param j1 Final column index
+     *
      * @return A(r(:), j0:j1)
+     *
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
     public Matrix getMatrix(int[] r, int j0, int j1) {
@@ -397,6 +410,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param i Row index.
      * @param j Column index.
      * @param s A(i,j).
+     *
      * @throws ArrayIndexOutOfBoundsException
      */
     public void set(int i, int j, double s) {
@@ -411,6 +425,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param j0 Initial column index
      * @param j1 Final column index
      * @param X  A(i0:i1,j0:j1)
+     *
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
     public void setMatrix(int i0, int i1, int j0, int j1, Matrix X) {
@@ -431,6 +446,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param r Array of row indices.
      * @param c Array of column indices.
      * @param X A(r(:),c(:))
+     *
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
     public void setMatrix(int[] r, int[] c, Matrix X) {
@@ -452,6 +468,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param j0 Initial column index
      * @param j1 Final column index
      * @param X  A(r(:),j0:j1)
+     *
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
     public void setMatrix(int[] r, int j0, int j1, Matrix X) {
@@ -473,6 +490,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param i1 Final row index
      * @param c  Array of column indices.
      * @param X  A(i0:i1,c(:))
+     *
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
     public void setMatrix(int i0, int i1, int[] c, Matrix X) {
@@ -581,6 +599,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * C = A + B
      *
      * @param B another matrix
+     *
      * @return A + B
      */
     public Matrix plus(Matrix B) {
@@ -599,6 +618,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * A = A + B
      *
      * @param B another matrix
+     *
      * @return A + B
      */
     public Matrix plusEquals(Matrix B) {
@@ -615,6 +635,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * C = A - B
      *
      * @param B another matrix
+     *
      * @return A - B
      */
     public Matrix minus(Matrix B) {
@@ -633,6 +654,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * A = A - B
      *
      * @param B another matrix
+     *
      * @return A - B
      */
     public Matrix minusEquals(Matrix B) {
@@ -649,6 +671,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Element-by-element multiplication, C = A.*B
      *
      * @param B another matrix
+     *
      * @return A.*B
      */
     public Matrix arrayTimes(Matrix B) {
@@ -667,6 +690,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Element-by-element multiplication in place, A = A.*B
      *
      * @param B another matrix
+     *
      * @return A.*B
      */
     public Matrix arrayTimesEquals(Matrix B) {
@@ -683,6 +707,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Element-by-element right division, C = A./B
      *
      * @param B another matrix
+     *
      * @return A./B
      */
     public Matrix arrayRightDivide(Matrix B) {
@@ -701,6 +726,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Element-by-element right division in place, A = A./B
      *
      * @param B another matrix
+     *
      * @return A./B
      */
     public Matrix arrayRightDivideEquals(Matrix B) {
@@ -717,6 +743,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Element-by-element left division, C = A.\B
      *
      * @param B another matrix
+     *
      * @return A.\B
      */
     public Matrix arrayLeftDivide(Matrix B) {
@@ -735,6 +762,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Element-by-element left division in place, A = A.\B
      *
      * @param B another matrix
+     *
      * @return A.\B
      */
     public Matrix arrayLeftDivideEquals(Matrix B) {
@@ -751,6 +779,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Multiply a matrix by a scalar, C = s*A
      *
      * @param s scalar
+     *
      * @return s*A
      */
     public Matrix times(double s) {
@@ -768,6 +797,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Multiply a matrix by a scalar in place, A = s*A
      *
      * @param s scalar
+     *
      * @return replace A by s*A
      */
     public Matrix timesEquals(double s) {
@@ -783,7 +813,9 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Linear algebraic matrix multiplication, A * B
      *
      * @param B another matrix
+     *
      * @return Matrix product, A * B
+     *
      * @throws IllegalArgumentException Matrix inner dimensions must agree.
      */
     public Matrix times(Matrix B) {
@@ -813,6 +845,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * LU Decomposition
      *
      * @return LUDecomposition
+     *
      * @see LUDecomposition
      */
     public LUDecomposition lu() {
@@ -823,6 +856,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * QR Decomposition
      *
      * @return QRDecomposition
+     *
      * @see QRDecomposition
      */
     public QRDecomposition qr() {
@@ -833,6 +867,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Cholesky Decomposition
      *
      * @return CholeskyDecomposition
+     *
      * @see CholeskyDecomposition
      */
     public CholeskyDecomposition chol() {
@@ -843,6 +878,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Singular Value Decomposition
      *
      * @return SingularValueDecomposition
+     *
      * @see SingularValueDecomposition
      */
     public SingularValueDecomposition svd() {
@@ -853,6 +889,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Eigenvalue Decomposition
      *
      * @return EigenvalueDecomposition
+     *
      * @see EigenvalueDecomposition
      */
     public EigenvalueDecomposition eig() {
@@ -863,6 +900,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Solve A*X = B
      *
      * @param B right hand side
+     *
      * @return solution if A is square, least squares solution otherwise
      */
     public Matrix solve(Matrix B) {
@@ -874,6 +912,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * Solve X*A = B, which is also A'*X' = B'
      *
      * @param B right hand side
+     *
      * @return solution if A is square, least squares solution otherwise.
      */
     public Matrix solveTranspose(Matrix B) {
@@ -934,6 +973,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      *
      * @param m Number of rows.
      * @param n Number of colums.
+     *
      * @return An m-by-n matrix with uniformly distributed random elements.
      */
     public static Matrix random(int m, int n) {
@@ -952,6 +992,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      *
      * @param m Number of rows.
      * @param n Number of colums.
+     *
      * @return An m-by-n matrix with ones on the diagonal and zeros elsewhere.
      */
     public static Matrix identity(int m, int n) {
@@ -1002,6 +1043,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      *
      * @param format A Formatting object for individual elements.
      * @param width  Field width for each column.
+     *
      * @see java.text.DecimalFormat#setDecimalFormatSymbols
      */
     public void print(NumberFormat format, int width) {
@@ -1022,6 +1064,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param output the output stream.
      * @param format A formatting object to format the matrix elements
      * @param width  Column width.
+     *
      * @see java.text.DecimalFormat#setDecimalFormatSymbols
      */
     public void print(PrintWriter output, NumberFormat format, int width) {
@@ -1110,6 +1153,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param top      top-PLane
      * @param bottom   bottom-Plane
      * @param parallel is parallel projection
+     *
      * @return Projektionsmatrix
      */
     public static Matrix getProjectionFromFrustum(double near, double far, double left, double right, double top, double bottom, boolean parallel) {
@@ -1156,6 +1200,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param direction die Blickrichtung der Kamera
      * @param up        das Oben der Kamera
      * @param left      das links der Kamera
+     *
      * @return die View-Matrix
      */
     public static Matrix getView(Vector3d location, Vector3d direction, Vector3d up, Vector3d left) {

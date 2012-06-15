@@ -59,7 +59,6 @@ public class SimpleAnimationMain extends Framework {
 
             add(lines[i]);
         }
-
     }
 
     /**

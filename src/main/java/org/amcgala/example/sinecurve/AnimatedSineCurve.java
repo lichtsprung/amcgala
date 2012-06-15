@@ -62,7 +62,6 @@ public class AnimatedSineCurve extends Shape {
                 }
             }
         });
-
     }
 
     private void init() {

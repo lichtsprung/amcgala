@@ -47,6 +47,7 @@ public class Vector3d {
      * Skalarprodukt mit einem anderen Vektor
      *
      * @param that der andere Vektor
+     *
      * @return Skalarprodukt
      */
     public double dot(Vector3d that) {
@@ -57,6 +58,7 @@ public class Vector3d {
      * Kreuzprodukt zweier Vektoren
      *
      * @param that der andere Vektor
+     *
      * @return Ergebnisvektor
      */
     public Vector3d cross(Vector3d that) {
@@ -70,6 +72,7 @@ public class Vector3d {
      * Subtrahiert einen Vektor von diesem Vektor.
      *
      * @param that der andere Vektor
+     *
      * @return Ergebnisvektor
      */
     public Vector3d sub(Vector3d that) {
@@ -83,6 +86,7 @@ public class Vector3d {
      * Addiert einen Vektor zu diesem Vektor
      *
      * @param that der andere Vektor
+     *
      * @return Ergebnisvektor
      */
     public Vector3d add(Vector3d that) {
@@ -114,6 +118,7 @@ public class Vector3d {
      * Multipliziert diesen Vektor mit einem Skalar
      *
      * @param s die skalare Größe
+     *
      * @return Ergebnisvektor
      */
     public Vector3d times(double s) {
@@ -148,6 +153,7 @@ public class Vector3d {
      * Transformiert den Vektor mithilfe einer Transformationsmatrix und gibt eine Kopie des transformierten Vektors zurück.
      *
      * @param transformation die Transformationsmatrix
+     *
      * @return der transformierte Vektor
      */
     public Vector3d transform(Matrix transformation) {

@@ -46,6 +46,7 @@ public class CholeskyDecomposition implements java.io.Serializable {
      * Cholesky algorithm for symmetric and positive definite matrix.
      *
      * @param Arg Square, symmetric matrix.
+     *
      * @return Structure to access L and isspd flag.
      */
     public CholeskyDecomposition(Matrix Arg) {
@@ -142,7 +143,9 @@ public class CholeskyDecomposition implements java.io.Serializable {
      * Solve A*X = B
      *
      * @param B A Matrix with as many rows as A and any number of columns.
+     *
      * @return X so that L*L'*X = B
+     *
      * @throws IllegalArgumentException Matrix row dimensions must agree.
      * @throws RuntimeException         Matrix is not symmetric positive definite.
      */

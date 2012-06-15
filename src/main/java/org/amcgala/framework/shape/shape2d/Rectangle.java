@@ -57,6 +57,7 @@ public class Rectangle extends Shape {
      * @param left   die linke Seite des Rechtecks
      * @param top    die obere Seite des Rechtecks
      * @param right  die rechte Seite des Rechtecks
+     *
      * @deprecated
      */
     public Rectangle(Line bottom, Line left, Line top, Line right) {

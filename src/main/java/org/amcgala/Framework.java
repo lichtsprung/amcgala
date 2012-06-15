@@ -23,6 +23,7 @@ import org.amcgala.framework.event.InputHandler;
 import org.amcgala.framework.event.WASDController;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
+import org.amcgala.framework.scenegraph.DefaultSceneGraph;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.scenegraph.SceneGraph;
 import org.amcgala.framework.scenegraph.visitor.RenderVisitor;
@@ -33,8 +34,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.JFrame;
-import javax.swing.event.MouseInputAdapter;
-import java.awt.event.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -76,7 +84,7 @@ public abstract class Framework {
         screenHeight = height;
 
         visitors = new ArrayList<Visitor>(10);
-        scenegraph = new SceneGraph();
+        scenegraph = new DefaultSceneGraph();
         aspectRatio = width / height;
         fieldOfView = Math.toRadians(76);
 
@@ -180,7 +188,6 @@ public abstract class Framework {
 
         // TODO eigentlich unschön. Besser wäre es, würde man das Framework final deklarieren und man übergibt eine Szene, die vom Framework gerendet wird.
         initGraph();
-
     }
 
     /**
@@ -396,58 +403,6 @@ public abstract class Framework {
      */
     public void shutdown() {
         System.exit(0);
-    }
-
-    /**
-     * Fügt dem Framework einen neuen KeyAdapter hinzu, der KeyEvents abfängt
-     * und behandelt.
-     *
-     * @param keyAdapter der KeyAdapter, der dem Framework hinzugefügt werden
-     *                   soll
-     * @deprecated wird zum Ende des Semesters entfernt, da auf den Eventbus
-     *             zurückgegriffen wird.
-     */
-    public void addKeyAdapter(KeyAdapter keyAdapter) {
-        frame.addKeyListener(keyAdapter);
-    }
-
-    /**
-     * Entfernt einen KeyListener aus dem Framework.
-     *
-     * @param keyAdapter der KeyListener, der entfernt werden soll
-     * @deprecated wird zum Ende des Semesters entfernt, da auf den Eventbus
-     *             zurückgegriffen wird.
-     */
-    public void removeKeyAdapter(KeyAdapter keyAdapter) {
-        frame.removeKeyListener(keyAdapter);
-    }
-
-    /**
-     * Entfernt einen MouseAdapter aus dem Framework.
-     *
-     * @param mouseAdapter der MouseAdapter, der entfernt werden soll
-     * @deprecated wird zum Ende des Semesters entfernt, da auf den Eventbus
-     *             zurückgegriffen wird.
-     */
-    public void removeMouseAdapter(MouseAdapter mouseAdapter) {
-        frame.removeMouseListener(mouseAdapter);
-        frame.removeMouseMotionListener(mouseAdapter);
-        frame.removeMouseWheelListener(mouseAdapter);
-    }
-
-    /**
-     * Fügt dem Framework einen neuen MouseAdapter hinzu, der die MouseEvents
-     * abfängt und behandelt.
-     *
-     * @param mouseAdapter der MouseAdapter, der dem Framework hinzugefügt
-     *                     werden soll
-     * @deprecated wird zum Ende des Semesters entfernt, da auf den Eventbus
-     *             zurückgegriffen wird.
-     */
-    public void addMouseAdapter(MouseInputAdapter mouseAdapter) {
-        frame.addMouseListener(mouseAdapter);
-        frame.addMouseMotionListener(mouseAdapter);
-        frame.addMouseWheelListener(mouseAdapter);
     }
 
     /**

@@ -58,7 +58,6 @@ public class Field extends Shape implements InputHandler {
                         if (count > GOL_BORDER + 2) {
                             elements[x][y].isAlive = false;
                         }
-
                     } else {
                         elements[x][y].isAlive = false;
                     }

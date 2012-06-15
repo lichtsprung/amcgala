@@ -37,5 +37,4 @@ public class Element extends Shape {
             polygon.render(renderer);
         }
     }
-
 }

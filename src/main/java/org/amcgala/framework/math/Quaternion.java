@@ -55,6 +55,7 @@ public final class Quaternion {
      * Multipliziert das Quaternion mit einem anderem Quaternion.
      *
      * @param that das zweite Quaternion
+     *
      * @return das Resultat der Multiplikation
      */
     public Quaternion times(Quaternion that) {
@@ -87,6 +88,7 @@ public final class Quaternion {
      * Setzt die Werte dieses Quaternion auf die Werte des anderen Quaternion.
      *
      * @param that das andere Quaternion
+     *
      * @return das Quaternion mit den neuen Werten
      */
     public Quaternion set(Quaternion that) {
@@ -104,6 +106,7 @@ public final class Quaternion {
      * @param y die y-Komponente des Quaternions
      * @param z die z-Komponente des Quaternions
      * @param w die w-Komponente des Quaternions
+     *
      * @return das Quaternion mit den neuen Werten
      */
     public Quaternion set(double x, double y, double z, double w) {
@@ -153,6 +156,7 @@ public final class Quaternion {
      * @param yaw   der Scherwinkel
      * @param pitch der Kantenwinkel
      * @param roll  der Rollwinkel
+     *
      * @return das Quaternion, das den Eulerwinkeln entspricht
      */
     public Quaternion fromAngles(double yaw, double pitch, double roll) {
@@ -202,6 +206,7 @@ public final class Quaternion {
      * @param m20 Komponente 7 der Matrix
      * @param m21 Komponente 8 der Matrix
      * @param m22 Komponente 9 der Matrix
+     *
      * @return das neue Quaternion
      */
     public Quaternion fromRotationMatrix(
@@ -251,6 +256,7 @@ public final class Quaternion {
      * @param xAxis die x-Achse des Koordinatensystems
      * @param yAxis die y-Achse des Koordinatensystems
      * @param zAxis die z-Achse des Koordinatensystems
+     *
      * @return das neue Quaternion
      */
     public Quaternion fromAxes(Vector3d xAxis, Vector3d yAxis, Vector3d zAxis) {
@@ -274,6 +280,7 @@ public final class Quaternion {
      *
      * @param i der Index der Komponente, die zurückgegeben werden soll. i
      *          sollte zwischen 0 und 2 liegen
+     *
      * @return die i. Komponente
      */
     public Vector3d getRotationColumn(int i) {

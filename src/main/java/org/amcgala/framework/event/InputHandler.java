@@ -20,4 +20,5 @@ package org.amcgala.framework.event;
  *
  * @author Robert Giacinto
  */
-public interface InputHandler {}
+public interface InputHandler {
+}

@@ -29,6 +29,7 @@ public interface Camera {
      * Gibt die Koordinaten im kanonischen Sichtvolumen zurück.
      *
      * @param vector3d der zu projezierende Vektor
+     *
      * @return der transformierte Vektor in den Clipping Raum
      */
     CVPoint getClippingSpaceCoordinates(Vector3d vector3d);
@@ -44,6 +45,7 @@ public interface Camera {
      * Gibt die Koordinaten des Vektors im Bildraum zurück.
      *
      * @param vector3d der zu projezierende Vektor
+     *
      * @return die Koordinaten des Vektors im Bildraum
      */
     Pixel getImageSpaceCoordinates(Vector3d vector3d);

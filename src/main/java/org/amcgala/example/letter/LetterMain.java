@@ -13,12 +13,10 @@ public class LetterMain extends Framework {
 
     public static void main(String[] args) {
         new LetterMain(500, 250).start();
-
     }
 
     @Override
     public void initGraph() {
         add(new Text("amCGAla öäüß +-*/ !? ", -100, 0));
-
     }
 }

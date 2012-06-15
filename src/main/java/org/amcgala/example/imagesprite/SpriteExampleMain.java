@@ -11,7 +11,6 @@ public class SpriteExampleMain extends Framework {
 
     public SpriteExampleMain(int width, int height) {
         super(width, height);
-
     }
 
     @Override

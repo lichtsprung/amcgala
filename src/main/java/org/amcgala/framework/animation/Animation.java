@@ -25,13 +25,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Eine Animation, die das Verhalten eines Shapes beeinflussen kann.
  *
  * @param <T> Der Typ des Shapes, das durch diese Animation beeinflusst wird. Dies ermöglicht den direkten Zugriff auf die Felder des Objekts ohne einen Cast durchführen zu müssen.
+ *
  * @author Robert Giacinto
  */
 public abstract class Animation<T extends Shape> {
 
     public static final Animation EMPTY_ANIMATION = new Animation() {
         @Override
-        public void update() {}
+        public void update() {
+        }
     };
 
     protected static final Logger logger = LoggerFactory.getLogger(Animation.class);

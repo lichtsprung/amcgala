@@ -861,6 +861,7 @@ public class EigenvalueDecomposition implements java.io.Serializable {
      * Check for symmetry, then construct the eigenvalue decomposition
      *
      * @param Arg Square matrix
+     *
      * @return Structure to access D and V.
      */
     public EigenvalueDecomposition(Matrix Arg) {
@@ -889,7 +890,6 @@ public class EigenvalueDecomposition implements java.io.Serializable {
 
             // Diagonalize.
             tql2();
-
         } else {
             H = new double[n][n];
             ort = new double[n];

@@ -14,7 +14,6 @@
  */
 package org.amcgala.framework.animation;
 
-import com.google.common.base.Preconditions;
 import org.amcgala.Framework;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
