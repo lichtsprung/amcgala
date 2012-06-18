@@ -20,10 +20,10 @@ public interface SceneGraph {
     void add(Node node);
 
     /**
-     * Fügt ein Shape einem bestimmten Knoten hinzu.
+     * Fügt ein AbstractShape einem bestimmten Knoten hinzu.
      *
-     * @param shape das Shape, das hinzugefügt werden soll
-     * @param node  der Knoten, dem dieses Shape hinzugefügt werden soll
+     * @param shape das AbstractShape, das hinzugefügt werden soll
+     * @param node  der Knoten, dem dieses AbstractShape hinzugefügt werden soll
      */
     void add(Shape shape, Node node);
 
@@ -36,7 +36,6 @@ public interface SceneGraph {
     void add(Node child, Node parent);
 
     /**
-     *
      * @param child
      * @param parentLabel
      */
@@ -84,11 +83,11 @@ public interface SceneGraph {
 
 
     /**
-     * Findet ein {@link Shape} über seinen Namen und gibt dessen Referenz zurück.
+     * Findet ein {@link org.amcgala.framework.shape.AbstractShape} über seinen Namen und gibt dessen Referenz zurück.
      *
      * @param label der Name des Shapes
      *
-     * @return das Shape
+     * @return das AbstractShape
      */
     Shape getShape(String label);
 

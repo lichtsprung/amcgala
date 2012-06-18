@@ -2,7 +2,7 @@ package org.amcgala.framework.shape.util;
 
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.shape.Shape;
+import org.amcgala.framework.shape.AbstractShape;
 import org.amcgala.framework.shape.shape2d.Rectangle;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -12,7 +12,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  *
  * @author Steffen Troester
  */
-public class ParticleGravitation extends Shape implements ParticleManipulation {
+public class ParticleGravitation extends AbstractShape implements ParticleManipulation {
 
     private Rectangle rectangle;
     private final double x;

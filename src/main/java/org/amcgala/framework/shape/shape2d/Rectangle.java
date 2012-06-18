@@ -16,7 +16,7 @@ package org.amcgala.framework.shape.shape2d;
 
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.Line;
-import org.amcgala.framework.shape.Shape;
+import org.amcgala.framework.shape.AbstractShape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Robert Giacinto
  */
-public class Rectangle extends Shape {
+public class Rectangle extends AbstractShape {
 
     public double width;
     public double height;

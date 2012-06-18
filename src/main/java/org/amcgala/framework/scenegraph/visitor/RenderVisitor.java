@@ -26,7 +26,7 @@ import java.util.ConcurrentModificationException;
 
 /**
  * Der RenderVisitor traversiert einmal pro Frame über den Szenengraph und
- * zeichnet jedes Shape, das gefunden wird, auf den Canvas des Fensters.
+ * zeichnet jedes AbstractShape, das gefunden wird, auf den Canvas des Fensters.
  *
  * @author Robert Giacinto
  */
@@ -58,6 +58,7 @@ public class RenderVisitor implements Visitor {
     @Override
     public void visit(Node node) {
         synchronized (node.getShapes()) {
+
             Matrix transform = node.getTransformMatrix();
             renderer.setCamera(camera);
             renderer.setTransformationMatrix(transform);

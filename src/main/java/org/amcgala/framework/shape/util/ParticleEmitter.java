@@ -4,8 +4,8 @@ import org.amcgala.framework.animation.Updatable;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.transform.RotationZ;
+import org.amcgala.framework.shape.AbstractShape;
 import org.amcgala.framework.shape.Line;
-import org.amcgala.framework.shape.Shape;
 
 import java.util.List;
 import java.util.Random;
@@ -17,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @author Steffen Troester
  */
-public class ParticleEmitter extends Shape implements Updatable {
+public class ParticleEmitter extends AbstractShape implements Updatable {
 
     private boolean enabled = true;
     private double width, height;

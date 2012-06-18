@@ -28,7 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Steffen Troester
  */
-public class Polygon extends Shape {
+public class Polygon extends AbstractShape {
 
     private Line line1;
     private Line line2;

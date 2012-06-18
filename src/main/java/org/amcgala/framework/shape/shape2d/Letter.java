@@ -15,7 +15,7 @@
 package org.amcgala.framework.shape.shape2d;
 
 import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.shape.Shape;
+import org.amcgala.framework.shape.AbstractShape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,7 +32,7 @@ import java.util.ArrayList;
  *
  * @author Robert Giacinto, Steffen Troester
  */
-public class Letter extends Shape {
+public class Letter extends AbstractShape {
     private static final String AMCGALA_FONT_GIF = "org/amcgala/font.gif";
     private ArrayList<Point2d> point2ds;
     private static int[] fontResources = null;

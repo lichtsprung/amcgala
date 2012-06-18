@@ -3,7 +3,7 @@ package org.amcgala.framework.shape.util;
 import org.amcgala.framework.animation.Updatable;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.shape.Shape;
+import org.amcgala.framework.shape.AbstractShape;
 import org.amcgala.framework.shape.shape2d.Point2d;
 
 /**
@@ -12,7 +12,7 @@ import org.amcgala.framework.shape.shape2d.Point2d;
  *
  * @author Steffen Troester
  */
-public class Particle extends Shape implements Updatable {
+public class Particle extends AbstractShape implements Updatable {
 
     private double particleSpeed;
     private int life = 100;

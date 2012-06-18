@@ -15,25 +15,21 @@
 package org.amcgala;
 
 import com.google.common.eventbus.EventBus;
+import org.amcgala.framework.Scene;
 import org.amcgala.framework.animation.Animator;
-import org.amcgala.framework.camera.AbstractCamera;
 import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.camera.SimplePerspectiveCamera;
-import org.amcgala.framework.event.InputHandler;
-import org.amcgala.framework.event.WASDController;
-import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.DefaultSceneGraph;
-import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.scenegraph.SceneGraph;
 import org.amcgala.framework.scenegraph.visitor.RenderVisitor;
 import org.amcgala.framework.scenegraph.visitor.UpdateVisitor;
 import org.amcgala.framework.scenegraph.visitor.Visitor;
-import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
+import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -41,11 +37,13 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Die Hauptklasse des Frameworks, die die Hauptaufgaben übernimmt. Sie
@@ -53,22 +51,19 @@ import java.util.List;
  *
  * @author Robert Giacinto
  */
-public abstract class Framework {
+public class Framework {
 
     private static final Logger log = LoggerFactory.getLogger(Framework.class);
     private SceneGraph scenegraph;
-    private org.amcgala.framework.renderer.Renderer renderer;
+    private Renderer renderer;
     private Camera camera;
     private Animator animator;
     private List<Visitor> visitors;
-    private RenderVisitor rv;
-    private WASDController wasdController;
-    private double aspectRatio;
-    private double fieldOfView;
-    private int screenWidth;
-    private int screenHeight;
     private JFrame frame;
-    private EventBus inputEventBus;
+    private EventBus eventBus;
+    private Map<String, Scene> scenes;
+    private Scene activeScene;
+    private RenderVisitor rv;
 
     /**
      * Erstellt ein neues Framework, das eine grafische Ausgabe in der Auflösung
@@ -79,43 +74,27 @@ public abstract class Framework {
      */
     public Framework(int width, int height) {
         log.info("Initialising framework");
-        inputEventBus = new EventBus("Input");
-        screenWidth = width;
-        screenHeight = height;
+        eventBus = new EventBus("Input");
 
         visitors = new ArrayList<Visitor>(10);
         scenegraph = new DefaultSceneGraph();
-        aspectRatio = width / height;
-        fieldOfView = Math.toRadians(76);
+
+        scenes = new HashMap<String, Scene>();
+
 
         frame = new JFrame("amCGAla Framework");
         frame.setSize(width, height);
         frame.setResizable(false);
-        frame.addWindowListener(new WindowAdapter() {
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-            @Override
-            public void windowClosing(WindowEvent e) {
-                super.windowClosing(e);
-                log.info("Shutting down...");
-                shutdown();
-            }
-        });
-
-        frame.setBackground(java.awt.Color.WHITE);
+        frame.setBackground(Color.WHITE);
         frame.setVisible(true);
 
 
-        camera = new SimplePerspectiveCamera(Vector3d.UNIT_Y, Vector3d.UNIT_Z, Vector3d.ZERO, 2000);
-        wasdController = new WASDController(camera);
-        registerInputEventHandler(wasdController);
-
-        renderer = new Renderer(width, height, frame);
-
-
+        // TODO Zahlen weg und eine Konfigurationsdatei einführen!
         animator = new Animator(60, 60);
 
-        UpdateVisitor updateVisitor = new UpdateVisitor();
-        visitors.add(updateVisitor);
+        visitors.add(new UpdateVisitor());
 
         rv = new RenderVisitor();
         rv.setCamera(camera);
@@ -127,12 +106,12 @@ public abstract class Framework {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                inputEventBus.post(e);
+                eventBus.post(e);
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                inputEventBus.post(e);
+                eventBus.post(e);
             }
         });
 
@@ -140,27 +119,27 @@ public abstract class Framework {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                inputEventBus.post(e);
+                eventBus.post(e);
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                inputEventBus.post(e);
+                eventBus.post(e);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                inputEventBus.post(e);
+                eventBus.post(e);
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                inputEventBus.post(e);
+                eventBus.post(e);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                inputEventBus.post(e);
+                eventBus.post(e);
             }
         });
 
@@ -168,12 +147,12 @@ public abstract class Framework {
 
             @Override
             public void mouseDragged(MouseEvent e) {
-                inputEventBus.post(e);
+                eventBus.post(e);
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                inputEventBus.post(e);
+                eventBus.post(e);
             }
         });
 
@@ -181,177 +160,11 @@ public abstract class Framework {
 
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                inputEventBus.post(e);
+                eventBus.post(e);
             }
         });
-
-
-        // TODO eigentlich unschön. Besser wäre es, würde man das Framework final deklarieren und man übergibt eine Szene, die vom Framework gerendet wird.
-        initGraph();
     }
 
-    /**
-     * Jedes Programm, das auf das Framework zurückgreift implementiert diese
-     * Methode. Hier findet die spezifische Initialisierung des Szenengraphs
-     * statt. Hier können zum Beispiel Objekte an den Szenengraph gehängt
-     * werden.
-     */
-    public abstract void initGraph();
-
-    /**
-     * Fügt der Szene ein neues zeichenbares Objekt hinzu. Dieses wird an den
-     * Root-Knoten angehängt.
-     *
-     * @param shape das Grafikobjekt, das der Szene hinzugefügt wird
-     */
-    public void add(Shape shape) {
-        scenegraph.add(shape);
-    }
-
-    /**
-     * Fügt dem Szenengraph einen neuen Knoten hinzu.
-     *
-     * @param node der neue Knoten
-     */
-    public void add(Node node) {
-        scenegraph.add(node);
-    }
-
-    /**
-     * Fügt einen Knoten an einen anderen bestimmten Knoten hinzu.
-     *
-     * @param label der Name des Knotens
-     * @param node  der Knoten der angehängt wird
-     */
-    public void add(String label, Node node) {
-        scenegraph.add(node, label);
-    }
-
-    /**
-     * Fügt dem benannten Knoten das Shapeobjekt hinzu.
-     *
-     * @param label der name des Knotens
-     * @param shape das Shapeobjekt
-     */
-    public void add(String label, Shape shape) {
-        scenegraph.add(shape, label);
-    }
-
-    /**
-     * Ändert den Renderer des Frameworks. Damit ist es möglich die Ausgabe des
-     * Frameworks zu verändern. Abhängig von der Implementierung des Renderers.
-     *
-     * @param renderer der neue Renderer
-     */
-    public void setRenderer(org.amcgala.framework.renderer.Renderer renderer) {
-        this.renderer = renderer;
-    }
-
-    /**
-     * Ändert den Szenengraph, der vom Framework verwendet wird.
-     *
-     * @param scenegraph der neue Szenengraph
-     */
-    public void setScenegraph(SceneGraph scenegraph) {
-        this.scenegraph = scenegraph;
-    }
-
-    /**
-     * Das Seitenverhältnis der Ausgabe. Diese wird innerhalb der Kamera
-     * benötigt.
-     *
-     * @return das Seitenverhältnis der Ausgabe
-     */
-    public double getAspectRatio() {
-        return aspectRatio;
-    }
-
-    private void setAspectRatio(double aspectRatio) {
-        this.aspectRatio = aspectRatio;
-    }
-
-    /**
-     * Gibt die Höhe der Ausgabe zurück.
-     *
-     * @return die Höhe in Pixeln
-     */
-    public int getScreenHeight() {
-        return screenHeight;
-    }
-
-    /**
-     * Ändert die Höhe der Bildschirmausgabe.
-     *
-     * @param screenHeight die Höhe der Bildschirmausgabe in Pixeln
-     */
-    public void setScreenHeight(int screenHeight) {
-        this.screenHeight = screenHeight;
-        setAspectRatio(screenWidth / screenHeight);
-    }
-
-    /**
-     * Gibt die Breite der Bildschirmausgabe in Pixeln zurück.
-     *
-     * @return die Breite der Bildschirmausgabe in Pixeln
-     */
-    public int getScreenWidth() {
-        return screenWidth;
-    }
-
-    /**
-     * Ändert die Breite der Bildschirmausgabe.
-     *
-     * @param screenWidth die neue Breite der Bildschirmausgabe in Pixeln
-     */
-    public void setScreenWidth(int screenWidth) {
-        this.screenWidth = screenWidth;
-        setAspectRatio(screenWidth / screenHeight);
-    }
-
-    /**
-     * Gibt den Animator zurück.
-     *
-     * @return der Animator des Frameworks
-     */
-    public Animator getAnimator() {
-        return animator;
-    }
-
-    /**
-     * Gibt die Kamera zurück.
-     *
-     * @return die Kamera des Frameworks
-     */
-    public Camera getCamera() {
-        return camera;
-    }
-
-    /**
-     * Gibt den Renderer zurück.
-     *
-     * @return der Renderer des Frameworks
-     */
-    public org.amcgala.framework.renderer.Renderer getRenderer() {
-        return renderer;
-    }
-
-    /**
-     * Gibt den Szenengraphen zurück.
-     *
-     * @return der Szenengraph des Frameworks
-     */
-    public SceneGraph getScenegraph() {
-        return scenegraph;
-    }
-
-    /**
-     * Gibt die Liste der registrierten Visitor zurück.
-     *
-     * @return die registrierten Visitor
-     */
-    public List<Visitor> getVisitors() {
-        return Collections.unmodifiableList(visitors);
-    }
 
     /**
      * Aktualisiert den Szenengraphen, in dem die einzelnen, registrierten
@@ -397,40 +210,38 @@ public abstract class Framework {
         }
     }
 
-    /**
-     * Beendet ein laufendes Framework. Falls es etwas aufzuräumen gibt, dann
-     * passiert das hier.
-     */
-    public void shutdown() {
-        System.exit(0);
+
+    public void addScene(Scene scene) {
+        scenes.put(scene.getLabel(), scene);
+        if (activeScene == null) {
+            loadScene(scene);
+        }
     }
 
-    /**
-     * Ändert die Kamera.
-     *
-     * @param camera die neue Kamera
-     */
-    public void setCamera(AbstractCamera camera) {
-        this.camera = camera;
+    public void setActiveScene(Scene scene) {
+        if (!scenes.values().contains(scene)) {
+            scenes.put(scene.getLabel(), scene);
+        }
+        activeScene = scene;
+    }
+
+    public void loadScene(String label) {
+        checkArgument(scenes.containsKey(label), "Es existiert keine Szene mit diesem Namen!");
+        activeScene = scenes.get(label);
+        loadScene(activeScene);
+    }
+
+    public void loadScene(Scene scene) {
+        camera = scene.getCamera();
+        renderer = scene.getRenderer();
+        renderer.setFrame(frame);
+        scenegraph = scene.getSceneGraph();
         rv.setCamera(camera);
-        wasdController.setCamera(camera);
+        rv.setRenderer(renderer);
     }
 
-    /**
-     * Registriert einen neuen Eventhandler bei der EventQueue.
-     *
-     * @param handler der neue Inputhandler
-     */
-    public void registerInputEventHandler(InputHandler handler) {
-        inputEventBus.register(handler);
-    }
 
-    /**
-     * Entfernt einen Eventhandler aus der Liste der Subscriber.
-     *
-     * @param handler der Inputhandler, der entfernt werden soll
-     */
-    public void unregisterInputEventHandler(InputHandler handler) {
-        inputEventBus.unregister(handler);
+    public void setFPS(int fps) {
+        animator.setFramesPerSecond(fps);
     }
 }

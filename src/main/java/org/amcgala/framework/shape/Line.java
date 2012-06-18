@@ -15,6 +15,7 @@
 package org.amcgala.framework.shape;
 
 import com.google.common.base.Objects;
+import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Robert Giacinto
  */
-public class Line extends Shape {
+public class Line extends AbstractShape {
 
     public double x1, y1, z1;
     public double x2, y2, z2;
@@ -80,4 +81,6 @@ public class Line extends Shape {
     }
 
     private static final Logger log = LoggerFactory.getLogger(Line.class.getName());
+
+
 }

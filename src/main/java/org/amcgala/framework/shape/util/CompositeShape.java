@@ -17,6 +17,7 @@ package org.amcgala.framework.shape.util;
 import com.google.common.base.Objects;
 import org.amcgala.framework.event.InputHandler;
 import org.amcgala.framework.renderer.Renderer;
+import org.amcgala.framework.shape.AbstractShape;
 import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ import java.util.List;
  *
  * @author Sascha Lemke
  */
-public class CompositeShape extends Shape implements InputHandler {
+public class CompositeShape extends AbstractShape implements InputHandler {
     private static final Logger log = LoggerFactory.getLogger(CompositeShape.class.getName());
     private List<Shape> shapes;
 
@@ -71,9 +72,9 @@ public class CompositeShape extends Shape implements InputHandler {
     }
 
     /**
-     * Entfernt ein Shape aus dem {@code CompositeShape} entfernen.
+     * Entfernt ein AbstractShape aus dem {@code CompositeShape} entfernen.
      *
-     * @param shape das Shape, das entfernt werden soll
+     * @param shape das AbstractShape, das entfernt werden soll
      */
     public void remove(Shape shape) {
         this.shapes.remove(shape);

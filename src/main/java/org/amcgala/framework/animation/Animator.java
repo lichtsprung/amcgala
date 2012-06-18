@@ -22,7 +22,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Diese Klasse kümmert sich um das Timing der Animation. Sie ruft in
+ * Diese Klasse kümmert sich um das Timing der AbstractAnimation. Sie ruft in
  * regelmäßigen Abständen die Methoden update und show der Klasse Framework auf
  * und ermöglicht so die Realisation von Animationen.
  *

@@ -20,7 +20,7 @@ import java.awt.Color;
 
 /**
  * Ein Pixel stellt einen Punkt in der Ausgabe dar.
- * Es wird während des Renderings verwendet, um ein Shape über einen Renderer
+ * Es wird während des Renderings verwendet, um ein AbstractShape über einen Renderer
  * auszugeben.
  *
  * @author Robert Giacinto

@@ -16,7 +16,7 @@ package org.amcgala.framework.shape.shape2d;
 
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.shape.Shape;
+import org.amcgala.framework.shape.AbstractShape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +28,7 @@ import java.awt.Color;
  *
  * @author Robert Giacinto
  */
-public class Point2d extends Shape {
+public class Point2d extends AbstractShape {
 
     public double x;
     public double y;

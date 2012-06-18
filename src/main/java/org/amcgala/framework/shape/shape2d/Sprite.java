@@ -18,7 +18,7 @@ package org.amcgala.framework.shape.shape2d;
 import com.google.common.base.Objects;
 import org.amcgala.framework.renderer.Pixel;
 import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.shape.Shape;
+import org.amcgala.framework.shape.AbstractShape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Steffen Troester
  */
-public class Sprite extends Shape {
+public class Sprite extends AbstractShape {
     private static final Logger log = LoggerFactory.getLogger(Sprite.class.getName());
 
     private double x, y;

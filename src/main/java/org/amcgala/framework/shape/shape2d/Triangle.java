@@ -15,12 +15,12 @@
 package org.amcgala.framework.shape.shape2d;
 
 import org.amcgala.framework.renderer.Renderer;
+import org.amcgala.framework.shape.AbstractShape;
 import org.amcgala.framework.shape.Line;
-import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Triangle extends Shape {
+public class Triangle extends AbstractShape {
 
     public Line a, b, c;
 

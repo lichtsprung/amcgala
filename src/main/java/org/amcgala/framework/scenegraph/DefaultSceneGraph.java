@@ -16,7 +16,10 @@ package org.amcgala.framework.scenegraph;
 
 import org.amcgala.framework.scenegraph.transform.Transformation;
 import org.amcgala.framework.scenegraph.visitor.Visitor;
+import org.amcgala.framework.shape.AbstractShape;
 import org.amcgala.framework.shape.Shape;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -29,7 +32,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Szenengraph des Frameworks.
  */
 public class DefaultSceneGraph implements SceneGraph {
-
+    private static final Logger log = LoggerFactory.getLogger(DefaultSceneGraph.class);
     private Node root;
     private Map<String, Node> nodes;
     private Map<String, Shape> shapes;
@@ -44,6 +47,7 @@ public class DefaultSceneGraph implements SceneGraph {
 
     @Override
     public void add(Node node) {
+        log.info("adding node ", node);
         root.add(checkNotNull(node));
         nodes.put(node.getLabel(), node);
     }
@@ -56,7 +60,7 @@ public class DefaultSceneGraph implements SceneGraph {
     }
 
     @Override
-    public void add(Node child, String parentLabel){
+    public void add(Node child, String parentLabel) {
         checkArgument(nodes.containsKey(parentLabel), "Elternknoten konnte im Szenengraph nicht gefunden werden");
         Node parent = nodes.get(parentLabel);
         parent.add(child);
@@ -78,7 +82,6 @@ public class DefaultSceneGraph implements SceneGraph {
     }
 
 
-
     @Override
     public void remove(Node node) {
         checkArgument(checkNotNull(node).getParent() != null, "Root-Knoten darf nicht gelöscht werden!");
@@ -94,7 +97,7 @@ public class DefaultSceneGraph implements SceneGraph {
             }
             nodes.remove(n.getLabel());
         }
-        System.out.println(children.size() + " Knoten entfernt.");
+        log.info(children.size() + " Knoten entfernt.");
     }
 
 
@@ -106,6 +109,7 @@ public class DefaultSceneGraph implements SceneGraph {
 
     @Override
     public void add(Shape shape) {
+        root.add(checkNotNull(shape));
     }
 
     @Override
@@ -127,6 +131,4 @@ public class DefaultSceneGraph implements SceneGraph {
     public Shape getShape(String label) {
         return shapes.get(label);
     }
-
-
 }

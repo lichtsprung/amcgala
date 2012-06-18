@@ -23,7 +23,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -48,25 +47,6 @@ public class Renderer {
     private Camera camera;
     private Matrix transformationMatrix;
 
-    /**
-     * Erzeugt einen neuen Renderer und initialisiert die gemeinsamen Felder
-     * aller Renderer.
-     *
-     * @param width  die Breite der Ausgabe des Renderers
-     * @param height die Höhe der Ausgabe des Renderers
-     */
-    public Renderer(int width, int height, JFrame frame) {
-        checkArgument(width > 0, "Breite des Fensters muss größer 0 sein!");
-        checkArgument(height > 0, "Höhe des Fensters muss größer 0 sein!");
-        this.frame = checkNotNull(frame);
-
-        this.offsetX = width >> 1;
-        this.offsetY = height >> 1;
-
-        frame.createBufferStrategy(2);
-        bs = frame.getBufferStrategy();
-        g = bs.getDrawGraphics();
-    }
 
     /**
      * Gibt die Breite der Ausgabe zurück.
@@ -190,5 +170,19 @@ public class Renderer {
         Vector3d tv = checkNotNull(point).transform(transformationMatrix);
         Pixel p = camera.getImageSpaceCoordinates(tv);
         putPixel(p, checkNotNull(color));
+    }
+
+    public void setFrame(JFrame frame) {
+        this.frame = checkNotNull(frame);
+
+        this.width = frame.getWidth();
+        this.height = frame.getHeight();
+
+        this.offsetX = frame.getWidth() >> 1;
+        this.offsetY = frame.getHeight() >> 1;
+
+        frame.createBufferStrategy(2);
+        bs = frame.getBufferStrategy();
+        g = bs.getDrawGraphics();
     }
 }

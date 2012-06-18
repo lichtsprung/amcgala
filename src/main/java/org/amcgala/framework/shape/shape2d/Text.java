@@ -15,6 +15,7 @@
 package org.amcgala.framework.shape.shape2d;
 
 import org.amcgala.framework.renderer.Renderer;
+import org.amcgala.framework.shape.AbstractShape;
 import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Robert Giacinto, Steffen Troester
  */
-public class Text extends Shape {
+public class Text extends AbstractShape {
 
     private static final double SPACING = 14;
     private double x;
@@ -33,7 +34,7 @@ public class Text extends Shape {
     private Letter[] letters;
 
     /**
-     * Erzeugt ein Text-Shape, das den Text an der Position (x,y) darstellt.
+     * Erzeugt ein Text-AbstractShape, das den Text an der Position (x,y) darstellt.
      * Dabei wird ein Zeichen als Sprite mit 16x16 Pixel gezaehlt.
      *
      * @param text der Text

@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Ein einfacher Timer, der einen Zeitraum messen kann. Diese Klasse wird zur
- * Animation und Aktualisierung des Frameworks benötigt.
+ * AbstractAnimation und Aktualisierung des Frameworks benötigt.
  *
  * @author Robert Giacinto
  */

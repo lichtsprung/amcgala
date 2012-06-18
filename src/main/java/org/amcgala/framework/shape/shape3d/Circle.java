@@ -16,7 +16,7 @@ package org.amcgala.framework.shape.shape3d;
 
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.shape.Shape;
+import org.amcgala.framework.shape.AbstractShape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Steffen Tröster
  */
-public class Circle extends Shape {
+public class Circle extends AbstractShape {
 
     private double x, y;
     private double radius;
