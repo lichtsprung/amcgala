@@ -35,6 +35,7 @@ public class Minimal extends Framework {
 
     @Override
     public void initGraph() {
+        add(new Line(0, 0, 100, 100));
     }
 
     public static void main(String[] args) {
