@@ -8,6 +8,7 @@ import java.awt.Color;
 
 /**
  * Schnittstelle aller Shapes, die im Framework dargestellt werden können.
+ *
  * @author Robert Giacinto
  * @since 2.0
  */

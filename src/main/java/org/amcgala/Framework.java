@@ -18,6 +18,12 @@ import com.google.common.eventbus.EventBus;
 import org.amcgala.framework.Scene;
 import org.amcgala.framework.animation.Animator;
 import org.amcgala.framework.camera.Camera;
+import org.amcgala.framework.event.InputHandler;
+import org.amcgala.framework.event.KeyPressedEvent;
+import org.amcgala.framework.event.KeyReleasedEvent;
+import org.amcgala.framework.event.MouseClickedEvent;
+import org.amcgala.framework.event.MousePressedEvent;
+import org.amcgala.framework.event.MouseReleasedEvent;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.DefaultSceneGraph;
 import org.amcgala.framework.scenegraph.SceneGraph;
@@ -38,7 +44,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +56,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  *
  * @author Robert Giacinto
  */
-public class Framework {
+public final class Framework {
 
     private static final Logger log = LoggerFactory.getLogger(Framework.class);
     private SceneGraph scenegraph;
@@ -60,10 +65,16 @@ public class Framework {
     private Animator animator;
     private List<Visitor> visitors;
     private JFrame frame;
-    private EventBus eventBus;
+    private EventBus sceneEventBus;
+    private EventBus frameworkEventBus;
     private Map<String, Scene> scenes;
     private Scene activeScene;
-    private RenderVisitor rv;
+    private RenderVisitor renderVisitor;
+    private UpdateVisitor updateVisitor;
+    private Map<String, InputHandler> frameworkInputHandlers;
+    private List<Scene> sceneList;
+    private int currentSceneIndex;
+    private boolean paused;
 
     /**
      * Erstellt ein neues Framework, das eine grafische Ausgabe in der Auflösung
@@ -74,12 +85,18 @@ public class Framework {
      */
     public Framework(int width, int height) {
         log.info("Initialising framework");
-        eventBus = new EventBus("Input");
+
+        frameworkInputHandlers = new HashMap<String, InputHandler>();
+        frameworkEventBus = new EventBus("Framework Input Event Bus");
+
+        sceneEventBus = new EventBus();
 
         visitors = new ArrayList<Visitor>(10);
         scenegraph = new DefaultSceneGraph();
 
         scenes = new HashMap<String, Scene>();
+        sceneList = new ArrayList<Scene>();
+        currentSceneIndex = 0;
 
 
         frame = new JFrame("amCGAla Framework");
@@ -94,24 +111,25 @@ public class Framework {
         // TODO Zahlen weg und eine Konfigurationsdatei einführen!
         animator = new Animator(60, 60);
 
-        visitors.add(new UpdateVisitor());
+        updateVisitor = new UpdateVisitor();
+        visitors.add(updateVisitor);
 
-        rv = new RenderVisitor();
-        rv.setCamera(camera);
-        rv.setRenderer(renderer);
-        visitors.add(rv);
+        renderVisitor = new RenderVisitor();
+        visitors.add(renderVisitor);
 
 
         frame.addKeyListener(new KeyAdapter() {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                eventBus.post(e);
+                sceneEventBus.post(new KeyPressedEvent(e));
+                frameworkEventBus.post(new KeyPressedEvent(e));
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                eventBus.post(e);
+                sceneEventBus.post(new KeyReleasedEvent(e));
+                frameworkEventBus.post(new KeyReleasedEvent(e));
             }
         });
 
@@ -119,27 +137,32 @@ public class Framework {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                eventBus.post(e);
+                sceneEventBus.post(new MouseClickedEvent(e));
+                frameworkEventBus.post(new MouseClickedEvent(e));
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                eventBus.post(e);
+                sceneEventBus.post(new MousePressedEvent(e));
+                frameworkEventBus.post(new MousePressedEvent(e));
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                eventBus.post(e);
+                sceneEventBus.post(new MouseReleasedEvent(e));
+                frameworkEventBus.post(new MouseReleasedEvent(e));
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                eventBus.post(e);
+                sceneEventBus.post(e);
+                frameworkEventBus.post(e);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                eventBus.post(e);
+                sceneEventBus.post(e);
+                frameworkEventBus.post(e);
             }
         });
 
@@ -147,12 +170,14 @@ public class Framework {
 
             @Override
             public void mouseDragged(MouseEvent e) {
-                eventBus.post(e);
+                sceneEventBus.post(e);
+                frameworkEventBus.post(e);
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                eventBus.post(e);
+                sceneEventBus.post(e);
+                frameworkEventBus.post(e);
             }
         });
 
@@ -160,7 +185,8 @@ public class Framework {
 
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                eventBus.post(e);
+                sceneEventBus.post(e);
+                frameworkEventBus.post(e);
             }
         });
     }
@@ -171,7 +197,7 @@ public class Framework {
      * Visitor den Szenengraphen besuchen.
      */
     public void update() {
-        if (camera != null) {
+        if (camera != null && !paused) {
             for (Visitor v : visitors) {
                 scenegraph.accept(v);
             }
@@ -182,7 +208,7 @@ public class Framework {
      * Rendert den Szenengraphen mithilfe des registrierten Renderers.
      */
     public void show() {
-        if (renderer != null) {
+        if (renderer != null && !paused) {
             renderer.show();
         }
     }
@@ -201,47 +227,88 @@ public class Framework {
         }
     }
 
-    /**
-     * Pausiert die Aktualisierung des Frameworks.
-     */
-    public void pause() {
-        if (animator != null) {
-            animator.stop();
-        }
-    }
-
 
     public void addScene(Scene scene) {
+        checkArgument(!scenes.containsKey(scene.getLabel()), "Es existiert bereits eine Szene mit dem gleichen Namen!");
         scenes.put(scene.getLabel(), scene);
+        sceneList.add(scene);
+
         if (activeScene == null) {
             loadScene(scene);
         }
     }
 
     public void setActiveScene(Scene scene) {
-        if (!scenes.values().contains(scene)) {
+        if (!scenes.containsKey(scene.getLabel())) {
             scenes.put(scene.getLabel(), scene);
+            sceneList.add(scene);
         }
         activeScene = scene;
     }
 
     public void loadScene(String label) {
         checkArgument(scenes.containsKey(label), "Es existiert keine Szene mit diesem Namen!");
-        activeScene = scenes.get(label);
-        loadScene(activeScene);
+        Scene scene = scenes.get(label);
+        loadScene(scene);
     }
 
     public void loadScene(Scene scene) {
+        log.debug("loading scene: " + scene.getLabel());
+        updateVisitor.setPaused(true);
+        paused = true;
         camera = scene.getCamera();
         renderer = scene.getRenderer();
         renderer.setFrame(frame);
         scenegraph = scene.getSceneGraph();
-        rv.setCamera(camera);
-        rv.setRenderer(renderer);
+        renderVisitor.setRenderer(renderer);
+        renderVisitor.setCamera(camera);
+        sceneEventBus = scene.getEventBus();
+        activeScene = scene;
+        paused = false;
+        updateVisitor.setPaused(false);
+    }
+
+    public Scene getScene(String label) {
+        checkArgument(scenes.containsKey(label), "Es existiert keine Szene mit diesem Namen!");
+        return scenes.get(label);
     }
 
 
     public void setFPS(int fps) {
         animator.setFramesPerSecond(fps);
+    }
+
+    public void removeScene(Scene scene) {
+        checkArgument(scenes.containsValue(scene), "Szene " + scene.getLabel() + " konnte nicht gefunden werden");
+        checkArgument(!activeScene.equals(scene), "Aktive Szene kann nicht entfernt werden!");
+        scenes.remove(scene.getLabel());
+    }
+
+    public void addInputHandler(InputHandler inputHandler, String label) {
+        frameworkEventBus.register(inputHandler);
+        frameworkInputHandlers.put(label, inputHandler);
+    }
+
+
+    public void removeInputHandler(String label) {
+        checkArgument(frameworkInputHandlers.containsKey(label), "InputHandler mit Label " + label + " konnte nicht gefunden werden.");
+        frameworkEventBus.unregister(frameworkInputHandlers.get(label));
+        frameworkInputHandlers.remove(label);
+    }
+
+    public void nextScene() {
+        if (sceneList.size() > 1) {
+            if (currentSceneIndex + 1 < sceneList.size()) {
+                currentSceneIndex++;
+                loadScene(sceneList.get(currentSceneIndex));
+            } else {
+                currentSceneIndex = 0;
+                loadScene(sceneList.get(currentSceneIndex));
+            }
+        }
+    }
+
+    public int getSceneCount() {
+        return sceneList.size();
     }
 }

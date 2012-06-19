@@ -92,7 +92,7 @@ public class Plane {
      * @param z die z-Komponente der Normalen
      */
     public void setNormal(double x, double y, double z) {
-        normal = new Vector3d(x, y, z);
+        normal = Vector3d.createVector3d(x, y, z);
     }
 
     /**

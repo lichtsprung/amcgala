@@ -1244,6 +1244,6 @@ public class Matrix implements Cloneable, java.io.Serializable {
     }
 
     public Vector3d toVector3d() {
-        return new Vector3d(get(0, 0), get(1, 0), get(2, 0));
+        return Vector3d.createVector3d(get(0, 0), get(1, 0), get(2, 0));
     }
 }

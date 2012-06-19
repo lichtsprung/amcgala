@@ -56,19 +56,19 @@ public class Box extends AbstractShape {
      * Updates the Box at runtime.
      */
     private void calculate() {
-        lines.add(new Line(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x + width, position.y, position.z)));
-        lines.add(new Line(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x + width, position.y, position.z)));
-        lines.add(new Line(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x, position.y + height, position.z)));
-        lines.add(new Line(new Vector3d(position.x, position.y, position.z), new Vector3d(position.x, position.y, position.z - depth)));
-        lines.add(new Line(new Vector3d(position.x, position.y + height, position.z), new Vector3d(position.x + width, position.y + height, position.z)));
-        lines.add(new Line(new Vector3d(position.x + width, position.y, position.z), new Vector3d(position.x + width, position.y + height, position.z)));
-        lines.add(new Line(new Vector3d(position.x, position.y + height, position.z), new Vector3d(position.x, position.y + height, position.z - depth)));
-        lines.add(new Line(new Vector3d(position.x + width, position.y + height, position.z), new Vector3d(position.x + width, position.y + height, position.z - depth)));
-        lines.add(new Line(new Vector3d(position.x + width, position.y, position.z), new Vector3d(position.x + width, position.y, position.z - depth)));
-        lines.add(new Line(new Vector3d(position.x, position.y, position.z - depth), new Vector3d(position.x + width, position.y, position.z - depth)));
-        lines.add(new Line(new Vector3d(position.x, position.y, position.z - depth), new Vector3d(position.x, position.y + height, position.z - depth)));
-        lines.add(new Line(new Vector3d(position.x, position.y + height, position.z - depth), new Vector3d(position.x + width, position.y + height, position.z - depth)));
-        lines.add(new Line(new Vector3d(position.x + width, position.y, position.z - depth), new Vector3d(position.x + width, position.y + height, position.z - depth)));
+        lines.add(new Line(Vector3d.createVector3d(position.x, position.y, position.z), Vector3d.createVector3d(position.x + width, position.y, position.z)));
+        lines.add(new Line(Vector3d.createVector3d(position.x, position.y, position.z), Vector3d.createVector3d(position.x + width, position.y, position.z)));
+        lines.add(new Line(Vector3d.createVector3d(position.x, position.y, position.z), Vector3d.createVector3d(position.x, position.y + height, position.z)));
+        lines.add(new Line(Vector3d.createVector3d(position.x, position.y, position.z), Vector3d.createVector3d(position.x, position.y, position.z - depth)));
+        lines.add(new Line(Vector3d.createVector3d(position.x, position.y + height, position.z), Vector3d.createVector3d(position.x + width, position.y + height, position.z)));
+        lines.add(new Line(Vector3d.createVector3d(position.x + width, position.y, position.z), Vector3d.createVector3d(position.x + width, position.y + height, position.z)));
+        lines.add(new Line(Vector3d.createVector3d(position.x, position.y + height, position.z), Vector3d.createVector3d(position.x, position.y + height, position.z - depth)));
+        lines.add(new Line(Vector3d.createVector3d(position.x + width, position.y + height, position.z), Vector3d.createVector3d(position.x + width, position.y + height, position.z - depth)));
+        lines.add(new Line(Vector3d.createVector3d(position.x + width, position.y, position.z), Vector3d.createVector3d(position.x + width, position.y, position.z - depth)));
+        lines.add(new Line(Vector3d.createVector3d(position.x, position.y, position.z - depth), Vector3d.createVector3d(position.x + width, position.y, position.z - depth)));
+        lines.add(new Line(Vector3d.createVector3d(position.x, position.y, position.z - depth), Vector3d.createVector3d(position.x, position.y + height, position.z - depth)));
+        lines.add(new Line(Vector3d.createVector3d(position.x, position.y + height, position.z - depth), Vector3d.createVector3d(position.x + width, position.y + height, position.z - depth)));
+        lines.add(new Line(Vector3d.createVector3d(position.x + width, position.y, position.z - depth), Vector3d.createVector3d(position.x + width, position.y + height, position.z - depth)));
     }
 
     /**

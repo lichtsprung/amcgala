@@ -34,41 +34,39 @@ public class RenderVisitor implements Visitor {
 
     private static final Logger log = LoggerFactory.getLogger(RenderVisitor.class);
     private Renderer renderer;
-    private Camera camera;
 
     /**
-     * Setzt den Renderer, der von diesem
+     * Setzt den DefaultRenderer, der von diesem
      * <code>RenderVisitor</code> verwendet werden soll.
      *
-     * @param renderer der neue Renderer
+     * @param renderer der neue DefaultRenderer
      */
     public void setRenderer(Renderer renderer) {
         this.renderer = renderer;
     }
 
     /**
-     * Setzt die Kamera, die vom Renderer verwendet werden soll.
+     * Setzt die Kamera, die vom DefaultRenderer verwendet werden soll.
      *
      * @param camera die neue Kamera
      */
     public void setCamera(Camera camera) {
-        this.camera = camera;
+        if (renderer != null) {
+            renderer.setCamera(camera);
+        }
     }
 
     @Override
     public void visit(Node node) {
         synchronized (node.getShapes()) {
-
             Matrix transform = node.getTransformMatrix();
-            renderer.setCamera(camera);
             renderer.setTransformationMatrix(transform);
 
             for (Shape shape : node.getShapes()) {
                 try {
                     shape.render(renderer);
                 } catch (ConcurrentModificationException ex) {
-                    // Ignore exception since we don't care for thread-safety at this point.
-                    log.info("Caught an exception...");
+                    log.error("Caught an exception...", ex);
                 }
             }
         }

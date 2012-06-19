@@ -15,7 +15,6 @@
 package org.amcgala.framework.shape;
 
 import com.google.common.base.Objects;
-import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
 import org.slf4j.Logger;
@@ -27,11 +26,18 @@ import org.slf4j.LoggerFactory;
  * @author Robert Giacinto
  */
 public class Line extends AbstractShape {
-
-    public double x1, y1, z1;
-    public double x2, y2, z2;
+    private static final Logger log = LoggerFactory.getLogger(Line.class.getName());
+    private double x1, y1, z1, x2, y2, z2;
     private Vector3d start, end;
 
+    /**
+     * Erstellt eine Linie, die in einer 2d Ebene mit z = -1 liegt und von (x1, y1) nach (x2, y2) geht.
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
     public Line(double x1, double y1, double x2, double y2) {
         this.x1 = x1;
         this.y1 = y1;
@@ -50,8 +56,13 @@ public class Line extends AbstractShape {
             this.y2 = y1;
         }
 
-        start = new Vector3d(x1, y1, -1);
-        end = new Vector3d(x2, y2, -1);
+        start = Vector3d.createVector3d(x1, y1, -1);
+        end = Vector3d.createVector3d(x2, y2, -1);
+    }
+
+    public Line(double x1, double y1, double x2, double y2, String label) {
+        this(x1, y1, x2, y2);
+        this.label = label;
     }
 
     public Line(Vector3d start, Vector3d end) {
@@ -63,12 +74,13 @@ public class Line extends AbstractShape {
         this.z2 = end.z;
     }
 
+    public Line(Vector3d start, Vector3d end, String label) {
+        this(start, end);
+        this.label = label;
+    }
+
     @Override
     public void render(Renderer renderer) {
-        // Einbeziehen der Transformationsgruppen. Um Animationen zu beruecksichtigen, die auf die einzelnen Felder zugegriffen
-        // haben, werden die start und end Vektoren aktualisiert, bevor sie mit der Transformationsmatrix multipliziert werden.
-        start = new Vector3d(x1, y1, z1);
-        end = new Vector3d(x2, y2, z2);
         renderer.drawLine(start, end);
     }
 
@@ -79,8 +91,4 @@ public class Line extends AbstractShape {
 
         return Objects.toStringHelper(getClass()).add("x1", x1).add("y1", y1).add("x2", x2).add("y2", y2).toString();
     }
-
-    private static final Logger log = LoggerFactory.getLogger(Line.class.getName());
-
-
 }

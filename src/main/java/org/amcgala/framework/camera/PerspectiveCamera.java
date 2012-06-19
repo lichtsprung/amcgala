@@ -105,7 +105,7 @@ public final class PerspectiveCamera extends AbstractCamera {
             cullingPlanes[i] = new Plane();
         }
 
-        location = new Vector3d(0, 0, 0);
+        location = Vector3d.createVector3d(0, 0, 0);
 
         frustumNear = 1.0;
         frustumFar = 2.0;

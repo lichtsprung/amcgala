@@ -1,6 +1,5 @@
 package org.amcgala.framework.animation;
 
-import org.amcgala.framework.shape.AbstractShape;
 import org.amcgala.framework.shape.Shape;
 
 /**
@@ -21,6 +20,4 @@ public interface Animation<T extends Shape> extends Updatable {
      * @param shape das Shape, zu dem diese Animation gehört.
      */
     void setShape(T shape);
-
-
 }

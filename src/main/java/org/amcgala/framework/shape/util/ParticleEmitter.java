@@ -22,7 +22,7 @@ public class ParticleEmitter extends AbstractShape implements Updatable {
     private boolean enabled = true;
     private double width, height;
     private double x, y, z; // Mittepunkt
-    private Vector3d direction = new Vector3d(0, 1, 0);
+    private Vector3d direction = Vector3d.createVector3d(0, 1, 0);
     private final List<Particle> particles = new CopyOnWriteArrayList<Particle>();
     private final List<ParticleManipulation> particleManipulations = new CopyOnWriteArrayList<ParticleManipulation>();
     private RotationZ rectrotation = new RotationZ(Math.PI / 2);
@@ -111,7 +111,7 @@ public class ParticleEmitter extends AbstractShape implements Updatable {
             rotateScale.x += x;
             rotateScale.y += y;
             // display
-            new Line(new Vector3d(x, y, 1), rotateScale).render(renderer);
+            new Line(Vector3d.createVector3d(x, y, 1), rotateScale).render(renderer);
         }
     }
 

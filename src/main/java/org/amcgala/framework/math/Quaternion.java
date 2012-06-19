@@ -287,7 +287,7 @@ public final class Quaternion {
 
 
         double norm = lengthSquared();
-        Vector3d store = new Vector3d(0, 0, 0);
+        Vector3d store = Vector3d.createVector3d(0, 0, 0);
 
         double xx = x * x * norm;
         double xy = x * y * norm;

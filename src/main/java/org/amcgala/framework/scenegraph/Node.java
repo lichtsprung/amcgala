@@ -50,7 +50,7 @@ public class Node implements Updatable {
      */
     private final List<Node> children;
     /**
-     * Die Geometrieobjekte, die an diesem Knoten hängen und von dem Renderer
+     * Die Geometrieobjekte, die an diesem Knoten hängen und von dem DefaultRenderer
      * dargestellt werden.
      */
     private final List<Shape> shapes;

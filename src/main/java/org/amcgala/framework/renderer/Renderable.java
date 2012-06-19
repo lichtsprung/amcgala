@@ -1,7 +1,7 @@
 package org.amcgala.framework.renderer;
 
 /**
- * Interface, das von allen Objekten implementiert wird, die über einen Renderer dargestellt werden können.
+ * Interface, das von allen Objekten implementiert wird, die über einen DefaultRenderer dargestellt werden können.
  *
  * @author Robert Giacinto
  */

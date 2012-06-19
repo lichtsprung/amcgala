@@ -101,9 +101,9 @@ public class PLYPolygonParser {
         }
         // Lade alle Koordinaten
         for (int i = 0; i < vertexCount; i++) {
-            vertices.add(new Vector3d(scanner.nextDouble() * scale, scanner
+            vertices.add(Vector3d.createVector3d(scanner.nextDouble() * scale, scanner
                     .nextDouble() * scale, scanner.nextDouble() * scale));
-            normals.add(new Vector3d(scanner.nextDouble() * scale, scanner
+            normals.add(Vector3d.createVector3d(scanner.nextDouble() * scale, scanner
                     .nextDouble() * scale, scanner.nextDouble() * scale));
             scanner.nextLine();
         }

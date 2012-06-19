@@ -33,7 +33,7 @@ public abstract class AbstractAnimation<T extends Shape> implements Animation<T>
     protected static final Logger logger = LoggerFactory.getLogger(AbstractAnimation.class);
     protected T shape;
 
-    public AbstractAnimation(T shape){
+    public AbstractAnimation(T shape) {
         this.shape = shape;
     }
 

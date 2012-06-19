@@ -23,9 +23,20 @@ import org.amcgala.framework.scenegraph.Node;
  * @author Robert Giacinto
  */
 public class UpdateVisitor implements Visitor {
+    private boolean paused;
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
 
     @Override
     public void visit(Node node) {
-        node.update();
+        if(!paused){
+            node.update();
+        }
     }
 }

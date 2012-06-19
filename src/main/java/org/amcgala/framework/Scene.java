@@ -1,15 +1,22 @@
 package org.amcgala.framework;
 
+import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.camera.SimplePerspectiveCamera;
 import org.amcgala.framework.event.InputHandler;
 import org.amcgala.framework.math.Vector3d;
+import org.amcgala.framework.renderer.DefaultRenderer;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.DefaultSceneGraph;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.scenegraph.SceneGraph;
 import org.amcgala.framework.shape.Shape;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Ein {@code Scene} Objekt verwaltet alle Objekte und den dazugehörigen {@link org.amcgala.framework.scenegraph.DefaultSceneGraph},
@@ -25,13 +32,15 @@ public class Scene {
     private Renderer renderer;
     private EventBus eventBus;
     private String label;
+    private Map<String, InputHandler> inputHandlers;
 
     public Scene(String label) {
         this.label = label;
         sceneGraph = new DefaultSceneGraph();
         camera = new SimplePerspectiveCamera(Vector3d.UNIT_Y, Vector3d.UNIT_Z, Vector3d.ZERO, 2000);
-        renderer = new Renderer();
+        renderer = new DefaultRenderer(camera);
         eventBus = new EventBus();
+        inputHandlers = new HashMap<String, InputHandler>();
     }
 
     /**
@@ -75,22 +84,42 @@ public class Scene {
     /**
      * Registriert einen neuen Eventhandler bei der EventQueue.
      *
-     * @param handler der neue Inputhandler
+     * @param inputHandler der neue Inputhandler
+     * @param label Name des neuen Inputhandlers
      */
-    public void registerInputEventHandler(InputHandler handler) {
-        eventBus.register(handler);
+    public void addInputHandler(InputHandler inputHandler, String label) {
+        inputHandlers.put(label, inputHandler);
+        eventBus.register(inputHandler);
     }
 
     /**
      * Entfernt einen Eventhandler aus der Liste der Subscriber.
      *
-     * @param handler der Inputhandler, der entfernt werden soll
+     * @param label Name des {@code InputHandler} der entfernt werden soll
      */
-    public void unregisterInputEventHandler(InputHandler handler) {
-        eventBus.unregister(handler);
+    public void removeInputHandler(String label) {
+        checkArgument(inputHandlers.containsKey(label), "InputHandler mit Namen " + label + " konnte nicht gefunden werden");
+        eventBus.unregister(inputHandlers.get(label));
     }
 
     public SceneGraph getSceneGraph() {
         return sceneGraph;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Scene scene = (Scene) o;
+
+        if (label != null ? !label.equals(scene.label) : scene.label != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return label != null ? label.hashCode() : 0;
     }
 }

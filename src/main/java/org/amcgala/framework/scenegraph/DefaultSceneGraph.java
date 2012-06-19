@@ -16,7 +16,6 @@ package org.amcgala.framework.scenegraph;
 
 import org.amcgala.framework.scenegraph.transform.Transformation;
 import org.amcgala.framework.scenegraph.visitor.Visitor;
-import org.amcgala.framework.shape.AbstractShape;
 import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +29,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Szenengraph des Frameworks.
+ *
+ * @since 2.0
  */
 public class DefaultSceneGraph implements SceneGraph {
     private static final Logger log = LoggerFactory.getLogger(DefaultSceneGraph.class);
@@ -46,16 +47,15 @@ public class DefaultSceneGraph implements SceneGraph {
     }
 
     @Override
-    public void add(Node node) {
-        log.info("adding node ", node);
-        root.add(checkNotNull(node));
-        nodes.put(node.getLabel(), node);
+    public void add(Node child) {
+        root.add(checkNotNull(child));
+        nodes.put(child.getLabel(), child);
     }
 
     @Override
     public void add(Node child, Node parent) {
         checkArgument(nodes.containsKey(parent.getLabel()), "Elternknoten konnte im Szenengraph nicht gefunden werden");
-        parent.add(child);
+        parent.add(checkNotNull(child));
         nodes.put(child.getLabel(), child);
     }
 

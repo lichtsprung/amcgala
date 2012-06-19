@@ -27,52 +27,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Polygonobjekt fuer die Koerperdarstellung im 3D Raum
  *
  * @author Steffen Troester
+ * @author Robert Giacinto
  */
 public class Polygon extends AbstractShape {
 
+    private static final Logger log = LoggerFactory.getLogger(Polygon.class.getName());
     private Line line1;
     private Line line2;
     private Line line3;
     private Line line4;
     private Vector3d norm;
 
-    public void move(double x, double y, double z) {
-        if (line1 != null && line2 != null && line3 != null) {
-            line1.x1 += x;
-            line1.x2 += x;
-            line1.y1 += y;
-            line1.y2 += y;
-            line1.z1 += z;
-            line1.z2 += z;
 
-            line2.x1 += x;
-            line2.x2 += x;
-            line2.y1 += y;
-            line2.y2 += y;
-            line2.z1 += z;
-            line2.z2 += z;
-
-            line3.x1 += x;
-            line3.x2 += x;
-            line3.y1 += y;
-            line3.y2 += y;
-            line3.z1 += z;
-            line3.z2 += z;
-
-            if (line4 != null) {
-                line4.x1 += x;
-                line4.x2 += x;
-                line4.y1 += y;
-                line4.y2 += y;
-                line4.z1 += z;
-                line4.z2 += z;
-            }
-        }
-    }
-
-    /*
-      * Verhindern des Standardkonstruktors.
-      */
     private Polygon() {
     }
 
@@ -87,6 +53,11 @@ public class Polygon extends AbstractShape {
         this.norm = norm;
     }
 
+    public Polygon(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d norm, String label) {
+        this(v1, v2, v3, norm);
+        this.label = label;
+    }
+
     public Polygon(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4,
                    Vector3d norm) {
         checkNotNull(v1);
@@ -99,6 +70,12 @@ public class Polygon extends AbstractShape {
         line3 = new Line(v3, v4);
         line4 = new Line(v4, v1);
         this.norm = norm;
+    }
+
+    public Polygon(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4,
+                   Vector3d norm, String label) {
+        this(v1, v2, v3, v4, norm);
+        this.label = label;
     }
 
     @Override
@@ -124,6 +101,4 @@ public class Polygon extends AbstractShape {
     public String toString() {
         return Objects.toStringHelper(getClass()).add("line1", line1).add("line2", line2).add("line3", line3).add("line4", line4).toString();
     }
-
-    private static final Logger log = LoggerFactory.getLogger(Polygon.class.getName());
 }

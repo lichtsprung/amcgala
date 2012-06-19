@@ -43,7 +43,7 @@ public class Circle extends AbstractShape {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        pos = new Vector3d(x, y, -1);
+        pos = Vector3d.createVector3d(x, y, -1);
     }
 
     /**
@@ -95,7 +95,7 @@ public class Circle extends AbstractShape {
 
     @Override
     public void render(Renderer renderer) {
-        pos = new Vector3d(x, y, -1);
+        pos = Vector3d.createVector3d(x, y, -1);
         renderer.drawCircle(pos, radius);
     }
 

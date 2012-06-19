@@ -32,7 +32,8 @@ public abstract class AbstractShape implements Shape {
     private static final Logger logger = LoggerFactory.getLogger(AbstractShape.class);
     private Color color = Color.BLACK;
     private Animation animation;
-    protected String label = getClass().getSimpleName() + System.nanoTime();
+    protected String label = getClass().getSimpleName() + " - " + System.nanoTime();
+
 
     @Override
     public Color getColor() {
