@@ -2,7 +2,7 @@ package org.amcgala.example.basic;
 
 import com.google.common.eventbus.Subscribe;
 import org.amcgala.Amcgala;
-import org.amcgala.framework.Scene;
+import org.amcgala.Scene;
 import org.amcgala.framework.event.InputHandler;
 import org.amcgala.framework.event.KeyPressedEvent;
 import org.amcgala.framework.scenegraph.Node;

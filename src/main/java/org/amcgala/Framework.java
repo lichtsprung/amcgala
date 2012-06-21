@@ -15,7 +15,6 @@
 package org.amcgala;
 
 import com.google.common.eventbus.EventBus;
-import org.amcgala.framework.Scene;
 import org.amcgala.framework.animation.Animator;
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.event.InputHandler;

@@ -1,6 +1,5 @@
-package org.amcgala.framework;
+package org.amcgala;
 
-import com.google.common.base.Preconditions;
 import com.google.common.eventbus.EventBus;
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.camera.SimplePerspectiveCamera;
@@ -85,7 +84,7 @@ public class Scene {
      * Registriert einen neuen Eventhandler bei der EventQueue.
      *
      * @param inputHandler der neue Inputhandler
-     * @param label Name des neuen Inputhandlers
+     * @param label        Name des neuen Inputhandlers
      */
     public void addInputHandler(InputHandler inputHandler, String label) {
         inputHandlers.put(label, inputHandler);
@@ -102,7 +101,7 @@ public class Scene {
         eventBus.unregister(inputHandlers.get(label));
     }
 
-    public SceneGraph getSceneGraph() {
+    protected SceneGraph getSceneGraph() {
         return sceneGraph;
     }
 
@@ -113,9 +112,7 @@ public class Scene {
 
         Scene scene = (Scene) o;
 
-        if (label != null ? !label.equals(scene.label) : scene.label != null) return false;
-
-        return true;
+        return !(label != null ? !label.equals(scene.label) : scene.label != null);
     }
 
     @Override
