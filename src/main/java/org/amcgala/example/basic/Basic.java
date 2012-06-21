@@ -20,22 +20,23 @@ import java.util.Random;
 public class Basic extends Amcgala {
 
     public Basic() {
-        Scene scene = new Scene("one");
+        final Scene scene = new Scene("one");
         final Node node = new Node("lineNode");
         Line line = new Line(-100, -100, 100, 100, "Line1");
 
-        node.add(line);
-        scene.add(node);
+        scene.add(line, node);
+
+        // Hinzufügen eines Szenen-InputHandlers
         scene.addInputHandler(new InputHandler() {
             Random random = new Random(System.currentTimeMillis());
 
             @Subscribe
             public void addRandomLine(KeyPressedEvent e) {
                 if (KeyEvent.VK_ENTER == e.getKeyCode()) {
-                    node.add(new Line(-400 + random.nextInt(800),
+                    scene.add(new Line(-400 + random.nextInt(800),
                             -300 + random.nextInt(600),
                             -400 + random.nextInt(800),
-                            -300 + random.nextInt(600)));
+                            -300 + random.nextInt(600)), node);
                 }
             }
         }, "Random Line");
@@ -44,14 +45,22 @@ public class Basic extends Amcgala {
 
         Scene scene2 = new Scene("two");
         Node node2 = new Node("lineNode");
+        Node node3 = new Node("testNode");
         Line line2 = new Line(-100, 100, 100, 100, "Line2");
         Line line3 = new Line(-100, -100, 100, -100, "Line3");
 
-        node2.add(line2);
-        node2.add(line3);
-        scene2.add(node2);
+
+        // Hinzufügen von Baumhierarchien
+        scene2.add(node2);  // root -> node2
+        scene2.add(node3, node2); // root -> node2 -> node3
+
+        // Hinzufügen eines Shapes zu einem bestimmten Knoten über das Label des Knotens
+        scene2.add(line2, "lineNode");
+        scene2.add(line3, "lineNode");
 
         framework.addScene(scene2);
+
+        // Hinzufügen eines Framework-InputHandlers
         framework.addInputHandler(new InputHandler() {
             @Subscribe
             public void switchScenes(KeyPressedEvent e) {

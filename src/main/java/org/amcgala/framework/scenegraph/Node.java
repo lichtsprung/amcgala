@@ -94,7 +94,7 @@ public class Node implements Updatable {
      * @return gibt Referenz auf sich selbst zurück um verschachtelte Aufrufe zu
      *         ermöglichen
      */
-    public Node add(Node childNode) {
+    protected Node add(Node childNode) {
         childNode.parent = this;
         synchronized (children) {
             children.add(childNode);
@@ -109,9 +109,14 @@ public class Node implements Updatable {
      *
      * @return true, wenn Knoten gefunden und entfernt wurde
      */
-    public boolean removeNode(Node node) {
+    protected boolean removeNode(Node node) {
         checkArgument(children.contains(node), "Node mit Label " + node.getLabel() + " konnte nicht gefunden werden.");
         return children.remove(node);
+    }
+
+    protected boolean removeShape(Shape shape) {
+        checkArgument(shapes.contains(shape), "Shape mit Label " + shape.getLabel() + " konnte nicht gefunden werden.");
+        return shapes.remove(shape);
     }
 
 
@@ -122,8 +127,9 @@ public class Node implements Updatable {
      *
      * @return true, wenn es erfolgreich hinzugefügt wurde
      */
-    public boolean add(Shape shape) {
+    protected boolean add(Shape shape) {
         synchronized (shapes) {
+            shape.setNode(this);
             shapes.add(shape);
         }
         return true;

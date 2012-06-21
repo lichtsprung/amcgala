@@ -97,4 +97,10 @@ public interface SceneGraph {
      * @param visitor der Visitor
      */
     void accept(Visitor visitor);
+
+    /**
+     * Entfernt ein {@link Shape} aus dem Szenengraph.
+     * @param label der Name des Shapes, das entfernt werden soll
+     */
+    void removeShape(String label);
 }

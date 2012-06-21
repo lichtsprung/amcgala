@@ -64,6 +64,13 @@ public class Scene {
         sceneGraph.add(shape, node);
     }
 
+    public void add(Shape shape, String nodeLabel) {
+        sceneGraph.add(shape, nodeLabel);
+    }
+
+    public void add(Node child, Node parent){
+        sceneGraph.add(child, parent);
+    }
     public Camera getCamera() {
         return camera;
     }
@@ -99,6 +106,10 @@ public class Scene {
     public void removeInputHandler(String label) {
         checkArgument(inputHandlers.containsKey(label), "InputHandler mit Namen " + label + " konnte nicht gefunden werden");
         eventBus.unregister(inputHandlers.get(label));
+    }
+
+    public void removeShape(String label) {
+        sceneGraph.removeShape(label);
     }
 
     protected SceneGraph getSceneGraph() {

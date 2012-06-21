@@ -77,8 +77,13 @@ public class DefaultSceneGraph implements SceneGraph {
 
     @Override
     public void add(Shape shape, Node node) {
-        checkArgument(nodes.containsKey(node.getLabel()), "Knoten konnte im Szenengraph nicht gefunden werden");
         node.add(shape);
+        shapes.put(shape.getLabel(), shape);
+
+        if(!nodes.containsKey(node.getLabel())) {
+            nodes.put(node.getLabel(), node);
+            root.add(node);
+        }
     }
 
 
@@ -110,11 +115,20 @@ public class DefaultSceneGraph implements SceneGraph {
     @Override
     public void add(Shape shape) {
         root.add(checkNotNull(shape));
+        shapes.put(shape.getLabel(), shape);
     }
 
     @Override
     public void accept(Visitor visitor) {
         root.accept(visitor);
+    }
+
+    @Override
+    public void removeShape(String label) {
+        checkArgument(shapes.containsKey(label), "Shape " + label + " konnte nicht gefunden werden");
+        Shape shape = shapes.get(label);
+        shape.getNode().removeShape(shape);
+        shapes.remove(label);
     }
 
     @Override

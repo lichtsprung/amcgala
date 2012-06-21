@@ -15,6 +15,7 @@
 package org.amcgala.framework.shape;
 
 import org.amcgala.framework.animation.Animation;
+import org.amcgala.framework.scenegraph.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,7 @@ public abstract class AbstractShape implements Shape {
     private static final Logger logger = LoggerFactory.getLogger(AbstractShape.class);
     private Color color = Color.BLACK;
     private Animation animation;
+    private Node node;
     protected String label = getClass().getSimpleName() + " - " + System.nanoTime();
 
 
@@ -65,5 +67,15 @@ public abstract class AbstractShape implements Shape {
     @Override
     public Animation getAnimation() {
         return animation;
+    }
+
+    @Override
+    public Node getNode() {
+        return node;
+    }
+
+    @Override
+    public void setNode(Node node) {
+        this.node = node;
     }
 }
