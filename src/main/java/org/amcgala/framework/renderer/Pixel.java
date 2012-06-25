@@ -15,8 +15,10 @@
 package org.amcgala.framework.renderer;
 
 import com.google.common.base.Objects;
+import com.google.common.math.DoubleMath;
 
 import java.awt.Color;
+import java.math.RoundingMode;
 
 /**
  * Ein Pixel stellt einen Punkt in der Ausgabe dar.
@@ -50,10 +52,8 @@ public class Pixel {
      * @param y die y-Koordinate des Pixels
      */
     public Pixel(double x, double y) {
-        float nx = Math.round(x);
-        float ny = Math.round(y);
-        this.y = Math.round(ny);
-        this.x = Math.round(nx);
+        this.x = DoubleMath.roundToInt(x, RoundingMode.HALF_DOWN);
+        this.y = DoubleMath.roundToInt(y, RoundingMode.HALF_DOWN);
     }
 
 

@@ -66,6 +66,8 @@ public class Line extends AbstractShape {
     }
 
     public Line(Vector3d start, Vector3d end) {
+        this.start = start;
+        this.end = end;
         this.x1 = start.x;
         this.y1 = start.y;
         this.z1 = start.z;

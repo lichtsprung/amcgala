@@ -249,6 +249,7 @@ public final class Framework {
         checkArgument(scenes.containsKey(label), "Es existiert keine Szene mit diesem Namen!");
         Scene scene = scenes.get(label);
         loadScene(scene);
+
     }
 
     public void loadScene(Scene scene) {

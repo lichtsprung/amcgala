@@ -68,6 +68,10 @@ public class Scene {
         sceneGraph.add(shape, nodeLabel);
     }
 
+    public void add (Node node, String parentLabel){
+        sceneGraph.add(node, parentLabel);
+    }
+
     public void add(Node child, Node parent){
         sceneGraph.add(child, parent);
     }

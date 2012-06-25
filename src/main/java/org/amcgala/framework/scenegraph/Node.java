@@ -36,7 +36,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  * Eine Node ist Teil des Scenegraphs und kann beliebig viele Kindsknoten und
  * Geometrieobjekte zugewiesen bekommen.
  */
-public class Node implements Updatable {
+public final class Node implements Updatable {
 
     private static final Logger logger = LoggerFactory.getLogger(Node.class);
     private String label = null;
@@ -60,6 +60,8 @@ public class Node implements Updatable {
      */
     private Transformation transformation;
 
+    private List<Transformation> transformations;
+
     /**
      * Erstellt eine neue Node mit einem Label, über das die Node innerhalb des
      * Graphens gefunden werden kann.
@@ -69,6 +71,7 @@ public class Node implements Updatable {
     public Node(String label) {
         this.label = label;
         transformation = new Translation(0, 0, 0);
+        transformations = new ArrayList<Transformation>();
         shapes = new CopyOnWriteArrayList<Shape>();
         children = new CopyOnWriteArrayList<Node>();
     }
@@ -241,6 +244,10 @@ public class Node implements Updatable {
      */
     public void setTransformation(Transformation transformation) {
         this.transformation = transformation;
+    }
+
+    public void setTransformation(Transformation... transformations) {
+        Collections.addAll(this.transformations, transformations);
     }
 
     /**
