@@ -15,7 +15,7 @@
 package org.amcgala.example.basics;
 
 import org.amcgala.Framework;
-import org.amcgala.framework.shape.BresenhamLine;
+import org.amcgala.shape.BresenhamLine;
 
 /**
  * Dieses Beispiel zeigt die Minimalkonfiguration des Frameworks.
