@@ -60,33 +60,74 @@ public class Scene {
         sceneGraph.add(node);
     }
 
+    /**
+     * Fügt der Szene ein neues Shapeobjekt hinzu. Dieses wird dem Szenengraph an dem übergebenen Knoten angehängt.
+     *
+     * @param shape das Shape, das der Szene hinzugefügt werden soll
+     * @param node  der Knoten, an dem das Shape angehängt werden soll
+     */
     public void add(Shape shape, Node node) {
         sceneGraph.add(shape, node);
     }
 
+    /**
+     * Fügt der Szene ein neues Shapeobjekt hinzu. Es wird dem Knoten mit dem übergebenen Label angehängt.
+     *
+     * @param shape     das Shape, das der Szene hinzugefügt werden soll
+     * @param nodeLabel das Label des Knotens
+     */
     public void add(Shape shape, String nodeLabel) {
         sceneGraph.add(shape, nodeLabel);
     }
 
-    public void add (Node node, String parentLabel){
+    /**
+     * Fügt der Szene einen neuen Knoten hinzu und hängt diesen an den Elternknoten mit dem übergebenen Label.
+     *
+     * @param node        der neue Knoten, der hinzugefügt werden soll
+     * @param parentLabel das Label des Elternknotens
+     */
+    public void add(Node node, String parentLabel) {
         sceneGraph.add(node, parentLabel);
     }
 
-    public void add(Node child, Node parent){
+    /**
+     * Fügt einem Elternknoten einen neuen Kindsknoten im Szenengraph hinzu.
+     *
+     * @param child  der neue Kindsknoten
+     * @param parent der Elternknoten
+     */
+    public void add(Node child, Node parent) {
         sceneGraph.add(child, parent);
     }
+
+    /**
+     * Gibt die gerade aktive Kamera der Szene zurück.
+     * @return die innerhalb der Szene verwendete Kamera
+     */
     public Camera getCamera() {
         return camera;
     }
 
+    /**
+     * Gibt den von der Szene verwendete Renderer zurück.
+     * @return der verwendete Renderer
+     */
     public Renderer getRenderer() {
         return renderer;
     }
 
+    /**
+     * Gibt den {@link EventBus} der Szene zurück.
+     * @return der in der Szene verwendete {@link EventBus}
+     */
     public EventBus getEventBus() {
         return eventBus;
     }
 
+    /**
+     * Gibt das Label der Szene zurück.
+     * @return das Label der Szene
+     */
     public String getLabel() {
         return label;
     }
@@ -112,6 +153,10 @@ public class Scene {
         eventBus.unregister(inputHandlers.get(label));
     }
 
+    /**
+     * Entfernt ein Shape aus der Szene.
+     * @param label das Label des Shapes, das entfernt werden soll
+     */
     public void removeShape(String label) {
         sceneGraph.removeShape(label);
     }

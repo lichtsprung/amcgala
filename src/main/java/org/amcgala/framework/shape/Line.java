@@ -33,10 +33,10 @@ public class Line extends AbstractShape {
     /**
      * Erstellt eine Linie, die in einer 2d Ebene mit z = -1 liegt und von (x1, y1) nach (x2, y2) geht.
      *
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
+     * @param x1 x-Koordinate des Startvektors
+     * @param y1 y-Koordinate des Startvektors
+     * @param x2 x-Koordinate des Endvektors
+     * @param y2 y-Koordinate des Endvektors
      */
     public Line(double x1, double y1, double x2, double y2) {
         this.x1 = x1;
@@ -60,11 +60,27 @@ public class Line extends AbstractShape {
         end = Vector3d.createVector3d(x2, y2, -1);
     }
 
+    /**
+     * Erstellt eine Linie, die in einer 2d Ebene mit z = -1 liegt und von (x1, y1) nach (x2, y2) geht und explizit ein
+     * Label zugewiesen bekommt.
+     *
+     * @param x1    x-Koordinate des Startvektors
+     * @param y1    y-Koordinate des Startvektors
+     * @param x2    x-Koordinate des Endvektors
+     * @param y2    y-Koordinate des Endvektors
+     * @param label das Label der Linie
+     */
     public Line(double x1, double y1, double x2, double y2, String label) {
         this(x1, y1, x2, y2);
         this.label = label;
     }
 
+    /**
+     * Erstellt eine Linie zwischen zwei Vektoren.
+     *
+     * @param start der Startvektor
+     * @param end   der Endvektor
+     */
     public Line(Vector3d start, Vector3d end) {
         this.start = start;
         this.end = end;
@@ -76,6 +92,13 @@ public class Line extends AbstractShape {
         this.z2 = end.z;
     }
 
+    /**
+     * Erstellt eine Linie zwischen zwei Vektoren und weist dieser ein explizites Label zu.
+     *
+     * @param start der Startvektor
+     * @param end   der Endvektor
+     * @param label das Label der Linie
+     */
     public Line(Vector3d start, Vector3d end, String label) {
         this(start, end);
         this.label = label;
@@ -90,7 +113,6 @@ public class Line extends AbstractShape {
      * toString method.
      */
     public String toString() {
-
         return Objects.toStringHelper(getClass()).add("x1", x1).add("y1", y1).add("x2", x2).add("y2", y2).toString();
     }
 }

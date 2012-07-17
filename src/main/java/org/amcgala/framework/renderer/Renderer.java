@@ -87,4 +87,5 @@ public interface Renderer {
     void putPixel(Vector3d point, Color color);
 
     void setFrame(JFrame frame);
+
 }

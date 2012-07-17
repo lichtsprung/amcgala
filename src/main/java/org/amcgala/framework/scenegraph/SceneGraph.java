@@ -36,11 +36,20 @@ public interface SceneGraph {
     void add(Node child, Node parent);
 
     /**
-     * @param child
-     * @param parentLabel
+     * Fügt einem Knoten einen neuen Kindsknoten hinzu. Vom Elternknoten muss nur das
+     * Label bekannt sein, um diesem ein neues Kind hinzufügen zu können.
+     *
+     * @param child       der Kindsknoten, der hinzugefügt werden soll
+     * @param parentLabel die Bezeichnung des Elternknotens
      */
     void add(Node child, String parentLabel);
 
+    /**
+     * Fügt einem Knoten über seinen Bezeichner ein neues Shapeobjekt hinzu.
+     *
+     * @param shape     das Shape, das dem Knoten hinzugefügt werden soll
+     * @param nodeLabel der Bezeichner des Knoten innerhalb des Szenengraphen
+     */
     void add(Shape shape, String nodeLabel);
 
     /**
@@ -83,11 +92,11 @@ public interface SceneGraph {
 
 
     /**
-     * Findet ein {@link org.amcgala.framework.shape.AbstractShape} über seinen Namen und gibt dessen Referenz zurück.
+     * Findet ein {@link org.amcgala.framework.shape.Shape} über seinen Namen und gibt dessen Referenz zurück.
      *
      * @param label der Name des Shapes
      *
-     * @return das AbstractShape
+     * @return das Shape
      */
     Shape getShape(String label);
 
@@ -100,7 +109,15 @@ public interface SceneGraph {
 
     /**
      * Entfernt ein {@link Shape} aus dem Szenengraph.
+     *
      * @param label der Name des Shapes, das entfernt werden soll
      */
     void removeShape(String label);
+
+    /**
+     * Gibt die Anzahl der Knoten im Szenengraph zurück.
+     *
+     * @return die Anzahl der Knoten
+     */
+    int getNodeCount();
 }

@@ -12,9 +12,13 @@ public class BasicTurtle extends TurtleMode {
 
     @Override
     public void turtleCommands() {
-        set(-100, -100);
+        up();
+        turnLeft(180);
+        move(100);
         turnLeft(90);
-
+        move(100);
+        turnLeft(180);
+        down();
 
         for(int length = 200; length > 5; length *= 0.95){
             move(length);

@@ -14,7 +14,9 @@
  */
 package org.amcgala.framework.animation.interpolation;
 
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Interface, das alle Klassen implementieren, die eine Interpolation
@@ -24,7 +26,7 @@ import java.util.logging.Logger;
  */
 public abstract class Interpolation {
 
-    private static final Logger logger = Logger.getLogger(Interpolation.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(Interpolation.class);
     protected double min;
     protected double max;
     protected double stepCount;

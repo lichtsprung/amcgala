@@ -139,11 +139,7 @@ public class Plane {
     public boolean isOnPlane(Vector3d point) {
         double distance = distance(point);
 
-        if (distance < MathConstants.EPSILON && distance > -MathConstants.EPSILON) {
-            return true;
-        } else {
-            return false;
-        }
+        return distance < MathConstants.EPSILON && distance > -MathConstants.EPSILON;
     }
 
     /**
@@ -156,10 +152,6 @@ public class Plane {
      */
     public boolean isNearPlane(Vector3d point) {
         double distance = distance(point);
-        if (distance < MathConstants.NEAR_EPSILON && distance > -MathConstants.NEAR_EPSILON) {
-            return true;
-        } else {
-            return false;
-        }
+        return distance < MathConstants.NEAR_EPSILON && distance > -MathConstants.NEAR_EPSILON;
     }
 }

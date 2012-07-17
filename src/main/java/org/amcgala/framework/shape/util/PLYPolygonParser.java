@@ -30,8 +30,7 @@ import java.util.Scanner;
 
 /**
  * Statischer PLY File Parser zum laden von Polygonen. Export von komplexen
- * Objekten aus Blender moeglich (siehe example Paket) <br/>
- * <br/>
+ * Objekten aus Blender moeglich (siehe example Paket)
  *
  * @author Steffen Tröster
  */

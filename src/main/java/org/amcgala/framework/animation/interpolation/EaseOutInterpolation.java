@@ -14,7 +14,9 @@
  */
 package org.amcgala.framework.animation.interpolation;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Eine Interpolation, bei der die Schritt zu Beginn groß sind und zum Ende hin
@@ -24,7 +26,7 @@ import java.util.logging.Logger;
  */
 public class EaseOutInterpolation extends Interpolation {
 
-    private static final Logger logger = Logger.getLogger(EaseOutInterpolation.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(EaseOutInterpolation.class);
 
     /**
      * Erzeugt eine neue EaseOutInterpolation.

@@ -145,4 +145,9 @@ public class DefaultSceneGraph implements SceneGraph {
     public Shape getShape(String label) {
         return shapes.get(label);
     }
+
+    @Override
+    public int getNodeCount(){
+        return nodes.size();
+    }
 }

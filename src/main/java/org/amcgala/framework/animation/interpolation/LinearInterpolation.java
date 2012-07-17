@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LinearInterpolation extends Interpolation {
 
-    private static final Logger logger = LoggerFactory.getLogger(LinearInterpolation.class);
+    private static final Logger log = LoggerFactory.getLogger(LinearInterpolation.class);
 
     /**
      * Erzeugt einen neuen LinearInterpolator.
