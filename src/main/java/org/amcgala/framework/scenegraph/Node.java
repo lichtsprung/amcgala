@@ -35,10 +35,17 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * Eine Node ist Teil des Scenegraphs und kann beliebig viele Kindsknoten und
  * Geometrieobjekte zugewiesen bekommen.
+ *
+ * @author Robert Giacinto
+ * @since 1.0
  */
 public final class Node implements Updatable {
 
-    private static final Logger logger = LoggerFactory.getLogger(Node.class);
+    private static final Logger log = LoggerFactory.getLogger(Node.class);
+    /**
+     * Das Label dieses Knotens. Über diesen lässt sich der Knoten bestimmen und kann dazu verwendet werden,
+     * auf den Knoten zur Laufzeit wieder zugreifen zu können.
+     */
     private String label = null;
     /**
      * Der übergeordnete Knoten, an dem dieser Knoten hängt. {@code null}, wenn es sich
@@ -55,11 +62,9 @@ public final class Node implements Updatable {
      */
     private final List<Shape> shapes;
     /**
-     * Ein Transformationsobjekt, das sich auf die Geometrie dieses Knotens und
-     * der Kindsknoten auswirkt.
+     * Die Transformationen, die an diesem Knoten hängen und sich auf die {@link Shape} Objekte
+     * des Knotens und aller Kindsknoten auswirkt.
      */
-    private Transformation transformation;
-
     private List<Transformation> transformations;
 
     /**
@@ -70,8 +75,8 @@ public final class Node implements Updatable {
      */
     public Node(String label) {
         this.label = label;
-        transformation = new Translation(0, 0, 0);
         transformations = new ArrayList<Transformation>();
+        transformations.add(new Translation(0, 0, 0));
         shapes = new CopyOnWriteArrayList<Shape>();
         children = new CopyOnWriteArrayList<Node>();
     }
@@ -112,12 +117,19 @@ public final class Node implements Updatable {
      *
      * @return true, wenn Knoten gefunden und entfernt wurde
      */
-    protected boolean removeNode(Node node) {
+    protected boolean remove(Node node) {
         checkArgument(children.contains(node), "Node mit Label " + node.getLabel() + " konnte nicht gefunden werden.");
         return children.remove(node);
     }
 
-    protected boolean removeShape(Shape shape) {
+    /**
+     * Entfernt ein Shape aus diesem Knoten.
+     *
+     * @param shape das Shape, das entfernt werden soll
+     *
+     * @return {@code true}, wenn Shape entfern wurde
+     */
+    protected boolean remove(Shape shape) {
         checkArgument(shapes.contains(shape), "Shape mit Label " + shape.getLabel() + " konnte nicht gefunden werden.");
         return shapes.remove(shape);
     }
@@ -128,7 +140,7 @@ public final class Node implements Updatable {
      *
      * @param shape das neue Objekt
      *
-     * @return true, wenn es erfolgreich hinzugefügt wurde
+     * @return {@code true}, wenn es erfolgreich hinzugefügt wurde
      */
     protected boolean add(Shape shape) {
         synchronized (shapes) {
@@ -151,7 +163,7 @@ public final class Node implements Updatable {
                 return this;
             } else {
                 for (Node n : children) {
-                    return n.getNode(label);
+                    n.getNode(label);
                 }
             }
         }
@@ -197,10 +209,14 @@ public final class Node implements Updatable {
      * @return die Kindsknoten
      */
     public Collection<Node> getChildren() {
-
         return Collections.unmodifiableCollection(children);
     }
 
+    /**
+     * Gibt alle Kindsknoten zurück, die an diesem Knoten hängen.
+     *
+     * @return die Liste der Kindsknoten
+     */
     public Collection<Node> getAllChildren() {
         List<Node> nodes = new ArrayList<Node>();
         getAllChildren(this, nodes);
@@ -226,45 +242,37 @@ public final class Node implements Updatable {
         return Collections.unmodifiableCollection(shapes);
     }
 
-    /**
-     * Gibt die Transformationsmatrix dieses Knotens zurück.
-     *
-     * @return die Transformationsmatrix
-     */
-    public Transformation getTransformation() {
-        return transformation;
-    }
 
     /**
-     * Setzt die aktuelle Transformationsmatrix dieses Knotens.
-     * TODO Die Reihenfolge der Transformation spielt eine Rolle - ist es sinnvoll, das so zu gestalten, dass man nur eine Transformation pro Node zulässt?
-     * TODO Durch Varargs ersetzen.
+     * Fügt dem Knoten eine beliebige Anzahl von Transformationen hinzu.
+     * Sollten bereits Transformationen vorhanden sein, so werden die neuen hinten angehängt.
      *
-     * @param transformation die neue Transformationsmatrix
+     * @param transformations die Transformationen, die hinzugefügt werden sollen
      */
-    public void setTransformation(Transformation transformation) {
-        this.transformation = transformation;
-    }
-
-    public void setTransformation(Transformation... transformations) {
+    public void add(Transformation... transformations) {
         Collections.addAll(this.transformations, transformations);
+        log.info("Neue Transformation hinzugefügt: {}", transformations);
     }
 
     /**
      * Gibt die gesamte Transformationsmatrix zurück.
-     * TODO die Verwendung von varargs ermöglichen.
      *
-     * @return
+     * @return die Transformationsmatrix dieses Knotens
      */
     public Matrix getTransformMatrix() {
-        Matrix b = transformation.getTransformMatrix();
+        Matrix matrix = Matrix.identity(4, 4);
 
-        if (parent != null) {
-            Matrix c = parent.getTransformMatrix();
-            b = b.times(c);
+        for (Transformation t : transformations) {
+            Matrix tmp = t.getTransformMatrix();
+            matrix = matrix.times(tmp);
         }
 
-        return b;
+        if (parent != null) {
+            Matrix parentTransformMatrix = parent.getTransformMatrix();
+            matrix = parentTransformMatrix.times(matrix);
+        }
+
+        return matrix;
     }
 
 
@@ -273,13 +281,10 @@ public final class Node implements Updatable {
         return Objects.toStringHelper(getClass()).add("label", label).toString();
     }
 
-    /**
-     * TODO Verwendung von varargs berücksichtigen
-     */
     @Override
     public void update() {
-        if (transformation != null) {
-            transformation.update();
+        for (Transformation t : transformations) {
+            t.update();
         }
 
         for (Shape shape : shapes) {

@@ -227,7 +227,7 @@ public final class Framework {
     }
 
 
-    public void addScene(Scene scene) {
+    public void add(Scene scene) {
         checkArgument(!scenes.containsKey(scene.getLabel()), "Es existiert bereits eine Szene mit dem gleichen Namen!");
         scenes.put(scene.getLabel(), scene);
         sceneList.add(scene);
@@ -278,7 +278,7 @@ public final class Framework {
         animator.setFramesPerSecond(fps);
     }
 
-    public void removeScene(Scene scene) {
+    public void remove(Scene scene) {
         checkArgument(scenes.containsValue(scene), "Szene " + scene.getLabel() + " konnte nicht gefunden werden");
         checkArgument(!activeScene.equals(scene), "Aktive Szene kann nicht entfernt werden!");
         scenes.remove(scene.getLabel());

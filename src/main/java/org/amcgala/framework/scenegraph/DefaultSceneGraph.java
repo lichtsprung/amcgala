@@ -28,8 +28,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Szenengraph des Frameworks.
+ * Standardimplementierung des Szenengraph des Frameworks.
  *
+ * @author Robert Giacinto
  * @since 2.0
  */
 public class DefaultSceneGraph implements SceneGraph {
@@ -38,6 +39,9 @@ public class DefaultSceneGraph implements SceneGraph {
     private Map<String, Node> nodes;
     private Map<String, Shape> shapes;
 
+    /**
+     * Standardkonstruktor.
+     */
     public DefaultSceneGraph() {
         root = new Node("root");
         nodes = new HashMap<String, Node>();
@@ -72,15 +76,17 @@ public class DefaultSceneGraph implements SceneGraph {
         checkArgument(nodes.containsKey(nodeLabel), "Knoten konnte im Szenengraph nicht gefunden werden");
         Node node = nodes.get(nodeLabel);
         node.add(shape);
+        shape.setNode(node);
         shapes.put(shape.getLabel(), shape);
     }
 
     @Override
     public void add(Shape shape, Node node) {
         node.add(shape);
+        shape.setNode(node);
         shapes.put(shape.getLabel(), shape);
 
-        if(!nodes.containsKey(node.getLabel())) {
+        if (!nodes.containsKey(node.getLabel())) {
             nodes.put(node.getLabel(), node);
             root.add(node);
         }
@@ -93,7 +99,7 @@ public class DefaultSceneGraph implements SceneGraph {
         Node parent = node.getParent();
         Collection<Node> children = node.getAllChildren();
 
-        parent.removeNode(node);
+        parent.remove(node);
         children.add(node);
 
         for (Node n : children) {
@@ -103,6 +109,31 @@ public class DefaultSceneGraph implements SceneGraph {
             nodes.remove(n.getLabel());
         }
         log.info(children.size() + " Knoten entfernt.");
+    }
+
+    @Override
+    public void removeNode(String label) {
+        checkArgument(!"root".equalsIgnoreCase(label), "Root-Knoten darf nicht gelöscht werden!");
+        Node node = nodes.get(label);
+        Node parent = node.getParent();
+        Collection<Node> children = node.getAllChildren();
+
+        parent.remove(node);
+        children.add(node);
+
+        for (Node n : children) {
+            for (Shape s : n.getShapes()) {
+                shapes.remove(s.getLabel());
+            }
+            nodes.remove(n.getLabel());
+        }
+        log.info(children.size() + " Knoten entfernt.");
+    }
+
+    @Override
+    public void remove(Shape shape) {
+        shape.getNode().remove(shape);
+        shapes.remove(shape.getLabel());
     }
 
 
@@ -127,18 +158,18 @@ public class DefaultSceneGraph implements SceneGraph {
     public void removeShape(String label) {
         checkArgument(shapes.containsKey(label), "Shape " + label + " konnte nicht gefunden werden");
         Shape shape = shapes.get(label);
-        shape.getNode().removeShape(shape);
+        shape.getNode().remove(shape);
         shapes.remove(label);
     }
 
     @Override
-    public void add(Transformation transformation) {
-        root.setTransformation(transformation);
+    public void add(Transformation... transformations) {
+        root.add(transformations);
     }
 
     @Override
-    public void add(Transformation transformation, String label) {
-        nodes.get(label).setTransformation(transformation);
+    public void add(String label, Transformation... transformations) {
+        nodes.get(label).add(transformations);
     }
 
     @Override
@@ -147,7 +178,7 @@ public class DefaultSceneGraph implements SceneGraph {
     }
 
     @Override
-    public int getNodeCount(){
+    public int getNodeCount() {
         return nodes.size();
     }
 }

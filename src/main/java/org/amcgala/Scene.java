@@ -10,6 +10,7 @@ import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.DefaultSceneGraph;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.scenegraph.SceneGraph;
+import org.amcgala.framework.scenegraph.transform.Transformation;
 import org.amcgala.framework.shape.Shape;
 
 import java.util.HashMap;
@@ -62,6 +63,7 @@ public class Scene {
 
     /**
      * Fügt der Szene ein neues Shapeobjekt hinzu. Dieses wird dem Szenengraph an dem übergebenen Knoten angehängt.
+     * TODO das ist verwirrend, dass man erst den Knoten der Szene hinzufügen muss, um ein Shape dranhängen zu können.
      *
      * @param shape das Shape, das der Szene hinzugefügt werden soll
      * @param node  der Knoten, an dem das Shape angehängt werden soll
@@ -101,7 +103,17 @@ public class Scene {
     }
 
     /**
+     * Fügt dem root {@link Node} des {@link SceneGraph} eine Transformation hinzu,
+     *
+     * @param transformation die Transformation, die hinzugefügt werden soll
+     */
+    public void add(Transformation transformation) {
+        sceneGraph.add(transformation);
+    }
+
+    /**
      * Gibt die gerade aktive Kamera der Szene zurück.
+     *
      * @return die innerhalb der Szene verwendete Kamera
      */
     public Camera getCamera() {
@@ -110,6 +122,7 @@ public class Scene {
 
     /**
      * Gibt den von der Szene verwendete Renderer zurück.
+     *
      * @return der verwendete Renderer
      */
     public Renderer getRenderer() {
@@ -118,6 +131,7 @@ public class Scene {
 
     /**
      * Gibt den {@link EventBus} der Szene zurück.
+     *
      * @return der in der Szene verwendete {@link EventBus}
      */
     public EventBus getEventBus() {
@@ -126,6 +140,7 @@ public class Scene {
 
     /**
      * Gibt das Label der Szene zurück.
+     *
      * @return das Label der Szene
      */
     public String getLabel() {
@@ -155,6 +170,7 @@ public class Scene {
 
     /**
      * Entfernt ein Shape aus der Szene.
+     *
      * @param label das Label des Shapes, das entfernt werden soll
      */
     public void removeShape(String label) {

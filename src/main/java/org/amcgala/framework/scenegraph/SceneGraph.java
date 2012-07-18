@@ -59,27 +59,41 @@ public interface SceneGraph {
      */
     void add(Shape shape);
 
+
     /**
      * Fügt einem bestimmten Knoten innerhalb des Szenengraphs eine neue Transformation hinzu.
      *
-     * @param transformation die neue Transformation
-     * @param label          die Bezeichnung des gesuchten Knotens
+     * @param transformations die neuen Transformation
+     * @param label           die Bezeichnung des gesuchten Knotens
      */
-    void add(Transformation transformation, String label);
+    void add(String label, Transformation... transformations);
 
     /**
      * Fügt dem Wurzelknoten eine neue Transformation hinzu.
      *
-     * @param transformation die neue Transformation
+     * @param transformations die neuen Transformation
      */
-    void add(Transformation transformation);
+    void add(Transformation... transformations);
 
     /**
      * Entfernt den Knoten aus dem Szenengraph.
      *
-     * @param node der Knoten,der entfernt werden soll
+     * @param node {@link Node}, das entfernt werden soll
      */
     void remove(Node node);
+
+    /**
+     * Entfernt den Knoten mit dem übergebenen Label.
+     *
+     * @param label der Bezeichner des Knotens
+     */
+    void removeNode(String label);
+
+    /**
+     * Entfernt ein Shape aus dem Szenengraph.
+     * @param shape das {@link Shape}, das entfernt werden soll
+     */
+    void remove(Shape shape);
 
     /**
      * Gibt den Knoten mit einem gegebenen Namen zurück.

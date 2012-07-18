@@ -41,7 +41,7 @@ public class Basic extends Amcgala {
             }
         }, "Random Line");
 
-        framework.addScene(scene);
+        framework.add(scene);
 
         Scene scene2 = new Scene("two");
         Node node2 = new Node("lineNode");
@@ -58,7 +58,7 @@ public class Basic extends Amcgala {
         scene2.add(line2, "lineNode");
         scene2.add(line3, "lineNode");
 
-        framework.addScene(scene2);
+        framework.add(scene2);
 
         // Hinzufügen eines Framework-InputHandlers
         framework.addInputHandler(new InputHandler() {

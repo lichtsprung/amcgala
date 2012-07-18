@@ -1,7 +1,6 @@
 package org.amcgala;
 
 
-import com.google.common.base.Preconditions;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.shape.Line;
 
@@ -26,7 +25,7 @@ public abstract class TurtleMode {
     public TurtleMode() {
         turtleCommands();
         Framework framework = new Framework(WIDTH, HEIGHT);
-        framework.addScene(turtleScene);
+        framework.add(turtleScene);
         framework.start();
     }
 
