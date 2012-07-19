@@ -51,20 +51,20 @@ public class DefaultSceneGraph implements SceneGraph {
     }
 
     @Override
-    public void add(Node child) {
+    public void addNode(Node child) {
         root.add(checkNotNull(child));
         nodes.put(child.getLabel(), child);
     }
 
     @Override
-    public void add(Node child, Node parent) {
+    public void addNode(Node child, Node parent) {
         checkArgument(nodes.containsKey(parent.getLabel()), "Elternknoten konnte im Szenengraph nicht gefunden werden");
         parent.add(checkNotNull(child));
         nodes.put(child.getLabel(), child);
     }
 
     @Override
-    public void add(Node child, String parentLabel) {
+    public void addNode(Node child, String parentLabel) {
         checkArgument(nodes.containsKey(parentLabel), "Elternknoten konnte im Szenengraph nicht gefunden werden");
         Node parent = nodes.get(parentLabel);
         parent.add(child);
@@ -72,7 +72,7 @@ public class DefaultSceneGraph implements SceneGraph {
     }
 
     @Override
-    public void add(Shape shape, String nodeLabel) {
+    public void addShape(Shape shape, String nodeLabel) {
         checkArgument(nodes.containsKey(nodeLabel), "Knoten konnte im Szenengraph nicht gefunden werden");
         Node node = nodes.get(nodeLabel);
         node.add(shape);
@@ -81,7 +81,7 @@ public class DefaultSceneGraph implements SceneGraph {
     }
 
     @Override
-    public void add(Shape shape, Node node) {
+    public void addShape(Shape shape, Node node) {
         node.add(shape);
         shape.setNode(node);
         shapes.put(shape.getLabel(), shape);
@@ -94,7 +94,7 @@ public class DefaultSceneGraph implements SceneGraph {
 
 
     @Override
-    public void remove(Node node) {
+    public void removeNode(Node node) {
         checkArgument(checkNotNull(node).getParent() != null, "Root-Knoten darf nicht gelöscht werden!");
         Node parent = node.getParent();
         Collection<Node> children = node.getAllChildren();
@@ -131,7 +131,7 @@ public class DefaultSceneGraph implements SceneGraph {
     }
 
     @Override
-    public void remove(Shape shape) {
+    public void removeShape(Shape shape) {
         shape.getNode().remove(shape);
         shapes.remove(shape.getLabel());
     }
@@ -144,7 +144,7 @@ public class DefaultSceneGraph implements SceneGraph {
 
 
     @Override
-    public void add(Shape shape) {
+    public void addShape(Shape shape) {
         root.add(checkNotNull(shape));
         shapes.put(shape.getLabel(), shape);
     }
@@ -163,12 +163,12 @@ public class DefaultSceneGraph implements SceneGraph {
     }
 
     @Override
-    public void add(Transformation... transformations) {
+    public void addTransformation(Transformation... transformations) {
         root.add(transformations);
     }
 
     @Override
-    public void add(String label, Transformation... transformations) {
+    public void addTransformation(String label, Transformation... transformations) {
         nodes.get(label).add(transformations);
     }
 

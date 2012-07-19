@@ -52,18 +52,26 @@ public abstract class AbstractCamera implements Camera {
     /**
      * Die Projektionsmatrix
      */
-    protected Matrix projection;
+    protected Matrix projectionMatrix;
 
-    protected Quaternion quaternion;
+    protected Matrix inverseProjectionMatrix;
 
     protected boolean parallel;
+
+    protected int width;
+    protected int height;
+
+    public AbstractCamera(){
+        inverseProjectionMatrix = Matrix.identity(4,4);
+        projectionMatrix = Matrix.identity(4, 4);
+    }
 
     /**
      * Gibt die Projektionsmatrix der Kamera zurück.
      *
      * @return die aktuelle Projektionsmatrix
      */
-    protected abstract Matrix getProjection();
+    protected abstract Matrix getProjectionMatrix();
 
     /**
      * Gibt die Blickrichtung der Kamera zurück.
@@ -115,25 +123,41 @@ public abstract class AbstractCamera implements Camera {
      */
     @Override
     public Vector3d getVup() {
-        return quaternion.getRotationColumn(1);
+        return up;
     }
 
     /**
      * Ändert den Oben-Vektor der Kamera.
      *
-     * @param vup der neue Oben-Vektor
+     * @param up der neue Oben-Vektor
      */
     @Override
-    public void setVup(Vector3d vup) {
-        this.up = vup;
+    public void setVup(Vector3d up) {
+        this.up = up;
         update();
-    }
-
-    public Vector3d getLeft() {
-        return quaternion.getRotationColumn(0);
     }
 
     public boolean isParallel() {
         return parallel;
+    }
+
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
+    }
+
+    @Override
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    @Override
+    public void setHeight(int height) {
+        this.height = height;
     }
 }

@@ -249,14 +249,15 @@ public final class Framework {
         checkArgument(scenes.containsKey(label), "Es existiert keine Szene mit diesem Namen!");
         Scene scene = scenes.get(label);
         loadScene(scene);
-
     }
 
     public void loadScene(Scene scene) {
         log.debug("loading scene: " + scene.getLabel());
-        updateVisitor.setPaused(true);
         paused = true;
+        updateVisitor.setPaused(paused);
         camera = scene.getCamera();
+        camera.setWidth(frame.getWidth());
+        camera.setHeight(frame.getHeight());
         renderer = scene.getRenderer();
         renderer.setFrame(frame);
         scenegraph = scene.getSceneGraph();
@@ -265,7 +266,7 @@ public final class Framework {
         sceneEventBus = scene.getEventBus();
         activeScene = scene;
         paused = false;
-        updateVisitor.setPaused(false);
+        updateVisitor.setPaused(paused);
     }
 
     public Scene getScene(String label) {

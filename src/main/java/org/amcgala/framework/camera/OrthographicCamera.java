@@ -47,8 +47,8 @@ public final class OrthographicCamera extends AbstractCamera {
     }
 
     @Override
-    public Matrix getProjection() {
-        return projection;
+    public Matrix getProjectionMatrix() {
+        return projectionMatrix;
     }
 
     @Override
@@ -75,18 +75,18 @@ public final class OrthographicCamera extends AbstractCamera {
                 {0, 0, 0, 1}
         };
         Matrix kt = Matrix.constructWithCopy(viewValues);
-        projection = vd.times(kt);
+        projectionMatrix = vd.times(kt);
     }
 
     @Override
     public CVPoint getClippingSpaceCoordinates(Vector3d vector3d) {
-        Matrix point = projection.times(vector3d.toMatrix());
+        Matrix point = projectionMatrix.times(vector3d.toMatrix());
         return new CVPoint(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0));
     }
 
     @Override
     public Pixel getImageSpaceCoordinates(Vector3d vector3d) {
-        Matrix point = projection.times(vector3d.toMatrix());
+        Matrix point = projectionMatrix.times(vector3d.toMatrix());
         return new Pixel(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0));
     }
 

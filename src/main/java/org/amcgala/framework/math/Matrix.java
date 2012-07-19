@@ -1119,7 +1119,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
         double row[] = new double[n];
         for (int j = 0; j < n; j++) // extract the elements of the 1st row.
         {
-            row[j] = ((Double) v.elementAt(j)).doubleValue();
+            row[j] = (Double) v.elementAt(j);
         }
         v.removeAllElements();
         v.addElement(row);  // Start storing rows instead of columns.
@@ -1131,7 +1131,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
                 if (j >= n) {
                     throw new java.io.IOException("Row " + v.size() + " is too long.");
                 }
-                row[j++] = Double.valueOf(tokenizer.sval).doubleValue();
+                row[j++] = Double.valueOf(tokenizer.sval);
             } while (tokenizer.nextToken() == StreamTokenizer.TT_WORD);
             if (j < n) {
                 throw new java.io.IOException("Row " + v.size() + " is too short.");
@@ -1143,90 +1143,58 @@ public class Matrix implements Cloneable, java.io.Serializable {
         return new Matrix(A);
     }
 
-    /**
-     * Erzeugt eine Projektionsmatrix von den Grenzen des View Frustrum.
-     *
-     * @param near     near-Plane
-     * @param far      far-Plane
-     * @param left     left-Plane
-     * @param right    right-Plane
-     * @param top      top-PLane
-     * @param bottom   bottom-Plane
-     * @param parallel is parallel projection
-     *
-     * @return Projektionsmatrix
-     */
-    public static Matrix getProjectionFromFrustum(double near, double far, double left, double right, double top, double bottom, boolean parallel) {
 
-        double m00 = 1, m01 = 0, m02 = 0, m03 = 0;
-        double m10 = 0, m11 = 1, m12 = 0, m13 = 0;
-        double m20 = 0, m21 = 0, m22 = 1, m23 = 0;
-        double m30 = 0, m31 = 0, m32 = 0, m33 = 1;
-
-        if (parallel) {
-            // scale
-            m00 = 2.0 / (right - left);
-            m11 = 2.0 / (top - bottom);
-            m22 = -2.0 / (far - near);
-            m33 = 1;
-            // translation
-            m03 = -(right + left) / (right - left);
-            m13 = -(top + bottom) / (top - bottom);
-            m23 = -(far + near) / (far - near);
-        } else {
-            m00 = (2.0 * near) / (right - left);
-            m11 = (2.0 * near) / (top - bottom);
-            m32 = -1.0;
-            m33 = -0.0;
-            m02 = (right + left) / (right - left);
-            m12 = (top + bottom) / (top - bottom);
-            m22 = -(far + near) / (far - near);
-            m23 = -(2.0f * far * near) / (far - near);
-        }
+    public static Matrix fromFrustrum(double left, double right, double bottom, double top, double near, double far) {
+        double x = 2 * near / (right - left);
+        double y = 2 * near / (top - bottom);
+        double a = (right + left) / (right - left);
+        double b = (top + bottom) / (top - bottom);
+        double c = -(far + near) / (far - near);
+        double d = -2 * far * near / (far - near);
 
         double[][] values = {
-                {m00, m01, m02, m03},
-                {m10, m11, m12, m13},
-                {m20, m21, m22, 23},
-                {m30, m31, m32, m33}};
+                {x, 0, a, 0},
+                {0, y, b, 0},
+                {0, 0, c, d},
+                {0, 0, -1, 0}
+        };
 
-        return Matrix.constructWithCopy(values);
+        return constructWithCopy(values);
     }
 
-    /**
-     * Erzeugt eine View-Matrix von dem lokalen Koordinatensystem der Kamera.
-     *
-     * @param location  die Position der Kamera
-     * @param direction die Blickrichtung der Kamera
-     * @param up        das Oben der Kamera
-     * @param left      das links der Kamera
-     *
-     * @return die View-Matrix
-     */
-    public static Matrix getView(Vector3d location, Vector3d direction, Vector3d up, Vector3d left) {
-        Vector3d s = direction.cross(up);
-        Vector3d u = s.cross(direction);
-
-        Matrix viewMatrix = Matrix.identity(4, 4);
-        viewMatrix.set(0, 0, s.x);
-        viewMatrix.set(0, 1, s.y);
-        viewMatrix.set(0, 2, s.z);
-
-        viewMatrix.set(1, 0, u.x);
-        viewMatrix.set(1, 1, u.y);
-        viewMatrix.set(1, 2, u.z);
-
-        viewMatrix.set(2, 0, -direction.x);
-        viewMatrix.set(2, 1, -direction.y);
-        viewMatrix.set(2, 2, -direction.z);
-
-        Matrix transMatrix = Matrix.identity(4, 4);
-        transMatrix.set(0, 3, -location.x);
-        transMatrix.set(1, 3, -location.y);
-        transMatrix.set(2, 3, -location.z);
+    public static Matrix getPerspective(double fieldOfView, double aspect, double near, double far) {
+        double ymax = near * Math.tan(fieldOfView * Math.PI / 360);
+        double ymin = -ymax;
+        double xmin = ymin * aspect;
+        double xmax = ymax * aspect;
 
 
-        return viewMatrix.times(transMatrix);
+        return fromFrustrum(xmin, xmax, ymin, ymax, near, far);
+    }
+
+
+    public static Matrix lookAt(Vector3d eye, Vector3d target, Vector3d up) {
+        Vector3d z = eye.sub(target).normalize();
+        if (z.length() == 0) {
+            z.z = 1;
+        }
+
+        Vector3d x = up.cross(z).normalize();
+        if (x.length() == 0) {
+            z.x += 0.0001;
+            x = up.cross(z).normalize();
+        }
+
+        Vector3d y = z.cross(x);
+
+        double[][] values = {
+                {x.x, y.x, z.x},
+                {x.y, y.y, z.y},
+                {x.z, y.z, z.z},
+                {0, 0, 0, 1}
+        };
+
+        return constructWithCopy(values);
     }
 
 

@@ -91,4 +91,11 @@ public interface Camera {
      * wurde.
      */
     void update();
+
+    int getWidth();
+
+    int getHeight();
+
+    void setWidth(int width);
+    void setHeight(int height);
 }

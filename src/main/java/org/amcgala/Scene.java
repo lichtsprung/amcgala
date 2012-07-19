@@ -49,7 +49,7 @@ public class Scene {
      * @param shape das hinzuzufügende Objekt
      */
     public void add(Shape shape) {
-        sceneGraph.add(shape);
+        sceneGraph.addShape(shape);
     }
 
     /**
@@ -58,7 +58,7 @@ public class Scene {
      * @param node der neue Knoten
      */
     public void add(Node node) {
-        sceneGraph.add(node);
+        sceneGraph.addNode(node);
     }
 
     /**
@@ -69,7 +69,7 @@ public class Scene {
      * @param node  der Knoten, an dem das Shape angehängt werden soll
      */
     public void add(Shape shape, Node node) {
-        sceneGraph.add(shape, node);
+        sceneGraph.addShape(shape, node);
     }
 
     /**
@@ -79,7 +79,7 @@ public class Scene {
      * @param nodeLabel das Label des Knotens
      */
     public void add(Shape shape, String nodeLabel) {
-        sceneGraph.add(shape, nodeLabel);
+        sceneGraph.addShape(shape, nodeLabel);
     }
 
     /**
@@ -89,7 +89,7 @@ public class Scene {
      * @param parentLabel das Label des Elternknotens
      */
     public void add(Node node, String parentLabel) {
-        sceneGraph.add(node, parentLabel);
+        sceneGraph.addNode(node, parentLabel);
     }
 
     /**
@@ -99,7 +99,7 @@ public class Scene {
      * @param parent der Elternknoten
      */
     public void add(Node child, Node parent) {
-        sceneGraph.add(child, parent);
+        sceneGraph.addNode(child, parent);
     }
 
     /**
@@ -108,7 +108,7 @@ public class Scene {
      * @param transformation die Transformation, die hinzugefügt werden soll
      */
     public void add(Transformation transformation) {
-        sceneGraph.add(transformation);
+        sceneGraph.addTransformation(transformation);
     }
 
     /**

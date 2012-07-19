@@ -204,7 +204,7 @@ public final class Node implements Updatable {
 
     /**
      * Gibt die Kindsknoten zurück.
-     * Die zurückgegebene ist read-only. Um einen neuen Kindsknoten hinzuzufügen sollte die entsprochende Methode {@code add} verwendet werden.
+     * Die zurückgegebene ist read-only. Um einen neuen Kindsknoten hinzuzufügen sollte die entsprochende Methode {@code addNode} verwendet werden.
      *
      * @return die Kindsknoten
      */

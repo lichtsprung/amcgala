@@ -51,7 +51,7 @@ public class ParticleEmitter extends AbstractShape implements Updatable {
                 // translate
                 rot.x += x;
                 rot.y += y;
-                // add
+                // addNode
                 particles.add(new Particle(particleSpeed, direction.copy(),
                         rot.x, rot.y));
             }

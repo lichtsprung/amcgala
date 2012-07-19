@@ -165,15 +165,13 @@ public class Vector3d implements Comparable<Vector3d> {
     }
 
     /**
-     * TODO es sollten durchgängig nur noch Referenzen auf neue Vektoren zurückgegeben werden und nicht mit Side Effects gearbeitet werden.
      * Gibt den Vektor normalisiert zurück.
      *
      * @return der normalisierte Vektor
      */
     public Vector3d normalize() {
         double norm = 1.0 / length();
-        times(norm);
-        return this;
+        return createVector3d(x * norm, y * norm, z * norm);
     }
 
     /**
