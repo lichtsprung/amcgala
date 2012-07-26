@@ -21,9 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Ein 3d Kreis, der mithilfe des Bresenham Algorithmus gezeichnet wird.
+ * Ein 3d Kreis.
  *
  * @author Steffen Tröster
+ * @author Robert Giacinto
  */
 public class Circle extends AbstractShape {
 
@@ -51,7 +52,7 @@ public class Circle extends AbstractShape {
     /**
      * Setzt den Radius des Kreises auf den übergebenen Wert.
      *
-     * @param r
+     * @param r der neue Radius des Kreises
      */
     public void setRadius(double r) {
         this.radius = r;
@@ -60,7 +61,7 @@ public class Circle extends AbstractShape {
     /**
      * Gibt den Radius des Kreises zurück.
      *
-     * @return
+     * @return der Radius des Kreises
      */
     public double getRadius() {
         return this.radius;
@@ -75,26 +76,22 @@ public class Circle extends AbstractShape {
     }
 
     /**
-     * Gibt die Position in Form eines Vektors zurück.
+     * Gibt die Position des Kreises zurück.
      *
-     * @return
+     * @return die Position des Kreises
      */
     public Vector3d getPosition() {
         return Vector3d.createVector3d(this.x, this.y, this.z);
     }
 
-    /**
-     *
-     */
+
     @Override
     public void render(Renderer renderer) {
         pos = Vector3d.createVector3d(x, y, z);
         renderer.drawCircle(pos, radius);
     }
 
-    /**
-     *
-     */
+
     @Override
     public String toString() {
         return "Circle3d{" + "x=" + x + ", y=" + y + ", radius=" + radius

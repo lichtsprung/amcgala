@@ -25,7 +25,7 @@ public abstract class TurtleMode {
     public TurtleMode() {
         turtleCommands();
         Framework framework = new Framework(WIDTH, HEIGHT);
-        framework.add(turtleScene);
+        framework.addScene(turtleScene);
         framework.start();
     }
 

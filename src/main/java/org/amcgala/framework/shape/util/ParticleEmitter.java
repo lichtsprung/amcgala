@@ -13,7 +13,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Emitter Klasse die ParticleContainer mit den gegebenen Eigenschaften ausgibt.
- * Emitter kann dis/enabled werden. TODO: Bis jetzt erst 2d moeglich !
+ * Emitter kann dis/enabled werden.
+ * TODO: Sollte auf 3D erweitert werden.
  *
  * @author Steffen Troester
  */
@@ -80,12 +81,12 @@ public class ParticleEmitter extends AbstractShape implements Updatable {
     }
 
     /**
-     * 2D Constructor for Particle Emitter
+     * Konstruktor für einen Emitter in einer 2D Ebene.
      *
-     * @param width
-     * @param x
-     * @param y
-     * @param direction
+     * @param width die Breite des Emitters
+     * @param x x-Koordinate der Position
+     * @param y y-Koordinate der Position
+     * @param direction die Richtung des Emitters
      */
     public ParticleEmitter(double width, double x, double y, Vector3d direction) {
         this.width = width;
@@ -114,6 +115,7 @@ public class ParticleEmitter extends AbstractShape implements Updatable {
             new Line(Vector3d.createVector3d(x, y, 1), rotateScale).render(renderer);
         }
     }
+
 
     public void addParticleManipulation(ParticleManipulation p) {
         particleManipulations.add(p);

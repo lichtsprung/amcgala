@@ -19,7 +19,7 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * Ein {@code Scene} Objekt verwaltet alle Objekte und den dazugehörigen {@link org.amcgala.framework.scenegraph.DefaultSceneGraph},
+ * Ein {@link Scene} Objekt verwaltet alle Objekte und den dazugehörigen {@link org.amcgala.framework.scenegraph.DefaultSceneGraph},
  * der über die Klasse {@link org.amcgala.Framework} dargestellt werden kann.
  *
  * @author Robert Giacinto
@@ -34,6 +34,11 @@ public class Scene {
     private String label;
     private Map<String, InputHandler> inputHandlers;
 
+    /**
+     * Erstellt eine neue Szene mit einem bestimmten Bezeichner.
+     *
+     * @param label der Bezeichner der Szene
+     */
     public Scene(String label) {
         this.label = label;
         sceneGraph = new DefaultSceneGraph();

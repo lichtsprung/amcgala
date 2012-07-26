@@ -107,8 +107,6 @@ public class Sprite extends AbstractShape {
      * Spriteobjekt aus einer Datei (jpeg,png,gif)
      *
      * @param path
-     *
-     * @throws IOException
      */
     public Sprite(String path) {
 
@@ -116,9 +114,21 @@ public class Sprite extends AbstractShape {
         FileInputStream f = null;
         try {
             f = new FileInputStream(path);
-            loadImage(f);
         } catch (FileNotFoundException e) {
-            log.error("Datei {} konnte nicht geladen werden!", path);
+            log.error("Konnte Datei {} nicht finden", path);
+        }
+
+        try {
+
+            loadImage(f);
+        } finally {
+            try {
+                if (f != null) {
+                    f.close();
+                }
+            } catch (IOException e) {
+                log.error("Konnte Datei nicht schließen", e);
+            }
         }
     }
 

@@ -7,10 +7,10 @@ import org.amcgala.framework.shape.AbstractShape;
 import org.amcgala.framework.shape.shape2d.Point2d;
 
 /**
- * Partikel Element fuer den ParticleEmitter. TODO: Es sollte hier moeglich sein
- * auch verschiedene Objekte als Particle zu nutzen !
+ * 2D - Partikel  für den {@link ParticleEmitter}.
+ * TODO: Es sollte hier moeglich sein auch verschiedene Objekte als Particle zu nutzen !
  *
- * @author Steffen Troester
+ * @author Steffen Tröster
  */
 public class Particle extends AbstractShape implements Updatable {
 
@@ -23,10 +23,10 @@ public class Particle extends AbstractShape implements Updatable {
     /**
      * Particle Constructor initialisiert vom ParticleEmitter
      *
-     * @param particleSpeed
-     * @param direction
-     * @param x
-     * @param y
+     * @param particleSpeed Geschwindigkeit des Partikels
+     * @param direction     die Bewegungsrichtung
+     * @param x             x-Koordinate des Partikels
+     * @param y             y-Koordinate des Partikels
      */
     public Particle(double particleSpeed, final Vector3d direction, double x,
                     double y) {
@@ -51,30 +51,64 @@ public class Particle extends AbstractShape implements Updatable {
         point2d.render(renderer);
     }
 
+    /**
+     * Gibt die Bewegungsrichtung des Partikels zurück.
+     *
+     * @return die Bewegungsrichtung
+     */
     public Vector3d getDirection() {
         return direction;
     }
 
+    /**
+     * Ändert die Bewegungsrichtung des Partikels.
+     *
+     * @param direction die neue Richtung
+     */
     public void setDirection(Vector3d direction) {
         this.direction = direction;
     }
 
+
+    /**
+     * Gibt die aktuelle Geschwindigkeit des Partikels zurück.
+     *
+     * @return die Geschwindigkeit
+     */
     public double getParticleSpeed() {
         return particleSpeed;
     }
 
+    /**
+     * Ändert die Geschwindigkeit des Partikels.
+     *
+     * @param particleSpeed die neue Geschwindigkeit
+     */
     public void setParticleSpeed(double particleSpeed) {
         this.particleSpeed = particleSpeed;
     }
 
+    /**
+     * Gibt die x-Koordinate der Position des Partikels zurück.
+     *
+     * @return die x-Koordinate der Position
+     */
     public double getX() {
         return point2d.x;
     }
 
+    /**
+     * Gibt die y-Koordinate des Partikels zurück.
+     * @return die y-Koordinate der Position
+     */
     public double getY() {
         return point2d.y;
     }
 
+    /**
+     * Gibt die Lebenskraft des Partikels zurück.
+     * @return die Lebenskraft
+     */
     public int getLife() {
         return life;
     }

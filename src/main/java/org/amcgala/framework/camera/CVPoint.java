@@ -14,31 +14,33 @@
  */
 package org.amcgala.framework.camera;
 
+import com.google.common.base.Objects;
+
 /**
  * Diese Klasse repräsentiert einen Punkt im kanonischen View Volume.
  * Einen CVPoint erhält man als Ergebnis der Projektion.
  */
 public class CVPoint {
 
-    public double x, y;
+    public double x;
+    public double y;
+    public double z;
 
     /**
      * Erzeugt einen neuen CVPunkt.
-     * TODO nochmal überprüfen: Sollte eigentlich 3d sein.
      *
      * @param x x-Koordinate
      * @param y y-Koordinate
      */
-    public CVPoint(double x, double y) {
+    public CVPoint(double x, double y, double z) {
         this.x = x;
         this.y = y;
+        this.z = z;
     }
 
     @Override
     public String toString() {
-        return "CVPoint{"
-                + "x=" + x
-                + ", y=" + y
-                + '}';
+        return Objects.toStringHelper(getClass()).add("x", x).add("y", y).add("z", z).toString();
     }
+
 }

@@ -56,8 +56,7 @@ public class PLYPolygonParser {
     }
 
     /**
-     * Parst .ply File und gibt Polygone zurueck<br/>
-     * <br/>
+     * Parst .ply File und gibt Polygone zurueck
      *
      * @param inputStream to File
      * @param scale       Skalierung des Objektes (zB 100)

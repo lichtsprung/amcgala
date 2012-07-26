@@ -24,7 +24,7 @@ public class TransformationExample extends Amcgala {
         scene.add(new Translation(100, 0, 0));
         node.add(new RotationZ(Math.PI / 17));
 
-        framework.add(scene);
+        framework.addScene(scene);
         framework.start();
     }
 

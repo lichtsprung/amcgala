@@ -181,9 +181,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
             if (A[i].length != n) {
                 throw new IllegalArgumentException("All rows must have the same length.");
             }
-            for (int j = 0; j < n; j++) {
-                C[i][j] = A[i][j];
-            }
+            System.arraycopy(A[i], 0, C[i], 0, n);
         }
         return X;
     }
@@ -195,9 +193,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
         Matrix X = new Matrix(m, n);
         double[][] C = X.getArray();
         for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                C[i][j] = A[i][j];
-            }
+            System.arraycopy(A[i], 0, C[i], 0, n);
         }
         return X;
     }
@@ -231,9 +227,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
     public double[][] getArrayCopy() {
         double[][] C = new double[m][n];
         for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                C[i][j] = A[i][j];
-            }
+            System.arraycopy(A[i], 0, C[i], 0, n);
         }
         return C;
     }
@@ -261,9 +255,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
     public double[] getRowPackedCopy() {
         double[] vals = new double[m * n];
         for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                vals[i * n + j] = A[i][j];
-            }
+            System.arraycopy(A[i], 0, vals, i * n, n);
         }
         return vals;
     }
@@ -308,7 +300,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param j0 Initial column index
      * @param j1 Final column index
      *
-     * @return A(i0:i1, j0:j1)
+     * @return A(i0 i1, j0 j1)
      *
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
@@ -317,9 +309,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
         double[][] B = X.getArray();
         try {
             for (int i = i0; i <= i1; i++) {
-                for (int j = j0; j <= j1; j++) {
-                    B[i - i0][j - j0] = A[i][j];
-                }
+                System.arraycopy(A[i], j0, B[i - i0], j0 - j0, j1 + 1 - j0);
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new ArrayIndexOutOfBoundsException("Submatrix indices");
@@ -333,7 +323,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param r Array of row indices.
      * @param c Array of column indices.
      *
-     * @return A(r(:), c(:))
+     * @return A(r, c)
      *
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
@@ -359,7 +349,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param i1 Final row index
      * @param c  Array of column indices.
      *
-     * @return A(i0:i1, c(:))
+     * @return A(i0i1, c)
      *
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
@@ -385,7 +375,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param j0 Initial column index
      * @param j1 Final column index
      *
-     * @return A(r(:), j0:j1)
+     * @return A(r, j0j1)
      *
      * @throws ArrayIndexOutOfBoundsException Submatrix indices
      */
@@ -394,9 +384,7 @@ public class Matrix implements Cloneable, java.io.Serializable {
         double[][] B = X.getArray();
         try {
             for (int i = 0; i < r.length; i++) {
-                for (int j = j0; j <= j1; j++) {
-                    B[i][j - j0] = A[r[i]][j];
-                }
+                System.arraycopy(A[r[i]], j0, B[i], j0 - j0, j1 + 1 - j0);
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new ArrayIndexOutOfBoundsException("Submatrix indices");
@@ -1014,7 +1002,9 @@ public class Matrix implements Cloneable, java.io.Serializable {
      * @param d Number of digits after the decimal.
      */
     public void print(int w, int d) {
-        print(new PrintWriter(System.out, true), w, d);
+        PrintWriter writer = new PrintWriter(System.out, true);
+        print(writer, w, d);
+        writer.close();
     }
 
     /**

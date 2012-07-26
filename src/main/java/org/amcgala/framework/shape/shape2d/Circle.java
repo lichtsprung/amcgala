@@ -21,9 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A 2D Circle. Drawn with the Bresenham Algorithm.
+ * Ein 2D-Kreis, der in der Ebene z = -1 liegt.
  *
- * @author Steffen Troester
+ * @author Steffen Tröster
+ * @author Robert Giacinto
  */
 public class Circle extends AbstractShape {
 
@@ -49,7 +50,7 @@ public class Circle extends AbstractShape {
     /**
      * Setzt den Radius des Kreises auf den übergebenen Wert.
      *
-     * @param r
+     * @param r der neue Radius des Kreises
      */
     public void setRadius(double r) {
         this.radius = r;
@@ -58,7 +59,7 @@ public class Circle extends AbstractShape {
     /**
      * Gibt den Radius des Kreises zurück.
      *
-     * @return
+     * @return der Radius des Kreises
      */
     public double getRadius() {
         return this.radius;
@@ -67,8 +68,8 @@ public class Circle extends AbstractShape {
     /**
      * Setzt die Position des Kreises auf den übergebenen Wert.
      *
-     * @param x
-     * @param y
+     * @param x x-Koordinate der Position
+     * @param y y-Koordinate der Position
      */
     public void setPosition(double x, double y) {
         this.x = x;
@@ -76,18 +77,18 @@ public class Circle extends AbstractShape {
     }
 
     /**
-     * Gibt den Wert <i>x</i> des Kreises zurück.
+     * Gibt die x-Koordinate des Kreises zurück.
      *
-     * @return
+     * @return die x-Koordinate
      */
     public double getX() {
         return this.x;
     }
 
     /**
-     * Gibt den Wert <i>y</i> des Kreises zurück.
+     * Gibt die y-Koordinate des Kreises zurück.
      *
-     * @return
+     * @return die y-Koordinate
      */
     public double getY() {
         return this.y;

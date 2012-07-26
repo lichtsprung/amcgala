@@ -27,7 +27,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * CompositeShape for Shapeobjects.
+ * Ein Containerobjekt, das für die Erstellung von zusammengesetzten Shape-Objekten genutzt werden kann.
+ * Für ein Beispiel siehe {@link org.amcgala.framework.shape.shape3d.Box}.
  *
  * @author Sascha Lemke
  */
@@ -37,16 +38,16 @@ public class CompositeShape extends AbstractShape implements InputHandler {
 
 
     /**
-     * Creates an empty Containerobject.
+     * Erstellt ein neues Containerobjekt.
      */
     public CompositeShape() {
         shapes = new ArrayList<Shape>();
     }
 
     /**
-     * Creates an Containobject with the given shapes.
+     * Erstellt ein neues Containerobjekt mit den übergebenen Shape-Objekten.
      *
-     * @param shapes
+     * @param shapes die Shapes, die hinzugefügt werden sollen
      */
     public CompositeShape(Shape... shapes) {
         this();
@@ -63,18 +64,16 @@ public class CompositeShape extends AbstractShape implements InputHandler {
     }
 
     /**
-     * Removes the last entry.
-     *
-     * @return
+     * Entfernt das letzte Shape aus dem Container.
      */
     public void removeLast() {
         shapes.remove(this.shapes.size() - 1);
     }
 
     /**
-     * Entfernt ein AbstractShape aus dem {@code CompositeShape} entfernen.
+     * Entfernt ein {@link Shape} aus dem {@code CompositeShape} entfernen.
      *
-     * @param shape das AbstractShape, das entfernt werden soll
+     * @param shape das Shape, das entfernt werden soll
      */
     public void remove(Shape shape) {
         this.shapes.remove(shape);
@@ -85,9 +84,6 @@ public class CompositeShape extends AbstractShape implements InputHandler {
         return Objects.toStringHelper(getClass()).add("Shapes", shapes).toString();
     }
 
-    /**
-     *
-     */
     @Override
     public void render(Renderer renderer) {
         for (Shape shape : shapes) {
