@@ -1,6 +1,5 @@
 package org.amcgala;
 
-
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.shape.Line;
 
@@ -8,56 +7,50 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Math.*;
 
 /**
- * Die Klasse stellt Funktionlitäten zur Verfügung, die man benötigt, um Turtlegrafiken zu erstellen.
+ * Eine Turtle kann zum Zeichnen von Turtlegrafiken innerhalb eines amCGAla Programms verwendet werden.
  *
  * @author Robert Giacinto
- * @since 2.0
  */
-public abstract class TurtleMode {
-    protected final static int WIDTH = 800;
-    protected final static int HEIGHT = 600;
-    private final Scene scene = new Scene("turtle");
-    private Vector3d heading = Vector3d.UNIT_X;
+public class Turtle {
+
+    private Scene scene;
+
+    private Vector3d heading = Vector3d.UNIT_Y;
     private Vector3d position = Vector3d.ZERO;
     private double headingAngle;
     private boolean up;
 
-    public TurtleMode() {
-        turtleCommands();
-        Framework framework = new Framework(WIDTH, HEIGHT);
-        framework.addScene(scene);
-        framework.start();
+    public Turtle(Scene scene) {
+        this.scene = scene;
     }
 
-    private void set(int x, int y) {
-        set((double) x, (double) y);
+    public Turtle(Vector3d position, Vector3d heading, Scene scene) {
+        this.position = position;
+        this.heading = heading;
+        this.scene = scene;
     }
 
-    private void set(double x, double y) {
-        position = new Vector3d(x, y, -1);
-    }
-
-    protected void up(){
+    public void up(){
         up = true;
     }
 
-    protected void down(){
+    public void down(){
         up = false;
     }
 
-    protected void turnLeft(double angle) {
+    public void turnLeft(double angle) {
         headingAngle += angle;
         heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
         heading.normalize();
     }
 
-    protected void turnRight(double angle) {
+    public void turnRight(double angle) {
         headingAngle -= angle;
         heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
         heading.normalize();
     }
 
-    protected void move(double length) {
+    public void move(double length) {
         checkArgument(length > 0, "Schrittlänge kann nur positiv sein!");
 
         if (up) {
@@ -66,10 +59,17 @@ public abstract class TurtleMode {
             Vector3d endPosition = position.add(heading.times(length));
             endPosition.z = -1;
             position.z = -1;
-            scene.add(new Line(position, endPosition));
+            Line line = new Line(position, endPosition);
+            scene.add(line);
             position = endPosition;
         }
     }
 
-    public abstract void turtleCommands();
+    public Vector3d getHeading() {
+        return heading;
+    }
+
+    public Vector3d getPosition() {
+        return position;
+    }
 }

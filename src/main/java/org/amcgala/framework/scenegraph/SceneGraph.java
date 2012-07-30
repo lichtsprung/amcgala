@@ -4,6 +4,8 @@ import org.amcgala.framework.scenegraph.transform.Transformation;
 import org.amcgala.framework.scenegraph.visitor.Visitor;
 import org.amcgala.framework.shape.Shape;
 
+import java.util.Collection;
+
 /**
  * Dieses Interface beschreibt die Methoden, die ein Scene Graph zur Verfügung stellen muss.
  *
@@ -134,4 +136,6 @@ public interface SceneGraph {
      * @return die Anzahl der Knoten
      */
     int getNodeCount();
+
+    Collection<Shape> getAllShapes();
 }

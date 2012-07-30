@@ -276,14 +276,17 @@ public final class Framework {
      * @param scene Szene, die geladen werden soll
      */
     public void loadScene(Scene scene) {
-        log.debug("loading scene: " + scene.getLabel());
+        log.info("loading scene: " + scene.getLabel());
         paused = true;
         updateVisitor.setPaused(paused);
+
         camera = scene.getCamera();
         camera.setWidth(frame.getWidth());
         camera.setHeight(frame.getHeight());
+
         renderer = scene.getRenderer();
         renderer.setFrame(frame);
+
         scenegraph = scene.getSceneGraph();
         renderVisitor.setRenderer(renderer);
         renderVisitor.setCamera(camera);

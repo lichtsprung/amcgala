@@ -12,6 +12,8 @@ import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.scenegraph.SceneGraph;
 import org.amcgala.framework.scenegraph.transform.Transformation;
 import org.amcgala.framework.shape.Shape;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +29,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public class Scene {
     public static final Scene EMPTY_SCENE = new Scene("Empty Scene");
+    private static final Logger log = LoggerFactory.getLogger(Scene.class);
     private SceneGraph sceneGraph;
     private Camera camera;
     private Renderer renderer;
@@ -199,5 +202,38 @@ public class Scene {
     @Override
     public int hashCode() {
         return label != null ? label.hashCode() : 0;
+    }
+
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+
+    public void setRenderer(Renderer renderer) {
+        this.renderer = renderer;
+    }
+
+    public double getMinX(){
+
+        return 0;
+    }
+
+    public double getMaxX(){
+        return 0;
+    }
+
+    public double getMinY(){
+        return 0;
+    }
+
+    public double getMaxY(){
+        return 0;
+    }
+
+    public double getMinZ(){
+        return 0;
+    }
+
+    public double getMaxZ(){
+        return 0;
     }
 }
