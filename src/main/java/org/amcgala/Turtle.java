@@ -22,12 +22,15 @@ public class Turtle {
 
     public Turtle(Scene scene) {
         this.scene = scene;
+        headingAngle = 90;
+        heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
     }
 
-    public Turtle(Vector3d position, Vector3d heading, Scene scene) {
+    public Turtle(Vector3d position, Vector3d heading, double headingAngle, Scene scene) {
         this.position = position;
         this.heading = heading;
         this.scene = scene;
+        this.headingAngle = headingAngle;
     }
 
     public void up(){
@@ -71,5 +74,9 @@ public class Turtle {
 
     public Vector3d getPosition() {
         return position;
+    }
+
+    public double getHeadingAngle() {
+        return headingAngle;
     }
 }

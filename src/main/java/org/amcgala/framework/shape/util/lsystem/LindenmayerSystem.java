@@ -53,7 +53,8 @@ public class LindenmayerSystem {
                 case '[':
                     Vector3d position = turtle.getPosition();
                     Vector3d heading = turtle.getHeading();
-                    Turtle t = new Turtle(position, heading, scene);
+                    double headingAngle = turtle.getHeadingAngle();
+                    Turtle t = new Turtle(position, heading, headingAngle, scene);
                     turtles.push(turtle);
                     turtle = t;
                     break;
@@ -73,7 +74,7 @@ public class LindenmayerSystem {
 
     private void applyRules() {
         StringBuilder sb = new StringBuilder(100);
-        for (int i = 0; i < level.level + 1; i++) {
+        for (int i = 0; i < level.level; i++) {
             for (char c : current.toCharArray()) {
                 sb.append(rules.applyReplacementRules(Character.toString(c)));
             }
@@ -86,6 +87,4 @@ public class LindenmayerSystem {
         }
         current = sb.toString();
     }
-
-
 }

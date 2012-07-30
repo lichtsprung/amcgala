@@ -23,13 +23,15 @@ public class LSystem extends Amcgala {
         scene.setCamera(new OrthographicCamera(Vector3d.UNIT_Y, new Vector3d(0, 0, 1), new Vector3d(0, 0, -1)));
 
         LindenmayerSystem lindenmayerSystem = new LindenmayerSystem(
-                new Axiom("+F"),
+                new Axiom("X"),
                 new Rules()
-                        .addReplacementRule("F", "F-F+F+F-F")
-                        .addDrawingRule("F", "M"),
+                        .addReplacementRule("F", "FF")
+                        .addReplacementRule("X", "F-[[X]+X]+F[+FX]-X")
+                        .addDrawingRule("F", "M")
+                        .addDrawingRule("X", ""),
                 new Level(5),
-                new Length(600 / Math.pow(3, 5)),
-                new Angle(60),
+                new Length(5),
+                new Angle(22.3),
                 scene
         );
         // TODO Skalierung und Translation der Szene durch Anpassen der maximalen Ausmaße
