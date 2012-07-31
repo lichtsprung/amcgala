@@ -2,6 +2,7 @@ package org.amcgala;
 
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.shape.Line;
+import org.amcgala.framework.shape.util.CompositeShape;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Math.*;
@@ -13,25 +14,28 @@ import static java.lang.Math.*;
  */
 public class Turtle {
 
-    private Scene scene;
+    private CompositeShape turtleShape;
 
     private Vector3d heading = Vector3d.UNIT_Y;
     private Vector3d position = Vector3d.ZERO;
     private double headingAngle;
     private boolean up;
 
-    public Turtle(Scene scene) {
-        this.scene = scene;
+
+    public Turtle(CompositeShape shape) {
+
+        turtleShape = shape;
         headingAngle = 90;
         heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
     }
 
-    public Turtle(Vector3d position, Vector3d heading, double headingAngle, Scene scene) {
+    public Turtle(Vector3d position, Vector3d heading, double headingAngle, CompositeShape shape) {
         this.position = position;
         this.heading = heading;
-        this.scene = scene;
+        this.turtleShape = shape;
         this.headingAngle = headingAngle;
     }
+
 
     public void up(){
         up = true;
@@ -63,7 +67,7 @@ public class Turtle {
             endPosition.z = -1;
             position.z = -1;
             Line line = new Line(position, endPosition);
-            scene.add(line);
+            turtleShape.add(line);
             position = endPosition;
         }
     }

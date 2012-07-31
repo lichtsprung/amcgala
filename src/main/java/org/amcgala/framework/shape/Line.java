@@ -115,4 +115,12 @@ public class Line extends AbstractShape {
     public String toString() {
         return Objects.toStringHelper(getClass()).add("x1", x1).add("y1", y1).add("x2", x2).add("y2", y2).toString();
     }
+
+    public Vector3d getStart() {
+        return start;
+    }
+
+    public Vector3d getEnd() {
+        return end;
+    }
 }

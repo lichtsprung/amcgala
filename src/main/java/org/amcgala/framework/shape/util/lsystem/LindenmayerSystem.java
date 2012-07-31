@@ -3,6 +3,7 @@ package org.amcgala.framework.shape.util.lsystem;
 import org.amcgala.Scene;
 import org.amcgala.Turtle;
 import org.amcgala.framework.math.Vector3d;
+import org.amcgala.framework.shape.util.CompositeShape;
 
 import java.util.Stack;
 
@@ -22,21 +23,21 @@ public class LindenmayerSystem {
     private Level level;
     private Stack<Turtle> turtles;
     private Turtle turtle;
-    private Scene scene;
+    private CompositeShape shape;
     private String current;
     private Length length;
     private Angle angle;
 
 
-    public LindenmayerSystem(Axiom axiom, Rules rules, Level level, Length length, Angle angle, Scene scene) {
+    public LindenmayerSystem(Axiom axiom, Rules rules, Level level, Length length, Angle angle, CompositeShape shape) {
         this.axiom = axiom;
         this.rules = rules;
         this.level = level;
         this.length = length;
         this.angle = angle;
-        this.scene = scene;
+        this.shape = shape;
         turtles = new Stack<Turtle>();
-        turtle = new Turtle(scene);
+        turtle = new Turtle(shape);
         current = axiom.axiom;
     }
 
@@ -54,7 +55,7 @@ public class LindenmayerSystem {
                     Vector3d position = turtle.getPosition();
                     Vector3d heading = turtle.getHeading();
                     double headingAngle = turtle.getHeadingAngle();
-                    Turtle t = new Turtle(position, heading, headingAngle, scene);
+                    Turtle t = new Turtle(position, heading, headingAngle, shape);
                     turtles.push(turtle);
                     turtle = t;
                     break;
@@ -62,6 +63,9 @@ public class LindenmayerSystem {
                     turtle = turtles.pop();
                     break;
                 case 'm':
+                    turtle.up();
+                    turtle.move(length.length);
+                    turtle.down();
                     break;
                 case 'M':
                     turtle.move(length.length);

@@ -30,5 +30,6 @@ public class SceneGraphTest {
         log.info("Ein leerer Szenengraph hat nur einen Knoten mit dem Namen 'root'");
         int nodeCount = sceneGraph.getNodeCount();
         assertEquals(nodeCount, 1);
+
     }
 }

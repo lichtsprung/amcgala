@@ -4,6 +4,7 @@ import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.animation.Updatable;
 import org.amcgala.framework.renderer.Renderable;
 import org.amcgala.framework.scenegraph.Node;
+import org.amcgala.framework.shape.util.bounds.BoundingBox;
 
 import java.awt.Color;
 
@@ -58,4 +59,10 @@ public interface Shape extends Updatable, Renderable {
      * @param node der neue Knoten
      */
     void setNode(Node node);
+
+    /**
+     * Gibt die {@link BoundingBox} des Shapes zurück.
+     * @return die BoundingBox
+     */
+    BoundingBox getBoundingBox();
 }

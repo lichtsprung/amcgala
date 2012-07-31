@@ -16,6 +16,7 @@ package org.amcgala.framework.shape;
 
 import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.scenegraph.Node;
+import org.amcgala.framework.shape.util.bounds.BoundingBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,11 +31,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public abstract class AbstractShape implements Shape {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractShape.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractShape.class);
     private Color color = Color.BLACK;
     private Animation animation;
     private Node node;
     protected String label = getClass().getSimpleName() + " - " + System.nanoTime();
+    protected BoundingBox boundingBox = new BoundingBox();
 
 
     @Override
@@ -78,4 +80,10 @@ public abstract class AbstractShape implements Shape {
     public void setNode(Node node) {
         this.node = node;
     }
+
+    @Override
+    public BoundingBox getBoundingBox(){
+        return boundingBox;
+    }
+
 }

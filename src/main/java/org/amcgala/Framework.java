@@ -76,6 +76,9 @@ public final class Framework {
     private int currentSceneIndex;
     private boolean paused;
 
+    private int width;
+    private int height;
+
     /**
      * Erstellt ein neues Framework, das eine grafische Ausgabe in der Auflösung
      * width x height hat.
@@ -85,6 +88,8 @@ public final class Framework {
      */
     public Framework(int width, int height) {
         log.info("Initialising framework");
+        this.width = width;
+        this.height = height;
 
         frameworkInputHandlers = new HashMap<String, InputHandler>();
         frameworkEventBus = new EventBus("Framework Input Event Bus");
@@ -387,5 +392,13 @@ public final class Framework {
      */
     public int getSceneCount() {
         return sceneList.size();
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }
