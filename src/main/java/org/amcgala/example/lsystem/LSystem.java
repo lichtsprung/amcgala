@@ -38,11 +38,17 @@ public class LSystem extends Amcgala {
                 new Angle(22.3),
                 shape
         );
-        // TODO Skalierung und Translation der Szene durch Anpassen der maximalen Ausmaße
+
         lindenmayerSystem.run();
 
         if (shape.getBoundingBox().getWidth() < framework.getWidth() && shape.getBoundingBox().getHeight() < framework.getHeight()) {
             scene.add(new Translation(-shape.getBoundingBox().getCenter().x, -shape.getBoundingBox().getCenter().y, -shape.getBoundingBox().getCenter().z));
+        }else {
+            if (shape.getBoundingBox().getWidth() > framework.getWidth()) {
+                // TODO skalierung hinzufügen
+            }else{
+                // TODO skalierung hinzufügen
+            }
         }
 
         framework.addScene(scene);
