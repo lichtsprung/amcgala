@@ -14,7 +14,10 @@
  */
 package org.amcgala.framework.scenegraph.visitor;
 
+import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.scenegraph.Node;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Der UpdateVisitor traversiert den Szenengraph und ruft die update Methode
@@ -23,7 +26,9 @@ import org.amcgala.framework.scenegraph.Node;
  * @author Robert Giacinto
  */
 public class UpdateVisitor implements Visitor {
+    private static final Logger log = LoggerFactory.getLogger(UpdateVisitor.class);
     private boolean paused;
+
 
     public boolean isPaused() {
         return paused;

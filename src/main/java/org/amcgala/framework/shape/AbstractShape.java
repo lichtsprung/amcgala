@@ -15,6 +15,7 @@
 package org.amcgala.framework.shape;
 
 import org.amcgala.framework.animation.Animation;
+import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.shape.util.bounds.BoundingBox;
 import org.slf4j.Logger;
@@ -59,6 +60,11 @@ public abstract class AbstractShape implements Shape {
         if (animation != null) {
             animation.update();
         }
+    }
+
+    @Override
+    public void updateBoundingBox(Matrix transform){
+        boundingBox.updateBox(transform);
     }
 
     @Override

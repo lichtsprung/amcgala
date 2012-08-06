@@ -59,6 +59,21 @@ public class Translation implements Transformation {
         updateMatrix();
     }
 
+    public void setTranslateX(double translateX) {
+        this.translateX = translateX;
+        updateMatrix();
+    }
+
+    public void setTranslateY(double translateY) {
+        this.translateY = translateY;
+        updateMatrix();
+    }
+
+    public void setTranslateZ(double translateZ) {
+        this.translateZ = translateZ;
+        updateMatrix();
+    }
+
     private void updateMatrix() {
         double[][] values = {
                 {1, 0, 0, translateX},

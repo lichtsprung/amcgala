@@ -74,6 +74,36 @@ public class Scale implements Transformation {
         return transformMatrix;
     }
 
+    public void setScaleX(double scaleX) {
+        this.scaleX = scaleX;
+        updateMatrix();
+    }
+
+    public void setScaleY(double scaleY) {
+        this.scaleY = scaleY;
+        updateMatrix();
+    }
+
+    public void setScaleZ(double scaleZ) {
+        this.scaleZ = scaleZ;
+        updateMatrix();
+    }
+
+    public void changeScaleX(double diffX) {
+        scaleX += diffX;
+        updateMatrix();
+    }
+
+    public void changeScaleY(double diffY) {
+        scaleY= diffY;
+        updateMatrix();
+    }
+
+    public void changeScaleZ(double diffZ) {
+        scaleZ+= diffZ;
+        updateMatrix();
+    }
+
     @Override
     public void update() {
         if (interpolationX != null) {
