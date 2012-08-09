@@ -2,6 +2,7 @@ package org.amcgala.framework.shape;
 
 import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.animation.Updatable;
+import org.amcgala.framework.appearance.Appearance;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.renderer.Renderable;
 import org.amcgala.framework.scenegraph.Node;
@@ -80,4 +81,18 @@ public interface Shape extends Updatable, Renderable {
      * @param transform die Transformationsmatrix
      */
     void updateBoundingBox(Matrix transform);
+
+    /**
+     * Gibt die {@link Appearance} des Objekts zurück.
+     *
+     * @return die Appearance des Objekts
+     */
+    Appearance getAppearance();
+
+    /**
+     * Ändert die {@link Appearance} des Objekts.
+     *
+     * @param appearance die neue Appearance
+     */
+    void setAppearance(Appearance appearance);
 }

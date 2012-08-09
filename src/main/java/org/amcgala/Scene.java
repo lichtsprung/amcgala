@@ -4,6 +4,7 @@ import com.google.common.eventbus.EventBus;
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.camera.SimplePerspectiveCamera;
 import org.amcgala.framework.event.InputHandler;
+import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.DefaultRenderer;
 import org.amcgala.framework.renderer.Renderer;
@@ -56,7 +57,7 @@ public class Scene {
      *
      * @param shape das hinzuzufügende Objekt
      */
-    public void add(Shape shape) {
+    public void addShape(Shape shape) {
         sceneGraph.addShape(shape);
     }
 
@@ -65,7 +66,7 @@ public class Scene {
      *
      * @param node der neue Knoten
      */
-    public void add(Node node) {
+    public void addNode(Node node) {
         sceneGraph.addNode(node);
     }
 
@@ -86,7 +87,7 @@ public class Scene {
      * @param shape     das Shape, das der Szene hinzugefügt werden soll
      * @param nodeLabel das Label des Knotens
      */
-    public void add(Shape shape, String nodeLabel) {
+    public void addShape(Shape shape, String nodeLabel) {
         sceneGraph.addShape(shape, nodeLabel);
     }
 
@@ -96,7 +97,7 @@ public class Scene {
      * @param node        der neue Knoten, der hinzugefügt werden soll
      * @param parentLabel das Label des Elternknotens
      */
-    public void add(Node node, String parentLabel) {
+    public void addNode(Node node, String parentLabel) {
         sceneGraph.addNode(node, parentLabel);
     }
 
@@ -107,7 +108,7 @@ public class Scene {
      * @param child  der neue Kindsknoten
      * @param parent der Elternknoten
      */
-    public void add(Node child, Node parent) {
+    public void addNode(Node child, Node parent) {
         sceneGraph.addNode(child, parent);
     }
 
@@ -116,7 +117,7 @@ public class Scene {
      *
      * @param transformation die Transformation, die hinzugefügt werden soll
      */
-    public void add(Transformation transformation) {
+    public void addTransformation(Transformation transformation) {
         sceneGraph.addTransformation(transformation);
     }
 
@@ -213,28 +214,11 @@ public class Scene {
         this.renderer = renderer;
     }
 
-    public double getMinX() {
-
-        return 0;
+    public void addLight(Light light){
+        sceneGraph.addLight(light);
     }
 
-    public double getMaxX() {
-        return 0;
-    }
-
-    public double getMinY() {
-        return 0;
-    }
-
-    public double getMaxY() {
-        return 0;
-    }
-
-    public double getMinZ() {
-        return 0;
-    }
-
-    public double getMaxZ() {
-        return 0;
+    public boolean hasLights(){
+        return false;
     }
 }

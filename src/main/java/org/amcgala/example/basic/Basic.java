@@ -51,12 +51,12 @@ public class Basic extends Amcgala {
 
 
         // Hinzufügen von Baumhierarchien
-        scene2.add(node2);  // root -> node2
-        scene2.add(node3, node2); // root -> node2 -> node3
+        scene2.addNode(node2);  // root -> node2
+        scene2.addNode(node3, node2); // root -> node2 -> node3
 
         // Hinzufügen eines Shapes zu einem bestimmten Knoten über das Label des Knotens
-        scene2.add(line2, "lineNode");
-        scene2.add(line3, "lineNode");
+        scene2.addShape(line2, "lineNode");
+        scene2.addShape(line3, "lineNode");
 
         framework.addScene(scene2);
 

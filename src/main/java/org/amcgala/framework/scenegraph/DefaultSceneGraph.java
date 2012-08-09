@@ -14,6 +14,7 @@
  */
 package org.amcgala.framework.scenegraph;
 
+import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.scenegraph.transform.Transformation;
 import org.amcgala.framework.scenegraph.visitor.Visitor;
 import org.amcgala.framework.shape.Shape;
@@ -38,6 +39,7 @@ public class DefaultSceneGraph implements SceneGraph {
     private Node root;
     private Map<String, Node> nodes;
     private Map<String, Shape> shapes;
+    private Map<String, Light> lights;
 
     /**
      * Standardkonstruktor.
@@ -46,6 +48,7 @@ public class DefaultSceneGraph implements SceneGraph {
         root = new Node("root");
         nodes = new HashMap<String, Node>();
         shapes = new HashMap<String, Shape>();
+        lights = new HashMap<String, Light>();
 
         nodes.put(root.getLabel(), root);
     }
@@ -163,8 +166,33 @@ public class DefaultSceneGraph implements SceneGraph {
     }
 
     @Override
+    public void removeLight(String label) {
+        checkArgument(lights.containsKey(label), "Light " + label + " konnte nicht gefunden werden");
+
+    }
+
+    @Override
     public void addTransformation(Transformation... transformations) {
         root.add(transformations);
+    }
+
+    @Override
+    public void addLight(Light light) {
+        root.addLight(light);
+        lights.put(light.getLabel(), light);
+    }
+
+    @Override
+    public void addLight(Light light, Node node) {
+        if (!nodes.containsValue(node)) {
+            addNode(node);
+        }
+        node.addLight(light);
+    }
+
+    @Override
+    public void addLight(Light light, String label) {
+        getNode(label).addLight(light);
     }
 
     @Override

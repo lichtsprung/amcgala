@@ -1,5 +1,6 @@
 package org.amcgala.framework.scenegraph;
 
+import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.scenegraph.transform.Transformation;
 import org.amcgala.framework.scenegraph.visitor.Visitor;
 import org.amcgala.framework.shape.Shape;
@@ -78,6 +79,29 @@ public interface SceneGraph {
     void addTransformation(Transformation... transformations);
 
     /**
+     * Fügt dem Root-Knoten des Szenengraphs ein neues Lichtobjekt hinzu.
+     *
+     * @param light das neue Lichtobjekt, das hinzugefügt werden soll
+     */
+    void addLight(Light light);
+
+    /**
+     * Fügt einem Knoten ein neues Lichtobjekt hinzu.
+     *
+     * @param light das neue Lichtobjekt
+     * @param node  der Knoten, dem das Licht hinzugefügt werden soll
+     */
+    void addLight(Light light, Node node);
+
+    /**
+     * Fügt einem Knoten eine neues Lichtobjekt hinzu.
+     *
+     * @param light das Lichtobjekt
+     * @param label der Name des Knotens
+     */
+    void addLight(Light light, String label);
+
+    /**
      * Entfernt den Knoten aus dem Szenengraph.
      *
      * @param node {@link Node}, das entfernt werden soll
@@ -93,6 +117,7 @@ public interface SceneGraph {
 
     /**
      * Entfernt ein Shape aus dem Szenengraph.
+     *
      * @param shape das {@link Shape}, das entfernt werden soll
      */
     void removeShape(Shape shape);
@@ -129,6 +154,8 @@ public interface SceneGraph {
      * @param label der Name des Shapes, das entfernt werden soll
      */
     void removeShape(String label);
+
+    void removeLight(String label);
 
     /**
      * Gibt die Anzahl der Knoten im Szenengraph zurück.

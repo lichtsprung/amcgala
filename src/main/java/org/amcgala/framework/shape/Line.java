@@ -15,7 +15,9 @@
 package org.amcgala.framework.shape;
 
 import com.google.common.base.Objects;
+import org.amcgala.Framework;
 import org.amcgala.framework.math.Vector3d;
+import org.amcgala.framework.renderer.Pixel;
 import org.amcgala.framework.renderer.Renderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,7 +108,87 @@ public class Line extends AbstractShape {
 
     @Override
     public void render(Renderer renderer) {
-        renderer.drawLine(start, end);
+        if (Framework.getInstance().getActiveScene().hasLights()) {
+// Start- und Endpunkt der Linie in Pixeln, mit denen die Linienalgorithmen durchgefuehrt werden.
+            Pixel startPixel = renderer.getPixel(start);
+            Pixel endPixel = renderer.getPixel(end);
+
+            // Wir zeichnen von links nach rechts. Sollte der Startpixel rechts vom Endpixel liegen, dann tauschen wir die Pixel.
+            if (startPixel.x > endPixel.x) {
+                Pixel tmp = startPixel;
+                startPixel = endPixel;
+                endPixel = tmp;
+            }
+
+
+            /*
+            * Beginn des Bresenham Algorithmus
+            */
+            double dx = endPixel.x - startPixel.x;
+            double dy = endPixel.y - startPixel.y;
+            double dx2 = 2 * dx;
+            double dy2 = 2 * dy;
+
+            double e;
+            double y = startPixel.y;
+            double x = startPixel.x;
+            double z = start.z;
+
+            double dz = end.z - start.z;
+            dz = Math.round(dz);
+
+            int i = 1;
+            Vector3d v = new Vector3d(x, y, z);
+            renderer.drawPixel(v, appearance);
+
+            //1.+8. Oktant
+            if (dy <= dx && -dy <= dx) {
+                e = Math.abs(dy2) - dx;
+                while (i <= dx) {
+                    if (e >= 0) { /*
+                     * Diagonalschritt
+                     */
+                        if (dy <= 0) {
+                            y--;
+                        } else {
+                            y++;
+                        }
+                        e -= dx2;
+                    }
+                    x++;
+                    i++;
+                    e += Math.abs(dy2);
+
+                    z += (dz / dx);
+                    v = new Vector3d(x, y, z);
+
+                    renderer.drawPixel(v, appearance);
+                }
+            }
+
+            //2.+7. Oktant
+            if (Math.abs(dy) > dx) {
+                e = dx2 - Math.abs(dy);
+                while (i <= Math.abs(dy)) {
+                    if (e >= 0) {
+                        x++;
+                        e -= Math.abs(dy2);
+                    }
+                    if (dy > 0) {
+                        y++;
+                    } else {
+                        y--;
+                    }
+                    i++;
+                    e += dx2;
+                    z += (dz / dx);
+                    v = new Vector3d(x, y, z);
+                    renderer.drawPixel(v,appearance);
+                }
+            }
+        } else {
+            renderer.drawLine(start, end);
+        }
     }
 
     /**

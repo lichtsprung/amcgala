@@ -26,7 +26,7 @@ public class LSystem extends Amcgala {
         final Scene scene = new Scene("lsystem");
         scene.setCamera(new OrthographicCamera(Vector3d.UNIT_Y, new Vector3d(0, 0, 1), new Vector3d(0, 0, -1)));
         CompositeShape shape = new CompositeShape();
-        scene.add(shape);
+        scene.addShape(shape);
 
         LindenmayerSystem lindenmayerSystem = new LindenmayerSystem(
                 new Axiom("X"),
@@ -45,8 +45,8 @@ public class LSystem extends Amcgala {
 
         final Translation translation = new Translation(0, 0, 0);
         final Scale scaling = new Scale(1, 1, 1);
-        scene.add(translation);
-        scene.add(scaling);
+        scene.addTransformation(translation);
+        scene.addTransformation(scaling);
 
         shape.setAnimation(new Animation<CompositeShape>(shape) {
 

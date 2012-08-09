@@ -59,6 +59,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class Framework {
 
     private static final Logger log = LoggerFactory.getLogger(Framework.class);
+    private static Framework instance;
+
     private SceneGraph scenegraph;
     private Renderer renderer;
     private Camera camera;
@@ -79,6 +81,21 @@ public final class Framework {
     private int width;
     private int height;
 
+    public static Framework createInstance(int width, int height) {
+        checkArgument(instance == null, "Es können keine weiteren Instanzen von Framework erzeugt werden!");
+        instance = new Framework(width, height);
+        return instance;
+    }
+
+    public static Framework getInstance(){
+        if(instance == null) {
+            return createInstance(800, 600);
+        }else{
+            return instance;
+        }
+    }
+
+
     /**
      * Erstellt ein neues Framework, das eine grafische Ausgabe in der Auflösung
      * width x height hat.
@@ -86,7 +103,7 @@ public final class Framework {
      * @param width  die Breite der Auflösung
      * @param height die Höhe der Auflösung
      */
-    public Framework(int width, int height) {
+    private Framework(int width, int height) {
         log.info("Initialising framework");
         this.width = width;
         this.height = height;
@@ -383,6 +400,14 @@ public final class Framework {
                 loadScene(sceneList.get(currentSceneIndex));
             }
         }
+    }
+
+    /**
+     * Gibt die gerade aktive Szene zurück.
+     * @return die aktive Szene
+     */
+    public Scene getActiveScene() {
+        return activeScene;
     }
 
     /**

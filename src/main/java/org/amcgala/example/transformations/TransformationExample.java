@@ -18,10 +18,10 @@ public class TransformationExample extends Amcgala {
         Scene scene = new Scene("transformation scene");
         Line line = new Line(0, 0, 200, 0);
         Node node = new Node("linie");
-        scene.add(node);
+        scene.addNode(node);
         scene.add(line, node);
 
-        scene.add(new Translation(100, 0, 0));
+        scene.addTransformation(new Translation(100, 0, 0));
         node.add(new RotationZ(Math.PI / 17));
 
         framework.addScene(scene);

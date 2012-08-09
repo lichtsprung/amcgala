@@ -7,5 +7,5 @@ package org.amcgala;
  * @since 2.0
  */
 public class Amcgala {
-    protected final Framework framework = new Framework(800, 600);
+    protected final Framework framework = Framework.getInstance();
 }

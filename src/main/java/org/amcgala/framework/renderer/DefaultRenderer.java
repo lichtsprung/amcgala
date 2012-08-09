@@ -14,7 +14,9 @@
  */
 package org.amcgala.framework.renderer;
 
+import org.amcgala.framework.appearance.Appearance;
 import org.amcgala.framework.camera.Camera;
+import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
 
@@ -22,11 +24,12 @@ import javax.swing.JFrame;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Wird von jedem DefaultRenderer erweitert und stellt die Funktionen putPixel und show
+ * Wird von jedem DefaultRenderer erweitert und stellt die Funktionen drawPixel und show
  * zur Verfügung.
  */
 public class DefaultRenderer implements Renderer {
@@ -46,6 +49,7 @@ public class DefaultRenderer implements Renderer {
     private Graphics g;
     private Camera camera;
     private Matrix transformationMatrix;
+    private List<Light> lights;
 
     public DefaultRenderer(Camera camera) {
         this.camera = checkNotNull(camera);
@@ -73,6 +77,11 @@ public class DefaultRenderer implements Renderer {
     }
 
     @Override
+    public void setLights(List<Light> lights) {
+        this.lights = lights;
+    }
+
+    @Override
     public Camera getCamera() {
         return camera;
     }
@@ -83,18 +92,24 @@ public class DefaultRenderer implements Renderer {
     }
 
     @Override
-    public void putPixel(Pixel pixel) {
+    public void drawPixel(Pixel pixel) {
         checkNotNull(pixel);
         g.setColor(pixel.color);
         g.fillRect(offsetX + pixel.x, -pixel.y + offsetY, 1, 1);
     }
 
     @Override
-    public void putPixel(Pixel pixel, Color color) {
+    public void drawPixel(Pixel pixel, Color color) {
         checkNotNull(pixel);
         checkNotNull(color);
         setColor(color);
         g.fillRect(offsetX + pixel.x, -pixel.y + offsetY, 1, 1);
+    }
+
+    @Override
+    public Pixel getPixel(Vector3d vector) {
+        Vector3d tv = checkNotNull(vector).transform(transformationMatrix);
+        return camera.getImageSpaceCoordinates(tv);
     }
 
     @Override
@@ -139,10 +154,15 @@ public class DefaultRenderer implements Renderer {
     }
 
     @Override
-    public void putPixel(Vector3d point, Color color) {
+    public void drawPixel(Vector3d point, Color color) {
         Vector3d tv = checkNotNull(point).transform(transformationMatrix);
         Pixel p = camera.getImageSpaceCoordinates(tv);
-        putPixel(p, checkNotNull(color));
+        drawPixel(p, checkNotNull(color));
+    }
+
+    @Override
+    public void drawPixel(Vector3d vector, Appearance appearance) {
+        // TODO muss implementiert werden, dass die Appearances richtig verwendet werden.
     }
 
     @Override

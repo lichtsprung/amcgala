@@ -1,18 +1,18 @@
 package org.amcgala.framework.renderer;
 
+import org.amcgala.framework.appearance.Appearance;
 import org.amcgala.framework.camera.Camera;
+import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
 
 import javax.swing.JFrame;
 import java.awt.Color;
+import java.util.List;
 
 /**
- * Created with IntelliJ IDEA.
- * User: robert
- * Date: 6/19/12
- * Time: 2:13 PM
- * To change this template use File | Settings | File Templates.
+ * Dieses Interface, welche Methoden ein Renderer zur Verfügung stellen muss, um vom Framework benutzt werden zu können.
+ * @author Robert Giacinto
  */
 public interface Renderer {
     /**
@@ -33,6 +33,8 @@ public interface Renderer {
 
     void setTransformationMatrix(Matrix transformationMatrix);
 
+    void setLights(List<Light> lights);
+
     Camera getCamera();
 
     Matrix getTransformationMatrix();
@@ -44,7 +46,7 @@ public interface Renderer {
      *
      * @param pixel der Pixel, der dargestellt werden soll
      */
-    void putPixel(Pixel pixel);
+    void drawPixel(Pixel pixel);
 
     /**
      * Diese Methode stellt einen Pixel in einer bestimmten Farbe über den
@@ -54,7 +56,14 @@ public interface Renderer {
      * @param pixel der Pixel, der dargestellt werden soll
      * @param color die Farbe des Pixels
      */
-    void putPixel(Pixel pixel, Color color);
+    void drawPixel(Pixel pixel, Color color);
+
+    /**
+     * Gibt den Pixel zu einem Vector zurück.
+     * @param vector der Vector
+     * @return der Pixel auf dem Bildschirm
+     */
+    Pixel getPixel(Vector3d vector);
 
     /**
      * Setzt eine neue Farbe, mit der die weiteren Zeichenbefehle ausgeführt werden.
@@ -84,7 +93,9 @@ public interface Renderer {
 
     void drawCircle(Vector3d pos, double radius);
 
-    void putPixel(Vector3d point, Color color);
+    void drawPixel(Vector3d point, Color color);
+
+    void drawPixel(Vector3d vector, Appearance appearance);
 
     void setFrame(JFrame frame);
 

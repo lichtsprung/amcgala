@@ -15,6 +15,7 @@
 package org.amcgala.framework.scenegraph.visitor;
 
 import org.amcgala.framework.camera.Camera;
+import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.Node;
@@ -23,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ConcurrentModificationException;
+import java.util.List;
 
 /**
  * Der RenderVisitor traversiert einmal pro Frame über den Szenengraph und
@@ -61,6 +63,8 @@ public class RenderVisitor implements Visitor {
         synchronized (node.getShapes()) {
             Matrix transform = node.getTransformMatrix();
             renderer.setTransformationMatrix(transform);
+
+            List<Light> lights = node.getLights();
 
             for (Shape shape : node.getShapes()) {
                 try {

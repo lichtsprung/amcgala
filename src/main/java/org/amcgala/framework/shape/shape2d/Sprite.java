@@ -135,7 +135,7 @@ public class Sprite extends AbstractShape {
     @Override
     public void render(Renderer renderer) {
         for (Pixel pixel : pixels) {
-            renderer.putPixel(pixel);
+            renderer.drawPixel(pixel);
         }
     }
 

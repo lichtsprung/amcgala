@@ -16,6 +16,7 @@ package org.amcgala.framework.scenegraph;
 
 import com.google.common.base.Objects;
 import org.amcgala.framework.animation.Updatable;
+import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.scenegraph.transform.Transformation;
 import org.amcgala.framework.scenegraph.transform.Translation;
@@ -61,6 +62,9 @@ public final class Node implements Updatable {
      * dargestellt werden.
      */
     private final List<Shape> shapes;
+
+    private final List<Light> lights;
+
     /**
      * Die Transformationen, die an diesem Knoten hängen und sich auf die {@link Shape} Objekte
      * des Knotens und aller Kindsknoten auswirkt.
@@ -79,6 +83,7 @@ public final class Node implements Updatable {
         transformations.add(new Translation(0, 0, 0));
         shapes = new CopyOnWriteArrayList<Shape>();
         children = new CopyOnWriteArrayList<Node>();
+        lights = new CopyOnWriteArrayList<Light>();
     }
 
     /**
@@ -275,6 +280,16 @@ public final class Node implements Updatable {
         }
 
         return matrix;
+    }
+
+    public void addLight(Light light) {
+        synchronized (lights) {
+            lights.add(light);
+        }
+    }
+
+    public List<Light> getLights() {
+        return null;
     }
 
 

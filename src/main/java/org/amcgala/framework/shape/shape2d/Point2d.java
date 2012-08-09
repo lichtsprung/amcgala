@@ -46,7 +46,7 @@ public class Point2d extends AbstractShape {
     @Override
     public void render(Renderer renderer) {
         Vector3d point = Vector3d.createVector3d(x, y, -1);
-        renderer.putPixel(point, getColor());
+        renderer.drawPixel(point, getColor());
     }
 
     @Override

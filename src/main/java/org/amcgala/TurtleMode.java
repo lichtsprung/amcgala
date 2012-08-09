@@ -24,7 +24,7 @@ public abstract class TurtleMode {
 
     public TurtleMode() {
         turtleCommands();
-        Framework framework = new Framework(WIDTH, HEIGHT);
+        Framework framework = Framework.createInstance(WIDTH, HEIGHT);
         framework.addScene(scene);
         framework.start();
     }
@@ -66,7 +66,7 @@ public abstract class TurtleMode {
             Vector3d endPosition = position.add(heading.times(length));
             endPosition.z = -1;
             position.z = -1;
-            scene.add(new Line(position, endPosition));
+            scene.addShape(new Line(position, endPosition));
             position = endPosition;
         }
     }
