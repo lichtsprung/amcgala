@@ -102,6 +102,7 @@ public class Scene {
 
     /**
      * Fügt einem Elternknoten einen neuen Kindsknoten im Szenengraph hinzu.
+     * TODO das Erweitern der Baumhierarchie über eine Methode in einer Szene ist umständlich. Die Hierarchie sollte automatisch aktualisiert werden, wenn ein neuer Knoten hinzufügt wird.
      *
      * @param child  der neue Kindsknoten
      * @param parent der Elternknoten
@@ -212,28 +213,28 @@ public class Scene {
         this.renderer = renderer;
     }
 
-    public double getMinX(){
+    public double getMinX() {
 
         return 0;
     }
 
-    public double getMaxX(){
+    public double getMaxX() {
         return 0;
     }
 
-    public double getMinY(){
+    public double getMinY() {
         return 0;
     }
 
-    public double getMaxY(){
+    public double getMaxY() {
         return 0;
     }
 
-    public double getMinZ(){
+    public double getMinZ() {
         return 0;
     }
 
-    public double getMaxZ(){
+    public double getMaxZ() {
         return 0;
     }
 }
