@@ -15,6 +15,7 @@
 package org.amcgala.framework.scenegraph;
 
 import com.google.common.base.Objects;
+import org.amcgala.Framework;
 import org.amcgala.framework.animation.Updatable;
 import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Matrix;
@@ -289,7 +290,8 @@ public final class Node implements Updatable {
     }
 
     public List<Light> getLights() {
-        return null;
+        // TODO hier muss die gesamte Lichthierarchie übergeben werden.
+        return lights;
     }
 
 

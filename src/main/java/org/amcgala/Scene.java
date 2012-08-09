@@ -216,9 +216,11 @@ public class Scene {
 
     public void addLight(Light light){
         sceneGraph.addLight(light);
+
     }
 
     public boolean hasLights(){
-        return false;
+        // TODO das muss noch den korrekten Wert zurückgeben.
+        return true;
     }
 }

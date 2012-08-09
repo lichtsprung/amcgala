@@ -16,7 +16,7 @@ package org.amcgala.framework.shape;
 
 import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.appearance.Appearance;
-import org.amcgala.framework.appearance.BasicAppearance;
+import org.amcgala.framework.appearance.DefaultAppearance;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.shape.util.bounds.BoundingBox;
@@ -35,22 +35,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class AbstractShape implements Shape {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractShape.class);
-    protected Color color = Color.BLACK;
     private Animation animation;
     private Node node;
     protected String label = getClass().getSimpleName() + " - " + System.nanoTime();
     protected BoundingBox boundingBox = new BoundingBox();
-    protected Appearance appearance = new BasicAppearance();
+    protected Appearance appearance = new DefaultAppearance();
 
 
     @Override
     public Color getColor() {
-        return color;
+        return appearance.getColor();
     }
 
     @Override
     public void setColor(Color color) {
-        this.color = checkNotNull(color);
+        appearance.setColor(checkNotNull(color));
     }
 
     @Override

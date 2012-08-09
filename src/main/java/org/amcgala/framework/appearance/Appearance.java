@@ -50,4 +50,32 @@ public interface Appearance {
      * @return die Farbe
      */
     Color getColor();
+
+    /**
+     * Ändert die Farbe der Appearance
+     *
+     * @param color die neue Farbe
+     */
+    void setColor(Color color);
+
+    /**
+     * Ändert den Reflexionskoeffizienten der Appearance.
+     *
+     * @param reflectionCoefficient der neue Reflexionskoeffizient
+     */
+    void setReflectionCoefficient(double reflectionCoefficient);
+
+    /**
+     * Ändert den Glanzkoeffizienten der Appearance.
+     *
+     * @param specularCoefficient der neue Glanzkoeffizient
+     */
+    void setSpecularCoefficient(double specularCoefficient);
+
+    /**
+     * Ändert den Glanzexponenten der Appearance.
+     *
+     * @param specularExponent der neue Glanzexponent
+     */
+    void setSpecularExponent(double specularExponent);
 }

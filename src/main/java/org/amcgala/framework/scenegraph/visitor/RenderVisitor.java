@@ -65,6 +65,7 @@ public class RenderVisitor implements Visitor {
             renderer.setTransformationMatrix(transform);
 
             List<Light> lights = node.getLights();
+            renderer.setLights(lights);
 
             for (Shape shape : node.getShapes()) {
                 try {

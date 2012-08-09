@@ -18,7 +18,7 @@ public class LightsDemo extends Amcgala{
         Scene lightScene = new Scene("Light scene");
         PointLight pointLight = new PointLight("punktlicht", new AmbientLight("umgebungslicht", 0.5, new Color(255, 255, 255)), new Vector3d(150, 100, 1));
 
-        Mesh m = new Mesh(new Vector3d(-400, -300, 0), 800, 600, 100);
+        Mesh m = new Mesh(new Vector3d(-50, -50, 500), 100, 100, 100);
 
         lightScene.addShape(m);
         lightScene.addLight(pointLight);

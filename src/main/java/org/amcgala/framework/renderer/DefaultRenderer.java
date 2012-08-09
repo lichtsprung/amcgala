@@ -162,7 +162,11 @@ public class DefaultRenderer implements Renderer {
 
     @Override
     public void drawPixel(Vector3d vector, Appearance appearance) {
-        // TODO muss implementiert werden, dass die Appearances richtig verwendet werden.
+        Color c = appearance.getColor();
+        for(Light light : lights) {
+            c = light.interpolate(c, vector, camera.getPosition(), appearance);
+        }
+        drawPixel(vector, c);
     }
 
     @Override

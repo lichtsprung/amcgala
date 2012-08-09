@@ -109,7 +109,7 @@ public class Line extends AbstractShape {
     @Override
     public void render(Renderer renderer) {
         if (Framework.getInstance().getActiveScene().hasLights()) {
-// Start- und Endpunkt der Linie in Pixeln, mit denen die Linienalgorithmen durchgefuehrt werden.
+            // Start- und Endpunkt der Linie in Pixeln, mit denen die Linienalgorithmen durchgefuehrt werden.
             Pixel startPixel = renderer.getPixel(start);
             Pixel endPixel = renderer.getPixel(end);
 
@@ -183,7 +183,7 @@ public class Line extends AbstractShape {
                     e += dx2;
                     z += (dz / dx);
                     v = new Vector3d(x, y, z);
-                    renderer.drawPixel(v,appearance);
+                    renderer.drawPixel(v, appearance);
                 }
             }
         } else {
