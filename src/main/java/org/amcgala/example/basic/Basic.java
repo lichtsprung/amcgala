@@ -5,9 +5,13 @@ import org.amcgala.Amcgala;
 import org.amcgala.Scene;
 import org.amcgala.framework.event.InputHandler;
 import org.amcgala.framework.event.KeyPressedEvent;
+import org.amcgala.framework.lighting.AmbientLight;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.shape.Line;
+import org.amcgala.framework.shape.Polygon;
+import org.amcgala.framework.shape.util.PLYPolygonParser;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
@@ -19,7 +23,7 @@ import java.util.Random;
  */
 public class Basic extends Amcgala {
 
-    public Basic() {
+    public Basic() throws Exception {
         final Scene scene = new Scene("one");
         final Node node = new Node("lineNode");
         Line line = new Line(-100, -100, 100, 100, "Line1");
@@ -34,9 +38,9 @@ public class Basic extends Amcgala {
             public void addRandomLine(KeyPressedEvent e) {
                 if (KeyEvent.VK_ENTER == e.getKeyCode()) {
                     scene.add(new Line(-400 + random.nextInt(800),
-                            -300 + random.nextInt(600),
-                            -400 + random.nextInt(800),
-                            -300 + random.nextInt(600)), node);
+                                       -300 + random.nextInt(600),
+                                       -400 + random.nextInt(800),
+                                       -300 + random.nextInt(600)), node);
                 }
             }
         }, "Random Line");
@@ -60,6 +64,16 @@ public class Basic extends Amcgala {
 
         framework.addScene(scene2);
 
+        Scene scene3 = new Scene("three");
+        for (Polygon p : PLYPolygonParser.parseAsPolygonList("src/main/resources/org/amcgala/example/plyparser/monkey" +
+                                                                     ".ply", 300)) {
+            scene3.addShape(p);
+        }
+
+        // TODO Bei Verwendung des Lichts wird eine NaN Exception geworfen.
+        //scene3.addLight(new AmbientLight("ambient", 1, Color.RED));
+        framework.addScene(scene3);
+
         // Hinzufügen eines Framework-InputHandlers
         framework.addInputHandler(new InputHandler() {
             @Subscribe
@@ -74,6 +88,10 @@ public class Basic extends Amcgala {
     }
 
     public static void main(String[] args) {
-        new Basic();
+        try{
+            new Basic();
+        }catch(Exception e){
+            System.out.println(e);
+        }
     }
 }

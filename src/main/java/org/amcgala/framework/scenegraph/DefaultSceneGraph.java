@@ -214,4 +214,9 @@ public class DefaultSceneGraph implements SceneGraph {
     public Collection<Shape> getAllShapes() {
         return shapes.values();
     }
+
+    @Override
+    public boolean hasLight() {
+        return lights.size() > 0;
+    }
 }

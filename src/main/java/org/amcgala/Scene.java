@@ -112,6 +112,8 @@ public class Scene {
         sceneGraph.addNode(child, parent);
     }
 
+
+
     /**
      * Fügt dem root {@link Node} des {@link SceneGraph} eine Transformation hinzu,
      *
@@ -220,7 +222,6 @@ public class Scene {
     }
 
     public boolean hasLights(){
-        // TODO das muss noch den korrekten Wert zurückgeben.
-        return true;
+        return sceneGraph.hasLight();
     }
 }

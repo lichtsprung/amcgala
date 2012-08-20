@@ -165,4 +165,6 @@ public interface SceneGraph {
     int getNodeCount();
 
     Collection<Shape> getAllShapes();
+
+    boolean hasLight();
 }
