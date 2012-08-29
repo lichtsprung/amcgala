@@ -5,18 +5,16 @@ import org.amcgala.Amcgala;
 import org.amcgala.Scene;
 import org.amcgala.framework.event.InputHandler;
 import org.amcgala.framework.event.KeyPressedEvent;
-import org.amcgala.framework.lighting.AmbientLight;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.shape.Line;
 import org.amcgala.framework.shape.Polygon;
 import org.amcgala.framework.shape.util.PLYPolygonParser;
 
-import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
 /**
- * Hier ist unser tolles evolutionäres Programm, das vielleicht irgendwann funktionieren wird.
+ * Beispielprogramm für den Umgang mit mehreren Szenen.
  *
  * @author Robert Giacinto
  * @since 2.0
@@ -84,13 +82,14 @@ public class Basic extends Amcgala {
             }
         }, "Switch Scene");
 
+
         framework.start();
     }
 
     public static void main(String[] args) {
-        try{
+        try {
             new Basic();
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
     }

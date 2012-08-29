@@ -14,14 +14,13 @@
  */
 package org.amcgala.framework.scenegraph.visitor;
 
-import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.scenegraph.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Der UpdateVisitor traversiert den Szenengraph und ruft die update Methode
- * aller Objekte auf, die das Interface Updatable implementieren.
+ * Der UpdateVisitor traversiert den Szenengraph und ruft die update Methode aller Objekte auf, die das Interface
+ * Updatable implementieren.
  *
  * @author Robert Giacinto
  */
@@ -40,7 +39,7 @@ public class UpdateVisitor implements Visitor {
 
     @Override
     public void visit(Node node) {
-        if(!paused){
+        if (!paused) {
             node.update();
         }
     }

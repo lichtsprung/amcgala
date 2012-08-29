@@ -164,7 +164,15 @@ public interface SceneGraph {
      */
     int getNodeCount();
 
+    /**
+     * Gibt alle {@link Shape} Objekte zurück, die im {@link SceneGraph} verwaltet werden.
+     * @return die Liste aller Objekte im Szenengraph
+     */
     Collection<Shape> getAllShapes();
 
+    /**
+     * Prüft, ob dem Szenengraph Lichter hinzugefügt wurden.
+     * @return {@code true}, wenn Lichter im Szenengraph vorhanden sind
+     */
     boolean hasLight();
 }

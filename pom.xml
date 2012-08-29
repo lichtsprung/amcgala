@@ -7,7 +7,7 @@
 
     <groupId>org.amcgala</groupId>
     <artifactId>amcgala</artifactId>
-    <label>amcgala</label>
+    <name>amcgala</name>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -18,14 +18,14 @@
     <developers>
         <developer>
             <id>lichtsprung</id>
-            <label>Robert Giacinto</label>
+            <name>Robert Giacinto</name>
             <email>robert.giacinto@gmail.com</email>
         </developer>
     </developers>
 
     <licenses>
         <license>
-            <label>Educational Community License, Version 2.0</label>
+            <name>Educational Community License, Version 2.0</name>
             <url>http://www.osedu.org/licenses/ECL-2.0</url>
             <distribution>repo</distribution>
         </license>

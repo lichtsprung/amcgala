@@ -29,7 +29,6 @@ import static com.google.common.base.Preconditions.checkArgument;
  * @since 2.0
  */
 public class Scene {
-    public static final Scene EMPTY_SCENE = new Scene("Empty Scene");
     private static final Logger log = LoggerFactory.getLogger(Scene.class);
     private SceneGraph sceneGraph;
     private Camera camera;
@@ -208,19 +207,35 @@ public class Scene {
         return label != null ? label.hashCode() : 0;
     }
 
+    /**
+     * Ändert die von der Szene verwendete {@link Camera}.
+     * @param camera die neue Kamera
+     */
     public void setCamera(Camera camera) {
         this.camera = camera;
     }
 
+    /**
+     * Ändert den von der Szene verwendeten {@link Renderer}.
+     * @param renderer der neue Renderer
+     */
     public void setRenderer(Renderer renderer) {
         this.renderer = renderer;
     }
 
+    /**
+     * Fügt der Szene ein neues Licht hinzu.
+     * @param light das neue Licht
+     */
     public void addLight(Light light){
         sceneGraph.addLight(light);
 
     }
 
+    /**
+     * Prüft, ob Lichter in der Szene vorhanden sind.
+     * @return {@code true}, wenn Lichter der Szene hinzugefügt wurden
+     */
     public boolean hasLights(){
         return sceneGraph.hasLight();
     }

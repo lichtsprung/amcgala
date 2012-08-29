@@ -22,6 +22,11 @@ public class Turtle {
     private boolean up;
 
 
+    /**
+     * Erzeugt ein neues Turtle-Objekt, das die Grafik in dem übergebenem Shape speichert.
+     *
+     * @param shape das Shape, in dem die Turtlegrafik gespeichert werden soll
+     */
     public Turtle(CompositeShape shape) {
 
         turtleShape = shape;
@@ -29,6 +34,14 @@ public class Turtle {
         heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
     }
 
+    /**
+     * Erzeugt eine neue Turtle, die mit beliebigen Werten initialisiert werden kann.
+     *
+     * @param position die Position der Turtle
+     * @param heading der Vektor der Blickrichtung der Turtle
+     * @param headingAngle der Blickwinkel
+     * @param shape das Shape, in dem die Grafik gespeichert werden soll
+     */
     public Turtle(Vector3d position, Vector3d heading, double headingAngle, CompositeShape shape) {
         this.position = position;
         this.heading = heading;
@@ -37,26 +50,44 @@ public class Turtle {
     }
 
 
-    public void up(){
+    /**
+     * Beendet den Zeichenmodus der Turtle.
+     */
+    public void up() {
         up = true;
     }
 
-    public void down(){
+    /**
+     * Setzt die Turtle in den Zeichenmodus.
+     */
+    public void down() {
         up = false;
     }
 
+    /**
+     * Dreht die Turtle um einen bestimmten Winkel gegen den Uhrzeigersinn..
+     * @param angle der Winkel in Grad
+     */
     public void turnLeft(double angle) {
         headingAngle += angle;
         heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
         heading.normalize();
     }
 
+    /**
+     * Dreht die Turtle um einen bestimmten Winkel im Uhrzeigersinn.
+     * @param angle der Winkel in Grad
+     */
     public void turnRight(double angle) {
         headingAngle -= angle;
         heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
         heading.normalize();
     }
 
+    /**
+     * Lässt die Turtle geradeaus gehen.
+     * @param length die Länge des Schritts
+     */
     public void move(double length) {
         checkArgument(length > 0, "Schrittlänge kann nur positiv sein!");
 
@@ -72,14 +103,26 @@ public class Turtle {
         }
     }
 
+    /**
+     * Gibt die Blickrichtung der Turtle zurück.
+     * @return die Blickrichtung der Turtle
+     */
     public Vector3d getHeading() {
         return heading;
     }
 
+    /**
+     * Gibt die Position der Turtle zurück.
+     * @return die Position der Turtle
+     */
     public Vector3d getPosition() {
         return position;
     }
 
+    /**
+     * Gibt den Blickwinkel der Turtle zurück.
+     * @return der Blickwinkel der Turtle
+     */
     public double getHeadingAngle() {
         return headingAngle;
     }
