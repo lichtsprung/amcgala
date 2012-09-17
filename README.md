@@ -11,11 +11,13 @@ Um das Framework zu verwenden benötigt man entweder die Distribution-jar, in de
 sind, oder man verwendet die aktuellste Version, die über Maven zur Verfügung gestellt wird.
 Hierfür muss in die pom.xml des Projekts folgende Abhängigkeit hinzugefügt werden:
 
+```xml
 <dependency>
     <groupId>org.amcgala</groupId>
     <artifactId>amcgala</artifactId>
     <version>2.0-BETA</version>
 </dependency>
+```
 
 Das Package org.amcgala.example bietet einige Beispiele, wie das Framework benutzt werden kann. Für den schnellen
 Einstieg reicht es, die Klasse Amcgala zu erweitern und auf die dort zu Verfügung gestellte Framework Instanz zurückzugreifen.
