@@ -24,6 +24,18 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * Ein {@link Scene} Objekt verwaltet alle Objekte und den dazugehörigen {@link org.amcgala.framework.scenegraph.DefaultSceneGraph},
  * der über die Klasse {@link org.amcgala.Framework} dargestellt werden kann.
+ * Folgende Objekte werden von jeder Szene selbstständig verwaltet und beim Laden durch das Framework zur Darstellung
+ * verwendet:
+ * <ul>
+ *     <li>Ein Szenengraph, der sich um die hierarchische Verwaltung der Szene kümmert. Die Szene bietet dafür Methoden an,
+ *     die den Umgang mit dem Szenengraph vereinfachen.</li>
+ *     <li>Eine virtuelle Kamera, die für die Projektion der Szene verwendet wird. Hier können in jeder Szene unterschiedliche
+ *     Implementierungen verwendet werden.</li>
+ *     <li>Ein Renderer, die sich um die Darstellung der projezierten Geometrien kümmert. Auch hier können, abhängig von
+ *     den Anforderungen der jeweiligen Szene, unterschiedliche Implementierungen verwendet werden.</li>
+ *     <li>Ein Eventbus, der zum Message-Handling zwischen unterschiedlichen Objekten der Szene und zur Reaktion auf Key-
+ *     oder Mouse-Events verwendet werden kann.</li>
+ * </ul>
  *
  * @author Robert Giacinto
  * @since 2.0

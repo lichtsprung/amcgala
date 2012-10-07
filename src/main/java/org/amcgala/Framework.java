@@ -53,6 +53,13 @@ import static com.google.common.base.Preconditions.checkArgument;
  * Die Hauptklasse des Frameworks, die die Hauptaufgaben übernimmt. Sie
  * initialisiert die wichtigsten Datenstrukturen und ermöglicht ihren Zugriff.
  *
+ * Folgende wichtige Funktionen werden vom Framework übernommen:
+ * <ul>
+ *     <li>Laden von Szenen</li>
+ *     <li>Aktualisierung und Darstellung der aktiven Szene</li>
+ *     <li>Verwalten der InputHandler</li>
+ * </ul>
+ *
  * @author Robert Giacinto
  * @version 2.0
  */
@@ -81,16 +88,30 @@ public final class Framework {
     private int width;
     private int height;
 
+    /**
+     * Erzeugt eine neue Instanz des Frameworks. Die Größe des Fensters kann über die Parameter width und height
+     * bestimmt werden.
+     *
+     * @param width  die Breite des Fensters
+     * @param height die Höhe des Fensters
+     * @return Referenz auf die Frameworksinstanz
+     */
     public static Framework createInstance(int width, int height) {
         checkArgument(instance == null, "Es können keine weiteren Instanzen von Framework erzeugt werden!");
         instance = new Framework(width, height);
         return instance;
     }
 
-    public static Framework getInstance(){
-        if(instance == null) {
+    /**
+     * Gibt die bereits erzeugte Instanz des Frameworks zurück. Wurde noch keine erstellt, wird eine der Standardgröße
+     * 800x600 erstellt und zurückgegeben.
+     *
+     * @return Referenz auf die Frameworksinstanz
+     */
+    public static Framework getInstance() {
+        if (instance == null) {
             return createInstance(800, 600);
-        }else{
+        } else {
             return instance;
         }
     }
@@ -322,9 +343,7 @@ public final class Framework {
      * Gibt die Referenz auf eine Szene zurück.
      *
      * @param label das Label der Szene
-     *
      * @return die Szene mit dem übergebenen Label
-     *
      * @throws IllegalArgumentException wenn keine Szene mit dem übergebenen Label existiert
      */
     public Scene getScene(String label) {
@@ -404,6 +423,7 @@ public final class Framework {
 
     /**
      * Gibt die gerade aktive Szene zurück.
+     *
      * @return die aktive Szene
      */
     public Scene getActiveScene() {

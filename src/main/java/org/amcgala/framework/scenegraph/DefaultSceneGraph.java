@@ -29,7 +29,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Standardimplementierung des Szenengraph des Frameworks.
+ * Standardimplementierung des Szenengraph des Frameworks. In den meisten Fällen sollte man ohne die direkte Benutzung dieser
+ * Klasse auskommen. Die Klasse {@link org.amcgala.Scene} bietet einige Hilfsmethoden für die Handhabung eines Szenengraphs an.
  *
  * @author Robert Giacinto
  * @since 2.0
