@@ -15,7 +15,7 @@ Hierfür muss in die pom.xml des Projekts folgende Abhängigkeit hinzugefügt we
 <dependency>
     <groupId>org.amcgala</groupId>
     <artifactId>amcgala</artifactId>
-    <version>2.0-BETA</version>
+    <version>2.0-SNAPSHOT</version>
 </dependency>
 ```
 
