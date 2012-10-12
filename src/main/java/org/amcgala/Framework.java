@@ -439,10 +439,18 @@ public final class Framework {
         return sceneList.size();
     }
 
+    /**
+     * Gibt die Breite des Fensters zurück.
+     * @return die Breite des Fensters
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * Gibt die Höhe des Fensters zurück.
+     * @return die Höhe des Fensters
+     */
     public int getHeight() {
         return height;
     }
