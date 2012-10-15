@@ -18,11 +18,11 @@ import com.google.common.base.Objects;
 import org.amcgala.framework.animation.Updatable;
 import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Matrix;
-import org.amcgala.framework.raytracer.Hittable;
 import org.amcgala.framework.scenegraph.transform.Transformation;
 import org.amcgala.framework.scenegraph.transform.Translation;
 import org.amcgala.framework.scenegraph.visitor.Visitor;
 import org.amcgala.framework.shape.Shape;
+import org.amcgala.framework.shape.util.bounds.BoundingBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,6 +79,11 @@ public final class Node implements Updatable {
      */
     private List<Transformation> transformations;
 
+    /**
+     * Die BoundingBox, die um die Shapes dieses und aller Kindsknoten aufgespannt wird.
+     */
+    private BoundingBox boundingBox;
+
 
     /**
      * Erstellt eine neue Node mit einem Label, über das die Node innerhalb des
@@ -93,6 +98,7 @@ public final class Node implements Updatable {
         shapes = new CopyOnWriteArrayList<Shape>();
         children = new CopyOnWriteArrayList<Node>();
         lights = new CopyOnWriteArrayList<Light>();
+        boundingBox = new BoundingBox();
     }
 
     /**

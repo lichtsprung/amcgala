@@ -18,6 +18,9 @@ import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.appearance.Appearance;
 import org.amcgala.framework.appearance.DefaultAppearance;
 import org.amcgala.framework.math.Matrix;
+import org.amcgala.framework.raytracer.HitResult;
+import org.amcgala.framework.raytracer.Ray;
+import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.shape.util.bounds.BoundingBox;
 import org.slf4j.Logger;
@@ -65,7 +68,7 @@ public abstract class AbstractShape implements Shape {
     }
 
     @Override
-    public void updateBoundingBox(Matrix transform){
+    public void updateBoundingBox(Matrix transform) {
         boundingBox.updateBox(transform);
     }
 
@@ -90,7 +93,7 @@ public abstract class AbstractShape implements Shape {
     }
 
     @Override
-    public BoundingBox getBoundingBox(){
+    public BoundingBox getBoundingBox() {
         return boundingBox;
     }
 
@@ -102,5 +105,15 @@ public abstract class AbstractShape implements Shape {
     @Override
     public void setAppearance(Appearance appearance) {
         this.appearance = appearance;
+    }
+
+    @Override
+    public HitResult hit(Ray ray) {
+        return HitResult.NO_HIT;
+    }
+
+    @Override
+    public void render(Renderer renderer) {
+        // Leere Implementierung. Sollte von Unterklassen mit Inhalt gefüllt werden, wenn sie durch einen Renderer darstellbar sein sollen.
     }
 }

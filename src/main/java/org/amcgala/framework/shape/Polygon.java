@@ -42,7 +42,15 @@ public class Polygon extends AbstractShape {
     private Polygon() {
     }
 
+    /**
+     * Ein 3d Polygon, das durch 3 Vektoren und seine Norm definiert ist.
+     * @param v1 der erste Vektor
+     * @param v2 der zweite Vektor
+     * @param v3 der dritte Vektor
+     * @param norm der Normalenvektor
+     */
     public Polygon(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d norm) {
+        // TODO Die Vektoren sollten auch außerhalb der Linien verfügbar sein. Sie werden für die Berechnung der Bounding Boxes benötigt.
         checkNotNull(v1);
         checkNotNull(v2);
         checkNotNull(v3);
