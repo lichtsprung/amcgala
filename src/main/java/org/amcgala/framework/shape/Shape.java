@@ -4,6 +4,7 @@ import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.animation.Updatable;
 import org.amcgala.framework.appearance.Appearance;
 import org.amcgala.framework.math.Matrix;
+import org.amcgala.framework.raytracer.Hittable;
 import org.amcgala.framework.renderer.Renderable;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.shape.util.bounds.BoundingBox;
@@ -16,7 +17,7 @@ import java.awt.Color;
  * @author Robert Giacinto
  * @since 2.0
  */
-public interface Shape extends Updatable, Renderable {
+public interface Shape extends Updatable, Renderable, Hittable {
 
     /**
      * Setzt die Animation, die auf das Shape angewendet werden soll.

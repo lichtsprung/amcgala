@@ -92,6 +92,8 @@ public final class Framework {
      * Erzeugt eine neue Instanz des Frameworks. Die Größe des Fensters kann über die Parameter width und height
      * bestimmt werden.
      *
+     * TODO Die sollte wieder weg oder private sein. Kann mich nicht mehr daran erinnern, wieso zwischen get und create unterschieden wird.
+     *
      * @param width  die Breite des Fensters
      * @param height die Höhe des Fensters
      * @return Referenz auf die Frameworksinstanz

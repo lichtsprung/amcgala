@@ -15,10 +15,10 @@
 package org.amcgala.framework.scenegraph;
 
 import com.google.common.base.Objects;
-import org.amcgala.Framework;
 import org.amcgala.framework.animation.Updatable;
 import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Matrix;
+import org.amcgala.framework.raytracer.Hittable;
 import org.amcgala.framework.scenegraph.transform.Transformation;
 import org.amcgala.framework.scenegraph.transform.Translation;
 import org.amcgala.framework.scenegraph.visitor.Visitor;
@@ -44,26 +44,33 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class Node implements Updatable {
 
     private static final Logger log = LoggerFactory.getLogger(Node.class);
+
     /**
      * Das Label dieses Knotens. Über diesen lässt sich der Knoten bestimmen und kann dazu verwendet werden,
      * auf den Knoten zur Laufzeit wieder zugreifen zu können.
      */
     private String label = null;
+
     /**
      * Der übergeordnete Knoten, an dem dieser Knoten hängt. {@code null}, wenn es sich
      * um den Rootknoten handelt.
      */
     private Node parent;
+
     /**
      * Die Kindsknoten, die an diesem Knoten hängen.
      */
     private final List<Node> children;
+
     /**
      * Die Geometrieobjekte, die an diesem Knoten hängen und von dem DefaultRenderer
      * dargestellt werden.
      */
     private final List<Shape> shapes;
 
+    /**
+     * Die Lichtobjekte, die an diesem Knoten hängen.
+     */
     private final List<Light> lights;
 
     /**
@@ -71,6 +78,7 @@ public final class Node implements Updatable {
      * des Knotens und aller Kindsknoten auswirkt.
      */
     private List<Transformation> transformations;
+
 
     /**
      * Erstellt eine neue Node mit einem Label, über das die Node innerhalb des
@@ -214,7 +222,7 @@ public final class Node implements Updatable {
      *
      * @return die Kindsknoten
      */
-    public Collection<Node> getChildren() {
+    public Collection<Node> getChildNodes() {
         return Collections.unmodifiableCollection(children);
     }
 
