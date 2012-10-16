@@ -14,14 +14,12 @@
  */
 package org.amcgala.framework.raytracer;
 
-import ij.ImageJ;
+import org.amcgala.Scene;
+import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.scenegraph.visitor.Visitor;
 
 import javax.swing.JFrame;
-
-import java.awt.Image;
-import java.awt.font.ImageGraphicAttribute;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -34,11 +32,28 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class RaytraceVisitor implements Visitor {
 
-    private JFrame frame;
-   
+    private Renderer renderer;
+    private Scene scene;
+    private Raytracer raytracer;
 
-    public RaytraceVisitor(JFrame frame) {
-        this.frame = checkNotNull(frame);
+    public RaytraceVisitor() {
+        raytracer = new Raytracer();
+    }
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
+    }
+
+    public Renderer getRenderer() {
+        return renderer;
+    }
+
+    public void setRenderer(Renderer renderer) {
+        this.renderer = renderer;
     }
 
     @Override

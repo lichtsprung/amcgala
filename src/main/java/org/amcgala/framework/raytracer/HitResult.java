@@ -14,14 +14,17 @@
  */
 package org.amcgala.framework.raytracer;
 
+import org.amcgala.framework.math.Vector3d;
+
+import java.awt.Color;
+
 /**
- * Created with IntelliJ IDEA.
- * User: robert
- * Date: 10/15/12
- * Time: 3:26 PM
- * To change this template use File | Settings | File Templates.
+ * Die für das Raytracing benötigten Ergebnisse der Schnittpunktsberechnung.
  */
 public class HitResult {
     public static final HitResult NO_HIT = new HitResult();
-    protected double t = Double.POSITIVE_INFINITY;
+    public double t = Double.POSITIVE_INFINITY;
+    public Vector3d hitPoint;
+    public Vector3d normal;
+    public Color color;
 }

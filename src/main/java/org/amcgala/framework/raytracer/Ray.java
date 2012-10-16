@@ -21,8 +21,8 @@ import org.amcgala.framework.math.Vector3d;
  * definiert als r(t) = origin + t * direction.
  */
 public class Ray {
-    protected Vector3d origin;
-    protected Vector3d direction;
+    public Vector3d origin;
+    public Vector3d direction;
 
     /**
      * Erstellt eine neue Gerade, die über einen Ursprungs- und Richtungsvektor definiert ist.
@@ -33,4 +33,6 @@ public class Ray {
         this.origin = origin;
         this.direction = direction;
     }
+
+
 }

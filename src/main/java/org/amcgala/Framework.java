@@ -23,6 +23,7 @@ import org.amcgala.framework.event.KeyReleasedEvent;
 import org.amcgala.framework.event.MouseClickedEvent;
 import org.amcgala.framework.event.MousePressedEvent;
 import org.amcgala.framework.event.MouseReleasedEvent;
+import org.amcgala.framework.raytracer.RaytraceVisitor;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.DefaultSceneGraph;
 import org.amcgala.framework.scenegraph.SceneGraph;
@@ -52,12 +53,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * Die Hauptklasse des Frameworks, die die Hauptaufgaben übernimmt. Sie
  * initialisiert die wichtigsten Datenstrukturen und ermöglicht ihren Zugriff.
- *
  * Folgende wichtige Funktionen werden vom Framework übernommen:
  * <ul>
- *     <li>Laden von Szenen</li>
- *     <li>Aktualisierung und Darstellung der aktiven Szene</li>
- *     <li>Verwalten der InputHandler</li>
+ * <li>Laden von Szenen</li>
+ * <li>Aktualisierung und Darstellung der aktiven Szene</li>
+ * <li>Verwalten der InputHandler</li>
  * </ul>
  *
  * @author Robert Giacinto
@@ -80,6 +80,7 @@ public final class Framework {
     private Scene activeScene;
     private RenderVisitor renderVisitor;
     private UpdateVisitor updateVisitor;
+    private RaytraceVisitor raytraceVisitor;
     private Map<String, InputHandler> frameworkInputHandlers;
     private List<Scene> sceneList;
     private int currentSceneIndex;
@@ -91,11 +92,11 @@ public final class Framework {
     /**
      * Erzeugt eine neue Instanz des Frameworks. Die Größe des Fensters kann über die Parameter width und height
      * bestimmt werden.
-     *
      * TODO Die sollte wieder weg oder private sein. Kann mich nicht mehr daran erinnern, wieso zwischen get und create unterschieden wird.
      *
      * @param width  die Breite des Fensters
      * @param height die Höhe des Fensters
+     *
      * @return Referenz auf die Frameworksinstanz
      */
     public static Framework createInstance(int width, int height) {
@@ -161,6 +162,9 @@ public final class Framework {
 
         renderVisitor = new RenderVisitor();
         visitors.add(renderVisitor);
+
+        raytraceVisitor = new RaytraceVisitor();
+        visitors.add(raytraceVisitor);
 
 
         frame.addKeyListener(new KeyAdapter() {
@@ -333,8 +337,13 @@ public final class Framework {
         renderer.setFrame(frame);
 
         scenegraph = scene.getSceneGraph();
+
         renderVisitor.setRenderer(renderer);
         renderVisitor.setCamera(camera);
+
+        raytraceVisitor.setRenderer(renderer);
+        raytraceVisitor.setScene(scene);
+
         sceneEventBus = scene.getEventBus();
         activeScene = scene;
         paused = false;
@@ -345,7 +354,9 @@ public final class Framework {
      * Gibt die Referenz auf eine Szene zurück.
      *
      * @param label das Label der Szene
+     *
      * @return die Szene mit dem übergebenen Label
+     *
      * @throws IllegalArgumentException wenn keine Szene mit dem übergebenen Label existiert
      */
     public Scene getScene(String label) {
@@ -443,6 +454,7 @@ public final class Framework {
 
     /**
      * Gibt die Breite des Fensters zurück.
+     *
      * @return die Breite des Fensters
      */
     public int getWidth() {
@@ -451,6 +463,7 @@ public final class Framework {
 
     /**
      * Gibt die Höhe des Fensters zurück.
+     *
      * @return die Höhe des Fensters
      */
     public int getHeight() {

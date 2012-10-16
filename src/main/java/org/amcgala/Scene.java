@@ -16,6 +16,7 @@ import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,14 +28,14 @@ import static com.google.common.base.Preconditions.checkArgument;
  * Folgende Objekte werden von jeder Szene selbstständig verwaltet und beim Laden durch das Framework zur Darstellung
  * verwendet:
  * <ul>
- *     <li>Ein Szenengraph, der sich um die hierarchische Verwaltung der Szene kümmert. Die Szene bietet dafür Methoden an,
- *     die den Umgang mit dem Szenengraph vereinfachen.</li>
- *     <li>Eine virtuelle Kamera, die für die Projektion der Szene verwendet wird. Hier können in jeder Szene unterschiedliche
- *     Implementierungen verwendet werden.</li>
- *     <li>Ein Renderer, die sich um die Darstellung der projezierten Geometrien kümmert. Auch hier können, abhängig von
- *     den Anforderungen der jeweiligen Szene, unterschiedliche Implementierungen verwendet werden.</li>
- *     <li>Ein Eventbus, der zum Message-Handling zwischen unterschiedlichen Objekten der Szene und zur Reaktion auf Key-
- *     oder Mouse-Events verwendet werden kann.</li>
+ * <li>Ein Szenengraph, der sich um die hierarchische Verwaltung der Szene kümmert. Die Szene bietet dafür Methoden an,
+ * die den Umgang mit dem Szenengraph vereinfachen.</li>
+ * <li>Eine virtuelle Kamera, die für die Projektion der Szene verwendet wird. Hier können in jeder Szene unterschiedliche
+ * Implementierungen verwendet werden.</li>
+ * <li>Ein Renderer, die sich um die Darstellung der projezierten Geometrien kümmert. Auch hier können, abhängig von
+ * den Anforderungen der jeweiligen Szene, unterschiedliche Implementierungen verwendet werden.</li>
+ * <li>Ein Eventbus, der zum Message-Handling zwischen unterschiedlichen Objekten der Szene und zur Reaktion auf Key-
+ * oder Mouse-Events verwendet werden kann.</li>
  * </ul>
  *
  * @author Robert Giacinto
@@ -48,6 +49,7 @@ public class Scene {
     private EventBus eventBus;
     private String label;
     private Map<String, InputHandler> inputHandlers;
+    private Color background = Color.BLACK;
 
     /**
      * Erstellt eine neue Szene mit einem bestimmten Bezeichner.
@@ -122,7 +124,6 @@ public class Scene {
     public void addNode(Node child, Node parent) {
         sceneGraph.addNode(child, parent);
     }
-
 
 
     /**
@@ -221,6 +222,7 @@ public class Scene {
 
     /**
      * Ändert die von der Szene verwendete {@link Camera}.
+     *
      * @param camera die neue Kamera
      */
     public void setCamera(Camera camera) {
@@ -229,6 +231,7 @@ public class Scene {
 
     /**
      * Ändert den von der Szene verwendeten {@link Renderer}.
+     *
      * @param renderer der neue Renderer
      */
     public void setRenderer(Renderer renderer) {
@@ -237,18 +240,38 @@ public class Scene {
 
     /**
      * Fügt der Szene ein neues Licht hinzu.
+     *
      * @param light das neue Licht
      */
-    public void addLight(Light light){
+    public void addLight(Light light) {
         sceneGraph.addLight(light);
-
     }
 
     /**
      * Prüft, ob Lichter in der Szene vorhanden sind.
+     *
      * @return {@code true}, wenn Lichter der Szene hinzugefügt wurden
      */
-    public boolean hasLights(){
+    public boolean hasLights() {
         return sceneGraph.hasLight();
+    }
+
+    /**
+     * Gibt die Hintergrundfarbe der Szene zurück. Diese Methode ist zur Zeit nur für die Raytracing Implementierung
+     * relevant.
+     *
+     * @return die Hintergrundfarbe
+     */
+    public Color getBackground() {
+        return background;
+    }
+
+    /**
+     * Ändert die Farbe des Szenenhintergrunds.
+     *
+     * @param background die Farbe des Szenenhintergrunds
+     */
+    public void setBackground(Color background) {
+        this.background = background;
     }
 }
