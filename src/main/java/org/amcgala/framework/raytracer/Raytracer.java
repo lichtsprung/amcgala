@@ -14,6 +14,9 @@
  */
 package org.amcgala.framework.raytracer;
 
+
+import java.awt.*;
+
 /**
  * Ein Raytracer stellt eine Szene über die Schnittpunktsberechnungen der vorhandenen Objekte mit "Sehstrahlen" dar.
  *
@@ -21,4 +24,8 @@ package org.amcgala.framework.raytracer;
  * @since 2.1
  */
 public class Raytracer {
+
+    public Color trace(Ray ray) {
+        return null;
+    }
 }

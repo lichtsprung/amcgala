@@ -29,9 +29,24 @@ public abstract class TurtleMode {
     private boolean up;
 
 
+    /**
+     * Erzeugt ein TurtleMode Fenster der Größe 800x600.
+     */
     public TurtleMode() {
         turtleCommands();
         Framework framework = Framework.createInstance(WIDTH, HEIGHT);
+        framework.addScene(scene);
+        framework.start();
+    }
+
+    /**
+     * Erzeugt ein TurtleMode Fenster einer beliebigen Größe.
+     * @param width die Breite des Fensters
+     * @param height die Höhe des Fensters
+     */
+    public TurtleMode(int width, int height){
+        turtleCommands();
+        Framework framework = Framework.createInstance(width, height);
         framework.addScene(scene);
         framework.start();
     }
@@ -48,7 +63,7 @@ public abstract class TurtleMode {
      * Nimmt den Zeichenstift der Turtle von der Zeichenfläche und stoppt das Zeichnen.
      * Nach dem Aufruf dieser Methode kann die Turtle bewegt werden, ohne Änderungen an der Zeichnung vorzunehmen.
      */
-    protected void up(){
+    protected void up() {
         up = true;
     }
 
@@ -56,12 +71,13 @@ public abstract class TurtleMode {
      * Setzt den Zeichenstift der Turtle wieder auf der Zeichenfläche ab und beginnt das Zeichnen, sobald die Turtle nach
      * dem Aufruf dieser Methode wieder bewegt wird.
      */
-    protected void down(){
+    protected void down() {
         up = false;
     }
 
     /**
      * Dreht die Turtle entgegen den Uhrzeigersinn um den Winkel, der als Parameter übergeben wird.
+     *
      * @param angle der Winkel in Grad
      */
     protected void turnLeft(double angle) {
@@ -72,6 +88,7 @@ public abstract class TurtleMode {
 
     /**
      * Dreht die Turtle im Uhrzeigersinn um den Winkel, der als Parameter übergeben wird.
+     *
      * @param angle der Winkel in Grad
      */
     protected void turnRight(double angle) {
@@ -82,6 +99,7 @@ public abstract class TurtleMode {
 
     /**
      * Bewegt die Turtle um eine bestimmte Länge in Blickrichtung der Turtle.
+     *
      * @param length die Länge des Schritts
      */
     protected void move(double length) {
