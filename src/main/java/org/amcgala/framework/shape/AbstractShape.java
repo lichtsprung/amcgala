@@ -18,8 +18,6 @@ import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.appearance.Appearance;
 import org.amcgala.framework.appearance.DefaultAppearance;
 import org.amcgala.framework.math.Matrix;
-import org.amcgala.framework.raytracer.HitResult;
-import org.amcgala.framework.raytracer.Ray;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.shape.util.bounds.BoundingBox;
@@ -107,10 +105,6 @@ public abstract class AbstractShape implements Shape {
         this.appearance = appearance;
     }
 
-    @Override
-    public HitResult hit(Ray ray) {
-        return HitResult.NO_HIT;
-    }
 
     @Override
     public void render(Renderer renderer) {

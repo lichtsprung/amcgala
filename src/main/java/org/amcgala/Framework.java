@@ -23,7 +23,6 @@ import org.amcgala.framework.event.KeyReleasedEvent;
 import org.amcgala.framework.event.MouseClickedEvent;
 import org.amcgala.framework.event.MousePressedEvent;
 import org.amcgala.framework.event.MouseReleasedEvent;
-import org.amcgala.framework.raytracer.RaytraceVisitor;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.DefaultSceneGraph;
 import org.amcgala.framework.scenegraph.SceneGraph;
@@ -80,7 +79,6 @@ public final class Framework {
     private Scene activeScene;
     private RenderVisitor renderVisitor;
     private UpdateVisitor updateVisitor;
-    private RaytraceVisitor raytraceVisitor;
     private Map<String, InputHandler> frameworkInputHandlers;
     private List<Scene> sceneList;
     private int currentSceneIndex;
@@ -163,8 +161,6 @@ public final class Framework {
         renderVisitor = new RenderVisitor();
         visitors.add(renderVisitor);
 
-        raytraceVisitor = new RaytraceVisitor();
-        visitors.add(raytraceVisitor);
 
 
         frame.addKeyListener(new KeyAdapter() {
@@ -340,9 +336,6 @@ public final class Framework {
 
         renderVisitor.setRenderer(renderer);
         renderVisitor.setCamera(camera);
-
-        raytraceVisitor.setRenderer(renderer);
-        raytraceVisitor.setScene(scene);
 
         sceneEventBus = scene.getEventBus();
         activeScene = scene;
