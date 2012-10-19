@@ -150,7 +150,7 @@ public class DefaultRenderer implements Renderer {
     public void drawCircle(Vector3d pos, double radius) {
         Vector3d tv = checkNotNull(pos).transform(transformationMatrix);
         Pixel p = camera.getImageSpaceCoordinates(tv);
-        drawCircle(p.x, p.y, radius);
+        drawCircle(p.x - 1.5 * radius, p.y - 0.5 * radius, radius);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class DefaultRenderer implements Renderer {
     @Override
     public void drawPixel(Vector3d vector, Appearance appearance) {
         Color c = appearance.getColor();
-        for(Light light : lights) {
+        for (Light light : lights) {
             c = light.interpolate(c, vector, camera.getPosition(), appearance);
         }
         drawPixel(vector, c);
