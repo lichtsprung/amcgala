@@ -29,8 +29,10 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Wird von jedem DefaultRenderer erweitert und stellt die Funktionen drawPixel und show
- * zur Verfügung.
+ * Der DefaultRenderer verwendet ein JFrame und hat den zu Beginn den Ursprung des Koordinatensystems im Mittelpunkt
+ * des Fensters.
+ *
+ * @author Robert Giacinto
  */
 public class DefaultRenderer implements Renderer {
 
