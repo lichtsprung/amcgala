@@ -82,11 +82,13 @@ public class Letter extends AbstractShape {
 
     @Override
     public void render(Renderer renderer) {
+        Color old = renderer.getColor();
         if (point2ds != null) {
             for (Point2d p : point2ds) {
                 p.render(renderer);
             }
         }
+        renderer.setColor(old);
     }
 
     /**

@@ -187,6 +187,7 @@ public class Line extends AbstractShape {
                 }
             }
         } else {
+            renderer.setColor(getColor());
             renderer.drawLine(start, end);
         }
     }

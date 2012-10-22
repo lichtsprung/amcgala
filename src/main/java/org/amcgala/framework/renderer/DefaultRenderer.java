@@ -118,6 +118,7 @@ public class DefaultRenderer implements Renderer {
     public void setColor(Color color) {
         g.setColor(checkNotNull(color));
     }
+   
 
     @Override
     public void drawLine(int x1, int y1, int x2, int y2) {
@@ -184,5 +185,10 @@ public class DefaultRenderer implements Renderer {
         frame.createBufferStrategy(2);
         bs = frame.getBufferStrategy();
         g = bs.getDrawGraphics();
+    }
+
+    @Override
+    public Color getColor() {
+        return g.getColor();
     }
 }

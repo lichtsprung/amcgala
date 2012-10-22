@@ -99,6 +99,12 @@ public interface Renderer {
      * @param color die neue Farbe
      */
     void setColor(Color color);
+    
+    /**
+     * Gibt die Farbe, die vom Renderer verwendet wird, zurück.
+     * @return die aktuelle Farbe
+     */
+    Color getColor();
 
     /**
      * Zeichnet eine Linie von einem Startpunkt (x1, y1) zu einem Endpunkt (x2, y2).
