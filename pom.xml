@@ -9,6 +9,7 @@
     <artifactId>amcgala</artifactId>
     <name>amcgala</name>
 
+
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
@@ -134,6 +135,7 @@
     </build>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.javadoc.package>true</maven.javadoc.package>
     </properties>
 
     <dependencies>
