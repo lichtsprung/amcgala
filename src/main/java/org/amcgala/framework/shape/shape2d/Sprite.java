@@ -35,7 +35,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Spriteobjekt zum Darstellen
  *
- * @author Steffen Troester
+ * @author Steffen Tröster
  */
 public class Sprite extends AbstractShape {
     private static final Logger log = LoggerFactory.getLogger(Sprite.class.getName());
@@ -48,9 +48,9 @@ public class Sprite extends AbstractShape {
     /**
      * Spriteobjekt aus einer Datei (jpeg,png,gif)
      *
-     * @param path
-     * @param x
-     * @param y
+     * @param path der Pfad zu der Bilddatei
+     * @param x die x-Position des Sprites
+     * @param y die y-Position des Sprites
      *
      * @throws IOException
      */
@@ -106,7 +106,7 @@ public class Sprite extends AbstractShape {
     /**
      * Spriteobjekt aus einer Datei (jpeg,png,gif)
      *
-     * @param path
+     * @param path der Pfad zu dem Sprite, das geladen werden soll
      */
     public Sprite(String path) {
 

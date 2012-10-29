@@ -12,39 +12,40 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package org.amcgala.framework.shape.shape2d;
+package org.amcgala.framework.shape;
 
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.shape.AbstractShape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Ein 2D-Kreis, der in der Ebene z = -1 liegt.
+ * Ein 3d Kreis.
  *
  * @author Steffen Tröster
  * @author Robert Giacinto
  */
 public class Circle extends AbstractShape {
 
-    private double x;
-    private double y;
+    private double x, y;
     private double radius;
     private Vector3d pos;
+    private double z;
 
     /**
-     * Ein Kreis an der Position (x,y).
+     * Ein Kreis im 3d-Raum mit dem Mittelpunkt an der Position (x,y,z).
      *
-     * @param x      x-Position des Mittelpunkts
-     * @param y      y-Position des Mittelpunkts.
+     * @param x      die x-Position des Mittelpunkts
+     * @param y      die y-Position des Mittelpunkts
+     * @param z      die z-Position des Mittelpunkts
      * @param radius der Radius
      */
-    public Circle(double x, double y, double radius) {
+    public Circle(double x, double y, double z, double radius) {
         this.x = x;
         this.y = y;
+        this.z = z;
         this.radius = radius;
-        pos = Vector3d.createVector3d(x, y, -1);
+        pos = Vector3d.createVector3d(x, y, z);
     }
 
     /**
@@ -66,45 +67,36 @@ public class Circle extends AbstractShape {
     }
 
     /**
-     * Setzt die Position des Kreises auf den übergebenen Wert.
-     *
-     * @param x x-Koordinate der Position
-     * @param y y-Koordinate der Position
+     * Setzt den Kreis auf die übergebene Position.
      */
-    public void setPosition(double x, double y) {
+    public void setPosition(double x, double y, double z) {
         this.x = x;
         this.y = y;
+        this.z = z;
     }
 
     /**
-     * Gibt die x-Koordinate des Kreises zurück.
+     * Gibt die Position des Kreises zurück.
      *
-     * @return die x-Koordinate
+     * @return die Position des Kreises
      */
-    public double getX() {
-        return this.x;
+    public Vector3d getPosition() {
+        return Vector3d.createVector3d(this.x, this.y, this.z);
     }
 
-    /**
-     * Gibt die y-Koordinate des Kreises zurück.
-     *
-     * @return die y-Koordinate
-     */
-    public double getY() {
-        return this.y;
-    }
 
     @Override
     public void render(Renderer renderer) {
-        pos = Vector3d.createVector3d(x, y, -1);
+        pos = Vector3d.createVector3d(x, y, z);
         renderer.drawCircle(pos, radius);
     }
 
+
     @Override
     public String toString() {
-        return "Circle2d{" + "x=" + x + ", y=" + y + ", radius=" + radius
+        return "Circle3d{" + "x=" + x + ", y=" + y + ", radius=" + radius
                 + ", pos=" + pos + '}';
     }
 
-    private static final Logger log = LoggerFactory.getLogger(Circle.class);
+    private static final Logger log = LoggerFactory.getLogger(Circle.class.getName());
 }

@@ -50,22 +50,6 @@ public class Rectangle extends AbstractShape {
         right = new Line(x + width, y, x + width, y + height);
     }
 
-    /**
-     * Erzeugt ein neues Rechteck, das über die Kanten definiert wird.
-     *
-     * @param bottom die untere Seite des Rechtecks
-     * @param left   die linke Seite des Rechtecks
-     * @param top    die obere Seite des Rechtecks
-     * @param right  die rechte Seite des Rechtecks
-     *
-     * @deprecated
-     */
-    public Rectangle(Line bottom, Line left, Line top, Line right) {
-        this.top = top;
-        this.bottom = bottom;
-        this.left = left;
-        this.right = right;
-    }
 
     @Override
     public void render(Renderer renderer) {
