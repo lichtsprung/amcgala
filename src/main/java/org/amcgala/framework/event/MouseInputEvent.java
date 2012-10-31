@@ -1,5 +1,7 @@
 package org.amcgala.framework.event;
 
+import org.amcgala.Framework;
+
 import java.awt.event.MouseEvent;
 
 /**
@@ -17,5 +19,13 @@ public abstract class MouseInputEvent {
 
     public int getButton() {
         return event.getButton();
+    }
+
+    public int getX() {
+        return event.getX() - Framework.getInstance().getWidth() / 2;
+    }
+
+    public int getY() {
+        return (Framework.getInstance().getHeight() / 2) - event.getY();
     }
 }

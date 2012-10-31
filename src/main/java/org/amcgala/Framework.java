@@ -50,14 +50,9 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * Die Hauptklasse des Frameworks, die die Hauptaufgaben übernimmt. Sie
- * initialisiert die wichtigsten Datenstrukturen und ermöglicht ihren Zugriff.
- * Folgende wichtige Funktionen werden vom Framework übernommen:
- * <ul>
- * <li>Laden von Szenen</li>
- * <li>Aktualisierung und Darstellung der aktiven Szene</li>
- * <li>Verwalten der InputHandler</li>
- * </ul>
+ * Die Hauptklasse des Frameworks, die die Hauptaufgaben übernimmt. Sie initialisiert die wichtigsten Datenstrukturen
+ * und ermöglicht ihren Zugriff. Folgende wichtige Funktionen werden vom Framework übernommen: <ul> <li>Laden von
+ * Szenen</li> <li>Aktualisierung und Darstellung der aktiven Szene</li> <li>Verwalten der InputHandler</li> </ul>
  *
  * @author Robert Giacinto
  * @version 2.0
@@ -90,7 +85,6 @@ public final class Framework {
     /**
      * Erzeugt eine neue Instanz des Frameworks. Die Größe des Fensters kann über die Parameter width und height
      * bestimmt werden.
-     * TODO Die sollte wieder weg oder private sein. Kann mich nicht mehr daran erinnern, wieso zwischen get und create unterschieden wird.
      *
      * @param width  die Breite des Fensters
      * @param height die Höhe des Fensters
@@ -100,6 +94,7 @@ public final class Framework {
     public static Framework createInstance(int width, int height) {
         checkArgument(instance == null, "Es können keine weiteren Instanzen von Framework erzeugt werden!");
         instance = new Framework(width, height);
+        instance.start();
         return instance;
     }
 
@@ -119,8 +114,7 @@ public final class Framework {
 
 
     /**
-     * Erstellt ein neues Framework, das eine grafische Ausgabe in der Auflösung
-     * width x height hat.
+     * Erstellt ein neues Framework, das eine grafische Ausgabe in der Auflösung width x height hat.
      *
      * @param width  die Breite der Auflösung
      * @param height die Höhe der Auflösung
@@ -160,7 +154,6 @@ public final class Framework {
 
         renderVisitor = new RenderVisitor();
         visitors.add(renderVisitor);
-
 
 
         frame.addKeyListener(new KeyAdapter() {
@@ -238,8 +231,7 @@ public final class Framework {
 
 
     /**
-     * Aktualisiert den Szenengraphen, in dem die einzelnen, registrierten
-     * Visitor den Szenengraphen besuchen.
+     * Aktualisiert den Szenengraphen, in dem die einzelnen, registrierten Visitor den Szenengraphen besuchen.
      */
     public void update() {
         if (camera != null && !paused) {
@@ -259,8 +251,10 @@ public final class Framework {
     }
 
     /**
-     * Startet das Framework und aktualisiert den Szenengraphen mithilfe eines
-     * Animators.
+     * Startet das Framework und aktualisiert den Szenengraphen mithilfe eines Animators.
+     *
+     * @deprecated braucht nicht mehr aktiv vom Nutzer aufgerufen werden und wird in der kommenden Version private
+     *             sein.
      */
     public void start() {
         if (animator == null) {
@@ -289,9 +283,9 @@ public final class Framework {
     }
 
     /**
-     * Setzt eine {@link Scene} als aktive Szene innerhalb des Frameworks.
-     * Existiert die übergebene Szene noch nicht in der Menge aller Szenen innerhalb des Frameworks, wird die
-     * Szene unter dem Label der Szene im Framework gespeichert bevor sie geladen wird.
+     * Setzt eine {@link Scene} als aktive Szene innerhalb des Frameworks. Existiert die übergebene Szene noch nicht in
+     * der Menge aller Szenen innerhalb des Frameworks, wird die Szene unter dem Label der Szene im Framework
+     * gespeichert bevor sie geladen wird.
      *
      * @param scene die Szene, die geladen werden soll
      */
@@ -315,8 +309,8 @@ public final class Framework {
     }
 
     /**
-     * Das Framework lädt die Szene, indem {@link Camera}, {@link Renderer} und {@link SceneGraph} aus
-     * der Szene geladen werden.
+     * Das Framework lädt die Szene, indem {@link Camera}, {@link Renderer} und {@link SceneGraph} aus der Szene geladen
+     * werden.
      *
      * @param scene Szene, die geladen werden soll
      */
@@ -407,7 +401,8 @@ public final class Framework {
      * @param label der Bezeichner des InputHandlers, der entfernt werden soll
      */
     public void removeInputHandler(String label) {
-        checkArgument(frameworkInputHandlers.containsKey(label), "InputHandler mit Label " + label + " konnte nicht gefunden werden.");
+        checkArgument(frameworkInputHandlers.containsKey(label), "InputHandler mit Label " + label + " konnte nicht " +
+                "gefunden werden.");
         frameworkEventBus.unregister(frameworkInputHandlers.get(label));
         frameworkInputHandlers.remove(label);
     }

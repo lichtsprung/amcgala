@@ -23,20 +23,16 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * Ein {@link Scene} Objekt verwaltet alle Objekte und den dazugehörigen {@link org.amcgala.framework.scenegraph.DefaultSceneGraph},
- * der über die Klasse {@link org.amcgala.Framework} dargestellt werden kann.
- * Folgende Objekte werden von jeder Szene selbstständig verwaltet und beim Laden durch das Framework zur Darstellung
- * verwendet:
- * <ul>
+ * Ein {@link Scene} Objekt verwaltet alle Objekte und den dazugehörigen {@link org.amcgala.framework.scenegraph
+ * .DefaultSceneGraph}, der über die Klasse {@link org.amcgala.Framework} dargestellt werden kann. Folgende Objekte
+ * werden von jeder Szene selbstständig verwaltet und beim Laden durch das Framework zur Darstellung verwendet: <ul>
  * <li>Ein Szenengraph, der sich um die hierarchische Verwaltung der Szene kümmert. Die Szene bietet dafür Methoden an,
- * die den Umgang mit dem Szenengraph vereinfachen.</li>
- * <li>Eine virtuelle Kamera, die für die Projektion der Szene verwendet wird. Hier können in jeder Szene unterschiedliche
- * Implementierungen verwendet werden.</li>
- * <li>Ein Renderer, die sich um die Darstellung der projezierten Geometrien kümmert. Auch hier können, abhängig von
- * den Anforderungen der jeweiligen Szene, unterschiedliche Implementierungen verwendet werden.</li>
- * <li>Ein Eventbus, der zum Message-Handling zwischen unterschiedlichen Objekten der Szene und zur Reaktion auf Key-
- * oder Mouse-Events verwendet werden kann.</li>
- * </ul>
+ * die den Umgang mit dem Szenengraph vereinfachen.</li> <li>Eine virtuelle Kamera, die für die Projektion der Szene
+ * verwendet wird. Hier können in jeder Szene unterschiedliche Implementierungen verwendet werden.</li> <li>Ein
+ * Renderer, die sich um die Darstellung der projezierten Geometrien kümmert. Auch hier können, abhängig von den
+ * Anforderungen der jeweiligen Szene, unterschiedliche Implementierungen verwendet werden.</li> <li>Ein Eventbus, der
+ * zum Message-Handling zwischen unterschiedlichen Objekten der Szene und zur Reaktion auf Key- oder Mouse-Events
+ * verwendet werden kann.</li> </ul>
  *
  * @author Robert Giacinto
  * @since 2.0
@@ -85,12 +81,13 @@ public class Scene {
 
     /**
      * Fügt der Szene ein neues Shapeobjekt hinzu. Dieses wird dem Szenengraph an dem übergebenen Knoten angehängt.
-     * TODO das ist verwirrend, dass man erst den Knoten der Szene hinzufügen muss, um ein Shape dranhängen zu können.
      *
      * @param shape das Shape, das der Szene hinzugefügt werden soll
      * @param node  der Knoten, an dem das Shape angehängt werden soll
      */
     public void add(Shape shape, Node node) {
+        //TODO das ist verwirrend, dass man erst den Knoten der Szene hinzufügen muss,
+        // um ein Shape dranhängen zu können.
         sceneGraph.addShape(shape, node);
     }
 
@@ -116,12 +113,15 @@ public class Scene {
 
     /**
      * Fügt einem Elternknoten einen neuen Kindsknoten im Szenengraph hinzu.
-     * TODO das Erweitern der Baumhierarchie über eine Methode in einer Szene ist umständlich. Die Hierarchie sollte automatisch aktualisiert werden, wenn ein neuer Knoten hinzufügt wird.
      *
      * @param child  der neue Kindsknoten
      * @param parent der Elternknoten
      */
     public void addNode(Node child, Node parent) {
+
+        //TODO das Erweitern der Baumhierarchie über eine Methode in einer Szene ist umständlich. Die Hierarchie
+        // sollte automatisch aktualisiert werden, wenn ein neuer Knoten hinzufügt wird.
+
         sceneGraph.addNode(child, parent);
     }
 
@@ -188,7 +188,8 @@ public class Scene {
      * @param label Name des {@code InputHandler} der entfernt werden soll
      */
     public void removeInputHandler(String label) {
-        checkArgument(inputHandlers.containsKey(label), "InputHandler mit Namen " + label + " konnte nicht gefunden werden");
+        checkArgument(inputHandlers.containsKey(label), "InputHandler mit Namen " + label + " konnte nicht gefunden " +
+                "werden");
         eventBus.unregister(inputHandlers.get(label));
     }
 
