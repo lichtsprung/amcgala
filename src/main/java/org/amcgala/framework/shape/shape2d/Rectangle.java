@@ -50,6 +50,23 @@ public class Rectangle extends AbstractShape {
         right = new Line(x + width, y, x + width, y + height);
     }
 
+    /**
+     * Erzeugt ein neues Rechteck, über die Position der linken unteren Ecke und
+     * der Höhe und Breite des Rechtecks.
+     *
+     * @param x      die x-Koordinate der Ecke links unten.
+     * @param y      die y-Koordinate der Ecke links unten.
+     * @param width  die Breite des Rechtecks
+     * @param height die Höhe des Rechtecks
+     */
+    public Rectangle(double x, double y, double width, double height, String label) {
+        bottom = new Line(x, y, x + width, y);
+        top = new Line(x, y + height, x + width, y + height);
+        left = new Line(x, y, x, y + height);
+        right = new Line(x + width, y, x + width, y + height);
+        this.label = label;
+    }
+
 
     @Override
     public void render(Renderer renderer) {
