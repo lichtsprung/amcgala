@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Cologne University of Applied Sciences Licensed under the
  * Educational Community License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may
@@ -56,7 +56,6 @@ public class Box extends AbstractShape {
      * Updates the Box at runtime.
      */
     private void calculate() {
-        lines.add(new Line(Vector3d.createVector3d(position.x, position.y, position.z), Vector3d.createVector3d(position.x + width, position.y, position.z)));
         lines.add(new Line(Vector3d.createVector3d(position.x, position.y, position.z), Vector3d.createVector3d(position.x + width, position.y, position.z)));
         lines.add(new Line(Vector3d.createVector3d(position.x, position.y, position.z), Vector3d.createVector3d(position.x, position.y + height, position.z)));
         lines.add(new Line(Vector3d.createVector3d(position.x, position.y, position.z), Vector3d.createVector3d(position.x, position.y, position.z - depth)));
