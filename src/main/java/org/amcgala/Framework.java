@@ -17,12 +17,7 @@ package org.amcgala;
 import com.google.common.eventbus.EventBus;
 import org.amcgala.framework.animation.Animator;
 import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.event.InputHandler;
-import org.amcgala.framework.event.KeyPressedEvent;
-import org.amcgala.framework.event.KeyReleasedEvent;
-import org.amcgala.framework.event.MouseClickedEvent;
-import org.amcgala.framework.event.MousePressedEvent;
-import org.amcgala.framework.event.MouseReleasedEvent;
+import org.amcgala.framework.event.*;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.DefaultSceneGraph;
 import org.amcgala.framework.scenegraph.SceneGraph;
@@ -32,16 +27,9 @@ import org.amcgala.framework.scenegraph.visitor.Visitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.JFrame;
-import javax.swing.WindowConstants;
-import java.awt.Color;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,24 +50,54 @@ public final class Framework {
     private static final Logger log = LoggerFactory.getLogger(Framework.class);
     private static Framework instance;
 
+    // Der SceneGraph der aktellen Scene. Dieser wird beim Wechseln der Szene ausgetauscht.
     private SceneGraph scenegraph;
+
+    // Der Renderer der gerade aktiven Szene.
     private Renderer renderer;
+
+    // Die Kamera der aktiven Szene.
     private Camera camera;
+
+    // Der Animator kümmert sich um die Aktualisierung des Frameworks.
     private Animator animator;
+
+    // Alle im Framework registrierten Listener. Sie durchlaufen idR einmal pro Frame den SceneGraph.
     private List<Visitor> visitors;
+
+    // Das Frame, in dem der Renderer die Szene darstellt.
     private JFrame frame;
+
+    // Der EventBus der Szene. Diese Listener werden beim Wechseln der Szene ausgetauscht.
     private EventBus sceneEventBus;
+
+    // Der EventBus des Frameworks. Diese Listener bleiben durchgängig aktiv, auch wenn die Szene gewechselt wird.
     private EventBus frameworkEventBus;
+
+    // Alle im Framework registrierten Szenen. Durch die HashMap lässt sich eine Szene über ein Label aufrufen und laden.
     private Map<String, Scene> scenes;
+
+    // Die gerade aktive Szene.
     private Scene activeScene;
+
+    // TODO Sind die Referenzen notwendig?
+    // Referenz auf den aktiven RenderVisitor.
     private RenderVisitor renderVisitor;
+
+    // TODO Sind die Referenzen notwendig?
+    // Referenz auf den UpdateVisitor.
     private UpdateVisitor updateVisitor;
+
+    // Die InputHandler, die den EventBus des Frameworks verwenden.
     private Map<String, InputHandler> frameworkInputHandlers;
-    private List<Scene> sceneList;
-    private int currentSceneIndex;
+
+    // Ist das Framework pausiert? Wenn ja, dann wird der UpdateVisitor nicht mehr verwendet, um den SceneGraph zu aktualisieren.
     private boolean paused;
 
+    // Die Breite des Framework-Fensters.
     private int width;
+
+    // Die Höhe des Framework-Fensters.
     private int height;
 
     /**
@@ -88,12 +106,26 @@ public final class Framework {
      *
      * @param width  die Breite des Fensters
      * @param height die Höhe des Fensters
-     *
      * @return Referenz auf die Frameworksinstanz
      */
     public static Framework createInstance(int width, int height) {
         checkArgument(instance == null, "Es können keine weiteren Instanzen von Framework erzeugt werden!");
-        instance = new Framework(width, height);
+        instance = new Framework(width, height, "amCGAla Framework");
+        instance.start();
+        return instance;
+    }
+
+    /**
+     * Erzeugt eine neue Instanz des Frameworks. Die Größe des Fensters kann über die Parameter width und height
+     * bestimmt werden.
+     *
+     * @param width  die Breite des Fensters
+     * @param height die Höhe des Fensters
+     * @return Referenz auf die Frameworksinstanz
+     */
+    public static Framework createInstance(int width, int height, String label) {
+        checkArgument(instance == null, "Es können keine weiteren Instanzen von Framework erzeugt werden!");
+        instance = new Framework(width, height, label);
         instance.start();
         return instance;
     }
@@ -118,9 +150,11 @@ public final class Framework {
      *
      * @param width  die Breite der Auflösung
      * @param height die Höhe der Auflösung
+     * @param label  der Name des Frames
      */
-    private Framework(int width, int height) {
-        log.info("Initialising framework");
+    private Framework(int width, int height, String label) {
+
+        // Begin der Initialisierungsorgie.
         this.width = width;
         this.height = height;
 
@@ -133,11 +167,9 @@ public final class Framework {
         scenegraph = new DefaultSceneGraph();
 
         scenes = new HashMap<String, Scene>();
-        sceneList = new ArrayList<Scene>();
-        currentSceneIndex = 0;
 
 
-        frame = new JFrame("amCGAla Framework");
+        frame = new JFrame(label);
         frame.setSize(width, height);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -155,7 +187,10 @@ public final class Framework {
         renderVisitor = new RenderVisitor();
         visitors.add(renderVisitor);
 
+        // Ende der Initialisierungsorgie
 
+
+        // Dem Frame werden Mouse- und KeyEventListener hinzugefügt. Die Events werden dann in die EventBusse gepostet.
         frame.addKeyListener(new KeyAdapter() {
 
             @Override
@@ -252,11 +287,8 @@ public final class Framework {
 
     /**
      * Startet das Framework und aktualisiert den Szenengraphen mithilfe eines Animators.
-     *
-     * @deprecated braucht nicht mehr aktiv vom Nutzer aufgerufen werden und wird in der kommenden Version private
-     *             sein.
      */
-    public void start() {
+    protected void start() {
         if (animator == null) {
             update();
             show();
@@ -275,7 +307,6 @@ public final class Framework {
     public void addScene(Scene scene) {
         checkArgument(!scenes.containsKey(scene.getLabel()), "Es existiert bereits eine Szene mit dem gleichen Namen!");
         scenes.put(scene.getLabel(), scene);
-        sceneList.add(scene);
 
         if (activeScene == null) {
             loadScene(scene);
@@ -290,9 +321,9 @@ public final class Framework {
      * @param scene die Szene, die geladen werden soll
      */
     public void setActiveScene(Scene scene) {
+        // Für den Fall, dass die Szene dem Framework noch nicht bekannt war, wird diese der Liste von Szenen hinzugefügt.
         if (!scenes.containsKey(scene.getLabel())) {
             scenes.put(scene.getLabel(), scene);
-            sceneList.add(scene);
         }
         activeScene = scene;
     }
@@ -341,9 +372,7 @@ public final class Framework {
      * Gibt die Referenz auf eine Szene zurück.
      *
      * @param label das Label der Szene
-     *
      * @return die Szene mit dem übergebenen Label
-     *
      * @throws IllegalArgumentException wenn keine Szene mit dem übergebenen Label existiert
      */
     public Scene getScene(String label) {
@@ -407,20 +436,7 @@ public final class Framework {
         frameworkInputHandlers.remove(label);
     }
 
-    /**
-     * Wechselt zur nächsten Szene im Framework.
-     */
-    public void nextScene() {
-        if (sceneList.size() > 1) {
-            if (currentSceneIndex + 1 < sceneList.size()) {
-                currentSceneIndex++;
-                loadScene(sceneList.get(currentSceneIndex));
-            } else {
-                currentSceneIndex = 0;
-                loadScene(sceneList.get(currentSceneIndex));
-            }
-        }
-    }
+
 
     /**
      * Gibt die gerade aktive Szene zurück.
@@ -437,7 +453,7 @@ public final class Framework {
      * @return die Anzahl der Szenen im Framework
      */
     public int getSceneCount() {
-        return sceneList.size();
+        return scenes.size();
     }
 
     /**

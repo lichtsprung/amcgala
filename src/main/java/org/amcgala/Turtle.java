@@ -14,11 +14,20 @@ import static java.lang.Math.*;
  */
 public class Turtle {
 
+    // In diesem Shape werden die einzelnen Linienobjekte, die von der Turtle erzeugt werden, gespeichert und geschlossen
+    // gerendert.
     private CompositeShape turtleShape;
 
+    // Die Blickrichtung der Turtle. Zu Beginn schaut die Turtle nach oben.
     private Vector3d heading = Vector3d.UNIT_Y;
+
+    // Die Turtle steht im Nullpunkt des Koordinatensystems. Aktuell ist dies der Bildmittelpunkt.
     private Vector3d position = Vector3d.ZERO;
+
+    // Der Blinkwinkel - das gleiche wie heading, nur dass es sich hierbei um eine Graddarstellung im Bogenmaß handelt.
     private double headingAngle;
+
+    // Sitzt der Stift der Turtle auf? Ist up true, dann zeichnet die Turtle nicht.
     private boolean up;
 
 
