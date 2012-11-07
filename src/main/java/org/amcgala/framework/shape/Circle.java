@@ -111,6 +111,7 @@ public class Circle extends AbstractShape {
     @Override
     public void render(Renderer renderer) {
         pos = Vector3d.createVector3d(x, y, z);
+        renderer.setColor(getColor());
         renderer.drawCircle(pos, radius);
     }
 
