@@ -92,7 +92,7 @@ public class Scene {
     }
 
     /**
-     * Fügt der Szene ein neues Shapeobjekt hinzu. Dieses wird dem Szenengraph an dem übergebenen Knoten angehängt.
+     * Fügt der Szene ein neues Shapeobjekt hinzu. Dieses wird dem Szenengraph an dem übergebenen Knoten angehänork registrigt.
      *
      * @param shape das Shape, das der Szene hinzugefügt werden soll
      * @param node  der Knoten, an dem das Shape angehängt werden soll

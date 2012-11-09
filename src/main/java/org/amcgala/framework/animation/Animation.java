@@ -31,6 +31,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public abstract class Animation<T extends Shape> implements Updatable {
 
     protected static final Logger log = LoggerFactory.getLogger(Animation.class);
+
+    // Das Shape, das von der Animation verändert wird.
     protected T shape;
 
     public Animation(T shape) {
