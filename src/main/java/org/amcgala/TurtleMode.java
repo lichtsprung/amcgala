@@ -22,10 +22,20 @@ public abstract class TurtleMode {
      * Die Standardhöhe des Turtlefensters.
      */
     protected final static int HEIGHT = 600;
+
+    // Die Szene, in der der Turtle-Modus aktiv ist.
     private final Scene scene = new Scene("turtle");
+
+    // Die Blickrichtung der Turtle. Sie schaut in Richtung der x-Achse. Also nach rechts.
     private Vector3d heading = Vector3d.UNIT_X;
+
+    // Die Turtle steht im Urspung des Koordinatensystems. Aktuell in der Mitte des Fensters.
     private Vector3d position = Vector3d.ZERO;
+
+    // Der Blinkwinkel - das gleiche wie heading, nur dass es sich hierbei um eine Graddarstellung im Bogenmaß handelt.
     private double headingAngle;
+
+    // Wenn up true ist, dann zeichnet die Turtle nicht.
     private boolean up;
 
 
@@ -41,10 +51,11 @@ public abstract class TurtleMode {
 
     /**
      * Erzeugt ein TurtleMode Fenster einer beliebigen Größe.
-     * @param width die Breite des Fensters
+     *
+     * @param width  die Breite des Fensters
      * @param height die Höhe des Fensters
      */
-    public TurtleMode(int width, int height){
+    public TurtleMode(int width, int height) {
         turtleCommands();
         Framework framework = Framework.createInstance(width, height);
         framework.addScene(scene);

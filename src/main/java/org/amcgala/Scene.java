@@ -16,7 +16,7 @@ import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,12 +39,24 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public class Scene {
     private static final Logger log = LoggerFactory.getLogger(Scene.class);
+
+    // Der SceneGraph der Szene wird vom Framework geladen, wenn die Szene aktiviert wird.
     private SceneGraph sceneGraph;
+
     private Camera camera;
     private Renderer renderer;
+
+    // Der EventBus der Szene wird im Framework zusammen mit der Szene geladen. Dadurch lassen sich unterschiedliche Tastenbelegungen
+    // in unterschiedlichen Szenen realisieren.
     private EventBus eventBus;
+
+    // Das Label der Szene wird beim Speichern und Laden einer Szene im Framework benötigt.
     private String label;
+
+    // Die InputHandler der Szene, die auf den Eventbus der Szene zugreifen, wenn die Szene aktiv ist.
     private Map<String, InputHandler> inputHandlers;
+
+    // Hintergrund der Szene. Wird aktuell nur vom Raytracer verwendet.
     private Color background = Color.BLACK;
 
     /**

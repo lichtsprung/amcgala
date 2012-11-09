@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Cologne University of Applied Sciences Licensed under the
  * Educational Community License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may
@@ -49,6 +49,20 @@ public class Circle extends AbstractShape {
     }
 
     /**
+     * Ein Kreis im 3d-Raum mit einem Vektor als Mittelpunkt.
+     *
+     * @param middle Mittelpunkt als Vektor
+     * @param radius der Radius
+     */
+    public Circle(Vector3d center, double radius) {
+        this.x = center.x;
+        this.y = center.y;
+        this.z = center.z;
+        this.radius = radius;
+        pos = Vector3d.createVector3d(x, y, z);
+    }
+
+    /**
      * Setzt den Radius des Kreises auf den übergebenen Wert.
      *
      * @param r der neue Radius des Kreises
@@ -76,6 +90,15 @@ public class Circle extends AbstractShape {
     }
 
     /**
+     * Setzt den Kreis auf die übergebene Position.
+     */
+    public void setPosition(Vector3d center) {
+        this.x = center.x;
+        this.y = center.y;
+        this.z = center.z;
+    }
+
+    /**
      * Gibt die Position des Kreises zurück.
      *
      * @return die Position des Kreises
@@ -88,6 +111,7 @@ public class Circle extends AbstractShape {
     @Override
     public void render(Renderer renderer) {
         pos = Vector3d.createVector3d(x, y, z);
+        renderer.setColor(getColor());
         renderer.drawCircle(pos, radius);
     }
 
