@@ -18,6 +18,8 @@ import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.animation.Updatable;
 import org.amcgala.framework.appearance.Appearance;
 import org.amcgala.framework.math.Matrix;
+import org.amcgala.framework.raytracer.Hittable;
+import org.amcgala.framework.raytracer.RGBColor;
 import org.amcgala.framework.renderer.Renderable;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.shape.util.bounds.BoundingBox;
@@ -30,7 +32,7 @@ import java.awt.Color;
  * @author Robert Giacinto
  * @since 2.0
  */
-public interface Shape extends Updatable, Renderable {
+public interface Shape extends Updatable, Renderable, Hittable {
 
     /**
      * Setzt die Animation, die auf das Shape angewendet werden soll.
@@ -59,6 +61,8 @@ public interface Shape extends Updatable, Renderable {
      * @param color die neue Farbe des Shapes
      */
     void setColor(Color color);
+
+    void setColor(RGBColor color);
 
     /**
      * Gibt das Label des Shapes zurück.
@@ -95,18 +99,4 @@ public interface Shape extends Updatable, Renderable {
      * @param transform die Transformationsmatrix
      */
     void updateBoundingBox(Matrix transform);
-
-    /**
-     * Gibt die {@link Appearance} des Objekts zurück.
-     *
-     * @return die Appearance des Objekts
-     */
-    Appearance getAppearance();
-
-    /**
-     * Ändert die {@link Appearance} des Objekts.
-     *
-     * @param appearance die neue Appearance
-     */
-    void setAppearance(Appearance appearance);
 }

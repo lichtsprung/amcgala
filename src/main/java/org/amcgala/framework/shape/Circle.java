@@ -51,7 +51,7 @@ public class Circle extends AbstractShape {
     /**
      * Ein Kreis im 3d-Raum mit einem Vektor als Mittelpunkt.
      *
-     * @param middle Mittelpunkt als Vektor
+     * @param center Mittelpunkt als Vektor
      * @param radius der Radius
      */
     public Circle(Vector3d center, double radius) {

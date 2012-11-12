@@ -15,18 +15,17 @@
 package org.amcgala.framework.shape;
 
 import org.amcgala.framework.animation.Animation;
-import org.amcgala.framework.appearance.Appearance;
-import org.amcgala.framework.appearance.DefaultAppearance;
 import org.amcgala.framework.math.Matrix;
+import org.amcgala.framework.raytracer.RGBColor;
+import org.amcgala.framework.raytracer.Ray;
+import org.amcgala.framework.raytracer.ShadingInfo;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.shape.util.bounds.BoundingBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Color;
-
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.awt.*;
 
 /**
  * Diese Klasse stellt die Oberklasse aller darstellbaren Objekte dar.
@@ -40,17 +39,22 @@ public abstract class AbstractShape implements Shape {
     private Node node;
     protected String label = getClass().getSimpleName() + " - " + System.nanoTime();
     protected BoundingBox boundingBox = new BoundingBox();
-    protected Appearance appearance = new DefaultAppearance();
+    protected RGBColor color = new RGBColor(0, 0, 0);
 
 
     @Override
     public Color getColor() {
-        return appearance.getColor();
+        return color.toColor();
     }
 
     @Override
     public void setColor(Color color) {
-        appearance.setColor(checkNotNull(color));
+        // TODO hier fehlt die korrekte Berechnung der float Werte.
+    }
+
+    @Override
+    public void setColor(RGBColor color) {
+        this.color = color;
     }
 
     @Override
@@ -95,19 +99,15 @@ public abstract class AbstractShape implements Shape {
         return boundingBox;
     }
 
-    @Override
-    public Appearance getAppearance() {
-        return appearance;
-    }
 
     @Override
-    public void setAppearance(Appearance appearance) {
-        this.appearance = appearance;
+    public boolean hit(Ray ray, ShadingInfo shadingInfo) {
+        return false;
     }
-
 
     @Override
     public void render(Renderer renderer) {
-        // Leere Implementierung. Sollte von Unterklassen mit Inhalt gefüllt werden, wenn sie durch einen Renderer darstellbar sein sollen.
+        // Leere Implementierung. Sollte von Unterklassen mit Inhalt gefüllt werden,
+        // wenn sie durch einen Renderer darstellbar sein sollen.
     }
 }

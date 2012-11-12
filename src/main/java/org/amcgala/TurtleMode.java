@@ -46,7 +46,6 @@ public abstract class TurtleMode {
         turtleCommands();
         Framework framework = Framework.createInstance(WIDTH, HEIGHT);
         framework.addScene(scene);
-        framework.start();
     }
 
     /**
@@ -59,7 +58,6 @@ public abstract class TurtleMode {
         turtleCommands();
         Framework framework = Framework.createInstance(width, height);
         framework.addScene(scene);
-        framework.start();
     }
 
     private void set(int x, int y) {

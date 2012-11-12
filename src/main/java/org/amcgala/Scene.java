@@ -6,6 +6,7 @@ import org.amcgala.framework.camera.SimplePerspectiveCamera;
 import org.amcgala.framework.event.InputHandler;
 import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Vector3d;
+import org.amcgala.framework.raytracer.RGBColor;
 import org.amcgala.framework.renderer.DefaultRenderer;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.DefaultSceneGraph;
@@ -16,48 +17,40 @@ import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * Ein {@link Scene} Objekt verwaltet alle Objekte und den dazugehörigen {@link org.amcgala.framework.scenegraph
- * .DefaultSceneGraph}, der über die Klasse {@link org.amcgala.Framework} dargestellt werden kann. Folgende Objekte
- * werden von jeder Szene selbstständig verwaltet und beim Laden durch das Framework zur Darstellung verwendet: <ul>
+ * Ein {@link Scene} Objekt verwaltet alle Objekte und den dazugehörigen {@link org.amcgala.framework.scenegraph.DefaultSceneGraph},
+ * der über die Klasse {@link org.amcgala.Framework} dargestellt werden kann.
+ * Folgende Objekte werden von jeder Szene selbstständig verwaltet und beim Laden durch das Framework zur Darstellung
+ * verwendet:
+ * <ul>
  * <li>Ein Szenengraph, der sich um die hierarchische Verwaltung der Szene kümmert. Die Szene bietet dafür Methoden an,
- * die den Umgang mit dem Szenengraph vereinfachen.</li> <li>Eine virtuelle Kamera, die für die Projektion der Szene
- * verwendet wird. Hier können in jeder Szene unterschiedliche Implementierungen verwendet werden.</li> <li>Ein
- * Renderer, die sich um die Darstellung der projezierten Geometrien kümmert. Auch hier können, abhängig von den
- * Anforderungen der jeweiligen Szene, unterschiedliche Implementierungen verwendet werden.</li> <li>Ein Eventbus, der
- * zum Message-Handling zwischen unterschiedlichen Objekten der Szene und zur Reaktion auf Key- oder Mouse-Events
- * verwendet werden kann.</li> </ul>
+ * die den Umgang mit dem Szenengraph vereinfachen.</li>
+ * <li>Eine virtuelle Kamera, die für die Projektion der Szene verwendet wird. Hier können in jeder Szene unterschiedliche
+ * Implementierungen verwendet werden.</li>
+ * <li>Ein Renderer, die sich um die Darstellung der projezierten Geometrien kümmert. Auch hier können, abhängig von
+ * den Anforderungen der jeweiligen Szene, unterschiedliche Implementierungen verwendet werden.</li>
+ * <li>Ein Eventbus, der zum Message-Handling zwischen unterschiedlichen Objekten der Szene und zur Reaktion auf Key-
+ * oder Mouse-Events verwendet werden kann.</li>
+ * </ul>
  *
  * @author Robert Giacinto
  * @since 2.0
  */
 public class Scene {
     private static final Logger log = LoggerFactory.getLogger(Scene.class);
-
-    // Der SceneGraph der Szene wird vom Framework geladen, wenn die Szene aktiviert wird.
     private SceneGraph sceneGraph;
-
     private Camera camera;
     private Renderer renderer;
-
-    // Der EventBus der Szene wird im Framework zusammen mit der Szene geladen. Dadurch lassen sich unterschiedliche Tastenbelegungen
-    // in unterschiedlichen Szenen realisieren.
     private EventBus eventBus;
-
-    // Das Label der Szene wird beim Speichern und Laden einer Szene im Framework benötigt.
     private String label;
-
-    // Die InputHandler der Szene, die auf den Eventbus der Szene zugreifen, wenn die Szene aktiv ist.
     private Map<String, InputHandler> inputHandlers;
-
-    // Hintergrund der Szene. Wird aktuell nur vom Raytracer verwendet.
-    private Color background = Color.BLACK;
+    private RGBColor background = new RGBColor(0, 0, 0);
 
     /**
      * Erstellt eine neue Szene mit einem bestimmten Bezeichner.
@@ -83,7 +76,7 @@ public class Scene {
     }
 
     /**
-     * Fügt dem Rootknoten des {@link org.amcgala.framework.scenegraph.DefaultSceneGraph} ein {@link Node} hinzu.
+     * Fügt dem Rootknoten des {@link org.amcgala.framework.scenegraph.DefaultSceneGraph} ein {@link org.amcgala.framework.scenegraph.Node} hinzu.
      *
      * @param node der neue Knoten
      */
@@ -92,14 +85,13 @@ public class Scene {
     }
 
     /**
-     * Fügt der Szene ein neues Shapeobjekt hinzu. Dieses wird dem Szenengraph an dem übergebenen Knoten angehänork registrigt.
+     * Fügt der Szene ein neues Shapeobjekt hinzu. Dieses wird dem Szenengraph an dem übergebenen Knoten angehängt.
+     * TODO das ist verwirrend, dass man erst den Knoten der Szene hinzufügen muss, um ein Shape dranhängen zu können.
      *
      * @param shape das Shape, das der Szene hinzugefügt werden soll
      * @param node  der Knoten, an dem das Shape angehängt werden soll
      */
     public void add(Shape shape, Node node) {
-        //TODO das ist verwirrend, dass man erst den Knoten der Szene hinzufügen muss,
-        // um ein Shape dranhängen zu können.
         sceneGraph.addShape(shape, node);
     }
 
@@ -125,21 +117,17 @@ public class Scene {
 
     /**
      * Fügt einem Elternknoten einen neuen Kindsknoten im Szenengraph hinzu.
+     * TODO das Erweitern der Baumhierarchie über eine Methode in einer Szene ist umständlich. Die Hierarchie sollte automatisch aktualisiert werden, wenn ein neuer Knoten hinzufügt wird.
      *
      * @param child  der neue Kindsknoten
      * @param parent der Elternknoten
      */
     public void addNode(Node child, Node parent) {
-
-        //TODO das Erweitern der Baumhierarchie über eine Methode in einer Szene ist umständlich. Die Hierarchie
-        // sollte automatisch aktualisiert werden, wenn ein neuer Knoten hinzufügt wird.
-
         sceneGraph.addNode(child, parent);
     }
 
-
     /**
-     * Fügt dem root {@link Node} des {@link SceneGraph} eine Transformation hinzu,
+     * Fügt dem root {@link org.amcgala.framework.scenegraph.Node} des {@link org.amcgala.framework.scenegraph.SceneGraph} eine Transformation hinzu,
      *
      * @param transformation die Transformation, die hinzugefügt werden soll
      */
@@ -157,6 +145,15 @@ public class Scene {
     }
 
     /**
+     * Ändert die von der Szene verwendete {@link org.amcgala.framework.camera.Camera}.
+     *
+     * @param camera die neue Kamera
+     */
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+    }
+
+    /**
      * Gibt den von der Szene verwendete Renderer zurück.
      *
      * @return der verwendete Renderer
@@ -166,9 +163,18 @@ public class Scene {
     }
 
     /**
-     * Gibt den {@link EventBus} der Szene zurück.
+     * Ändert den von der Szene verwendeten {@link org.amcgala.framework.renderer.Renderer}.
      *
-     * @return der in der Szene verwendete {@link EventBus}
+     * @param renderer der neue Renderer
+     */
+    public void setRenderer(Renderer renderer) {
+        this.renderer = renderer;
+    }
+
+    /**
+     * Gibt den {@link com.google.common.eventbus.EventBus} der Szene zurück.
+     *
+     * @return der in der Szene verwendete {@link com.google.common.eventbus.EventBus}
      */
     public EventBus getEventBus() {
         return eventBus;
@@ -200,8 +206,7 @@ public class Scene {
      * @param label Name des {@code InputHandler} der entfernt werden soll
      */
     public void removeInputHandler(String label) {
-        checkArgument(inputHandlers.containsKey(label), "InputHandler mit Namen " + label + " konnte nicht gefunden " +
-                "werden");
+        checkArgument(inputHandlers.containsKey(label), "InputHandler mit Namen " + label + " konnte nicht gefunden werden");
         eventBus.unregister(inputHandlers.get(label));
     }
 
@@ -234,24 +239,6 @@ public class Scene {
     }
 
     /**
-     * Ändert die von der Szene verwendete {@link Camera}.
-     *
-     * @param camera die neue Kamera
-     */
-    public void setCamera(Camera camera) {
-        this.camera = camera;
-    }
-
-    /**
-     * Ändert den von der Szene verwendeten {@link Renderer}.
-     *
-     * @param renderer der neue Renderer
-     */
-    public void setRenderer(Renderer renderer) {
-        this.renderer = renderer;
-    }
-
-    /**
      * Fügt der Szene ein neues Licht hinzu.
      *
      * @param light das neue Licht
@@ -275,7 +262,7 @@ public class Scene {
      *
      * @return die Hintergrundfarbe
      */
-    public Color getBackground() {
+    public RGBColor getBackground() {
         return background;
     }
 
@@ -284,7 +271,11 @@ public class Scene {
      *
      * @param background die Farbe des Szenenhintergrunds
      */
-    public void setBackground(Color background) {
+    public void setBackground(RGBColor background) {
         this.background = background;
+    }
+
+    public Collection<Shape> getShapes() {
+        return sceneGraph.getAllShapes();
     }
 }

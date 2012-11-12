@@ -20,19 +20,15 @@ import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
 
-import javax.swing.JFrame;
-import java.awt.Color;
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Der DefaultRenderer verwendet ein JFrame und hat den zu Beginn den Ursprung des Koordinatensystems im Mittelpunkt
- * des Fensters.
- *
- * @author Robert Giacinto
+ * Wird von jedem DefaultRenderer erweitert und stellt die Funktionen drawPixel und show zur Verfügung.
  */
 public class DefaultRenderer implements Renderer {
 
@@ -118,7 +114,6 @@ public class DefaultRenderer implements Renderer {
     public void setColor(Color color) {
         g.setColor(checkNotNull(color));
     }
-   
 
     @Override
     public void drawLine(int x1, int y1, int x2, int y2) {
@@ -153,7 +148,7 @@ public class DefaultRenderer implements Renderer {
     public void drawCircle(Vector3d pos, double radius) {
         Vector3d tv = checkNotNull(pos).transform(transformationMatrix);
         Pixel p = camera.getImageSpaceCoordinates(tv);
-        drawCircle(p.x - 1.5 * radius, p.y - 0.5 * radius, radius);
+        drawCircle(p.x, p.y, radius);
     }
 
     @Override
@@ -188,7 +183,16 @@ public class DefaultRenderer implements Renderer {
     }
 
     @Override
+    public void fillRect(Pixel pos, int width, int height, Color color) {
+
+        g.setColor(color);
+        g.fillRect(pos.x * width, pos.y * height, width, height);
+    }
+
+    @Override
     public Color getColor() {
         return g.getColor();
     }
+
+
 }
