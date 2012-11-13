@@ -125,6 +125,7 @@ public class DefaultRenderer implements Renderer {
         int r2 = (int) (radius);
         int xi = (int) Math.round(x);
         int yi = (int) Math.round(y);
+
         g.drawOval(offsetX + xi + r2, -yi - r2 + offsetY, r2, r2);
     }
 
@@ -148,7 +149,7 @@ public class DefaultRenderer implements Renderer {
     public void drawCircle(Vector3d pos, double radius) {
         Vector3d tv = checkNotNull(pos).transform(transformationMatrix);
         Pixel p = camera.getImageSpaceCoordinates(tv);
-        drawCircle(p.x, p.y, radius);
+        drawCircle(p.x - 1.5 * radius, p.y - 0.5 * radius, radius);
     }
 
     @Override
