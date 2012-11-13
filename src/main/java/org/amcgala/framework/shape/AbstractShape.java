@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2011 Cologne University of Applied Sciences Licensed under the
  * Educational Community License, Version 2.0 (the "License"); you may
  * not use this file except in compliance with the License. You may
@@ -49,7 +49,8 @@ public abstract class AbstractShape implements Shape {
 
     @Override
     public void setColor(Color color) {
-        // TODO hier fehlt die korrekte Berechnung der float Werte.
+        float [] colors = color.getColorComponents(null);
+        this.color = new RGBColor(colors[0], colors[1], colors[2]);
     }
 
     @Override
