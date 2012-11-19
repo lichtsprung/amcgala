@@ -89,6 +89,7 @@ public final class Framework {
         frameworkInputHandlers = new HashMap<String, InputHandler>();
         frameworkEventBus = new EventBus("Framework Input Event Bus");
 
+
         sceneEventBus = new EventBus();
 
         visitors = new ArrayList<Visitor>(10);
@@ -261,6 +262,15 @@ public final class Framework {
     }
 
     /**
+     * Pausiert die Aktualisierung des Frameworks.
+     */
+    public void pause() {
+        if (animator != null) {
+            animator.stop();
+        }
+    }
+
+    /**
      * Fügt dem Framework eine neue {@link Scene} hinzu.
      *
      * @param scene die neue Szene
@@ -382,8 +392,6 @@ public final class Framework {
         frameworkEventBus.unregister(frameworkInputHandlers.get(label));
         frameworkInputHandlers.remove(label);
     }
-
-
 
     /**
      * Gibt die gerade aktive Szene zurück.

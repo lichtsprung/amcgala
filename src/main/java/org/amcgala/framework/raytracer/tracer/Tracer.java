@@ -9,4 +9,6 @@ import org.amcgala.framework.raytracer.Ray;
  */
 public interface Tracer {
     RGBColor trace(Ray ray, Scene scene);
+
+    RGBColor trace(Ray ray, Scene scene, int depth);
 }

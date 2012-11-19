@@ -196,6 +196,16 @@ public class Vector3d implements Comparable<Vector3d> {
         return createVector3d(tmp.get(0, 0), tmp.get(1, 0), tmp.get(2, 0));
     }
 
+    /**
+     * Bewegt den Vektor entlang eines Richtungsvektors um den Faktorwert t.
+     * @param direction die Richtung
+     * @param t der Faktor
+     * @return der neue Vektor v_neu = v_alt + direction * t
+     */
+    public Vector3d travel(Vector3d direction, double t) {
+        return new Vector3d(x + direction.x * t, y + direction.y * t, z + direction.z * t);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

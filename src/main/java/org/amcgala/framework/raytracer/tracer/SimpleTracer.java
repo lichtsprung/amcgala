@@ -49,4 +49,10 @@ public class SimpleTracer implements Tracer {
         return null;
     }
 
+    @Override
+    public RGBColor trace(Ray ray, Scene scene, int depth) {
+        // Wird von SimpleTracer nicht verwendet.
+        return null;
+    }
+
 }
