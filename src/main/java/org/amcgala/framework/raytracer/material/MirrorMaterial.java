@@ -30,8 +30,8 @@ public class MirrorMaterial extends Material {
         /*
          * TODO An dieser Stelle soll die Reflektion berechnet werden.
          *
-         * Hierfür muss die eigene Farbe des Objekts an der Stelle des Hitpoints berechnet werden. Dazu addiert werden
-         * die Reflektionsfarben der Objekte, die über die Reflektionsstrahlen getroffen werden.
+         * Hierfür muss die eigene Farbe des Objekts an der Stelle des Hitpoints berechnet werden.
+         * Dazu addiert werden die Reflektionsfarben der Objekte, die über die Reflektionsstrahlen getroffen werden.
          * Die gewichtete Summe der Farben wird am Ende der Methode zurückgegeben.
          *
          */
