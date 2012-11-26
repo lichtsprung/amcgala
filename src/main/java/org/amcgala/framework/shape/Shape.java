@@ -20,6 +20,7 @@ import org.amcgala.framework.appearance.Appearance;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.raytracer.Hittable;
 import org.amcgala.framework.raytracer.RGBColor;
+import org.amcgala.framework.raytracer.material.Material;
 import org.amcgala.framework.renderer.Renderable;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.shape.util.bounds.BoundingBox;
@@ -99,4 +100,17 @@ public interface Shape extends Updatable, Renderable, Hittable {
      * @param transform die Transformationsmatrix
      */
     void updateBoundingBox(Matrix transform);
+
+
+    /**
+     * Gibt das Material, das zur Färbung des Shapes verwendet wird, zurück
+     * @return das Material
+     */
+    Material getMaterial();
+
+    /**
+     * Ändert das Material, das für das Einfärben des Shapes verantwortlich ist.
+     * @param material das neue Material
+     */
+    void setMaterial(Material material);
 }

@@ -19,6 +19,7 @@ import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.raytracer.RGBColor;
 import org.amcgala.framework.raytracer.Ray;
 import org.amcgala.framework.raytracer.ShadingInfo;
+import org.amcgala.framework.raytracer.material.Material;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.shape.util.bounds.BoundingBox;
@@ -40,6 +41,7 @@ public abstract class AbstractShape implements Shape {
     protected String label = getClass().getSimpleName() + " - " + System.nanoTime();
     protected BoundingBox boundingBox = new BoundingBox();
     protected RGBColor color = new RGBColor(0, 0, 0);
+    protected Material material;
 
 
     @Override
@@ -104,6 +106,16 @@ public abstract class AbstractShape implements Shape {
     @Override
     public boolean hit(Ray ray, ShadingInfo shadingInfo) {
         return false;
+    }
+
+    @Override
+    public Material getMaterial() {
+        return material;
+    }
+
+    @Override
+    public void setMaterial(Material material) {
+        this.material = material;
     }
 
     @Override
