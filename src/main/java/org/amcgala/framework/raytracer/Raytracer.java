@@ -17,6 +17,7 @@ package org.amcgala.framework.raytracer;
 import org.amcgala.Scene;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.raytracer.sampler.RegularSampler;
+import org.amcgala.framework.raytracer.tracer.RecursiveTracer;
 import org.amcgala.framework.raytracer.tracer.SimpleTracer;
 import org.amcgala.framework.raytracer.tracer.Tracer;
 import org.amcgala.framework.renderer.Renderer;
@@ -38,9 +39,9 @@ public class Raytracer {
     private Vector3d direction;
 
     public Raytracer() {
-        tracer = new SimpleTracer();
+        // Aufruf des neuen rekursiven Tracers, der Spiegelungen ermöglicht.
+        tracer = new RecursiveTracer(5);
 
-        // Was bewirken die Parameter? Wie verändert sich das Ergebnis des Raytracers?
         viewPlane = new ViewPlane(600, 600, 1);
 
         viewPlane.setSampler(new RegularSampler());
@@ -58,13 +59,8 @@ public class Raytracer {
 
     public void traceScene() {
         /*
-         * TODO
-         * Für jedes Pixel
-         *      Schieße einen Strahl von der Mitte eines jeden Pixels in die Szene
-         *          Tipp: o = viewPlane.getWorldCoordinates(x, y);
-         *      Berechne mithilfe des Tracers den Farbwert an der Stelle
-         *      Färbe den Pixel an der Stelle (x,y) ein.
-         *          Tipp: viewPlane.drawPixel(x, y, color)
+         * Diese Methode braucht in diesem Praktikum nicht geändert werden.
+         *
          */
     }
 }
