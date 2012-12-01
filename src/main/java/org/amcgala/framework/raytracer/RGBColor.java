@@ -45,7 +45,7 @@ public class RGBColor {
     }
 
     public Color toColor() {
-        return new Color(red, green, blue);
+        return new Color(getRed(), getGreen(), getBlue());
     }
 
     public float getRed() {
