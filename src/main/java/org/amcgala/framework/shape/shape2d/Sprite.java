@@ -1,7 +1,5 @@
-package org.amcgala.framework.shape.shape2d;
-
 /*
- * Copyright 2011 Cologne University of Applied Sciences Licensed under the
+ * Copyright 2011-2012 Cologne University of Applied Sciences Licensed under the
  * Educational Community License, Version 2.0 (the "License"); you may not use
  * this file except in compliance with the License. You may obtain a copy of the
  * License at
@@ -14,6 +12,8 @@ package org.amcgala.framework.shape.shape2d;
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package org.amcgala.framework.shape.shape2d;
+
 
 import com.google.common.base.Objects;
 import org.amcgala.framework.renderer.Pixel;
@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,69 +39,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class Sprite extends AbstractShape {
     private static final Logger log = LoggerFactory.getLogger(Sprite.class.getName());
-
-    private double x, y;
-    private int width, height;
     private Pixel[] pixels;
     private String path;
-
-    /**
-     * Spriteobjekt aus einer Datei (jpeg,png,gif)
-     *
-     * @param path der Pfad zu der Bilddatei
-     * @param x die x-Position des Sprites
-     * @param y die y-Position des Sprites
-     *
-     * @throws IOException
-     */
-    public Sprite(String path, double x, double y) throws IOException {
-        this(path);
-        this.x = x;
-        this.y = y;
-    }
-
-    /**
-     * Spriteobjekt aus einer Datei (jpeg,png,gif)
-     *
-     * @param inputStream
-     */
-    public void loadImage(InputStream inputStream) {
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(inputStream);
-        } catch (IOException e) {
-            log.error("Konnte Bild nicht laden!", e);
-        }
-
-        width = checkNotNull(image).getWidth();
-        height = checkNotNull(image).getHeight();
-
-        // Farbwerte auslesen
-        int[] colorValues = new int[width * height];
-        image.getRGB(0, 0, width, height, colorValues, 0, width);
-
-        // Pixel erzeugen (Point2d's)
-        pixels = new Pixel[colorValues.length];
-
-        for (int i = 0; i < width * height; i++) {
-            pixels[i] = new Pixel(i % width + x, (height - i) / width + y, new Color(colorValues[i]));
-        }
-    }
-
-    /**
-     * Spriteobjekt aus einer Datei (jpeg,png,gif)
-     *
-     * @param inputStream
-     * @param x
-     * @param y
-     *
-     * @throws IOException
-     */
-    public Sprite(InputStream inputStream, int x, int y) throws IOException {
-        loadImage(inputStream);
-        this.x = x;
-        this.y = y;
-    }
 
     /**
      * Spriteobjekt aus einer Datei (jpeg,png,gif)
@@ -119,7 +58,6 @@ public class Sprite extends AbstractShape {
         }
 
         try {
-
             loadImage(f);
         } finally {
             try {
@@ -132,6 +70,38 @@ public class Sprite extends AbstractShape {
         }
     }
 
+    /**
+     * Spriteobjekt aus einer Datei (jpeg,png,gif)
+     *
+     * @param inputStream
+     */
+    public void loadImage(InputStream inputStream) {
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(inputStream);
+        } catch (IOException e) {
+            log.error("Konnte Bild nicht laden!", e);
+        }
+
+        int width = checkNotNull(image).getWidth();
+        int height = checkNotNull(image).getHeight();
+
+        // Farbwerte auslesen
+        int[] colorValues = new int[width * height];
+        if (image != null) {
+            image.getRGB(0, 0, width, height, colorValues, 0, width);
+        } else {
+            log.error("Couldn't load image from InputStream.");
+        }
+
+        // Pixel erzeugen
+        pixels = new Pixel[colorValues.length];
+
+        for (int i = 0; i < width * height; i++) {
+            pixels[i] = new Pixel(i % width, (height - i) / width, new Color(colorValues[i]));
+        }
+    }
+
     @Override
     public void render(Renderer renderer) {
         for (Pixel pixel : pixels) {
@@ -139,24 +109,8 @@ public class Sprite extends AbstractShape {
         }
     }
 
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
-
     @Override
     public String toString() {
-        return Objects.toStringHelper(getClass()).add("Path", path).add("x", x).add("y", y).toString();
+        return Objects.toStringHelper(getClass()).add("Path", path).toString();
     }
 }
