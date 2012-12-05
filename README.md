@@ -21,3 +21,5 @@ Hierfür muss in die pom.xml des Projekts folgende Abhängigkeit hinzugefügt we
 
 Das Package org.amcgala.example bietet einige Beispiele, wie das Framework benutzt werden kann. Für den schnellen
 Einstieg reicht es, die Klasse Amcgala zu erweitern und auf die dort zu Verfügung gestellte Framework Instanz zurückzugreifen.
+
+amcgala ist Opensource und wird unter der Educational Community License, Version 2.0 (http://opensource.org/licenses/ECL-2.0) zur Verfügung gestellt.
