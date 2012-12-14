@@ -41,7 +41,7 @@ public abstract class AbstractShape implements Shape {
     protected String label = getClass().getSimpleName() + " - " + System.nanoTime();
     protected BoundingBox boundingBox = new BoundingBox();
     protected RGBColor color = new RGBColor(0, 0, 0);
-    protected Material material;
+    protected Material material = new Material();
 
 
     @Override

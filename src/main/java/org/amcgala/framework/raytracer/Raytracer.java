@@ -16,13 +16,11 @@ package org.amcgala.framework.raytracer;
 
 import org.amcgala.Scene;
 import org.amcgala.framework.math.Vector3d;
+import org.amcgala.framework.raytracer.sampler.RandomSampler;
 import org.amcgala.framework.raytracer.sampler.RegularSampler;
 import org.amcgala.framework.raytracer.tracer.RecursiveTracer;
-import org.amcgala.framework.raytracer.tracer.SimpleTracer;
 import org.amcgala.framework.raytracer.tracer.Tracer;
 import org.amcgala.framework.renderer.Renderer;
-
-import java.awt.*;
 
 /**
  * Der RaytraceVisitor traversiert den {@link org.amcgala.framework.scenegraph.SceneGraph} und berechnet die
@@ -36,16 +34,13 @@ public class Raytracer {
     private Scene scene;
     private Tracer tracer;
     private ViewPlane viewPlane;
-    private Vector3d direction;
+    private Vector3d eye;
 
     public Raytracer() {
-        // Aufruf des neuen rekursiven Tracers, der Spiegelungen ermöglicht.
         tracer = new RecursiveTracer(5);
-
         viewPlane = new ViewPlane(600, 600, 1);
-
-        viewPlane.setSampler(new RegularSampler());
-        direction = new Vector3d(0, 0, -1);
+        viewPlane.setSampler(new RandomSampler(128));
+        eye = new Vector3d(0, 0, 600);
     }
 
     public void setScene(Scene scene) {
@@ -58,10 +53,24 @@ public class Raytracer {
     }
 
     public void traceScene() {
-        /*
-         * Diese Methode braucht in diesem Praktikum nicht geändert werden.
-         *
-         */
+        for (int row = 0; row < viewPlane.getVerticalResolution(); row++) {
+            for (int column = 0; column < viewPlane.getHorizontalResolution(); column++) {
+                RGBColor color = new RGBColor(0, 0, 0);
+                for (int n = 0; n < viewPlane.getNumberOfSamples(); n++) {
+                    final Vector3d o = viewPlane.getWorldCoordinates(column, row);
+                    final Vector3d d = o.sub(eye);
+                    Ray ray = new Ray(o, d);
+                    color = color.add(tracer.trace(ray, scene));
+                }
+
+                // Normalisieren der Farbe
+                color = color.times(1.0f / viewPlane.getNumberOfSamples());
+
+                // Rendering des Pixels
+                viewPlane.drawPixel(column, row, color);
+
+            }
+        }
     }
 }
 
