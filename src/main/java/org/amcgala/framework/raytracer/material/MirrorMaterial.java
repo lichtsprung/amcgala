@@ -1,6 +1,9 @@
 package org.amcgala.framework.raytracer.material;
 
+import org.amcgala.framework.math.MathConstants;
+import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.raytracer.RGBColor;
+import org.amcgala.framework.raytracer.Ray;
 import org.amcgala.framework.raytracer.ShadingInfo;
 
 /**
@@ -27,15 +30,10 @@ public class MirrorMaterial extends Material {
     @Override
     public RGBColor getColor(ShadingInfo hit) {
 
-        /*
-         * TODO An dieser Stelle soll die Reflektion berechnet werden.
-         *
-         * Hierfür muss die eigene Farbe des Objekts an der Stelle des Hitpoints berechnet werden.
-         * Dazu addiert werden die Reflektionsfarben der Objekte, die über die Reflektionsstrahlen getroffen werden.
-         * Die gewichtete Summe der Farben wird am Ende der Methode zurückgegeben.
-         *
-         */
+        double angle = hit.normal.dot(hit.ray.direction.times(-1));
+        Vector3d omegaI = hit.ray.direction.sub(hit.normal.times(-2 * angle));
+        Ray refRay = new Ray(hit.hitPoint.travel(omegaI, MathConstants.EPSILON), omegaI);
 
-        return null;
+        return baseColor.times(1 - reflectionCoefficient).add((hit.tracer.trace(refRay, hit.scene, hit.depth + 1).times(reflectionCoefficient)));
     }
 }
