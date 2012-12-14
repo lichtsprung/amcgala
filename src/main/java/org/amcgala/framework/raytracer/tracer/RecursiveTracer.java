@@ -3,6 +3,8 @@ package org.amcgala.framework.raytracer.tracer;
 import org.amcgala.Scene;
 import org.amcgala.framework.raytracer.RGBColor;
 import org.amcgala.framework.raytracer.Ray;
+import org.amcgala.framework.raytracer.ShadingInfo;
+import org.amcgala.framework.shape.Shape;
 
 /**
  * Rekursiver Raytracer, der für die Berechnung von Reflexionen verwendet werden kann.
@@ -30,16 +32,25 @@ public class RecursiveTracer implements Tracer {
 
     @Override
     public RGBColor trace(Ray ray, Scene scene, int depth) {
-        /*
-         * TODO Die rekursive Version des Tracers aus Aufgabe 7.
-         * Innerhalb dieser Methode muss wieder mit ShadingInfo Instanzen gearbeitet werden. Dem Objekt müssen folgende
-         * Informationen mitgegeben werden, bevor die shape.hit(ray, shadingInfo) Methode aufgerufen wird:
-         *
-         *      - Rekursionstiefe
-         *      - aktuelle Szene
-         *      - Referenz auf den Tracer
-         */
+        if (depth > maxDepth) {
+            return new RGBColor(0, 0, 0);
+        } else {
+            ShadingInfo result = new ShadingInfo();
+            result.color = scene.getBackground();
 
-        return null;
+            for (Shape shape : scene.getShapes()) {
+                ShadingInfo tmp = new ShadingInfo();
+                tmp.tracer = this;
+                tmp.scene = scene;
+                tmp.depth = depth;
+                tmp.label = shape.getLabel();
+                shape.hit(ray, tmp);
+
+                if (tmp.t < result.t) {
+                    result = tmp;
+                }
+            }
+            return result.color;
+        }
     }
 }
