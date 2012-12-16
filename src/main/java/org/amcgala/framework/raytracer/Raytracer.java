@@ -14,10 +14,10 @@
  */
 package org.amcgala.framework.raytracer;
 
+import org.amcgala.Framework;
 import org.amcgala.Scene;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.raytracer.sampler.RandomSampler;
-import org.amcgala.framework.raytracer.sampler.RegularSampler;
 import org.amcgala.framework.raytracer.tracer.RecursiveTracer;
 import org.amcgala.framework.raytracer.tracer.Tracer;
 import org.amcgala.framework.renderer.Renderer;
@@ -38,7 +38,7 @@ public class Raytracer {
 
     public Raytracer() {
         tracer = new RecursiveTracer(5);
-        viewPlane = new ViewPlane(600, 600, 1);
+        viewPlane = new ViewPlane(Framework.getInstance().getWidth(), Framework.getInstance().getHeight(), 1);
         viewPlane.setSampler(new RandomSampler(128));
         eye = new Vector3d(0, 0, 600);
     }
