@@ -31,10 +31,10 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -69,10 +69,29 @@ public final class Framework {
     private UpdateVisitor updateVisitor;
     private Raytracer raytracer;
     private Map<String, InputHandler> frameworkInputHandlers;
-    private int currentSceneIndex;
     private boolean paused;
     private int width;
     private int height;
+    private Properties properties;
+
+    private Framework() {
+        log.info("Loading properties");
+        properties = new Properties();
+        InputStream in = getClass().getResourceAsStream("amcgala.properties");
+
+        try {
+            properties.load(in);
+
+        } catch (IOException e) {
+            log.error("Couldn't load properties file.");
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                log.error("Couldn't close InputStream.");
+            }
+        }
+    }
 
     /**
      * Erstellt ein neues Framework, das eine grafische Ausgabe in der Auflösung
@@ -82,6 +101,7 @@ public final class Framework {
      * @param height die Höhe der Auflösung
      */
     private Framework(int width, int height) {
+        this();
         log.info("Initialising framework");
         this.width = width;
         this.height = height;
@@ -106,8 +126,7 @@ public final class Framework {
         frame.setVisible(true);
 
 
-        // TODO Zahlen weg und eine Konfigurationsdatei einführen!
-        animator = new Animator(60, 60);
+        animator = new Animator(Integer.parseInt(properties.getProperty("animator.fps")), Integer.parseInt(properties.getProperty("animator.fps")));
 
         updateVisitor = new UpdateVisitor();
         visitors.add(updateVisitor);
@@ -221,6 +240,10 @@ public final class Framework {
         } else {
             return instance;
         }
+    }
+
+    public Properties getProperties() {
+        return properties;
     }
 
     /**
@@ -431,7 +454,7 @@ public final class Framework {
      * @return die Breite des Fensters
      */
     public int getWidth() {
-        return width;
+        return (width == 0) ? Integer.parseInt(properties.getProperty("amcgala.width")) : width;
     }
 
     /**
@@ -440,6 +463,6 @@ public final class Framework {
      * @return die Höhe des Fensters
      */
     public int getHeight() {
-        return height;
+        return (height == 0) ? Integer.parseInt(properties.getProperty("amcgala.height")) : height;
     }
 }
