@@ -54,6 +54,25 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class Framework {
 
     private static final Logger log = LoggerFactory.getLogger(Framework.class);
+    public static Properties properties;
+
+    static {
+        log.info("Loading properties");
+        properties = new Properties();
+        InputStream in = Framework.class.getResourceAsStream("amcgala.properties");
+        try {
+            properties.load(in);
+        } catch (IOException e) {
+            log.error("Couldn't load amcgala properties file.");
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                log.error("Coulnd't close InputStream.");
+            }
+        }
+    }
+
     private static Framework instance;
     private SceneGraph scenegraph;
     private Renderer renderer;
@@ -72,26 +91,7 @@ public final class Framework {
     private boolean paused;
     private int width;
     private int height;
-    private Properties properties;
-
-    private Framework() {
-        log.info("Loading properties");
-        properties = new Properties();
-        InputStream in = getClass().getResourceAsStream("amcgala.properties");
-
-        try {
-            properties.load(in);
-
-        } catch (IOException e) {
-            log.error("Couldn't load properties file.");
-        } finally {
-            try {
-                in.close();
-            } catch (IOException e) {
-                log.error("Couldn't close InputStream.");
-            }
-        }
-    }
+    private boolean raytracing;
 
     /**
      * Erstellt ein neues Framework, das eine grafische Ausgabe in der Auflösung
@@ -101,7 +101,6 @@ public final class Framework {
      * @param height die Höhe der Auflösung
      */
     private Framework(int width, int height) {
-        this();
         log.info("Initialising framework");
         this.width = width;
         this.height = height;
@@ -236,10 +235,28 @@ public final class Framework {
      */
     public static Framework getInstance() {
         if (instance == null) {
-            return createInstance(800, 600);
+            return createInstance(Integer.parseInt(properties.getProperty("amcgala.width")), Integer.parseInt(properties.getProperty("amcgala.height")));
         } else {
             return instance;
         }
+    }
+
+    /**
+     * Gibt an, ob der {@link Raytracer} des Frameworks verwendet wird.
+     *
+     * @return {@code true} wenn Raytracer aktiv
+     */
+    public boolean isRaytracing() {
+        return raytracing;
+    }
+
+    /**
+     * Aktiviert oder deaktiviert den {@link Raytracer} des Frameworks.
+     *
+     * @param raytracing {@code true} wenn Raytracer aktiviert werden soll
+     */
+    public void setRaytracing(boolean raytracing) {
+        this.raytracing = raytracing;
     }
 
     public Properties getProperties() {
@@ -256,7 +273,7 @@ public final class Framework {
                 scenegraph.accept(v);
             }
         }
-        if (raytracer != null) {
+        if (raytracer != null && raytracing) {
             raytracer.traceScene();
         }
     }
