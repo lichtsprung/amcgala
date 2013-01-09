@@ -3,6 +3,7 @@
 Informationen und Anleitungen zu diesem Projekt sind im Wiki und der Projektwebsite zu finden.
 
 http://www.amcgala.org
+
 https://github.com/amcgala/amcgala/wiki
 
 ## Getting started
