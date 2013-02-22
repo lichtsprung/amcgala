@@ -53,26 +53,8 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public final class Framework {
 
+    public static final Properties properties = loadProperties();
     private static final Logger log = LoggerFactory.getLogger(Framework.class);
-    public static Properties properties;
-
-    static {
-        log.info("Loading properties");
-        properties = new Properties();
-        InputStream in = Framework.class.getResourceAsStream("amcgala.properties");
-        try {
-            properties.load(in);
-        } catch (IOException e) {
-            log.error("Couldn't load amcgala properties file.");
-        } finally {
-            try {
-                in.close();
-            } catch (IOException e) {
-                log.error("Coulnd't close InputStream.");
-            }
-        }
-    }
-
     private static Framework instance;
     private SceneGraph scenegraph;
     private Renderer renderer;
@@ -239,6 +221,24 @@ public final class Framework {
         } else {
             return instance;
         }
+    }
+
+    private static Properties loadProperties() {
+        final Properties props = new Properties();
+        log.info("Loading properties");
+        final InputStream in = Framework.class.getResourceAsStream("amcgala.properties");
+        try {
+            props.load(in);
+        } catch (IOException e) {
+            log.error("Couldn't load amcgala properties file.");
+        } finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                log.error("Coulnd't close InputStream.");
+            }
+        }
+        return props;  //To change body of created methods use File | Settings | File Templates.
     }
 
     /**
