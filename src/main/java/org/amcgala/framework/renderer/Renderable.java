@@ -6,5 +6,8 @@ package org.amcgala.framework.renderer;
  * @author Robert Giacinto
  */
 public interface Renderable {
+    @Deprecated
     void render(Renderer renderer);
+
+    DisplayList getDisplayList();
 }

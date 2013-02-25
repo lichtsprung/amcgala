@@ -7,8 +7,6 @@ import org.amcgala.framework.event.InputHandler;
 import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.raytracer.RGBColor;
-import org.amcgala.framework.renderer.DefaultRenderer;
-import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.DefaultSceneGraph;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.scenegraph.SceneGraph;
@@ -46,7 +44,6 @@ public class Scene {
     private static final Logger log = LoggerFactory.getLogger(Scene.class);
     private SceneGraph sceneGraph;
     private Camera camera;
-    private Renderer renderer;
     private EventBus eventBus;
     private String label;
     private Map<String, InputHandler> inputHandlers;
@@ -61,7 +58,6 @@ public class Scene {
         this.label = label;
         sceneGraph = new DefaultSceneGraph();
         camera = new SimplePerspectiveCamera(Vector3d.UNIT_Y, Vector3d.UNIT_Z, Vector3d.ZERO, 2000);
-        renderer = new DefaultRenderer(camera);
         eventBus = new EventBus();
         inputHandlers = new HashMap<String, InputHandler>();
     }
@@ -153,23 +149,6 @@ public class Scene {
         this.camera = camera;
     }
 
-    /**
-     * Gibt den von der Szene verwendete Renderer zurück.
-     *
-     * @return der verwendete Renderer
-     */
-    public Renderer getRenderer() {
-        return renderer;
-    }
-
-    /**
-     * Ändert den von der Szene verwendeten {@link org.amcgala.framework.renderer.Renderer}.
-     *
-     * @param renderer der neue Renderer
-     */
-    public void setRenderer(Renderer renderer) {
-        this.renderer = renderer;
-    }
 
     /**
      * Gibt den {@link com.google.common.eventbus.EventBus} der Szene zurück.

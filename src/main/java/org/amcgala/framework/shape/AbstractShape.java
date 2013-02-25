@@ -20,6 +20,7 @@ import org.amcgala.framework.raytracer.RGBColor;
 import org.amcgala.framework.raytracer.Ray;
 import org.amcgala.framework.raytracer.ShadingInfo;
 import org.amcgala.framework.raytracer.material.Material;
+import org.amcgala.framework.renderer.DisplayList;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.shape.util.bounds.BoundingBox;
@@ -51,7 +52,7 @@ public abstract class AbstractShape implements Shape {
 
     @Override
     public void setColor(Color color) {
-        float [] colors = color.getColorComponents(null);
+        float[] colors = color.getColorComponents(null);
         this.color = new RGBColor(colors[0], colors[1], colors[2]);
     }
 
@@ -122,5 +123,10 @@ public abstract class AbstractShape implements Shape {
     public void render(Renderer renderer) {
         // Leere Implementierung. Sollte von Unterklassen mit Inhalt gefüllt werden,
         // wenn sie durch einen Renderer darstellbar sein sollen.
+    }
+
+    @Override
+    public DisplayList getDisplayList() {
+        return new DisplayList();
     }
 }

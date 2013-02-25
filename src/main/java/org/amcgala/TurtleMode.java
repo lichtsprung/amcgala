@@ -2,9 +2,7 @@ package org.amcgala;
 
 
 import org.amcgala.framework.math.Vector3d;
-import org.amcgala.framework.shape.Line;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Math.*;
 
 /**
@@ -112,17 +110,18 @@ public abstract class TurtleMode {
      * @param length die Länge des Schritts
      */
     protected void move(double length) {
-        checkArgument(length > 0, "Schrittlänge kann nur positiv sein!");
-
-        if (up) {
-            position = position.add(heading.times(length));
-        } else {
-            Vector3d endPosition = position.add(heading.times(length));
-            endPosition.z = -1;
-            position.z = -1;
-            scene.addShape(new Line(position, endPosition));
-            position = endPosition;
-        }
+//  TODO muss korrigiert werden, sobald GL funktioniert.
+//        checkArgument(length > 0, "Schrittlänge kann nur positiv sein!");
+//
+//        if (up) {
+//            position = position.add(heading.times(length));
+//        } else {
+//            Vector3d endPosition = position.add(heading.times(length));
+//            endPosition.z = -1;
+//            position.z = -1;
+//            scene.addShape(new Line(position, endPosition));
+//            position = endPosition;
+//        }
     }
 
     public abstract void turtleCommands();

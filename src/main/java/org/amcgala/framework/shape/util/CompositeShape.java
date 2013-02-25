@@ -16,7 +16,6 @@ package org.amcgala.framework.shape.util;
 
 import com.google.common.base.Objects;
 import org.amcgala.framework.event.InputHandler;
-import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.shape.AbstractShape;
 import org.amcgala.framework.shape.Line;
@@ -30,7 +29,6 @@ import java.util.List;
 
 /**
  * Ein Containerobjekt, das für die Erstellung von zusammengesetzten Shape-Objekten genutzt werden kann.
- * Für ein Beispiel siehe {@link org.amcgala.framework.shape.shape3d.Box}.
  *
  * @author Sascha Lemke
  * @author Robert Giacinto
@@ -55,7 +53,6 @@ public class CompositeShape extends AbstractShape implements InputHandler {
     public CompositeShape(Line... lines) {
         this();
         Collections.addAll(shapes, lines);
-        updateBoundingBox();
     }
 
     /**
@@ -65,7 +62,6 @@ public class CompositeShape extends AbstractShape implements InputHandler {
      */
     public void add(Line... lines) {
         Collections.addAll(shapes, lines);
-        updateBoundingBox();
     }
 
     /**
@@ -73,7 +69,6 @@ public class CompositeShape extends AbstractShape implements InputHandler {
      */
     public void removeLast() {
         shapes.remove(shapes.size() - 1);
-        updateBoundingBox();
     }
 
     /**
@@ -83,7 +78,6 @@ public class CompositeShape extends AbstractShape implements InputHandler {
      */
     public void remove(Line line) {
         shapes.remove(line);
-        updateBoundingBox();
     }
 
     @Override
@@ -97,14 +91,5 @@ public class CompositeShape extends AbstractShape implements InputHandler {
             shape.setColor(getColor());
             shape.render(renderer);
         }
-    }
-
-    private void updateBoundingBox() {
-        List<Vector3d> vectors = new ArrayList<Vector3d>();
-        for (Line l : shapes) {
-            vectors.add(l.getStart());
-            vectors.add(l.getEnd());
-        }
-        boundingBox.updateBox(vectors);
     }
 }

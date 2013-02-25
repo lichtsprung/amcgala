@@ -14,16 +14,13 @@
  */
 package org.amcgala.framework.renderer;
 
-import org.amcgala.framework.appearance.Appearance;
 import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -47,7 +44,6 @@ public class DefaultRenderer implements Renderer {
     private Graphics g;
     private Camera camera;
     private Matrix transformationMatrix;
-    private List<Light> lights;
 
     public DefaultRenderer(Camera camera) {
         this.camera = checkNotNull(camera);
@@ -72,11 +68,6 @@ public class DefaultRenderer implements Renderer {
     @Override
     public void setTransformationMatrix(Matrix transformationMatrix) {
         this.transformationMatrix = checkNotNull(transformationMatrix);
-    }
-
-    @Override
-    public void setLights(List<Light> lights) {
-        this.lights = lights;
     }
 
     @Override
@@ -160,15 +151,6 @@ public class DefaultRenderer implements Renderer {
     }
 
     @Override
-    public void drawPixel(Vector3d vector, Appearance appearance) {
-        Color c = appearance.getColor();
-        for (Light light : lights) {
-            c = light.interpolate(c, vector, camera.getPosition(), appearance);
-        }
-        drawPixel(vector, c);
-    }
-
-    @Override
     public void setFrame(JFrame frame) {
         this.frame = checkNotNull(frame);
 
@@ -194,6 +176,5 @@ public class DefaultRenderer implements Renderer {
     public Color getColor() {
         return g.getColor();
     }
-
 
 }

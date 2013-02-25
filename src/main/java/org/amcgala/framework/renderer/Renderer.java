@@ -1,17 +1,15 @@
 package org.amcgala.framework.renderer;
 
-import org.amcgala.framework.appearance.Appearance;
 import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 /**
  * Dieses Interface, welche Methoden ein Renderer zur Verfügung stellen muss, um vom Framework benutzt werden zu können.
+ *
  * @author Robert Giacinto
  */
 public interface Renderer {
@@ -29,15 +27,13 @@ public interface Renderer {
      */
     int getHeight();
 
-    void setCamera(Camera camera);
-
-    void setTransformationMatrix(Matrix transformationMatrix);
-
-    void setLights(List<Light> lights);
-
     Camera getCamera();
 
+    void setCamera(Camera camera);
+
     Matrix getTransformationMatrix();
+
+    void setTransformationMatrix(Matrix transformationMatrix);
 
     /**
      * Diese Methode stellt einen Pixel über den DefaultRenderer auf der Ausgabe dar.
@@ -60,17 +56,11 @@ public interface Renderer {
 
     /**
      * Gibt den Pixel zu einem Vector zurück.
+     *
      * @param vector der Vector
      * @return der Pixel auf dem Bildschirm
      */
     Pixel getPixel(Vector3d vector);
-
-    /**
-     * Setzt eine neue Farbe, mit der die weiteren Zeichenbefehle ausgeführt werden.
-     *
-     * @param color die neue Farbe
-     */
-    void setColor(Color color);
 
     /**
      * Zeichnet eine Linie von einem Startpunkt (x1, y1) zu einem Endpunkt (x2, y2).
@@ -95,12 +85,17 @@ public interface Renderer {
 
     void drawPixel(Vector3d point, Color color);
 
-    void drawPixel(Vector3d vector, Appearance appearance);
-
     void setFrame(JFrame frame);
 
     void fillRect(Pixel pos, int width, int height, Color color);
 
     Color getColor();
+
+    /**
+     * Setzt eine neue Farbe, mit der die weiteren Zeichenbefehle ausgeführt werden.
+     *
+     * @param color die neue Farbe
+     */
+    void setColor(Color color);
 
 }

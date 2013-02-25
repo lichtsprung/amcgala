@@ -19,12 +19,14 @@ import org.amcgala.framework.animation.Animator;
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.event.*;
 import org.amcgala.framework.raytracer.Raytracer;
+import org.amcgala.framework.renderer.DisplayList;
+import org.amcgala.framework.renderer.GLRenderer;
 import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.DefaultSceneGraph;
 import org.amcgala.framework.scenegraph.SceneGraph;
-import org.amcgala.framework.scenegraph.visitor.RenderVisitor;
 import org.amcgala.framework.scenegraph.visitor.UpdateVisitor;
 import org.amcgala.framework.scenegraph.visitor.Visitor;
+import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,27 +55,28 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public final class Framework {
 
-    public static final Properties properties = loadProperties();
     private static final Logger log = LoggerFactory.getLogger(Framework.class);
+    public static final Properties properties = loadProperties();
     private static Framework instance;
     private SceneGraph scenegraph;
     private Renderer renderer;
-    private Camera camera;
     private Animator animator;
+    private Camera camera;
     private List<Visitor> visitors;
     private JFrame frame;
     private EventBus sceneEventBus;
     private EventBus frameworkEventBus;
     private Map<String, Scene> scenes;
     private Scene activeScene;
-    private RenderVisitor renderVisitor;
     private UpdateVisitor updateVisitor;
     private Raytracer raytracer;
     private Map<String, InputHandler> frameworkInputHandlers;
     private boolean paused;
     private int width;
     private int height;
-    private boolean raytracing;
+    private boolean tracing;
+    private boolean running;
+    private DisplayList dl;
 
     /**
      * Erstellt ein neues Framework, das eine grafische Ausgabe in der Auflösung
@@ -82,14 +85,14 @@ public final class Framework {
      * @param width  die Breite der Auflösung
      * @param height die Höhe der Auflösung
      */
-    private Framework(int width, int height) {
+    private Framework(int width, int height, FrameworkMode mode) {
         log.info("Initialising framework");
         this.width = width;
         this.height = height;
 
+
         frameworkInputHandlers = new HashMap<String, InputHandler>();
         frameworkEventBus = new EventBus("Framework Input Event Bus");
-
 
         sceneEventBus = new EventBus();
 
@@ -98,98 +101,123 @@ public final class Framework {
 
         scenes = new HashMap<String, Scene>();
 
-        frame = new JFrame("amCGAla Framework");
-        frame.setSize(width, height);
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        frame.setBackground(Color.WHITE);
-        frame.setVisible(true);
-
-
-        animator = new Animator(Integer.parseInt(properties.getProperty("animator.fps")), Integer.parseInt(properties.getProperty("animator.fps")));
-
         updateVisitor = new UpdateVisitor();
         visitors.add(updateVisitor);
 
-        renderVisitor = new RenderVisitor();
-        visitors.add(renderVisitor);
 
-        raytracer = new Raytracer();
+        // Hier ist doof!
+        //raytracer = new Raytracer();
 
+        switch (mode) {
+            case SOFTWARE:
+                // TODO der ganze Teil sollte in DefaultRenderer.
+                // TODO initialisierung sollte wie im GL teil erfolgen.
+                frame = new JFrame("amCGAla Framework");
+                frame.setSize(width, height);
+                frame.setResizable(false);
+                frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        frame.addKeyListener(new KeyAdapter() {
+                frame.addKeyListener(new KeyAdapter() {
 
-            @Override
-            public void keyPressed(KeyEvent e) {
-                sceneEventBus.post(new KeyPressedEvent(e));
-                frameworkEventBus.post(new KeyPressedEvent(e));
-            }
+                    @Override
+                    public void keyPressed(KeyEvent e) {
+                        sceneEventBus.post(new KeyPressedEvent(e));
+                        frameworkEventBus.post(new KeyPressedEvent(e));
+                    }
 
-            @Override
-            public void keyReleased(KeyEvent e) {
-                sceneEventBus.post(new KeyReleasedEvent(e));
-                frameworkEventBus.post(new KeyReleasedEvent(e));
-            }
-        });
+                    @Override
+                    public void keyReleased(KeyEvent e) {
+                        sceneEventBus.post(new KeyReleasedEvent(e));
+                        frameworkEventBus.post(new KeyReleasedEvent(e));
+                    }
+                });
 
-        frame.addMouseListener(new MouseListener() {
+                frame.addMouseListener(new MouseListener() {
 
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                sceneEventBus.post(new MouseClickedEvent(e));
-                frameworkEventBus.post(new MouseClickedEvent(e));
-            }
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        sceneEventBus.post(new MouseClickedEvent(e));
+                        frameworkEventBus.post(new MouseClickedEvent(e));
+                    }
 
-            @Override
-            public void mousePressed(MouseEvent e) {
-                sceneEventBus.post(new MousePressedEvent(e));
-                frameworkEventBus.post(new MousePressedEvent(e));
-            }
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        sceneEventBus.post(new MousePressedEvent(e));
+                        frameworkEventBus.post(new MousePressedEvent(e));
+                    }
 
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                sceneEventBus.post(new MouseReleasedEvent(e));
-                frameworkEventBus.post(new MouseReleasedEvent(e));
-            }
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                        sceneEventBus.post(new MouseReleasedEvent(e));
+                        frameworkEventBus.post(new MouseReleasedEvent(e));
+                    }
 
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                sceneEventBus.post(e);
-                frameworkEventBus.post(e);
-            }
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        sceneEventBus.post(e);
+                        frameworkEventBus.post(e);
+                    }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                sceneEventBus.post(e);
-                frameworkEventBus.post(e);
-            }
-        });
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        sceneEventBus.post(e);
+                        frameworkEventBus.post(e);
+                    }
+                });
 
-        frame.addMouseMotionListener(new MouseMotionListener() {
+                frame.addMouseMotionListener(new MouseMotionListener() {
 
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                sceneEventBus.post(e);
-                frameworkEventBus.post(e);
-            }
+                    @Override
+                    public void mouseDragged(MouseEvent e) {
+                        sceneEventBus.post(e);
+                        frameworkEventBus.post(e);
+                    }
 
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                sceneEventBus.post(e);
-                frameworkEventBus.post(e);
-            }
-        });
+                    @Override
+                    public void mouseMoved(MouseEvent e) {
+                        sceneEventBus.post(e);
+                        frameworkEventBus.post(e);
+                    }
+                });
 
-        frame.addMouseWheelListener(new MouseWheelListener() {
+                frame.addMouseWheelListener(new MouseWheelListener() {
 
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e) {
-                sceneEventBus.post(e);
-                frameworkEventBus.post(e);
-            }
-        });
+                    @Override
+                    public void mouseWheelMoved(MouseWheelEvent e) {
+                        sceneEventBus.post(e);
+                        frameworkEventBus.post(e);
+                    }
+                });
+
+                frame.setBackground(Color.WHITE);
+                frame.setVisible(true);
+                break;
+            case GL:
+                animator = new Animator(60, 60, this, GLRenderer.class);
+                break;
+            case RAYTRACER:
+                tracing = true;
+                break;
+        }
+
+        running = true;
     }
+
+    /**
+     * Erzeugt eine neue Instanz des Frameworks. Die Größe des Fensters kann über die Parameter width und height
+     * bestimmt werden.
+     *
+     * @param width  die Breite des Fensters
+     * @param height die Höhe des Fensters
+     * @return Referenz auf die Frameworksinstanz
+     */
+    public static Framework createInstance(int width, int height, FrameworkMode mode) {
+        checkArgument(instance == null, "Es können keine weiteren Instanzen von Framework erzeugt werden!");
+        instance = new Framework(width, height, mode);
+
+        return instance;
+    }
+
 
     /**
      * Erzeugt eine neue Instanz des Frameworks. Die Größe des Fensters kann über die Parameter width und height
@@ -201,13 +229,9 @@ public final class Framework {
      * @return Referenz auf die Frameworksinstanz
      */
     public static Framework createInstance(int width, int height) {
-        checkArgument(instance == null, "Es können keine weiteren Instanzen von Framework erzeugt werden!");
-        instance = new Framework(width, height);
-        if (instance.getSceneCount() > 0) {
-            instance.start();
-        }
-        return instance;
+        return createInstance(width, height, FrameworkMode.SOFTWARE);
     }
+
 
     /**
      * Gibt die bereits erzeugte Instanz des Frameworks zurück. Wurde noch keine erstellt, wird eine der Standardgröße
@@ -217,7 +241,23 @@ public final class Framework {
      */
     public static Framework getInstance() {
         if (instance == null) {
-            return createInstance(Integer.parseInt(properties.getProperty("amcgala.width")), Integer.parseInt(properties.getProperty("amcgala.height")));
+            instance = createInstance(Integer.parseInt(properties.getProperty("amcgala.width")), Integer.parseInt(properties.getProperty("amcgala.height")), FrameworkMode.GL);
+            return instance;
+        } else {
+            return instance;
+        }
+    }
+
+    /**
+     * Gibt die bereits erzeugte Instanz des Frameworks zurück. Wurde noch keine erstellt, wird eine der Standardgröße
+     * 800x600 erstellt und zurückgegeben.
+     *
+     * @return Referenz auf die Frameworksinstanz
+     */
+    public static Framework getInstance(FrameworkMode mode) {
+        if (instance == null) {
+            instance = createInstance(Integer.parseInt(properties.getProperty("amcgala.width")), Integer.parseInt(properties.getProperty("amcgala.height")), mode);
+            return instance;
         } else {
             return instance;
         }
@@ -241,24 +281,6 @@ public final class Framework {
         return props;  //To change body of created methods use File | Settings | File Templates.
     }
 
-    /**
-     * Gibt an, ob der {@link Raytracer} des Frameworks verwendet wird.
-     *
-     * @return {@code true} wenn Raytracer aktiv
-     */
-    public boolean isRaytracing() {
-        return raytracing;
-    }
-
-    /**
-     * Aktiviert oder deaktiviert den {@link Raytracer} des Frameworks.
-     *
-     * @param raytracing {@code true} wenn Raytracer aktiviert werden soll
-     */
-    public void setRaytracing(boolean raytracing) {
-        this.raytracing = raytracing;
-    }
-
     public Properties getProperties() {
         return properties;
     }
@@ -268,13 +290,19 @@ public final class Framework {
      * Visitor den Szenengraphen besuchen.
      */
     public void update() {
+        log.info("was called");
         if (camera != null && !paused) {
             for (Visitor v : visitors) {
                 scenegraph.accept(v);
             }
         }
-        if (raytracer != null && raytracing) {
+        if (tracing) {
             raytracer.traceScene();
+        }
+        Collection<Shape> shapes = scenegraph.getAllShapes();
+        dl = new DisplayList();
+        for (Shape s : shapes) {
+            dl.add(s.getDisplayList());
         }
     }
 
@@ -287,27 +315,12 @@ public final class Framework {
         }
     }
 
-    /**
-     * Startet das Framework und aktualisiert den Szenengraphen mithilfe eines
-     * Animators.
-     */
-    private void start() {
-        if (animator == null) {
-            update();
-            show();
-        } else {
-            animator.setFramework(this);
-            animator.start();
-        }
-    }
 
     /**
      * Pausiert die Aktualisierung des Frameworks.
      */
     public void pause() {
-        if (animator != null) {
-            animator.stop();
-        }
+        running = false;
     }
 
     /**
@@ -316,12 +329,12 @@ public final class Framework {
      * @param scene die neue Szene
      */
     public void addScene(Scene scene) {
+        log.info("Adding scene {}", scene);
         checkArgument(!scenes.containsKey(scene.getLabel()), "Es existiert bereits eine Szene mit dem gleichen Namen!");
         scenes.put(scene.getLabel(), scene);
 
         if (activeScene == null) {
             loadScene(scene);
-            start();
         }
     }
 
@@ -347,20 +360,19 @@ public final class Framework {
         paused = true;
         updateVisitor.setPaused(paused);
 
-        camera = scene.getCamera();
-        camera.setWidth(frame.getWidth());
-        camera.setHeight(frame.getHeight());
+        if (scene.getCamera() != null) {
+            camera = scene.getCamera();
+            camera.setWidth(width);
+            camera.setHeight(height);
+        }
 
-        renderer = scene.getRenderer();
-        renderer.setFrame(frame);
+        if (tracing) {
+            raytracer.setRenderer(renderer);
+            raytracer.setScene(scene);
+        }
 
         scenegraph = scene.getSceneGraph();
 
-        renderVisitor.setRenderer(renderer);
-        renderVisitor.setCamera(camera);
-
-        raytracer.setRenderer(renderer);
-        raytracer.setScene(scene);
 
         sceneEventBus = scene.getEventBus();
         activeScene = scene;
@@ -380,14 +392,6 @@ public final class Framework {
         return scenes.get(label);
     }
 
-    /**
-     * Ändert die Anzahl der Frames, die pro Sekunden berechnet werden sollen.
-     *
-     * @param fps die Frames pro Sekunde
-     */
-    public void setFPS(int fps) {
-        animator.setFramesPerSecond(fps);
-    }
 
     /**
      * Entfernt eine Szene aus dem Framework.
@@ -481,5 +485,10 @@ public final class Framework {
      */
     public int getHeight() {
         return (height == 0) ? Integer.parseInt(properties.getProperty("amcgala.height")) : height;
+    }
+
+
+    public DisplayList getCurrentState() {
+        return dl;
     }
 }
