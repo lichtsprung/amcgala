@@ -6,9 +6,13 @@ import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.math.Vertex3f;
 import org.amcgala.framework.shape.primitives.LinePrimitive;
+import org.amcgala.framework.shape.primitives.TrianglePrimitive;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.PixelFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,18 +24,21 @@ import static org.lwjgl.opengl.GL11.*;
  * Renderer, der die grafische Ausgabe über OpenGL beschleunigt.
  */
 public class GLRenderer implements Renderer {
+    private static final Logger log = LoggerFactory.getLogger(GLRenderer.class);
     private Camera camera;
     private Matrix transformationMatrix;
     private Color currentColor;
     private Framework framework;
 
     public GLRenderer(int width, int height, Framework framework) {
+        log.info("Creating new instance of GLRenderer...");
         this.framework = framework;
         try {
             Display.setDisplayMode(new DisplayMode(width, height));
             Display.setTitle("amCGAla Framework GL");
             Display.setInitialBackground(1f, 1f, 1f);
-            Display.create();
+            PixelFormat pf = new PixelFormat().withSamples(5);
+            Display.create(pf);
             glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
             glOrtho(0, width, height, 0, 1, -1);
@@ -111,7 +118,17 @@ public class GLRenderer implements Renderer {
         DisplayList list = framework.getCurrentState();
         glBegin(GL_LINE_STRIP);
         for (LinePrimitive line : list.lines) {
+            setColor(line.color);
             for (Vertex3f v : line.vertices) {
+                glVertex3f(v.x, v.y, v.z);
+            }
+        }
+        glEnd();
+
+        glBegin(GL_TRIANGLES);
+        for (TrianglePrimitive triangle : list.triangles) {
+            setColor(triangle.color);
+            for (Vertex3f v : triangle.vertices) {
                 glVertex3f(v.x, v.y, v.z);
             }
         }

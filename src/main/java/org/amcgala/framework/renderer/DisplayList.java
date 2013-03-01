@@ -1,20 +1,22 @@
 package org.amcgala.framework.renderer;
 
+import com.google.common.base.Objects;
 import org.amcgala.framework.shape.primitives.LinePrimitive;
 import org.amcgala.framework.shape.primitives.PointPrimitive;
 import org.amcgala.framework.shape.primitives.QuadPrimitive;
 import org.amcgala.framework.shape.primitives.TrianglePrimitive;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * DisplayList, die vom Renderer verwendet wird.
  */
 public class DisplayList {
-    public List<LinePrimitive> lines;
-    public List<QuadPrimitive> quads;
-    public List<TrianglePrimitive> triangles;
-    public List<PointPrimitive> points;
+    public List<LinePrimitive> lines = new ArrayList<LinePrimitive>();
+    public List<QuadPrimitive> quads = new ArrayList<QuadPrimitive>();
+    public List<TrianglePrimitive> triangles = new ArrayList<TrianglePrimitive>();
+    public List<PointPrimitive> points = new ArrayList<PointPrimitive>();
 
 
     public void add(DisplayList displayList) {
@@ -22,5 +24,10 @@ public class DisplayList {
         quads.addAll(displayList.quads);
         triangles.addAll(displayList.triangles);
         points.addAll(displayList.points);
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(getClass()).add("lines", lines).add("quads", quads).add("triangles", triangles).add("points", points).toString();
     }
 }

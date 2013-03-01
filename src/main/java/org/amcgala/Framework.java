@@ -54,9 +54,9 @@ import static com.google.common.base.Preconditions.checkArgument;
  * @version 2.0
  */
 public final class Framework {
-
     private static final Logger log = LoggerFactory.getLogger(Framework.class);
     public static final Properties properties = loadProperties();
+
     private static Framework instance;
     private SceneGraph scenegraph;
     private Renderer renderer;
@@ -197,10 +197,9 @@ public final class Framework {
                 break;
             case RAYTRACER:
                 tracing = true;
+
                 break;
         }
-
-        running = true;
     }
 
     /**
@@ -218,7 +217,6 @@ public final class Framework {
         return instance;
     }
 
-
     /**
      * Erzeugt eine neue Instanz des Frameworks. Die Größe des Fensters kann über die Parameter width und height
      * bestimmt werden.
@@ -231,7 +229,6 @@ public final class Framework {
     public static Framework createInstance(int width, int height) {
         return createInstance(width, height, FrameworkMode.SOFTWARE);
     }
-
 
     /**
      * Gibt die bereits erzeugte Instanz des Frameworks zurück. Wurde noch keine erstellt, wird eine der Standardgröße
@@ -281,6 +278,14 @@ public final class Framework {
         return props;  //To change body of created methods use File | Settings | File Templates.
     }
 
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
+
     public Properties getProperties() {
         return properties;
     }
@@ -290,7 +295,6 @@ public final class Framework {
      * Visitor den Szenengraphen besuchen.
      */
     public void update() {
-        log.info("was called");
         if (camera != null && !paused) {
             for (Visitor v : visitors) {
                 scenegraph.accept(v);
@@ -314,7 +318,6 @@ public final class Framework {
             renderer.show();
         }
     }
-
 
     /**
      * Pausiert die Aktualisierung des Frameworks.
@@ -391,7 +394,6 @@ public final class Framework {
         checkArgument(scenes.containsKey(label), "Es existiert keine Szene mit diesem Namen!");
         return scenes.get(label);
     }
-
 
     /**
      * Entfernt eine Szene aus dem Framework.
@@ -486,7 +488,6 @@ public final class Framework {
     public int getHeight() {
         return (height == 0) ? Integer.parseInt(properties.getProperty("amcgala.height")) : height;
     }
-
 
     public DisplayList getCurrentState() {
         return dl;

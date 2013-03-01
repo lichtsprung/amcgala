@@ -93,7 +93,9 @@ public class Animator extends Thread implements Runnable {
     public void run() {
 
         try {
-            this.renderer = rendererClass.getDeclaredConstructor(int.class, int.class, Framework.class).newInstance(800, 600, framework);
+            renderer = rendererClass.getDeclaredConstructor(int.class, int.class, Framework.class).newInstance(800, 600, framework);
+            log.info("New Renderer: {}", renderer);
+            running = true;
         } catch (InstantiationException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (IllegalAccessException e) {
@@ -103,7 +105,6 @@ public class Animator extends Thread implements Runnable {
         } catch (NoSuchMethodException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
-        log.info("New Renderer: {}", renderer);
 
         double fpsLastTime = System.nanoTime();
         double upsLastTime = System.nanoTime();
