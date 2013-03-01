@@ -326,6 +326,10 @@ public final class Framework {
         running = false;
     }
 
+    public void stop() {
+        animator.setRunning(false);
+    }
+
     /**
      * Fügt dem Framework eine neue {@link Scene} hinzu.
      *

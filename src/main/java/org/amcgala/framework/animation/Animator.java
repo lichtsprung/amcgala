@@ -88,6 +88,13 @@ public class Animator extends Thread implements Runnable {
         fpsTimer = new Timer(framesPerSecond);
     }
 
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
 
     @Override
     public void run() {

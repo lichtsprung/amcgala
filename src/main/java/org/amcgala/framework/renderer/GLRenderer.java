@@ -115,25 +115,29 @@ public class GLRenderer implements Renderer {
 
     @Override
     public void show() {
-        DisplayList list = framework.getCurrentState();
-        glBegin(GL_LINE_STRIP);
-        for (LinePrimitive line : list.lines) {
-            setColor(line.color);
-            for (Vertex3f v : line.vertices) {
-                glVertex3f(v.x, v.y, v.z);
+        if (!Display.isCloseRequested()) {
+            DisplayList list = framework.getCurrentState();
+            glBegin(GL_LINE_STRIP);
+            for (LinePrimitive line : list.lines) {
+                setColor(line.color);
+                for (Vertex3f v : line.vertices) {
+                    glVertex3f(v.x, v.y, v.z);
+                }
             }
-        }
-        glEnd();
+            glEnd();
 
-        glBegin(GL_TRIANGLES);
-        for (TrianglePrimitive triangle : list.triangles) {
-            setColor(triangle.color);
-            for (Vertex3f v : triangle.vertices) {
-                glVertex3f(v.x, v.y, v.z);
+            glBegin(GL_TRIANGLES);
+            for (TrianglePrimitive triangle : list.triangles) {
+                setColor(triangle.color);
+                for (Vertex3f v : triangle.vertices) {
+                    glVertex3f(v.x, v.y, v.z);
+                }
             }
+            glEnd();
+            Display.update();
+        } else {
+            Display.destroy();
         }
-        glEnd();
-        Display.update();
     }
 
     @Override
