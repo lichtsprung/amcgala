@@ -14,8 +14,8 @@ import org.lwjgl.opengl.PixelFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import java.awt.Color;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -102,10 +102,7 @@ public class GLRenderer implements Renderer {
 
     @Override
     public void drawLine(int x1, int y1, int x2, int y2) {
-        glBegin(GL_LINE_STRIP);
-        glVertex2f(x1, y1);
-        glVertex2f(x2, y2);
-        glEnd();
+
     }
 
     @Override
@@ -117,7 +114,7 @@ public class GLRenderer implements Renderer {
     public void show() {
         if (!Display.isCloseRequested()) {
             DisplayList list = framework.getCurrentState();
-            glBegin(GL_LINE_STRIP);
+            glBegin(GL_LINES);
             for (LinePrimitive line : list.lines) {
                 setColor(line.color);
                 for (Vertex3f v : line.vertices) {
