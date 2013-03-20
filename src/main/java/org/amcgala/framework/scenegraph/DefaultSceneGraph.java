@@ -220,4 +220,11 @@ public class DefaultSceneGraph implements SceneGraph {
     public boolean hasLight() {
         return lights.size() > 0;
     }
+
+    @Override
+    public void removeShapes() {
+        for (Node node : nodes.values()) {
+            node.removeShapes();
+        }
+    }
 }

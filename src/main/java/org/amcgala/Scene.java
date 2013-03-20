@@ -116,6 +116,13 @@ public class Scene {
     }
 
     /**
+     * Entfernt alle Objekte aus dem Szenengraph.
+     */
+    public void removeShapes() {
+        sceneGraph.removeShapes();
+    }
+
+    /**
      * Fügt einem Elternknoten einen neuen Kindsknoten im Szenengraph hinzu.
      * TODO das Erweitern der Baumhierarchie über eine Methode in einer Szene ist umständlich. Die Hierarchie sollte automatisch aktualisiert werden, wenn ein neuer Knoten hinzufügt wird.
      *

@@ -126,7 +126,6 @@ public interface SceneGraph {
      * Gibt den Knoten mit einem gegebenen Namen zurück.
      *
      * @param label der Name des gesuchten Knotens
-     *
      * @return der gesuchte Knoten
      */
     Node getNode(String label);
@@ -136,7 +135,6 @@ public interface SceneGraph {
      * Findet ein {@link org.amcgala.framework.shape.Shape} über seinen Namen und gibt dessen Referenz zurück.
      *
      * @param label der Name des Shapes
-     *
      * @return das Shape
      */
     Shape getShape(String label);
@@ -166,13 +164,20 @@ public interface SceneGraph {
 
     /**
      * Gibt alle {@link Shape} Objekte zurück, die im {@link SceneGraph} verwaltet werden.
+     *
      * @return die Liste aller Objekte im Szenengraph
      */
     Collection<Shape> getAllShapes();
 
     /**
      * Prüft, ob dem Szenengraph Lichter hinzugefügt wurden.
+     *
      * @return {@code true}, wenn Lichter im Szenengraph vorhanden sind
      */
     boolean hasLight();
+
+    /**
+     * Entfernt alle Shapes, die dem Szenengraph hinzugefügt wurden.
+     */
+    void removeShapes();
 }
