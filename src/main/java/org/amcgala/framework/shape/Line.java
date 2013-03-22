@@ -27,17 +27,19 @@ import org.slf4j.LoggerFactory;
  */
 public class Line extends AbstractShape {
     private static final Logger log = LoggerFactory.getLogger(Line.class.getName());
-    private LinePrimitive lp;
+    protected Vertex3f a, b;
 
-    public Line(Vertex3f v1, Vertex3f v2) {
-        lp = new LinePrimitive(v1, v2);
+    public Line(Vertex3f a, Vertex3f b) {
+        this.a = a;
+        this.b = b;
     }
 
     @Override
     public DisplayList getDisplayList() {
-        lp.color = getColor();
+        LinePrimitive linePrimitive = new LinePrimitive(a, b);
+        linePrimitive.color = getColor();
         final DisplayList l = new DisplayList();
-        l.lines.add(lp);
+        l.lines.add(linePrimitive);
         return l;
     }
 }
