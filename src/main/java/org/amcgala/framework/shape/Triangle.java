@@ -6,11 +6,17 @@ import org.amcgala.framework.shape.primitives.LinePrimitive;
 import org.amcgala.framework.shape.primitives.TrianglePrimitive;
 
 /**
- * Created with IntelliJ IDEA.
- * User: robert
- * Date: 3/22/13
- * Time: 11:17 AM
- * To change this template use File | Settings | File Templates.
+ * Ein Dreieck.
+ * C
+ * /\
+ * /  \
+ * /    \
+ * /      \
+ * /        \
+ * /          \
+ * /            \
+ * /              \
+ * A----------------B
  */
 public class Triangle extends AbstractShape {
     protected Vertex3f a, b, c;
