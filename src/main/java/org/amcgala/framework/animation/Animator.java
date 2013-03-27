@@ -68,7 +68,7 @@ public class Animator extends Thread implements Runnable {
     }
 
     /**
-     * GIbt die Anzahl der Aktualisierungen zurück.
+     * Gibt die Anzahl der Aktualisierungen zurück.
      *
      * @return die Anzahl der Aktualsierungen pro Sekunde
      */

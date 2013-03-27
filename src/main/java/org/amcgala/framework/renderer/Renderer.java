@@ -41,7 +41,9 @@ public interface Renderer {
      * jeweiligen Implementierung ab.
      *
      * @param pixel der Pixel, der dargestellt werden soll
+     * @deprecated wird nach Umstellung auf DisplayLists nicht mehr benötigt
      */
+    @Deprecated
     void drawPixel(Pixel pixel);
 
     /**
@@ -52,6 +54,7 @@ public interface Renderer {
      * @param pixel der Pixel, der dargestellt werden soll
      * @param color die Farbe des Pixels
      */
+    @Deprecated
     void drawPixel(Pixel pixel, Color color);
 
     /**
@@ -60,6 +63,7 @@ public interface Renderer {
      * @param vector der Vector
      * @return der Pixel auf dem Bildschirm
      */
+    @Deprecated
     Pixel getPixel(Vector3d vector);
 
     /**
@@ -70,8 +74,10 @@ public interface Renderer {
      * @param x2 der x2 Wert
      * @param y2 der y2 Wert
      */
+    @Deprecated
     void drawLine(int x1, int y1, int x2, int y2);
 
+    @Deprecated
     void drawCircle(double x, double y, double radius);
 
     /**
@@ -79,14 +85,18 @@ public interface Renderer {
      */
     void show();
 
+    @Deprecated
     void drawLine(Vector3d start, Vector3d end);
 
+    @Deprecated
     void drawCircle(Vector3d pos, double radius);
 
+    @Deprecated
     void drawPixel(Vector3d point, Color color);
 
     void setFrame(JFrame frame);
 
+    @Deprecated
     void fillRect(Pixel pos, int width, int height, Color color);
 
     Color getColor();

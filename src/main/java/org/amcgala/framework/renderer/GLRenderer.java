@@ -14,8 +14,8 @@ import org.lwjgl.opengl.PixelFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.JFrame;
-import java.awt.Color;
+import javax.swing.*;
+import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -113,6 +113,7 @@ public class GLRenderer implements Renderer {
     @Override
     public void show() {
         if (!Display.isCloseRequested()) {
+            Display.update();
             DisplayList list = framework.getCurrentState();
             glBegin(GL_LINES);
             for (LinePrimitive line : list.lines) {
@@ -131,7 +132,6 @@ public class GLRenderer implements Renderer {
                 }
             }
             glEnd();
-            Display.update();
         } else {
             Display.destroy();
         }
