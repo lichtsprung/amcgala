@@ -1,7 +1,8 @@
 package org.amcgala.framework.testing;
 
 
-import org.amcgala.Amcgala;
+import org.amcgala.Framework;
+import org.amcgala.FrameworkMode;
 import org.amcgala.Scene;
 import org.amcgala.framework.math.Vertex3f;
 import org.amcgala.framework.shape.Line;
@@ -10,8 +11,8 @@ import org.amcgala.framework.shape.Triangle;
 /**
  * Testklasse für die GL Funktionalität.
  */
-public class GLTestMain extends Amcgala {
-
+public class GLTestMain {
+    final Framework framework = Framework.getInstance(FrameworkMode.GL);
 
     public GLTestMain() {
         Scene scene = new Scene("line");

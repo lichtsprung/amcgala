@@ -14,12 +14,8 @@
  */
 package org.amcgala.framework.renderer;
 
-import com.google.common.eventbus.EventBus;
 import org.amcgala.Framework;
-import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.event.*;
-import org.amcgala.framework.math.Matrix;
-import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.shape.primitives.LinePrimitive;
 
 import javax.swing.*;
@@ -165,6 +161,10 @@ public class DefaultRenderer implements Renderer {
             g.setColor(line.color);
             g.drawLine((int) line.vertices.get(0).x, (int) line.vertices.get(0).y, (int) line.vertices.get(1).x, (int) line.vertices.get(1).y);
         }
+
+        // TODO Gefüllte Dreiecke
+
+        // TODO Gefüllte Vierecke
     }
 
     @Override

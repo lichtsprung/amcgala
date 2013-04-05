@@ -17,12 +17,11 @@ package org.amcgala;
 import com.google.common.eventbus.EventBus;
 import org.amcgala.framework.animation.Animator;
 import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.event.*;
+import org.amcgala.framework.event.InputHandler;
 import org.amcgala.framework.raytracer.Raytracer;
 import org.amcgala.framework.renderer.DefaultRenderer;
 import org.amcgala.framework.renderer.DisplayList;
 import org.amcgala.framework.renderer.GLRenderer;
-import org.amcgala.framework.renderer.Renderer;
 import org.amcgala.framework.scenegraph.DefaultSceneGraph;
 import org.amcgala.framework.scenegraph.SceneGraph;
 import org.amcgala.framework.scenegraph.visitor.UpdateVisitor;
@@ -34,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -149,12 +147,13 @@ public final class Framework {
     /**
      * Gibt die bereits erzeugte Instanz des Frameworks zurück. Wurde noch keine erstellt, wird eine der Standardgröße
      * 800x600 erstellt und zurückgegeben.
+     * Es wird der {@link DefaultRenderer} verwendet.
      *
      * @return Referenz auf die Frameworksinstanz
      */
     public static Framework getInstance() {
         if (instance == null) {
-            instance = createInstance(Integer.parseInt(properties.getProperty("amcgala.width")), Integer.parseInt(properties.getProperty("amcgala.height")), FrameworkMode.GL);
+            instance = createInstance(Integer.parseInt(properties.getProperty("amcgala.width")), Integer.parseInt(properties.getProperty("amcgala.height")), FrameworkMode.SOFTWARE);
             return instance;
         } else {
             return instance;

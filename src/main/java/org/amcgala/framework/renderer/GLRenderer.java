@@ -1,20 +1,15 @@
 package org.amcgala.framework.renderer;
 
 import org.amcgala.Framework;
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
-import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.math.Vertex3f;
 import org.amcgala.framework.shape.primitives.LinePrimitive;
 import org.amcgala.framework.shape.primitives.TrianglePrimitive;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.PixelFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.JFrame;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
