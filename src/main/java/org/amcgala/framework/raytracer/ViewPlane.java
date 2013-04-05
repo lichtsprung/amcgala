@@ -1,5 +1,6 @@
 package org.amcgala.framework.raytracer;
 
+import org.amcgala.Framework;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.raytracer.sampler.Sampler;
 import org.amcgala.framework.renderer.Pixel;
@@ -23,6 +24,7 @@ public class ViewPlane {
     private int numberOfSamples;
     private Sampler sampler;
     private Renderer renderer;
+    private Framework framework = Framework.getInstance();
 
     public Sampler getSampler() {
         return sampler;
@@ -127,7 +129,8 @@ public class ViewPlane {
         this.renderer = renderer;
     }
 
-    public void drawPixel(int column, int row, RGBColor color) {
-        renderer.fillRect(new Pixel(column, row), pixelSize, pixelSize, color.toColor());
-    }
+// TODO Die Methode muss an die Displaylist angepasst werden.
+//    public void drawPixel(int column, int row, RGBColor color) {
+//        renderer.fillRect(new Pixel(column, row), pixelSize, pixelSize, color.toColor());
+//    }
 }

@@ -259,11 +259,11 @@ public final class Quaternion {
      *
      * @return das neue Quaternion
      */
-    public Quaternion fromAxes(Vector3d xAxis, Vector3d yAxis, Vector3d zAxis) {
+    public Quaternion fromAxes(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis) {
         return fromRotationMatrix(
-                xAxis.x, yAxis.x, zAxis.x,
-                xAxis.y, yAxis.y, zAxis.y,
-                xAxis.z, yAxis.z, zAxis.z);
+                xAxis.getX(), yAxis.getX(), zAxis.getX(),
+                xAxis.getY(), yAxis.getY(), zAxis.getY(),
+                xAxis.getZ(), yAxis.getZ(), zAxis.getZ());
     }
 
     /**
@@ -283,7 +283,7 @@ public final class Quaternion {
      *
      * @return die i. Komponente
      */
-    public Vector3d getRotationColumn(int i) {
+    public Vector3 getRotationColumn(int i) {
 
 
         double norm = lengthSquared();
@@ -338,9 +338,9 @@ public final class Quaternion {
     }
 
     public Quaternion lookAt(Vector3d vup, Vector3d direction) {
-        Vector3d v3 = direction.normalize();
-        Vector3d v1 = vup.cross(direction).normalize();
-        Vector3d v2 = direction.cross(v1).normalize();
+        Vector3 v3 = direction.normalize();
+        Vector3 v1 = vup.cross(direction).normalize();
+        Vector3 v2 = direction.cross(v1).normalize();
         return fromAxes(v1, v2, v3);
     }
 

@@ -19,6 +19,7 @@ import org.amcgala.framework.animation.Animator;
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.event.*;
 import org.amcgala.framework.raytracer.Raytracer;
+import org.amcgala.framework.renderer.DefaultRenderer;
 import org.amcgala.framework.renderer.DisplayList;
 import org.amcgala.framework.renderer.GLRenderer;
 import org.amcgala.framework.renderer.Renderer;
@@ -30,9 +31,6 @@ import org.amcgala.framework.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -56,14 +54,11 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class Framework {
     private static final Logger log = LoggerFactory.getLogger(Framework.class);
     public static final Properties properties = loadProperties();
-
     private static Framework instance;
     private SceneGraph scenegraph;
-    private Renderer renderer;
     private Animator animator;
     private Camera camera;
     private List<Visitor> visitors;
-    private JFrame frame;
     private EventBus sceneEventBus;
     private EventBus frameworkEventBus;
     private Map<String, Scene> scenes;
@@ -76,7 +71,7 @@ public final class Framework {
     private int height;
     private boolean tracing;
     private boolean running;
-    private DisplayList dl;
+    private DisplayList displayList;
 
     /**
      * Erstellt ein neues Framework, das eine grafische Ausgabe in der Auflösung
@@ -104,100 +99,21 @@ public final class Framework {
         updateVisitor = new UpdateVisitor();
         visitors.add(updateVisitor);
 
-
-        // Hier ist doof!
+        //
+        // FIXME Raytracer ist eigentlich unabhängig vom Framework. Vielleicht besser: Raytracer(Framework, RaytracerMode.(Window, File)).
+        //
         //raytracer = new Raytracer();
+        //
 
         switch (mode) {
             case SOFTWARE:
-                // TODO der ganze Teil sollte in DefaultRenderer.
-                // TODO initialisierung sollte wie im GL teil erfolgen.
-                frame = new JFrame("amCGAla Framework");
-                frame.setSize(width, height);
-                frame.setResizable(false);
-                frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-                frame.addKeyListener(new KeyAdapter() {
-
-                    @Override
-                    public void keyPressed(KeyEvent e) {
-                        sceneEventBus.post(new KeyPressedEvent(e));
-                        frameworkEventBus.post(new KeyPressedEvent(e));
-                    }
-
-                    @Override
-                    public void keyReleased(KeyEvent e) {
-                        sceneEventBus.post(new KeyReleasedEvent(e));
-                        frameworkEventBus.post(new KeyReleasedEvent(e));
-                    }
-                });
-
-                frame.addMouseListener(new MouseListener() {
-
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        sceneEventBus.post(new MouseClickedEvent(e));
-                        frameworkEventBus.post(new MouseClickedEvent(e));
-                    }
-
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-                        sceneEventBus.post(new MousePressedEvent(e));
-                        frameworkEventBus.post(new MousePressedEvent(e));
-                    }
-
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                        sceneEventBus.post(new MouseReleasedEvent(e));
-                        frameworkEventBus.post(new MouseReleasedEvent(e));
-                    }
-
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                        sceneEventBus.post(e);
-                        frameworkEventBus.post(e);
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                        sceneEventBus.post(e);
-                        frameworkEventBus.post(e);
-                    }
-                });
-
-                frame.addMouseMotionListener(new MouseMotionListener() {
-
-                    @Override
-                    public void mouseDragged(MouseEvent e) {
-                        sceneEventBus.post(e);
-                        frameworkEventBus.post(e);
-                    }
-
-                    @Override
-                    public void mouseMoved(MouseEvent e) {
-                        sceneEventBus.post(e);
-                        frameworkEventBus.post(e);
-                    }
-                });
-
-                frame.addMouseWheelListener(new MouseWheelListener() {
-
-                    @Override
-                    public void mouseWheelMoved(MouseWheelEvent e) {
-                        sceneEventBus.post(e);
-                        frameworkEventBus.post(e);
-                    }
-                });
-
-                frame.setBackground(Color.WHITE);
-                frame.setVisible(true);
+                animator = new Animator(60, 60, this, DefaultRenderer.class);
                 break;
             case GL:
                 animator = new Animator(60, 60, this, GLRenderer.class);
                 break;
             case RAYTRACER:
                 tracing = true;
-
                 break;
         }
     }
@@ -278,6 +194,10 @@ public final class Framework {
         return props;  //To change body of created methods use File | Settings | File Templates.
     }
 
+    public EventBus getEventBus() {
+        return frameworkEventBus;
+    }
+
     public boolean isRunning() {
         return running;
     }
@@ -304,20 +224,12 @@ public final class Framework {
             raytracer.traceScene();
         }
         Collection<Shape> shapes = scenegraph.getAllShapes();
-        dl = new DisplayList();
+        displayList = new DisplayList();
         for (Shape s : shapes) {
-            dl.add(s.getDisplayList());
+            displayList.add(s.getDisplayList());
         }
     }
 
-    /**
-     * Rendert den Szenengraphen mithilfe des registrierten Renderers.
-     */
-    public void show() {
-        if (renderer != null && !paused) {
-            renderer.show();
-        }
-    }
 
     /**
      * Pausiert die Aktualisierung des Frameworks.
@@ -373,13 +285,9 @@ public final class Framework {
             camera.setHeight(height);
         }
 
-        if (tracing) {
-            raytracer.setRenderer(renderer);
-            raytracer.setScene(scene);
-        }
-
         scenegraph = scene.getSceneGraph();
 
+        // TODO laden der Scene in Raytracer
 
         sceneEventBus = scene.getEventBus();
         activeScene = scene;
@@ -494,6 +402,6 @@ public final class Framework {
     }
 
     public DisplayList getCurrentState() {
-        return dl;
+        return displayList;
     }
 }

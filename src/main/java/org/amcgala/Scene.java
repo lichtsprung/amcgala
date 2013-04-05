@@ -4,7 +4,6 @@ import com.google.common.eventbus.EventBus;
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.camera.SimplePerspectiveCamera;
 import org.amcgala.framework.event.InputHandler;
-import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.raytracer.RGBColor;
 import org.amcgala.framework.scenegraph.DefaultSceneGraph;
@@ -215,24 +214,6 @@ public class Scene {
     @Override
     public int hashCode() {
         return label != null ? label.hashCode() : 0;
-    }
-
-    /**
-     * Fügt der Szene ein neues Licht hinzu.
-     *
-     * @param light das neue Licht
-     */
-    public void addLight(Light light) {
-        sceneGraph.addLight(light);
-    }
-
-    /**
-     * Prüft, ob Lichter in der Szene vorhanden sind.
-     *
-     * @return {@code true}, wenn Lichter der Szene hinzugefügt wurden
-     */
-    public boolean hasLights() {
-        return sceneGraph.hasLight();
     }
 
     /**

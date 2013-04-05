@@ -1120,24 +1120,24 @@ public class Matrix implements Cloneable, java.io.Serializable {
     }
 
 
-    public static Matrix lookAt(Vector3d eye, Vector3d target, Vector3d up) {
-        Vector3d z = eye.sub(target).normalize();
+    public static Matrix lookAt(Vector3 eye, Vector3 target, Vector3 up) {
+        Vector3 z = eye.sub(target).normalize();
         if (z.length() == 0) {
-            z.z = 1;
+            z.setZ(1);
         }
 
-        Vector3d x = up.cross(z).normalize();
+        Vector3 x = up.cross(z).normalize();
         if (x.length() == 0) {
-            z.x += 0.0001;
+            z.setX(z.getX() + 0.0001);
             x = up.cross(z).normalize();
         }
 
-        Vector3d y = z.cross(x);
+        Vector3 y = z.cross(x);
 
         double[][] values = {
-                {x.x, y.x, z.x},
-                {x.y, y.y, z.y},
-                {x.z, y.z, z.z},
+                {x.getX(), y.getX(), z.getX()},
+                {x.getY(), y.getY(), z.getY()},
+                {x.getZ(), y.getZ(), z.getZ()},
                 {0, 0, 0, 1}
         };
 

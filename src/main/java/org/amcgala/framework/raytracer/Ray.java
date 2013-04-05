@@ -14,6 +14,7 @@
  */
 package org.amcgala.framework.raytracer;
 
+import org.amcgala.framework.math.Vector3;
 import org.amcgala.framework.math.Vector3d;
 
 /**
@@ -21,15 +22,15 @@ import org.amcgala.framework.math.Vector3d;
  * definiert als r(t) = origin + t * direction.
  */
 public class Ray {
-    public Vector3d origin;
-    public Vector3d direction;
+    public Vector3 origin;
+    public Vector3 direction;
 
     /**
      * Erstellt eine neue Gerade, die über einen Ursprungs- und Richtungsvektor definiert ist.
      * @param origin der Ursprungsvektor
      * @param direction der Richtungsvektor
      */
-    public Ray(Vector3d origin, Vector3d direction) {
+    public Ray(Vector3 origin, Vector3 direction) {
         this.origin = origin;
         this.direction = direction;
     }

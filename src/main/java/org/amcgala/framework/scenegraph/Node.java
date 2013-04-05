@@ -16,7 +16,6 @@ package org.amcgala.framework.scenegraph;
 
 import com.google.common.base.Objects;
 import org.amcgala.framework.animation.Updatable;
-import org.amcgala.framework.lighting.Light;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.scenegraph.transform.Transformation;
 import org.amcgala.framework.scenegraph.transform.Translation;
@@ -68,10 +67,6 @@ public final class Node implements Updatable {
      */
     private final List<Shape> shapes;
 
-    /**
-     * Die Lichtobjekte, die an diesem Knoten hängen.
-     */
-    private final List<Light> lights;
 
     /**
      * Die Transformationen, die an diesem Knoten hängen und sich auf die {@link Shape} Objekte
@@ -97,7 +92,6 @@ public final class Node implements Updatable {
         transformations.add(new Translation(0, 0, 0));
         shapes = new CopyOnWriteArrayList<Shape>();
         children = new CopyOnWriteArrayList<Node>();
-        lights = new CopyOnWriteArrayList<Light>();
         boundingBox = new BoundingBox();
     }
 
@@ -118,7 +112,6 @@ public final class Node implements Updatable {
      * Fügt dem Knoten einen neuen Kindsknoten hinzu.
      *
      * @param childNode der neue Knoten
-     *
      * @return gibt Referenz auf sich selbst zurück um verschachtelte Aufrufe zu
      *         ermöglichen
      */
@@ -134,7 +127,6 @@ public final class Node implements Updatable {
      * Entfernt einen Kindsknoten mit einem gegebenen Label.
      *
      * @param node der Knoten, der entfernt werden soll.
-     *
      * @return true, wenn Knoten gefunden und entfernt wurde
      */
     protected boolean remove(Node node) {
@@ -146,7 +138,6 @@ public final class Node implements Updatable {
      * Entfernt ein Shape aus diesem Knoten.
      *
      * @param shape das Shape, das entfernt werden soll
-     *
      * @return {@code true}, wenn Shape entfern wurde
      */
     protected boolean remove(Shape shape) {
@@ -159,7 +150,6 @@ public final class Node implements Updatable {
      * Fügt ein neues Geometrieobjekt dieser Node hinzu.
      *
      * @param shape das neue Objekt
-     *
      * @return {@code true}, wenn es erfolgreich hinzugefügt wurde
      */
     protected boolean add(Shape shape) {
@@ -174,7 +164,6 @@ public final class Node implements Updatable {
      * Gibt einen Knoten mit einem bestimmten Label zurück.
      *
      * @param label Label des Knoten, der gefunden werden soll
-     *
      * @return true, wenn Knoten gefunden wurde
      */
     public Node getNode(String label) {
@@ -295,17 +284,6 @@ public final class Node implements Updatable {
         }
 
         return matrix;
-    }
-
-    public void addLight(Light light) {
-        synchronized (lights) {
-            lights.add(light);
-        }
-    }
-
-    public List<Light> getLights() {
-        // TODO hier muss die gesamte Lichthierarchie übergeben werden.
-        return lights;
     }
 
 

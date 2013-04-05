@@ -27,67 +27,12 @@ public interface Renderer {
      */
     int getHeight();
 
-    Camera getCamera();
-
-    void setCamera(Camera camera);
-
-    Matrix getTransformationMatrix();
-
-    void setTransformationMatrix(Matrix transformationMatrix);
-
-    /**
-     * Diese Methode stellt einen Pixel über den DefaultRenderer auf der Ausgabe dar.
-     * Die genaue Art und Weise wie der Pixel dargestellt wird, hängt von der
-     * jeweiligen Implementierung ab.
-     *
-     * @param pixel der Pixel, der dargestellt werden soll
-     */
-    void drawPixel(Pixel pixel);
-
-    /**
-     * Diese Methode stellt einen Pixel in einer bestimmten Farbe über den
-     * DefaultRenderer auf der Ausgabe dar. Die genaue Art und Weise wie der Pixel
-     * dargestellt wird, hängt von der jeweiligen Implementierung ab.
-     *
-     * @param pixel der Pixel, der dargestellt werden soll
-     * @param color die Farbe des Pixels
-     */
-    void drawPixel(Pixel pixel, Color color);
-
-    /**
-     * Gibt den Pixel zu einem Vector zurück.
-     *
-     * @param vector der Vector
-     * @return der Pixel auf dem Bildschirm
-     */
-    Pixel getPixel(Vector3d vector);
-
-    /**
-     * Zeichnet eine Linie von einem Startpunkt (x1, y1) zu einem Endpunkt (x2, y2).
-     *
-     * @param x1 der x1 Wert
-     * @param y1 der y1 Wert
-     * @param x2 der x2 Wert
-     * @param y2 der y2 Wert
-     */
-    void drawLine(int x1, int y1, int x2, int y2);
-
-    void drawCircle(double x, double y, double radius);
 
     /**
      * Weist den DefaultRenderer an, den Buffer auszugeben.
      */
     void show();
 
-    void drawLine(Vector3d start, Vector3d end);
-
-    void drawCircle(Vector3d pos, double radius);
-
-    void drawPixel(Vector3d point, Color color);
-
-    void setFrame(JFrame frame);
-
-    void fillRect(Pixel pos, int width, int height, Color color);
 
     Color getColor();
 

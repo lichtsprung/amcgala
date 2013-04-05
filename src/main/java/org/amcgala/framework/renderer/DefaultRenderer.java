@@ -14,12 +14,17 @@
  */
 package org.amcgala.framework.renderer;
 
+import com.google.common.eventbus.EventBus;
+import org.amcgala.Framework;
 import org.amcgala.framework.camera.Camera;
+import org.amcgala.framework.event.*;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3d;
+import org.amcgala.framework.shape.primitives.LinePrimitive;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferStrategy;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -38,15 +43,98 @@ public class DefaultRenderer implements Renderer {
      */
     private int height;
     private BufferStrategy bs;
-    private int offsetX;
-    private int offsetY;
     private JFrame frame;
     private Graphics g;
-    private Camera camera;
-    private Matrix transformationMatrix;
+    private Framework framework = Framework.getInstance();
 
-    public DefaultRenderer(Camera camera) {
-        this.camera = checkNotNull(camera);
+
+    public DefaultRenderer() {
+        this.width = framework.getWidth();
+        this.height = framework.getHeight();
+
+
+        frame = new JFrame("Software Renderer");
+        frame.setSize(width, height);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        frame.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                framework.getActiveScene().getEventBus().post(new KeyPressedEvent(e));
+                framework.getEventBus().post(new KeyPressedEvent(e));
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                framework.getActiveScene().getEventBus().post(new KeyReleasedEvent(e));
+                framework.getEventBus().post(new KeyReleasedEvent(e));
+            }
+        });
+
+        frame.addMouseListener(new MouseListener() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                framework.getActiveScene().getEventBus().post(new MouseClickedEvent(e));
+                framework.getEventBus().post(new MouseClickedEvent(e));
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                framework.getActiveScene().getEventBus().post(new MousePressedEvent(e));
+                framework.getEventBus().post(new MousePressedEvent(e));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                framework.getActiveScene().getEventBus().post(new MouseReleasedEvent(e));
+                framework.getEventBus().post(new MouseReleasedEvent(e));
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                framework.getActiveScene().getEventBus().post(e);
+                framework.getEventBus().post(e);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                framework.getActiveScene().getEventBus().post(e);
+                framework.getEventBus().post(e);
+            }
+        });
+
+        frame.addMouseMotionListener(new MouseMotionListener() {
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                framework.getActiveScene().getEventBus().post(e);
+                framework.getEventBus().post(e);
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                framework.getActiveScene().getEventBus().post(e);
+                framework.getEventBus().post(e);
+            }
+        });
+
+        frame.addMouseWheelListener(new MouseWheelListener() {
+
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                framework.getActiveScene().getEventBus().post(e);
+                framework.getEventBus().post(e);
+            }
+        });
+
+        frame.setBackground(Color.WHITE);
+
+        frame.setVisible(true);
+        frame.createBufferStrategy(2);
+        bs = frame.getBufferStrategy();
     }
 
 
@@ -61,115 +149,22 @@ public class DefaultRenderer implements Renderer {
     }
 
     @Override
-    public void setCamera(Camera camera) {
-        this.camera = checkNotNull(camera);
-    }
-
-    @Override
-    public void setTransformationMatrix(Matrix transformationMatrix) {
-        this.transformationMatrix = checkNotNull(transformationMatrix);
-    }
-
-    @Override
-    public Camera getCamera() {
-        return camera;
-    }
-
-    @Override
-    public Matrix getTransformationMatrix() {
-        return transformationMatrix;
-    }
-
-    @Override
-    public void drawPixel(Pixel pixel) {
-        checkNotNull(pixel);
-        g.setColor(pixel.color);
-        g.fillRect(offsetX + pixel.x, -pixel.y + offsetY, 1, 1);
-    }
-
-    @Override
-    public void drawPixel(Pixel pixel, Color color) {
-        checkNotNull(pixel);
-        checkNotNull(color);
-        setColor(color);
-        g.fillRect(offsetX + pixel.x, -pixel.y + offsetY, 1, 1);
-    }
-
-    @Override
-    public Pixel getPixel(Vector3d vector) {
-        Vector3d tv = checkNotNull(vector).transform(transformationMatrix);
-        return camera.getImageSpaceCoordinates(tv);
-    }
-
-    @Override
     public void setColor(Color color) {
         g.setColor(checkNotNull(color));
     }
 
-    @Override
-    public void drawLine(int x1, int y1, int x2, int y2) {
-        g.drawLine(offsetX + x1, -y1 + offsetY, offsetX + x2, -y2 + offsetY);
-    }
-
-    @Override
-    public void drawCircle(double x, double y, double radius) {
-        int r2 = (int) (radius);
-        int xi = (int) Math.round(x);
-        int yi = (int) Math.round(y);
-
-        g.drawOval(offsetX + xi + r2, -yi - r2 + offsetY, r2, r2);
-    }
 
     @Override
     public void show() {
         bs.show();
         g = bs.getDrawGraphics();
         g.clearRect(0, 0, frame.getWidth(), frame.getHeight());
-    }
+        DisplayList list = framework.getCurrentState();
 
-    @Override
-    public void drawLine(Vector3d start, Vector3d end) {
-        Vector3d s = checkNotNull(start).transform(transformationMatrix);
-        Vector3d e = checkNotNull(end).transform(transformationMatrix);
-        Pixel sp = camera.getImageSpaceCoordinates(s);
-        Pixel ep = camera.getImageSpaceCoordinates(e);
-        drawLine(sp.x, sp.y, ep.x, ep.y);
-    }
-
-    @Override
-    public void drawCircle(Vector3d pos, double radius) {
-        Vector3d tv = checkNotNull(pos).transform(transformationMatrix);
-        Pixel p = camera.getImageSpaceCoordinates(tv);
-        drawCircle(p.x - 1.5 * radius, p.y - 0.5 * radius, radius);
-    }
-
-    @Override
-    public void drawPixel(Vector3d point, Color color) {
-        Vector3d tv = checkNotNull(point).transform(transformationMatrix);
-        Pixel p = camera.getImageSpaceCoordinates(tv);
-        drawPixel(p, checkNotNull(color));
-    }
-
-    @Override
-    public void setFrame(JFrame frame) {
-        this.frame = checkNotNull(frame);
-
-        this.width = frame.getWidth();
-        this.height = frame.getHeight();
-
-        this.offsetX = frame.getWidth() >> 1;
-        this.offsetY = frame.getHeight() >> 1;
-
-        frame.createBufferStrategy(2);
-        bs = frame.getBufferStrategy();
-        g = bs.getDrawGraphics();
-    }
-
-    @Override
-    public void fillRect(Pixel pos, int width, int height, Color color) {
-
-        g.setColor(color);
-        g.fillRect(pos.x * width, pos.y * height, width, height);
+        for (LinePrimitive line : list.lines) {
+            g.setColor(line.color);
+            g.drawLine((int) line.vertices.get(0).x, (int) line.vertices.get(0).y, (int) line.vertices.get(1).x, (int) line.vertices.get(1).y);
+        }
     }
 
     @Override

@@ -15,6 +15,7 @@
 package org.amcgala.framework.camera;
 
 import org.amcgala.framework.math.Matrix;
+import org.amcgala.framework.math.Vector3;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Pixel;
 import org.slf4j.Logger;
@@ -69,9 +70,9 @@ public final class OrthographicCamera extends AbstractCamera {
         Vector3d d = Vector3d.createVector3d(location.dot(u), location.dot(v), location.dot(n));
 
         double[][] viewValues = {
-                {u.x, u.y, u.z, d.x},
-                {v.x, v.y, v.z, d.y},
-                {n.x, n.y, n.z, d.z},
+                {u.getX(), u.getY(), u.getZ(), d.x},
+                {v.getX(), v.getY(), v.getZ(), d.y},
+                {n.getX(), n.getY(), n.getZ(), d.z},
                 {0, 0, 0, 1}
         };
         Matrix kt = Matrix.constructWithCopy(viewValues);
@@ -79,13 +80,13 @@ public final class OrthographicCamera extends AbstractCamera {
     }
 
     @Override
-    public CVPoint getClippingSpaceCoordinates(Vector3d vector3d) {
+    public CVPoint getClippingSpaceCoordinates(Vector3 vector3d) {
         Matrix point = projectionMatrix.times(vector3d.toMatrix());
         return new CVPoint(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0),1);
     }
 
     @Override
-    public Pixel getImageSpaceCoordinates(Vector3d vector3d) {
+    public Pixel getImageSpaceCoordinates(Vector3 vector3d) {
         Matrix point = projectionMatrix.times(vector3d.toMatrix());
         return new Pixel(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0));
     }

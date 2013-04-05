@@ -16,6 +16,7 @@ package org.amcgala.framework.camera;
 
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Quaternion;
+import org.amcgala.framework.math.Vector3;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Pixel;
 import org.slf4j.Logger;
@@ -68,7 +69,7 @@ public final class PerspectiveCamera extends AbstractCamera {
     }
 
     @Override
-    public CVPoint getClippingSpaceCoordinates(Vector3d vector3d) {
+    public CVPoint getClippingSpaceCoordinates(Vector3 vector3d) {
         Matrix point = view.times(vector3d.toMatrix());
         return new CVPoint(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0),1);
     }
@@ -80,7 +81,7 @@ public final class PerspectiveCamera extends AbstractCamera {
     }
 
     @Override
-    public Pixel getImageSpaceCoordinates(Vector3d vector3d) {
+    public Pixel getImageSpaceCoordinates(Vector3 vector3d) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -100,7 +100,7 @@ public class Animator extends Thread implements Runnable {
     public void run() {
 
         try {
-            renderer = rendererClass.getDeclaredConstructor(int.class, int.class, Framework.class).newInstance(800, 600, framework);
+            renderer = rendererClass.getDeclaredConstructor().newInstance();
             log.info("New Renderer: {}", renderer);
             running = true;
         } catch (InstantiationException e) {
