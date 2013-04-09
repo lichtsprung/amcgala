@@ -26,14 +26,6 @@ import org.amcgala.framework.renderer.Pixel;
  */
 public interface Camera {
 
-    /**
-     * Gibt die Koordinaten im kanonischen Sichtvolumen zurück.
-     *
-     * @param vector3d der zu projezierende Vektor
-     *
-     * @return der transformierte Vektor in den Clipping Raum
-     */
-    CVPoint getClippingSpaceCoordinates(Vector3 vector3d);
 
     /**
      * Gibt die Blickrichtung der Kamera zurück.
@@ -46,7 +38,6 @@ public interface Camera {
      * Gibt die Koordinaten des Vektors im Bildraum zurück.
      *
      * @param vector3d der zu projezierende Vektor
-     *
      * @return die Koordinaten des Vektors im Bildraum
      */
     Pixel getImageSpaceCoordinates(Vector3 vector3d);
@@ -98,5 +89,6 @@ public interface Camera {
     int getHeight();
 
     void setWidth(int width);
+
     void setHeight(int height);
 }

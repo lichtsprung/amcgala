@@ -104,11 +104,6 @@ public final class SimplePerspectiveCamera extends AbstractCamera {
 
 
     @Override
-    public CVPoint getClippingSpaceCoordinates(Vector3 vector3d) {
-        Matrix point = projectionMatrix.times(vector3d.toMatrix());
-        return new CVPoint(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0),1);    }
-
-    @Override
     public Pixel getImageSpaceCoordinates(Vector3 vector3d) {
         Matrix point = projectionMatrix.times(vector3d.toMatrix());
         return new Pixel(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0));

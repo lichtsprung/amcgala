@@ -68,11 +68,6 @@ public final class PerspectiveCamera extends AbstractCamera {
         return projectionMatrix;
     }
 
-    @Override
-    public CVPoint getClippingSpaceCoordinates(Vector3 vector3d) {
-        Matrix point = view.times(vector3d.toMatrix());
-        return new CVPoint(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0),1);
-    }
 
     @Override
     public void update() {

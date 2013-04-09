@@ -61,8 +61,8 @@ public abstract class AbstractCamera implements Camera {
     protected int width;
     protected int height;
 
-    public AbstractCamera(){
-        inverseProjectionMatrix = Matrix.identity(4,4);
+    public AbstractCamera() {
+        inverseProjectionMatrix = Matrix.identity(4, 4);
         projectionMatrix = Matrix.identity(4, 4);
     }
 

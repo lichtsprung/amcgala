@@ -3,7 +3,6 @@ package org.amcgala.framework.renderer;
 import com.google.common.base.Objects;
 import org.amcgala.framework.shape.primitives.LinePrimitive;
 import org.amcgala.framework.shape.primitives.PointPrimitive;
-import org.amcgala.framework.shape.primitives.QuadPrimitive;
 import org.amcgala.framework.shape.primitives.TrianglePrimitive;
 
 import java.util.ArrayList;
@@ -14,20 +13,18 @@ import java.util.List;
  */
 public class DisplayList {
     public List<LinePrimitive> lines = new ArrayList<LinePrimitive>();
-    public List<QuadPrimitive> quads = new ArrayList<QuadPrimitive>();
     public List<TrianglePrimitive> triangles = new ArrayList<TrianglePrimitive>();
     public List<PointPrimitive> points = new ArrayList<PointPrimitive>();
 
 
     public void add(DisplayList displayList) {
         lines.addAll(displayList.lines);
-        quads.addAll(displayList.quads);
         triangles.addAll(displayList.triangles);
         points.addAll(displayList.points);
     }
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(getClass()).add("lines", lines).add("quads", quads).add("triangles", triangles).add("points", points).toString();
+        return Objects.toStringHelper(getClass()).add("lines", lines).add("triangles", triangles).add("points", points).toString();
     }
 }
