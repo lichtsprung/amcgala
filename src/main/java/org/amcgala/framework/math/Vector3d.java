@@ -209,7 +209,7 @@ public class Vector3d implements Vector3 {
 
     @Override
     public void setY(double y) {
-       this.y = y;
+        this.y = y;
     }
 
     @Override

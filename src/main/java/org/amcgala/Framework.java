@@ -52,6 +52,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class Framework {
     private static final Logger log = LoggerFactory.getLogger(Framework.class);
     public static final Properties properties = loadProperties();
+    public static FrameworkMode currentMode;
     private static Framework instance;
     private SceneGraph scenegraph;
     private Animator animator;
@@ -80,6 +81,7 @@ public final class Framework {
      */
     private Framework(int width, int height, FrameworkMode mode) {
         log.info("Initialising framework");
+        currentMode = mode;
         this.width = width;
         this.height = height;
 

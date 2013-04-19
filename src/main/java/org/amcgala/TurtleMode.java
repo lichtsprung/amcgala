@@ -7,8 +7,6 @@ import org.amcgala.framework.math.Vertex3f;
 import org.amcgala.framework.math.util.Vectors;
 import org.amcgala.framework.shape.Line;
 
-import javax.vecmath.Vector3f;
-
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Math.*;
 

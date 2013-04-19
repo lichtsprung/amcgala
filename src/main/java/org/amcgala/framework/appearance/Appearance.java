@@ -14,7 +14,7 @@
  */
 package org.amcgala.framework.appearance;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * Klasse das Informationen zur Oberfläche eines Objektes speichert, wie z. B. den Reflexionskoeffizienten.

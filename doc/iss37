@@ -1,0 +1,9 @@
++ Einführung von GLRenderer
++ Wechsel zwischen Software und GL Modus
++ Füllen von Primitiven in allen Modi
+    - Wo bekommt man die Bildschirmkoordinaten für Bildraumverfahren her?
+    - Polygone und Triangulation
+
+
+Polygon(p1, p2, p3, p4, p5)
+    tesselate -> Liste von Dreiecken -> scanline -> Liste von Linien -> füllen der Displaylist

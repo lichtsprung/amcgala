@@ -49,20 +49,20 @@ public class RGBColor {
     }
 
     public float getRed() {
-        if(red > 1.0f) return 1.0f;
-        if(red < 0) return 0;
+        if (red > 1.0f) return 1.0f;
+        if (red < 0) return 0;
         return red;
     }
 
     public float getGreen() {
-        if(green > 1.0f) return 1.0f;
-        if(green < 0) return 0;
+        if (green > 1.0f) return 1.0f;
+        if (green < 0) return 0;
         return green;
     }
 
     public float getBlue() {
-        if(blue > 1.0f) return 1.0f;
-        if(blue < 0) return 0;
+        if (blue > 1.0f) return 1.0f;
+        if (blue < 0) return 0;
         return blue;
     }
 

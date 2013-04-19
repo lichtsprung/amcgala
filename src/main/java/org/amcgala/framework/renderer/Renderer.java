@@ -1,10 +1,5 @@
 package org.amcgala.framework.renderer;
 
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.math.Matrix;
-import org.amcgala.framework.math.Vector3d;
-
-import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -34,6 +29,11 @@ public interface Renderer {
     void show();
 
 
+    /**
+     * Gibt die aktuelle Farbe zurück, die vom Renderer verwendet wird.
+     *
+     * @return die aktive Farbe
+     */
     Color getColor();
 
     /**

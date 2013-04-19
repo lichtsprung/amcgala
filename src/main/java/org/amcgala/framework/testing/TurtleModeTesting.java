@@ -5,7 +5,7 @@ import org.amcgala.TurtleMode;
 /**
  * Turtle Test
  */
-public class TurtleModeTesting extends TurtleMode{
+public class TurtleModeTesting extends TurtleMode {
     @Override
     public void turtleCommands() {
         up();
@@ -20,7 +20,7 @@ public class TurtleModeTesting extends TurtleMode{
     }
 }
 
-class Main{
+class Main {
     public static void main(String[] args) {
         new TurtleModeTesting();
     }

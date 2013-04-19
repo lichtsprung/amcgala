@@ -14,7 +14,6 @@ public interface Collidable {
      * Berechnet die Kollision zwischen dem {@link org.amcgala.framework.shape.Shape} und einem anderen Objekt.
      *
      * @param other das andere Objekt
-     *
      * @return die Menge aller Kollisionen zwischen den beiden Objekten
      */
     Collection<Collision> collideWith(Collidable other);

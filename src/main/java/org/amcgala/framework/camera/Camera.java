@@ -15,7 +15,6 @@
 package org.amcgala.framework.camera;
 
 import org.amcgala.framework.math.Vector3;
-import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Pixel;
 
 /**
@@ -84,11 +83,31 @@ public interface Camera {
      */
     void update();
 
+    /**
+     * Gibt die Breite der verwendeten Viewplane zurück.
+     *
+     * @return die Breite der Viewplane
+     */
     int getWidth();
 
+    /**
+     * Gibt die Höhe der verwendeten Viewplane zurück.
+     *
+     * @return die Höhe der verwendeten Viewplane
+     */
     int getHeight();
 
+    /**
+     * Ändert die Breite der Viewplane.
+     *
+     * @param width die Breite der Viewplane
+     */
     void setWidth(int width);
 
+    /**
+     * Ändert die Höhe der Viewplane.
+     *
+     * @param height die Höhe der Viewplane
+     */
     void setHeight(int height);
 }

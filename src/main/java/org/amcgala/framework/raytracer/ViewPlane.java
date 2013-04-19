@@ -3,11 +3,9 @@ package org.amcgala.framework.raytracer;
 import org.amcgala.Framework;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.raytracer.sampler.Sampler;
-import org.amcgala.framework.renderer.Pixel;
 import org.amcgala.framework.renderer.Renderer;
 
 import javax.vecmath.Point2d;
-import java.awt.*;
 
 /**
  * Die ViewPlane des Raytracers ist die Projektionsfläche, durch die die Strahlen in die Szene geschickt werden. Hierbei
@@ -53,7 +51,6 @@ public class ViewPlane {
      *
      * @param column der Spaltenindex des Pixels
      * @param row    der Zeilenindex des Pixels
-     *
      * @return die Position des Pixels in Weltkoordinaten als 3d Vektor
      */
     public Vector3d getWorldCoordinates(int column, int row) {

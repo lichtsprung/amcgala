@@ -10,7 +10,7 @@ import javax.vecmath.Point2d;
  */
 public class RandomSampler extends AbstractSampler {
 
-    public RandomSampler(int samplingCount){
+    public RandomSampler(int samplingCount) {
         setNumberOfSamples(samplingCount);
     }
 

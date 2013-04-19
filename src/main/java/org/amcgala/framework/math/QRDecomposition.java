@@ -50,7 +50,6 @@ public class QRDecomposition implements java.io.Serializable {
      * QR Decomposition, computed by Householder reflections.
      *
      * @param A Rectangular matrix
-     *
      * @return Structure to access R and the Householder vectors and compute Q.
      */
     public QRDecomposition(Matrix A) {
@@ -187,9 +186,7 @@ public class QRDecomposition implements java.io.Serializable {
      * Least squares solution of A*X = B
      *
      * @param B A Matrix with as many rows as A and any number of columns.
-     *
      * @return X that minimizes the two norm of Q*R*X-B.
-     *
      * @throws IllegalArgumentException Matrix row dimensions must agree.
      * @throws RuntimeException         Matrix is rank deficient.
      */

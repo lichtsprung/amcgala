@@ -13,6 +13,8 @@ import javax.vecmath.Point2d;
  */
 public interface Sampler {
     int getNumberOfSamples();
+
     void setNumberOfSamples(int numberOfSamples);
+
     Point2d getSamplingPoint();
 }

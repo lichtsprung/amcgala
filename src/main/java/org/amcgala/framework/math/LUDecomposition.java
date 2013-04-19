@@ -50,7 +50,6 @@ public class LUDecomposition implements java.io.Serializable {
      * LU Decomposition
      *
      * @param A Rectangular matrix
-     *
      * @return Structure to access L, U and piv.
      */
     public LUDecomposition(Matrix A) {
@@ -242,7 +241,6 @@ public class LUDecomposition implements java.io.Serializable {
      * Determinant
      *
      * @return det(A)
-     *
      * @throws IllegalArgumentException Matrix must be square
      */
     public double det() {
@@ -260,9 +258,7 @@ public class LUDecomposition implements java.io.Serializable {
      * Solve A*X = B
      *
      * @param B A Matrix with as many rows as A and any number of columns.
-     *
      * @return X so that L*U*X = B(piv,:)
-     *
      * @throws IllegalArgumentException Matrix row dimensions must agree.
      * @throws RuntimeException         Matrix is singular.
      */

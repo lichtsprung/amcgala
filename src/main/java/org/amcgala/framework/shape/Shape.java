@@ -16,7 +16,6 @@ package org.amcgala.framework.shape;
 
 import org.amcgala.framework.animation.Animation;
 import org.amcgala.framework.animation.Updatable;
-import org.amcgala.framework.appearance.Appearance;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.raytracer.Hittable;
 import org.amcgala.framework.raytracer.RGBColor;
@@ -25,7 +24,7 @@ import org.amcgala.framework.renderer.Renderable;
 import org.amcgala.framework.scenegraph.Node;
 import org.amcgala.framework.shape.util.bounds.BoundingBox;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * Schnittstelle aller Shapes, die im Framework dargestellt werden können.
@@ -104,12 +103,14 @@ public interface Shape extends Updatable, Renderable, Hittable {
 
     /**
      * Gibt das Material, das zur Färbung des Shapes verwendet wird, zurück
+     *
      * @return das Material
      */
     Material getMaterial();
 
     /**
      * Ändert das Material, das für das Einfärben des Shapes verantwortlich ist.
+     *
      * @param material das neue Material
      */
     void setMaterial(Material material);

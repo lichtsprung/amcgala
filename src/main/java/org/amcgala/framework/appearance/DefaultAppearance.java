@@ -14,7 +14,7 @@
  */
 package org.amcgala.framework.appearance;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * Die Basisoberflächenklasse für alle Shapeobjekte.

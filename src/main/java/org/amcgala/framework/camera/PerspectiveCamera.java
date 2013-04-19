@@ -17,7 +17,6 @@ package org.amcgala.framework.camera;
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Quaternion;
 import org.amcgala.framework.math.Vector3;
-import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.renderer.Pixel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

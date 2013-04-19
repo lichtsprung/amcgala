@@ -1,7 +1,7 @@
 package org.amcgala.framework.raytracer.material.texture;
 
-import org.amcgala.framework.raytracer.ShadingInfo;
 import org.amcgala.framework.raytracer.RGBColor;
+import org.amcgala.framework.raytracer.ShadingInfo;
 
 /**
  * Jede Textur, die von dem Raytracer dargestellt werden soll, muss dieses Interface implementieren.

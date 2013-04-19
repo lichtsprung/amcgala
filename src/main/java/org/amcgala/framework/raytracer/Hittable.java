@@ -26,7 +26,7 @@ public interface Hittable {
     /**
      * Berechnet den Schnittpunkt des Shapes mit dem Strahl, der vom Raytracer in die Scene geschickt wird.
      *
-     * @param ray       der Strahl, mit dem der Schnittpunkt berechnet werden soll
+     * @param ray         der Strahl, mit dem der Schnittpunkt berechnet werden soll
      * @param shadingInfo Das Ergebnisobjekt der Schnittberechnung
      */
     boolean hit(Ray ray, ShadingInfo shadingInfo);

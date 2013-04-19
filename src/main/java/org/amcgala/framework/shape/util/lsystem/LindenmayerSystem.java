@@ -1,6 +1,5 @@
 package org.amcgala.framework.shape.util.lsystem;
 
-import org.amcgala.Scene;
 import org.amcgala.Turtle;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.shape.util.CompositeShape;

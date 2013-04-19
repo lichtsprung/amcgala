@@ -16,7 +16,6 @@ package org.amcgala.framework.camera;
 
 import org.amcgala.framework.math.Matrix;
 import org.amcgala.framework.math.Vector3;
-import org.amcgala.framework.math.Vector3d;
 
 /**
  * Eine abstrakte Implementierung des {@code Camera} Interface.

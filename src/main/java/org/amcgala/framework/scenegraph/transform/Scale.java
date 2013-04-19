@@ -95,12 +95,12 @@ public class Scale implements Transformation {
     }
 
     public void changeScaleY(double diffY) {
-        scaleY= diffY;
+        scaleY = diffY;
         updateMatrix();
     }
 
     public void changeScaleZ(double diffZ) {
-        scaleZ+= diffZ;
+        scaleZ += diffZ;
         updateMatrix();
     }
 

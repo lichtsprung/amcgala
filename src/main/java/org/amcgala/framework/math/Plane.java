@@ -99,7 +99,6 @@ public class Plane {
      * Gibt die Entfernung des Punktes von der Ebene zurück.
      *
      * @param point der Punkt, der überprüft werden soll
-     *
      * @return die Entfernung von der Ebene
      */
     public double distance(Vector3d point) {
@@ -115,7 +114,6 @@ public class Plane {
      * 3. In der Ebene (Side.None)
      *
      * @param point der Punkt, der überprüft werden soll
-     *
      * @return Lage des Punktes
      */
     public Side whichSide(Vector3d point) {
@@ -133,7 +131,6 @@ public class Plane {
      * Überprüft, ob ein Punkt auf dieser Ebene liegt.
      *
      * @param point der Punkt, der überprüft werden soll
-     *
      * @return true, wenn Punkt auf Ebene liegt
      */
     public boolean isOnPlane(Vector3d point) {
@@ -147,7 +144,6 @@ public class Plane {
      * MathConstants.NEAR_EPSILON nachgeschaut werden.
      *
      * @param point der Punkt der überprüft werden soll
-     *
      * @return true, wenn Punkt in der Nähe der Ebene
      */
     public boolean isNearPlane(Vector3d point) {

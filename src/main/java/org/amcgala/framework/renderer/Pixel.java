@@ -118,7 +118,6 @@ public class Pixel {
     }
 
 
-
     @Override
     public String toString() {
         return Objects.toStringHelper(getClass()).add("x", x).add("y", y).add("Color", color).toString();
