@@ -158,17 +158,10 @@ public interface SceneGraph {
     void removeLight(String label);
 
     /**
-     * Gibt die Anzahl der Knoten im Szenengraph zurück.
-     *
-     * @return die Anzahl der Knoten
-     */
-    int getNodeCount();
-
-    /**
      * Gibt alle {@link Shape} Objekte zurück, die im {@link SceneGraph} verwaltet werden.
      * @return die Liste aller Objekte im Szenengraph
      */
-    Collection<Shape> getAllShapes();
+    Collection<Shape> getShapes();
 
     /**
      * Prüft, ob dem Szenengraph Lichter hinzugefügt wurden.

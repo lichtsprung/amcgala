@@ -207,12 +207,7 @@ public class DefaultSceneGraph implements SceneGraph {
     }
 
     @Override
-    public int getNodeCount() {
-        return nodes.size();
-    }
-
-    @Override
-    public Collection<Shape> getAllShapes() {
+    public Collection<Shape> getShapes() {
         return shapes.values();
     }
 
