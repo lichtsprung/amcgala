@@ -3,6 +3,7 @@ package org.amcgala.framework.renderer;
 import org.amcgala.Framework;
 import org.amcgala.framework.math.Vertex3f;
 import org.amcgala.framework.shape.primitives.LinePrimitive;
+import org.amcgala.framework.shape.primitives.PointPrimitive;
 import org.amcgala.framework.shape.primitives.TrianglePrimitive;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
@@ -103,6 +104,15 @@ public class GLRenderer implements Renderer {
             }
         }
         glEnd();
+
+        glBegin(GL_POINT);
+        for (PointPrimitive point : list.points) {
+            setColor(point.color);
+            Vertex3f v = point.vertices.get(0);
+            glVertex3f(v.x, v.y, v.z);
+        }
+        glEnd();
+
         Display.update();
     }
 
