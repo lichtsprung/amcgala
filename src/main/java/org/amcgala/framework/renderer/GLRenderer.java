@@ -105,7 +105,7 @@ public class GLRenderer implements Renderer {
         }
         glEnd();
 
-        glBegin(GL_POINT);
+        glBegin(GL_POINTS);
         for (PointPrimitive point : list.points) {
             setColor(point.color);
             Vertex3f v = point.vertices.get(0);

@@ -4,31 +4,23 @@ package org.amcgala.framework.testing;
 import org.amcgala.Framework;
 import org.amcgala.FrameworkMode;
 import org.amcgala.Scene;
-import org.amcgala.framework.math.Vertex3f;
-import org.amcgala.framework.shape.Line;
-import org.amcgala.framework.shape.Triangle;
+import org.amcgala.framework.shape.Point;
+
+import java.util.Random;
 
 /**
  * Testklasse für die GL Funktionalität.
  */
 public class GLTestMain {
-    final Framework framework = Framework.getInstance(FrameworkMode.GL);
+    final Framework framework = Framework.getInstance(FrameworkMode.SOFTWARE);
 
     public GLTestMain() {
         Scene scene = new Scene("line");
-//        Random r = new Random(System.nanoTime());
-//        for (int i = 0; i < r.nextInt(1000); i++) {
-//            Line line = new Line(new Vertex3f((float) r.nextInt(800), (float) r.nextInt(600), 0), new Vertex3f((float) r.nextInt(800), (float) r.nextInt(600), 0));
-//            line.setColor(new Color(r.nextFloat(), r.nextFloat(), r.nextFloat()));
-//            scene.addShape(line);
-//        }
-//        scene.addTransformation(new RotationZ());
-        Line line1 = new Line(new Vertex3f(100, 100, 0), new Vertex3f(200, 100, 0));
-        Line line2 = new Line(new Vertex3f(100, 300, 0), new Vertex3f(200, 300, 0));
-        Triangle triangle = new Triangle(new Vertex3f(100, 100, 0), new Vertex3f(300, 100, 0), new Vertex3f(200, 50, 0));
-//        scene.addShape(line1);
-//        scene.addShape(line2);
-        scene.addShape(triangle);
+        Random r = new Random(System.currentTimeMillis());
+
+        for (int i = 0; i < 1000; i++) {
+            scene.add(new Point(r.nextFloat() * 800, r.nextFloat() * 600, -1));
+        }
         framework.addScene(scene);
     }
 

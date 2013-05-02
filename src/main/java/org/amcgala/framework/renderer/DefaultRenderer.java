@@ -17,6 +17,7 @@ package org.amcgala.framework.renderer;
 import org.amcgala.Framework;
 import org.amcgala.framework.event.*;
 import org.amcgala.framework.shape.primitives.LinePrimitive;
+import org.amcgala.framework.shape.primitives.PointPrimitive;
 
 import javax.swing.*;
 import java.awt.*;
@@ -160,6 +161,11 @@ public class DefaultRenderer implements Renderer {
         for (LinePrimitive line : list.lines) {
             g.setColor(line.color);
             g.drawLine((int) line.vertices.get(0).x, (int) line.vertices.get(0).y, (int) line.vertices.get(1).x, (int) line.vertices.get(1).y);
+        }
+
+        for (PointPrimitive point : list.points) {
+            g.setColor(point.color);
+            g.fillRect((int) point.vertices.get(0).x, (int) point.vertices.get(0).y, 1, 1);
         }
 
         // TODO Gefüllte Dreiecke

@@ -90,6 +90,11 @@ public class Scene {
         sceneGraph.addShape(shape, node);
     }
 
+
+    public void add(Shape shape) {
+        sceneGraph.addShape(shape);
+    }
+
     /**
      * Fügt der Szene ein neues Shapeobjekt hinzu. Es wird dem Knoten mit dem übergebenen Label angehängt.
      *
