@@ -19,9 +19,9 @@ import org.amcgala.framework.animation.Animator;
 import org.amcgala.framework.camera.Camera;
 import org.amcgala.framework.event.InputHandler;
 import org.amcgala.framework.raytracer.Raytracer;
-import org.amcgala.framework.renderer.DefaultRenderer;
 import org.amcgala.framework.renderer.DisplayList;
 import org.amcgala.framework.renderer.GLRenderer;
+import org.amcgala.framework.renderer.SoftwareRenderer;
 import org.amcgala.framework.scenegraph.DefaultSceneGraph;
 import org.amcgala.framework.scenegraph.SceneGraph;
 import org.amcgala.framework.scenegraph.visitor.UpdateVisitor;
@@ -102,12 +102,10 @@ public final class Framework {
         //
         // FIXME Raytracer ist eigentlich unabhängig vom Framework. Vielleicht besser: Raytracer(Framework, RaytracerMode.(Window, File)).
         //
-        //raytracer = new Raytracer();
-        //
 
         switch (mode) {
             case SOFTWARE:
-                animator = new Animator(60, 60, this, DefaultRenderer.class);
+                animator = new Animator(60, 60, this, SoftwareRenderer.class);
                 break;
             case GL:
                 animator = new Animator(60, 60, this, GLRenderer.class);
@@ -135,8 +133,7 @@ public final class Framework {
 
     /**
      * Erzeugt eine neue Instanz des Frameworks. Die Größe des Fensters kann über die Parameter width und height
-     * bestimmt werden.
-     * TODO Die sollte wieder weg oder private sein. Kann mich nicht mehr daran erinnern, wieso zwischen get und create unterschieden wird.
+     * bestimmt werden..
      *
      * @param width  die Breite des Fensters
      * @param height die Höhe des Fensters
@@ -149,7 +146,7 @@ public final class Framework {
     /**
      * Gibt die bereits erzeugte Instanz des Frameworks zurück. Wurde noch keine erstellt, wird eine der Standardgröße
      * 800x600 erstellt und zurückgegeben.
-     * Es wird der {@link DefaultRenderer} verwendet.
+     * Es wird der {@link org.amcgala.framework.renderer.SoftwareRenderer} verwendet.
      *
      * @return Referenz auf die Frameworksinstanz
      */
@@ -195,18 +192,22 @@ public final class Framework {
         return props;  //To change body of created methods use File | Settings | File Templates.
     }
 
+    /**
+     * Gibt den Eventbus des Frameworks zurück. Dieser besteht unabhängig von einer Szene und kann dafür verwendet werden,
+     * Interaktionsverhalten zu implementieren, das über eine Szene hinaus aktiv sein soll.
+     *
+     * @return
+     */
     public EventBus getEventBus() {
         return frameworkEventBus;
     }
 
-    public boolean isRunning() {
-        return running;
-    }
 
-    public void setRunning(boolean running) {
-        this.running = running;
-    }
-
+    /**
+     * Gibt die Konfiguration des Frameworks zurück.
+     *
+     * @return die {@link Properties} des Frameworks
+     */
     public Properties getProperties() {
         return properties;
     }

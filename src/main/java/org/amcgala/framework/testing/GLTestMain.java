@@ -19,7 +19,7 @@ public class GLTestMain {
         Random r = new Random(System.currentTimeMillis());
 
         for (int i = 0; i < 1000; i++) {
-            scene.add(new Point(r.nextFloat() * 800, r.nextFloat() * 600, -1));
+            scene.addShape(new Point(r.nextFloat() * 800, r.nextFloat() * 600, -1));
         }
         framework.addScene(scene);
     }

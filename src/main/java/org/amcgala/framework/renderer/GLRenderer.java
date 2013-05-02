@@ -19,7 +19,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 
 /**
- * Renderer, der die grafische Ausgabe über OpenGL beschleunigt.
+ * Die OpenGL Version des Renderers. Es wird LWJGL als GL Anbindung verwendet.
  */
 public class GLRenderer implements Renderer {
     private static final Logger log = LoggerFactory.getLogger(GLRenderer.class);
@@ -37,12 +37,11 @@ public class GLRenderer implements Renderer {
             frame.setBackground(Color.BLACK);
             frame.add(canvas);
             frame.setVisible(true);
-            /*
-             * TODO Besser wäre Display.destroy aufzurufen.
-             * Display.destroy muss vom selben Thread wie der OpenGL Context aufgerufen werden. Wir befinden uns hier
-             * aber im AWT Event Thread und bekommen bei Display.destroy eine Exception geworfen. Könnte umgegangen werden,
-             * wenn dem Renderer von außen eine Nachricht geschickt wird, sich selbst zu beenden.
-             */
+
+//            TODO Besser wäre Display.destroy aufzurufen.
+//            Display.destroy muss vom selben Thread wie der OpenGL Context aufgerufen werden. Wir befinden uns hier
+//            aber im AWT Event Thread und bekommen bei Display.destroy eine Exception geworfen. Könnte umgegangen werden,
+//            wenn dem Renderer von außen eine Nachricht geschickt wird, sich selbst zu beenden.
             frame.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {

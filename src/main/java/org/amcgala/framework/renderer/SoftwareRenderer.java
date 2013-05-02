@@ -27,9 +27,10 @@ import java.awt.image.BufferStrategy;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Wird von jedem DefaultRenderer erweitert und stellt die Funktionen drawPixel und show zur Verfügung.
+ * Der Renderer in einer Software Implementierung ohne Hardwarebeschleunigung. Es wird ein JFrame verwendet, in dem über ein Graphics Object
+ * auf einem Panel pixelweise gezeichnet wird.
  */
-public class DefaultRenderer implements Renderer {
+public class SoftwareRenderer implements Renderer {
 
     /**
      * Die Breite der Ausgabe des Renderers
@@ -39,13 +40,29 @@ public class DefaultRenderer implements Renderer {
      * Die Höhe der Ausgabe des Renderers
      */
     private int height;
+    /**
+     * Die BufferStrategy wird für das Double Buffering verwendet des Frames verwendet.
+     */
     private BufferStrategy bs;
+    /**
+     * Der Frame, in dem der Software Renderer zeichnet.
+     */
     private JFrame frame;
+    /**
+     * Das {@link Graphics} Objekt, das für das Zeichnen auf dem Panel verwendet wird.
+     */
     private Graphics g;
+    /**
+     * Die globale Instanz des Frameworks kann verwendet werden, um vom Renderer Einfluss auf
+     * das laufende Programm nehmen zu können.
+     */
     private Framework framework = Framework.getInstance();
 
 
-    public DefaultRenderer() {
+    /**
+     * Der SoftwareRenderer initialisiert sich mit den Properties, die aus der laufenden Framework Instanz genommen werden.
+     */
+    public SoftwareRenderer() {
         this.width = framework.getWidth();
         this.height = framework.getHeight();
 
@@ -158,6 +175,9 @@ public class DefaultRenderer implements Renderer {
         g.clearRect(0, 0, frame.getWidth(), frame.getHeight());
         DisplayList list = framework.getCurrentState();
 
+        // Hier werden Lines und nicht gefüllte Dreiecke gezeichnet.
+        // Gefüllte Dreiecke werden per Scan Line Algorithmus auf Linien runtergebrochen und dann auch hier
+        // gezeichnet.
         for (LinePrimitive line : list.lines) {
             g.setColor(line.color);
             g.drawLine((int) line.vertices.get(0).x, (int) line.vertices.get(0).y, (int) line.vertices.get(1).x, (int) line.vertices.get(1).y);
@@ -168,7 +188,6 @@ public class DefaultRenderer implements Renderer {
             g.fillRect((int) point.vertices.get(0).x, (int) point.vertices.get(0).y, 1, 1);
         }
 
-        // TODO Gefüllte Dreiecke
 
         // TODO Gefüllte Vierecke
     }
