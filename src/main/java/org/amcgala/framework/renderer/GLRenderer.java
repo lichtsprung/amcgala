@@ -59,7 +59,7 @@ public class GLRenderer implements Renderer {
             glOrtho(0, framework.getWidth(), framework.getHeight(), 0, 1, -1);
             glMatrixMode(GL_MODELVIEW);
         } catch (LWJGLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            log.error("OpenGL konnte nicht initialisiert werden: {}", e);
         }
     }
 

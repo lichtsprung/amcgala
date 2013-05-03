@@ -64,7 +64,7 @@ public class Triangle extends AbstractShape {
 
     @Override
     public DisplayList getDisplayList() {
-        DisplayList displayList = new DisplayList();
+        final DisplayList displayList = new DisplayList();
         if (fill) {
             if (Framework.currentMode == FrameworkMode.GL) {
                 TrianglePrimitive trianglePrimitive = new TrianglePrimitive(a, b, c);
