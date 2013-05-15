@@ -1,6 +1,8 @@
 package org.amcgala;
 
+import org.amcgala.framework.math.Vector3;
 import org.amcgala.framework.math.Vector3d;
+import org.amcgala.framework.shape.Line;
 import org.amcgala.framework.shape.util.CompositeShape;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -18,10 +20,10 @@ public class Turtle {
     private CompositeShape turtleShape;
 
     // Die Blickrichtung der Turtle. Zu Beginn schaut die Turtle nach oben.
-    private Vector3d heading = Vector3d.UNIT_Y;
+    private Vector3 heading = Vector3d.UNIT_Y;
 
     // Die Turtle steht im Nullpunkt des Koordinatensystems. Aktuell ist dies der Bildmittelpunkt.
-    private Vector3d position = Vector3d.ZERO;
+    private Vector3 position = Vector3d.ZERO;
 
     // Der Blinkwinkel - das gleiche wie heading, nur dass es sich hierbei um eine Graddarstellung im Bogenmaß handelt.
     private double headingAngle;
@@ -36,7 +38,6 @@ public class Turtle {
      * @param shape das Shape, in dem die Turtlegrafik gespeichert werden soll
      */
     public Turtle(CompositeShape shape) {
-
         turtleShape = shape;
         headingAngle = 90;
         heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
@@ -50,11 +51,16 @@ public class Turtle {
      * @param headingAngle der Blickwinkel
      * @param shape        das Shape, in dem die Grafik gespeichert werden soll
      */
-    public Turtle(Vector3d position, Vector3d heading, double headingAngle, CompositeShape shape) {
+    public Turtle(Vector3 position, Vector3 heading, double headingAngle, CompositeShape shape) {
         this.position = position;
         this.heading = heading;
         this.turtleShape = shape;
         this.headingAngle = headingAngle;
+    }
+
+    public Turtle(Vector3 position, CompositeShape shape) {
+        this(shape);
+        this.position = position;
     }
 
 
@@ -101,17 +107,16 @@ public class Turtle {
      */
     public void move(double length) {
         checkArgument(length > 0, "Schrittlänge kann nur positiv sein!");
-//  TODO muss korriegiert werden, spbald GL funktioniert.
-//        if (up) {
-//            position = position.add(heading.times(length));
-//        } else {
-//            Vector3d endPosition = position.add(heading.times(length));
-//            endPosition.z = -1;
-//            position.z = -1;
-////            Line line = new Line(position, endPosition);
-//            turtleShape.add(line);
-//            position = endPosition;
-//        }
+        if (up) {
+            position = position.add(heading.times(length));
+        } else {
+            Vector3 endPosition = position.add(heading.times(length));
+            endPosition.setZ(-1);
+            position.setZ(-1);
+            Line line = new Line(position.toVertex3f(), endPosition.toVertex3f());
+            turtleShape.add(line);
+            position = endPosition;
+        }
     }
 
     /**
@@ -119,7 +124,7 @@ public class Turtle {
      *
      * @return die Blickrichtung der Turtle
      */
-    public Vector3d getHeading() {
+    public Vector3 getHeading() {
         return heading;
     }
 
@@ -128,7 +133,7 @@ public class Turtle {
      *
      * @return die Position der Turtle
      */
-    public Vector3d getPosition() {
+    public Vector3 getPosition() {
         return position;
     }
 

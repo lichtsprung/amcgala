@@ -37,4 +37,5 @@ public interface Vector3 extends Comparable<Vector3> {
     void setY(double y);
 
     void setZ(double z);
+    public Vertex3f toVertex3f();
 }

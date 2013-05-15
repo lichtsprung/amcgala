@@ -1,6 +1,7 @@
 package org.amcgala.framework.shape.util.lsystem;
 
 import org.amcgala.Turtle;
+import org.amcgala.framework.math.Vector3;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.shape.util.CompositeShape;
 
@@ -28,6 +29,16 @@ public class LindenmayerSystem {
     private Angle angle;
 
 
+    /**
+     * Erstellt ein neues L-System.
+     *
+     * @param axiom das Startsymbol des L-Systems
+     * @param rules die Ersetzungsregeln, die auf das Axiom angewendet werden
+     * @param level die Rekusionstiefe
+     * @param length die Schrittweite
+     * @param angle der Winkel, um den gedreht wird
+     * @param shape das Shape, das für die Darstellung des L-Systems verwendet werden soll
+     */
     public LindenmayerSystem(Axiom axiom, Rules rules, Level level, Length length, Angle angle, CompositeShape shape) {
         this.axiom = axiom;
         this.rules = rules;
@@ -40,6 +51,9 @@ public class LindenmayerSystem {
         current = axiom.axiom;
     }
 
+    /**
+     * Wendet die Regeln des L-Systems auf das Startsymbol an.
+     */
     public void run() {
         applyRules();
         for (char c : current.toCharArray()) {
@@ -51,8 +65,8 @@ public class LindenmayerSystem {
                     turtle.turnLeft(angle.angle);
                     break;
                 case '[':
-                    Vector3d position = turtle.getPosition();
-                    Vector3d heading = turtle.getHeading();
+                    Vector3 position = turtle.getPosition();
+                    Vector3 heading = turtle.getHeading();
                     double headingAngle = turtle.getHeadingAngle();
                     Turtle t = new Turtle(position, heading, headingAngle, shape);
                     turtles.push(turtle);
