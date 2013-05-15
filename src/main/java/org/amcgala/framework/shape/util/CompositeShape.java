@@ -29,7 +29,6 @@ import java.util.List;
 
 /**
  * Ein Containerobjekt, das für die Erstellung von zusammengesetzten Shape-Objekten genutzt werden kann.
- * TODO auf GL API ändern.
  *
  * @author Sascha Lemke
  * @author Robert Giacinto

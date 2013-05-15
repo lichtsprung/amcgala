@@ -7,6 +7,8 @@ import org.amcgala.framework.shape.util.CompositeShape;
 
 import java.util.Stack;
 
+import static java.lang.Math.*;
+
 /**
  * Ein Lindenmayer-System, das folgende Zeichnen interpretieren kann:
  * - + : Rechtsdrehung
@@ -27,17 +29,18 @@ public class LindenmayerSystem {
     private String current;
     private Length length;
     private Angle angle;
+    private Vector3 startPosition;
 
 
     /**
      * Erstellt ein neues L-System.
      *
-     * @param axiom das Startsymbol des L-Systems
-     * @param rules die Ersetzungsregeln, die auf das Axiom angewendet werden
-     * @param level die Rekusionstiefe
+     * @param axiom  das Startsymbol des L-Systems
+     * @param rules  die Ersetzungsregeln, die auf das Axiom angewendet werden
+     * @param level  die Rekusionstiefe
      * @param length die Schrittweite
-     * @param angle der Winkel, um den gedreht wird
-     * @param shape das Shape, das für die Darstellung des L-Systems verwendet werden soll
+     * @param angle  der Winkel, um den gedreht wird
+     * @param shape  das Shape, das für die Darstellung des L-Systems verwendet werden soll
      */
     public LindenmayerSystem(Axiom axiom, Rules rules, Level level, Length length, Angle angle, CompositeShape shape) {
         this.axiom = axiom;
@@ -50,6 +53,24 @@ public class LindenmayerSystem {
         turtle = new Turtle(shape);
         current = axiom.axiom;
     }
+
+    /**
+     * Erstellt ein neues L-System.
+     *
+     * @param axiom         das Startsymbol des L-Systems
+     * @param rules         die Ersetzungsregeln, die auf das Axiom angewendet werden
+     * @param level         die Rekusionstiefe
+     * @param length        die Schrittweite
+     * @param angle         der Winkel, um den gedreht wird
+     * @param shape         das Shape, das für die Darstellung des L-Systems verwendet werden soll
+     * @param startPosition die Startposition der Turtle
+     */
+    public LindenmayerSystem(Axiom axiom, Rules rules, Level level, Length length, Angle angle, CompositeShape shape, Vector3 startPosition, float startHeading) {
+        this(axiom, rules, level, length, angle, shape);
+        this.startPosition = startPosition;
+        turtle = new Turtle(startPosition, new Vector3d(cos(toRadians(startHeading)), -sin(toRadians(startHeading)), -1), startHeading, shape);
+    }
+
 
     /**
      * Wendet die Regeln des L-Systems auf das Startsymbol an.
@@ -67,8 +88,7 @@ public class LindenmayerSystem {
                 case '[':
                     Vector3 position = turtle.getPosition();
                     Vector3 heading = turtle.getHeading();
-                    double headingAngle = turtle.getHeadingAngle();
-                    Turtle t = new Turtle(position, heading, headingAngle, shape);
+                    Turtle t = new Turtle(position, heading, turtle.getHeadingAngle(), shape);
                     turtles.push(turtle);
                     turtle = t;
                     break;

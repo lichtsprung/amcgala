@@ -20,7 +20,7 @@ public class Turtle {
     private CompositeShape turtleShape;
 
     // Die Blickrichtung der Turtle. Zu Beginn schaut die Turtle nach oben.
-    private Vector3 heading = Vector3d.UNIT_Y;
+    private Vector3 heading = Vector3d.UNIT_X;
 
     // Die Turtle steht im Nullpunkt des Koordinatensystems. Aktuell ist dies der Bildmittelpunkt.
     private Vector3 position = Vector3d.ZERO;
@@ -39,28 +39,22 @@ public class Turtle {
      */
     public Turtle(CompositeShape shape) {
         turtleShape = shape;
-        headingAngle = 90;
+        headingAngle = 0;
         heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
     }
 
-    /**
-     * Erzeugt eine neue Turtle, die mit beliebigen Werten initialisiert werden kann.
-     *
-     * @param position     die Position der Turtle
-     * @param heading      der Vektor der Blickrichtung der Turtle
-     * @param headingAngle der Blickwinkel
-     * @param shape        das Shape, in dem die Grafik gespeichert werden soll
-     */
+
+    public Turtle(Vector3 position, CompositeShape shape) {
+        this(shape);
+        this.position = position;
+    }
+
     public Turtle(Vector3 position, Vector3 heading, double headingAngle, CompositeShape shape) {
         this.position = position;
         this.heading = heading;
         this.turtleShape = shape;
         this.headingAngle = headingAngle;
-    }
-
-    public Turtle(Vector3 position, CompositeShape shape) {
-        this(shape);
-        this.position = position;
+        System.out.println("Turtle: " + position + ", " + headingAngle);
     }
 
 
