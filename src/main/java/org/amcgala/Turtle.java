@@ -22,7 +22,6 @@ public class Turtle {
     // Die Blickrichtung der Turtle. Zu Beginn schaut die Turtle nach oben.
     private Vector3 heading = Vector3d.UNIT_X;
 
-    // Die Turtle steht im Nullpunkt des Koordinatensystems. Aktuell ist dies der Bildmittelpunkt.
     private Vector3 position = Vector3d.ZERO;
 
     // Sitzt der Stift der Turtle auf? Ist up true, dann zeichnet die Turtle nicht.
@@ -73,12 +72,9 @@ public class Turtle {
      * @param angle der Winkel in Grad
      */
     public void turnLeft(double angle) {
-        System.out.println("angle: " + angle);
         Vector3 tmp = new Vector3d(cos(toRadians(angle)), sin(toRadians(angle)), 0);
-        System.out.println(tmp);
         heading = heading.sub(tmp);
         heading = heading.normalize();
-        System.out.println("new heading: " + heading);
     }
 
     /**
