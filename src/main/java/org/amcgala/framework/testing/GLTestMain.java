@@ -30,14 +30,14 @@ public class GLTestMain {
                 new Axiom("X"),
                 new Rules()
                         .addReplacementRule("F", "FF")
-                        .addReplacementRule("X", "F-[X+X]-X")
+                        .addReplacementRule("X", "F-X")
                         .addDrawingRule("F", "M")
                         .addDrawingRule("X", ""),
-                new Level(6),
-                new Length(6),
-                new Angle(22),
+                new Level(2),
+                new Length(20),
+                new Angle(90),
                 shape,
-                new Vector3d(100, 400, -1),
+                new Vector3d(300, 300, -1),
                 90
         );
 

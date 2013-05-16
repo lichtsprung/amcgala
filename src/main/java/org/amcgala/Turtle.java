@@ -25,9 +25,6 @@ public class Turtle {
     // Die Turtle steht im Nullpunkt des Koordinatensystems. Aktuell ist dies der Bildmittelpunkt.
     private Vector3 position = Vector3d.ZERO;
 
-    // Der Blinkwinkel - das gleiche wie heading, nur dass es sich hierbei um eine Graddarstellung im Bogenmaß handelt.
-    private double headingAngle;
-
     // Sitzt der Stift der Turtle auf? Ist up true, dann zeichnet die Turtle nicht.
     private boolean up;
 
@@ -39,8 +36,7 @@ public class Turtle {
      */
     public Turtle(CompositeShape shape) {
         turtleShape = shape;
-        headingAngle = 0;
-        heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
+        heading = Vector3d.UNIT_X;
     }
 
 
@@ -49,12 +45,11 @@ public class Turtle {
         this.position = position;
     }
 
-    public Turtle(Vector3 position, Vector3 heading, double headingAngle, CompositeShape shape) {
+    public Turtle(Vector3 position, Vector3 heading, CompositeShape shape) {
         this.position = position;
         this.heading = heading;
         this.turtleShape = shape;
-        this.headingAngle = headingAngle;
-        System.out.println("Turtle: " + position + ", " + headingAngle);
+        System.out.println("new turtle with heading: " + heading + " at position " + position);
     }
 
 
@@ -78,9 +73,12 @@ public class Turtle {
      * @param angle der Winkel in Grad
      */
     public void turnLeft(double angle) {
-        headingAngle += angle;
-        heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
-        heading.normalize();
+        System.out.println("angle: " + angle);
+        Vector3 tmp = new Vector3d(cos(toRadians(angle)), sin(toRadians(angle)), 0);
+        System.out.println(tmp);
+        heading = heading.sub(tmp);
+        heading = heading.normalize();
+        System.out.println("new heading: " + heading);
     }
 
     /**
@@ -89,9 +87,9 @@ public class Turtle {
      * @param angle der Winkel in Grad
      */
     public void turnRight(double angle) {
-        headingAngle -= angle;
-        heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
-        heading.normalize();
+        heading = heading.add(new Vector3d(cos(toRadians(angle)), sin(toRadians(angle)), 0));
+        heading = heading.normalize();
+        System.out.println("new heading: " + heading);
     }
 
     /**
@@ -131,12 +129,4 @@ public class Turtle {
         return position;
     }
 
-    /**
-     * Gibt den Blickwinkel der Turtle zurück.
-     *
-     * @return der Blickwinkel der Turtle
-     */
-    public double getHeadingAngle() {
-        return headingAngle;
-    }
 }

@@ -29,7 +29,6 @@ public class LindenmayerSystem {
     private String current;
     private Length length;
     private Angle angle;
-    private Vector3 startPosition;
 
 
     /**
@@ -67,8 +66,8 @@ public class LindenmayerSystem {
      */
     public LindenmayerSystem(Axiom axiom, Rules rules, Level level, Length length, Angle angle, CompositeShape shape, Vector3 startPosition, float startHeading) {
         this(axiom, rules, level, length, angle, shape);
-        this.startPosition = startPosition;
-        turtle = new Turtle(startPosition, new Vector3d(cos(toRadians(startHeading)), -sin(toRadians(startHeading)), -1), startHeading, shape);
+        Vector3 heading = new Vector3d(sin(toRadians(startHeading)), cos(toRadians(startHeading)), 0).normalize();
+        turtle = new Turtle(startPosition, heading, shape);
     }
 
 
@@ -80,15 +79,17 @@ public class LindenmayerSystem {
         for (char c : current.toCharArray()) {
             switch (c) {
                 case '+':
+                    System.out.println("Turning right: " + angle.angle);
                     turtle.turnRight(angle.angle);
                     break;
                 case '-':
+                    System.out.println("Turning left: " + angle.angle);
                     turtle.turnLeft(angle.angle);
                     break;
                 case '[':
                     Vector3 position = turtle.getPosition();
                     Vector3 heading = turtle.getHeading();
-                    Turtle t = new Turtle(position, heading, turtle.getHeadingAngle(), shape);
+                    Turtle t = new Turtle(position, heading, shape);
                     turtles.push(turtle);
                     turtle = t;
                     break;
@@ -96,11 +97,13 @@ public class LindenmayerSystem {
                     turtle = turtles.pop();
                     break;
                 case 'm':
+                    System.out.println("move: " + length.length);
                     turtle.up();
                     turtle.move(length.length);
                     turtle.down();
                     break;
                 case 'M':
+                    System.out.println("draw: " + length.length);
                     turtle.move(length.length);
                     break;
                 default:
