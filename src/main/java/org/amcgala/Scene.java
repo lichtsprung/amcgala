@@ -66,8 +66,9 @@ public class Scene {
      *
      * @param shape das hinzuzufügende Objekt
      */
-    public void addShape(Shape shape) {
+    public Scene addShape(Shape shape) {
         sceneGraph.addShape(shape);
+        return this;
     }
 
     /**
@@ -75,21 +76,21 @@ public class Scene {
      *
      * @param node der neue Knoten
      */
-    public void addNode(Node node) {
+    public Scene addNode(Node node) {
         sceneGraph.addNode(node);
+        return this;
     }
 
     /**
      * Fügt der Szene ein neues Shapeobjekt hinzu. Dieses wird dem Szenengraph an dem übergebenen Knoten angehängt.
-     * TODO das ist verwirrend, dass man erst den Knoten der Szene hinzufügen muss, um ein Shape dranhängen zu können.
      *
      * @param shape das Shape, das der Szene hinzugefügt werden soll
      * @param node  der Knoten, an dem das Shape angehängt werden soll
      */
-    public void add(Shape shape, Node node) {
+    public Scene addShape(Shape shape, Node node) {
         sceneGraph.addShape(shape, node);
+        return this;
     }
-
 
     /**
      * Fügt der Szene ein neues Shapeobjekt hinzu. Es wird dem Knoten mit dem übergebenen Label angehängt.
@@ -97,8 +98,9 @@ public class Scene {
      * @param shape     das Shape, das der Szene hinzugefügt werden soll
      * @param nodeLabel das Label des Knotens
      */
-    public void addShape(Shape shape, String nodeLabel) {
+    public Scene addShape(Shape shape, String nodeLabel) {
         sceneGraph.addShape(shape, nodeLabel);
+        return this;
     }
 
     /**
@@ -107,19 +109,20 @@ public class Scene {
      * @param node        der neue Knoten, der hinzugefügt werden soll
      * @param parentLabel das Label des Elternknotens
      */
-    public void addNode(Node node, String parentLabel) {
+    public Scene addNode(Node node, String parentLabel) {
         sceneGraph.addNode(node, parentLabel);
+        return this;
     }
 
     /**
      * Fügt einem Elternknoten einen neuen Kindsknoten im Szenengraph hinzu.
-     * TODO das Erweitern der Baumhierarchie über eine Methode in einer Szene ist umständlich. Die Hierarchie sollte automatisch aktualisiert werden, wenn ein neuer Knoten hinzufügt wird.
      *
      * @param child  der neue Kindsknoten
      * @param parent der Elternknoten
      */
-    public void addNode(Node child, Node parent) {
+    public Scene addNode(Node child, Node parent) {
         sceneGraph.addNode(child, parent);
+        return this;
     }
 
     /**
@@ -127,8 +130,9 @@ public class Scene {
      *
      * @param transformation die Transformation, die hinzugefügt werden soll
      */
-    public void addTransformation(Transformation transformation) {
+    public Scene addTransformation(Transformation transformation) {
         sceneGraph.addTransformation(transformation);
+        return this;
     }
 
     /**
@@ -148,7 +152,6 @@ public class Scene {
     public void setCamera(Camera camera) {
         this.camera = camera;
     }
-
 
     /**
      * Gibt den {@link com.google.common.eventbus.EventBus} der Szene zurück.
@@ -174,9 +177,10 @@ public class Scene {
      * @param inputHandler der neue Inputhandler
      * @param label        Name des neuen Inputhandlers
      */
-    public void addInputHandler(InputHandler inputHandler, String label) {
+    public Scene addInputHandler(InputHandler inputHandler, String label) {
         inputHandlers.put(label, inputHandler);
         eventBus.register(inputHandler);
+        return this;
     }
 
     /**
@@ -184,9 +188,10 @@ public class Scene {
      *
      * @param label Name des {@code InputHandler} der entfernt werden soll
      */
-    public void removeInputHandler(String label) {
+    public Scene removeInputHandler(String label) {
         checkArgument(inputHandlers.containsKey(label), "InputHandler mit Namen " + label + " konnte nicht gefunden werden");
         eventBus.unregister(inputHandlers.get(label));
+        return this;
     }
 
     /**
@@ -194,10 +199,46 @@ public class Scene {
      *
      * @param label das Label des Shapes, das entfernt werden soll
      */
-    public void removeShape(String label) {
+    public Scene removeShape(String label) {
         sceneGraph.removeShape(label);
+        return this;
     }
 
+    /**
+     * Entfernt ein Shape aus denen Szenengraph.
+     *
+     * @param shape das Shape, das entfernt werden soll
+     */
+    public Scene removeShape(Shape shape) {
+        sceneGraph.removeShape(shape);
+        return this;
+    }
+
+    /**
+     * Entfernt einen Knoten aus dem Szenengraph.
+     *
+     * @param label der Name des Knotens
+     */
+    public Scene removeNode(String label) {
+        sceneGraph.removeNode(label);
+        return this;
+    }
+
+    /**
+     * Entfernt einen Knoten aus dem Szenengraph.
+     *
+     * @param node der Knoten, der entfernt werden soll
+     */
+    public Scene removeNode(Node node) {
+        sceneGraph.removeNode(node);
+        return this;
+    }
+
+    /**
+     * Gibt den Szenengraph dieser Szene zurück.
+     *
+     * @return der Szenengraph
+     */
     protected SceneGraph getSceneGraph() {
         return sceneGraph;
     }
@@ -236,6 +277,11 @@ public class Scene {
         this.background = background;
     }
 
+    /**
+     * Gibt alle Shapes im Szenengraph zurück.
+     *
+     * @return alle Shapes im Szenengraph
+     */
     public Collection<Shape> getShapes() {
         return sceneGraph.getAllShapes();
     }
