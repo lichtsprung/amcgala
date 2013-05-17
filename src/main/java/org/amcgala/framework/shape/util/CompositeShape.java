@@ -89,6 +89,7 @@ public class CompositeShape extends AbstractShape implements InputHandler {
     public DisplayList getDisplayList() {
         DisplayList list = new DisplayList();
         for (Shape line : lines) {
+            line.setColor(getColor());
             list.add(line.getDisplayList());
         }
         return list;

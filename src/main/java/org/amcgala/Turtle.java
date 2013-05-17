@@ -22,7 +22,11 @@ public class Turtle {
     // Die Blickrichtung der Turtle. Zu Beginn schaut die Turtle nach oben.
     private Vector3 heading = Vector3d.UNIT_X;
 
+    // Die Turtle steht im Nullpunkt des Koordinatensystems. Aktuell ist dies der Bildmittelpunkt.
     private Vector3 position = Vector3d.ZERO;
+
+    // Der Blinkwinkel - das gleiche wie heading, nur dass es sich hierbei um eine Graddarstellung im Bogenmaß handelt.
+    private double headingAngle;
 
     // Sitzt der Stift der Turtle auf? Ist up true, dann zeichnet die Turtle nicht.
     private boolean up;
@@ -35,20 +39,21 @@ public class Turtle {
      */
     public Turtle(CompositeShape shape) {
         turtleShape = shape;
-        heading = Vector3d.UNIT_X;
+        headingAngle = 0;
+        heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), 0);
     }
 
-
-    public Turtle(Vector3 position, CompositeShape shape) {
-        this(shape);
-        this.position = position;
-    }
-
-    public Turtle(Vector3 position, Vector3 heading, CompositeShape shape) {
-        this.position = position;
-        this.heading = heading;
+    /**
+     * Erzeugt eine neue Turtle, die mit beliebigen Werten initialisiert werden kann.
+     *
+     * @param turtleState der Startzustand der Turtle
+     * @param shape       das Shape, in dem die Grafik gespeichert werden soll
+     */
+    public Turtle(TurtleState turtleState, CompositeShape shape) {
+        this.position = turtleState.position;
+        this.heading = turtleState.heading;
+        this.headingAngle = turtleState.headingAngle;
         this.turtleShape = shape;
-        System.out.println("new turtle with heading: " + heading + " at position " + position);
     }
 
 
@@ -72,9 +77,8 @@ public class Turtle {
      * @param angle der Winkel in Grad
      */
     public void turnLeft(double angle) {
-        Vector3 tmp = new Vector3d(cos(toRadians(angle)), sin(toRadians(angle)), 0);
-        heading = heading.sub(tmp);
-        heading = heading.normalize();
+        headingAngle -= angle;
+
     }
 
     /**
@@ -83,9 +87,7 @@ public class Turtle {
      * @param angle der Winkel in Grad
      */
     public void turnRight(double angle) {
-        heading = heading.add(new Vector3d(cos(toRadians(angle)), sin(toRadians(angle)), 0));
-        heading = heading.normalize();
-        System.out.println("new heading: " + heading);
+        headingAngle += angle;
     }
 
     /**
@@ -95,34 +97,21 @@ public class Turtle {
      */
     public void move(double length) {
         checkArgument(length > 0, "Schrittlänge kann nur positiv sein!");
+        heading = new Vector3d(cos(toRadians(headingAngle)), -sin(toRadians(headingAngle)), 0);
+        heading.normalize();
         if (up) {
             position = position.add(heading.times(length));
         } else {
             Vector3 endPosition = position.add(heading.times(length));
-            endPosition.setZ(-1);
-            position.setZ(-1);
+            endPosition.setZ(0);
+            position.setZ(0);
             Line line = new Line(position.toVertex3f(), endPosition.toVertex3f());
             turtleShape.add(line);
             position = endPosition;
         }
     }
 
-    /**
-     * Gibt die Blickrichtung der Turtle zurück.
-     *
-     * @return die Blickrichtung der Turtle
-     */
-    public Vector3 getHeading() {
-        return heading;
+    public TurtleState getTurtleState() {
+        return new TurtleState(headingAngle, heading, position);
     }
-
-    /**
-     * Gibt die Position der Turtle zurück.
-     *
-     * @return die Position der Turtle
-     */
-    public Vector3 getPosition() {
-        return position;
-    }
-
 }

@@ -5,11 +5,10 @@ import org.amcgala.Framework;
 import org.amcgala.FrameworkMode;
 import org.amcgala.Scene;
 import org.amcgala.framework.math.Vector3d;
-import org.amcgala.framework.shape.Point;
 import org.amcgala.framework.shape.util.CompositeShape;
 import org.amcgala.framework.shape.util.lsystem.*;
 
-import java.util.Random;
+import java.awt.*;
 
 /**
  * Testklasse für die GL Funktionalität.
@@ -19,12 +18,9 @@ public class GLTestMain {
 
     public GLTestMain() {
         Scene scene = new Scene("line");
-        Random r = new Random(System.currentTimeMillis());
 
-        for (int i = 0; i < 1000; i++) {
-            scene.addShape(new Point(r.nextFloat() * 800, r.nextFloat() * 600, -1));
-        }
         CompositeShape shape = new CompositeShape();
+        shape.setColor(Color.BLUE);
 
         LindenmayerSystem lindenmayerSystem = new LindenmayerSystem(
                 new Axiom("X"),
@@ -33,17 +29,43 @@ public class GLTestMain {
                         .addReplacementRule("X", "F-[[X]+X]+F[+FX]-X")
                         .addDrawingRule("F", "M")
                         .addDrawingRule("X", ""),
-                new Level(2),
-                new Length(20),
+                new Level(6),
+                new Length(3),
                 new Angle(25),
                 shape,
-                new Vector3d(300, 300, -1),
-                90
+                new Vector3d(80, 500, -1),
+                45
         );
 
         lindenmayerSystem.run();
 
         scene.addShape(shape);
+
+
+        CompositeShape shape2 = new CompositeShape();
+        shape2.setColor(Color.RED);
+
+        LindenmayerSystem lindenmayerSystem2 = new LindenmayerSystem(
+                new Axiom("FX"),
+                new Rules()
+                        .addReplacementRule("Y", "FX-Y")
+                        .addReplacementRule("X", "X+YF")
+                        .addDrawingRule("F", "M")
+                        .addDrawingRule("Y", "")
+                        .addDrawingRule("X", ""),
+                new Level(10),
+                new Length(15),
+                new Angle(90),
+                shape2,
+                new Vector3d(500, 400, -1),
+                0
+        );
+
+        lindenmayerSystem2.run();
+
+        scene.addShape(shape2);
+
+
         framework.addScene(scene);
     }
 

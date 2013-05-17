@@ -1,6 +1,7 @@
 package org.amcgala.framework.shape.util.lsystem;
 
 import org.amcgala.Turtle;
+import org.amcgala.TurtleState;
 import org.amcgala.framework.math.Vector3;
 import org.amcgala.framework.math.Vector3d;
 import org.amcgala.framework.shape.util.CompositeShape;
@@ -66,8 +67,9 @@ public class LindenmayerSystem {
      */
     public LindenmayerSystem(Axiom axiom, Rules rules, Level level, Length length, Angle angle, CompositeShape shape, Vector3 startPosition, float startHeading) {
         this(axiom, rules, level, length, angle, shape);
-        Vector3 heading = new Vector3d(sin(toRadians(startHeading)), cos(toRadians(startHeading)), 0).normalize();
-        turtle = new Turtle(startPosition, heading, shape);
+        Vector3 heading = new Vector3d(cos(toRadians(startHeading)), -sin(toRadians(startHeading)), 0).normalize();
+        System.out.println(heading);
+        turtle = new Turtle(new TurtleState(startHeading, heading, startPosition), shape);
     }
 
 
@@ -87,9 +89,8 @@ public class LindenmayerSystem {
                     turtle.turnLeft(angle.angle);
                     break;
                 case '[':
-                    Vector3 position = turtle.getPosition();
-                    Vector3 heading = turtle.getHeading();
-                    Turtle t = new Turtle(position, heading, shape);
+
+                    Turtle t = new Turtle(turtle.getTurtleState(), shape);
                     turtles.push(turtle);
                     turtle = t;
                     break;

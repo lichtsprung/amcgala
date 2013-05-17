@@ -30,7 +30,7 @@ public class GLRenderer implements Renderer {
         log.info("Creating new instance of GLRenderer...");
         this.framework = Framework.getInstance();
         try {
-            Frame frame = new Frame("GL Renderer");
+            Frame frame = new Frame("amCGAla GL");
             frame.setSize(framework.getWidth(), framework.getHeight());
 
             Canvas canvas = new Canvas();
@@ -50,7 +50,7 @@ public class GLRenderer implements Renderer {
             });
             Display.setParent(canvas);
             Display.setVSyncEnabled(true);
-            Display.setInitialBackground(1f, 1f, 1f);
+            Display.setInitialBackground(0.95f, 0.95f, 0.95f);
             PixelFormat pf = new PixelFormat().withSamples(1);
             Display.create(pf);
 
