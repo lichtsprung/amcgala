@@ -283,6 +283,6 @@ public class Scene {
      * @return alle Shapes im Szenengraph
      */
     public Collection<Shape> getShapes() {
-        return sceneGraph.getAllShapes();
+        return sceneGraph.getShapes();
     }
 }

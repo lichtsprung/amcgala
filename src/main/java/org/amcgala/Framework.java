@@ -225,7 +225,7 @@ public final class Framework {
         if (tracing) {
             raytracer.traceScene();
         }
-        Collection<Shape> shapes = scenegraph.getAllShapes();
+        Collection<Shape> shapes = scenegraph.getShapes();
         displayList = new DisplayList();
         for (Shape s : shapes) {
             displayList.add(s.getDisplayList());
