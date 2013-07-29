@@ -285,4 +285,8 @@ public class Scene {
     public Collection<Shape> getShapes() {
         return sceneGraph.getShapes();
     }
+
+    public void clear() {
+        sceneGraph = new DefaultSceneGraph();
+    }
 }

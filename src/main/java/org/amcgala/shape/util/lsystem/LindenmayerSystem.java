@@ -81,11 +81,11 @@ public class LindenmayerSystem {
         for (char c : current.toCharArray()) {
             switch (c) {
                 case '+':
-                    System.out.println("Turning right: " + angle.angle);
+//                    System.out.println("Turning right: " + angle.angle);
                     turtle.turnRight(angle.angle);
                     break;
                 case '-':
-                    System.out.println("Turning left: " + angle.angle);
+//                    System.out.println("Turning left: " + angle.angle);
                     turtle.turnLeft(angle.angle);
                     break;
                 case '[':
@@ -98,13 +98,13 @@ public class LindenmayerSystem {
                     turtle = turtles.pop();
                     break;
                 case 'm':
-                    System.out.println("move: " + length.length);
+//                    System.out.println("move: " + length.length);
                     turtle.up();
                     turtle.move(length.length);
                     turtle.down();
                     break;
                 case 'M':
-                    System.out.println("draw: " + length.length);
+//                    System.out.println("draw: " + length.length);
                     turtle.move(length.length);
                     break;
                 default:
