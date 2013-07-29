@@ -15,18 +15,18 @@
 package org.amcgala;
 
 import com.google.common.eventbus.EventBus;
-import org.amcgala.framework.animation.Animator;
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.event.InputHandler;
-import org.amcgala.framework.raytracer.Raytracer;
-import org.amcgala.framework.renderer.DisplayList;
-import org.amcgala.framework.renderer.GLRenderer;
-import org.amcgala.framework.renderer.SoftwareRenderer;
-import org.amcgala.framework.scenegraph.DefaultSceneGraph;
-import org.amcgala.framework.scenegraph.SceneGraph;
-import org.amcgala.framework.scenegraph.visitor.UpdateVisitor;
-import org.amcgala.framework.scenegraph.visitor.Visitor;
-import org.amcgala.framework.shape.Shape;
+import org.amcgala.animation.Animator;
+import org.amcgala.camera.Camera;
+import org.amcgala.event.InputHandler;
+import org.amcgala.raytracer.Raytracer;
+import org.amcgala.renderer.DisplayList;
+import org.amcgala.renderer.GLRenderer;
+import org.amcgala.renderer.SoftwareRenderer;
+import org.amcgala.scenegraph.DefaultSceneGraph;
+import org.amcgala.scenegraph.SceneGraph;
+import org.amcgala.scenegraph.visitor.UpdateVisitor;
+import org.amcgala.scenegraph.visitor.Visitor;
+import org.amcgala.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,7 +146,7 @@ public final class Framework {
     /**
      * Gibt die bereits erzeugte Instanz des Frameworks zurück. Wurde noch keine erstellt, wird eine der Standardgröße
      * 800x600 erstellt und zurückgegeben.
-     * Es wird der {@link org.amcgala.framework.renderer.SoftwareRenderer} verwendet.
+     * Es wird der {@link org.amcgala.renderer.SoftwareRenderer} verwendet.
      *
      * @return Referenz auf die Frameworksinstanz
      */
@@ -271,7 +271,7 @@ public final class Framework {
     }
 
     /**
-     * Das Framework lädt die Szene, indem {@link org.amcgala.framework.camera.Camera}, {@link org.amcgala.framework.renderer.Renderer} und {@link org.amcgala.framework.scenegraph.SceneGraph} aus
+     * Das Framework lädt die Szene, indem {@link org.amcgala.camera.Camera}, {@link org.amcgala.renderer.Renderer} und {@link org.amcgala.scenegraph.SceneGraph} aus
      * der Szene geladen werden.
      *
      * @param scene Szene, die geladen werden soll
@@ -332,7 +332,7 @@ public final class Framework {
     }
 
     /**
-     * Fügt dem Framework einen neuen {@link org.amcgala.framework.event.InputHandler} hinzu.
+     * Fügt dem Framework einen neuen {@link org.amcgala.event.InputHandler} hinzu.
      *
      * @param inputHandler der neue InputHandler
      * @param label        der Bezeichner dieses InputHandlers
@@ -343,7 +343,7 @@ public final class Framework {
     }
 
     /**
-     * Entfernt einen {@link org.amcgala.framework.event.InputHandler} aus dem Framework.
+     * Entfernt einen {@link org.amcgala.event.InputHandler} aus dem Framework.
      *
      * @param label der Bezeichner des InputHandlers, der entfernt werden soll
      */

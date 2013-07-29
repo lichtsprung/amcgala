@@ -1,11 +1,11 @@
 package org.amcgala;
 
 
-import org.amcgala.framework.math.Vector3;
-import org.amcgala.framework.math.Vector3d;
-import org.amcgala.framework.math.Vertex3f;
-import org.amcgala.framework.math.util.Vectors;
-import org.amcgala.framework.shape.Line;
+import org.amcgala.math.Vector3;
+import org.amcgala.math.Vector3d;
+import org.amcgala.math.Vertex3f;
+import org.amcgala.math.util.Vectors;
+import org.amcgala.shape.Line;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Math.*;

@@ -12,6 +12,7 @@
 /*.ipr
 /*.iws
 /.idea
+/.idea_modules
 
 # we use maven!
 /build.xml
@@ -33,3 +34,6 @@
 
 # Log files
 /*.log
+
+# sbt
+/project

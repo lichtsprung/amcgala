@@ -1,9 +1,9 @@
 package org.amcgala;
 
-import org.amcgala.framework.math.Vector3;
-import org.amcgala.framework.math.Vector3d;
-import org.amcgala.framework.shape.Line;
-import org.amcgala.framework.shape.util.CompositeShape;
+import org.amcgala.math.Vector3;
+import org.amcgala.math.Vector3d;
+import org.amcgala.shape.Line;
+import org.amcgala.shape.util.CompositeShape;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Math.*;

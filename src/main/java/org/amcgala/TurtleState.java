@@ -1,6 +1,6 @@
 package org.amcgala;
 
-import org.amcgala.framework.math.Vector3;
+import org.amcgala.math.Vector3;
 
 /**
  * Der Zustand (Position, Ausrichtung) einer Turtle. Diese Klasse wird dafür verwendet, um die notwendigen Zustandsvariablen

@@ -1,16 +1,16 @@
 package org.amcgala;
 
 import com.google.common.eventbus.EventBus;
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.camera.SimplePerspectiveCamera;
-import org.amcgala.framework.event.InputHandler;
-import org.amcgala.framework.math.Vector3d;
-import org.amcgala.framework.raytracer.RGBColor;
-import org.amcgala.framework.scenegraph.DefaultSceneGraph;
-import org.amcgala.framework.scenegraph.Node;
-import org.amcgala.framework.scenegraph.SceneGraph;
-import org.amcgala.framework.scenegraph.transform.Transformation;
-import org.amcgala.framework.shape.Shape;
+import org.amcgala.camera.Camera;
+import org.amcgala.camera.SimplePerspectiveCamera;
+import org.amcgala.event.InputHandler;
+import org.amcgala.math.Vector3d;
+import org.amcgala.raytracer.RGBColor;
+import org.amcgala.scenegraph.DefaultSceneGraph;
+import org.amcgala.scenegraph.Node;
+import org.amcgala.scenegraph.SceneGraph;
+import org.amcgala.scenegraph.transform.Transformation;
+import org.amcgala.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +21,7 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * Ein {@link Scene} Objekt verwaltet alle Objekte und den dazugehörigen {@link org.amcgala.framework.scenegraph.DefaultSceneGraph},
+ * Ein {@link Scene} Objekt verwaltet alle Objekte und den dazugehörigen {@link org.amcgala.scenegraph.DefaultSceneGraph},
  * der über die Klasse {@link org.amcgala.Framework} dargestellt werden kann.
  * Folgende Objekte werden von jeder Szene selbstständig verwaltet und beim Laden durch das Framework zur Darstellung
  * verwendet:
@@ -62,7 +62,7 @@ public class Scene {
     }
 
     /**
-     * Fügt das AbstractShape dem Rootknoten des {@link org.amcgala.framework.scenegraph.DefaultSceneGraph} hinzu.
+     * Fügt das AbstractShape dem Rootknoten des {@link org.amcgala.scenegraph.DefaultSceneGraph} hinzu.
      *
      * @param shape das hinzuzufügende Objekt
      */
@@ -72,7 +72,7 @@ public class Scene {
     }
 
     /**
-     * Fügt dem Rootknoten des {@link org.amcgala.framework.scenegraph.DefaultSceneGraph} ein {@link org.amcgala.framework.scenegraph.Node} hinzu.
+     * Fügt dem Rootknoten des {@link org.amcgala.scenegraph.DefaultSceneGraph} ein {@link org.amcgala.scenegraph.Node} hinzu.
      *
      * @param node der neue Knoten
      */
@@ -126,7 +126,7 @@ public class Scene {
     }
 
     /**
-     * Fügt dem root {@link org.amcgala.framework.scenegraph.Node} des {@link org.amcgala.framework.scenegraph.SceneGraph} eine Transformation hinzu,
+     * Fügt dem root {@link org.amcgala.scenegraph.Node} des {@link org.amcgala.scenegraph.SceneGraph} eine Transformation hinzu,
      *
      * @param transformation die Transformation, die hinzugefügt werden soll
      */
@@ -145,7 +145,7 @@ public class Scene {
     }
 
     /**
-     * Ändert die von der Szene verwendete {@link org.amcgala.framework.camera.Camera}.
+     * Ändert die von der Szene verwendete {@link org.amcgala.camera.Camera}.
      *
      * @param camera die neue Kamera
      */
