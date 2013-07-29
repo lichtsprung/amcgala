@@ -137,4 +137,9 @@ public interface SceneGraph {
      */
     Collection<Shape> getShapes();
 
+    /**
+     * Entfernt alle Shapes aus dem Scenegraph.
+     */
+    void removeShapes();
+
 }

@@ -303,4 +303,8 @@ public final class Node implements Updatable {
             shape.updateBoundingBox(transform);
         }
     }
+
+    public void removeShapes() {
+        shapes.clear();
+    }
 }

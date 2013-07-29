@@ -20,7 +20,7 @@ public class ExampleStateLogger extends StateLoggerAgent {
 
     @Override
     public void onUpdate(Set<World.CellWithIndex> cells, Set<Agent.AgentState> agents) {
-
+        scene.removeShapes();
         log.info("Start agents");
         for (Agent.AgentState s : agents) {
             Point p = new Point(s.position().index().x(), s.position().index().y(), -1);

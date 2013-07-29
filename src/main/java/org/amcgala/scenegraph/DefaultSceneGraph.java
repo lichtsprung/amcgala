@@ -183,4 +183,11 @@ public class DefaultSceneGraph implements SceneGraph {
     public Collection<Shape> getShapes() {
         return shapes.values();
     }
+
+    @Override
+    public void removeShapes() {
+        for (Node node : nodes.values()) {
+            node.removeShapes();
+        }
+    }
 }

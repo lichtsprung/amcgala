@@ -286,7 +286,7 @@ public class Scene {
         return sceneGraph.getShapes();
     }
 
-    public void clear() {
-        sceneGraph = new DefaultSceneGraph();
+    public void removeShapes() {
+        sceneGraph.removeShapes();
     }
 }
