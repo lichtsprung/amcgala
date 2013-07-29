@@ -1,9 +1,12 @@
 package org.amcgala.agents;
 
+import akka.actor.Actor;
 import akka.actor.ActorSelection;
+import akka.actor.Props;
 import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
+import akka.japi.Creator;
 
 /**
  * An Agent
@@ -16,10 +19,15 @@ public abstract class AmcgalaAgent extends UntypedActor {
     protected LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
     protected Agent.AgentState currentState;
+    protected World.Index initialIndex;
 
     // TODO Shouldn't be hardcoded!
     private ActorSelection simulation = getContext().system().actorSelection("akka.tcp://Simulator@localhost:2552/user/simulation");
 
+
+    public AmcgalaAgent(World.Index initialIndex) {
+        this.initialIndex = initialIndex;
+    }
 
     /**
      * User overridable callback.
@@ -30,7 +38,11 @@ public abstract class AmcgalaAgent extends UntypedActor {
      */
     @Override
     public void preStart() throws Exception {
-        simulation.tell(Simulation.Register$.MODULE$, self());
+        if (initialIndex == World$.MODULE$.RandomIndex()) {
+            simulation.tell(Simulation.RegisterWithRandomIndex$.MODULE$, self());
+        } else {
+            simulation.tell(new Simulation.Register(initialIndex), self());
+        }
     }
 
     /**
@@ -48,5 +60,27 @@ public abstract class AmcgalaAgent extends UntypedActor {
         }
     }
 
+    public void spawnChild(final Class<? extends AmcgalaAgent> childClass, final World.Index index) {
+        Props props = Props.create(new AmcgalaAgentCreator(childClass, index));
+        context().actorOf(props);
+    }
+
     abstract public Agent.AgentMessage onUpdate(Simulation.SimulationUpdate update);
+
+    static class AmcgalaAgentCreator implements Creator<Actor> {
+        Class<? extends AmcgalaAgent> childClass;
+        World.Index index;
+
+        AmcgalaAgentCreator(Class<? extends AmcgalaAgent> childClass, World.Index index) {
+            this.childClass = childClass;
+            this.index = index;
+        }
+
+        public Actor create() throws Exception {
+            return childClass.getConstructor(World.Index.class).newInstance(index);
+        }
+
+    }
 }
+
+

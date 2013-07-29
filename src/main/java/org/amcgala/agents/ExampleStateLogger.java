@@ -1,10 +1,12 @@
 package org.amcgala.agents;
 
+import akka.actor.Actor;
+import akka.japi.Creator;
 import org.amcgala.Scene;
 import org.amcgala.shape.Point;
 
 import java.awt.*;
-import java.util.Set;
+import java.util.Map;
 
 /**
  *
@@ -19,14 +21,20 @@ public class ExampleStateLogger extends StateLoggerAgent {
 
 
     @Override
-    public void onUpdate(Set<World.CellWithIndex> cells, Set<Agent.AgentState> agents) {
+    public void onUpdate(Map<World.Index, World.Cell> cells, Map<Integer, Agent.AgentState> agents) {
         scene.removeShapes();
-        log.info("Start agents");
-        for (Agent.AgentState s : agents) {
-            Point p = new Point(s.position().index().x(), s.position().index().y(), -1);
+        for (Agent.AgentState s : agents.values()) {
+            Point p = new Point(s.position().x(), s.position().y(), -1);
             p.setColor(Color.RED);
             scene.addShape(p);
         }
-        log.info("end agents");
+    }
+
+    static class StateLoggerCreator implements Creator<Actor> {
+
+        @Override
+        public Actor create() throws Exception {
+            return new ExampleStateLogger();
+        }
     }
 }

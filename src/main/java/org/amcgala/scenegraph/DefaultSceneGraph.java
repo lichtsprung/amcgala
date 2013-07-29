@@ -189,5 +189,6 @@ public class DefaultSceneGraph implements SceneGraph {
         for (Node node : nodes.values()) {
             node.removeShapes();
         }
+        shapes.clear();
     }
 }
