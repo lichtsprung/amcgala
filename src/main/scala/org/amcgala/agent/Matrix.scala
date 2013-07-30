@@ -1,4 +1,4 @@
-package org.amcgala.agents
+package org.amcgala.agent
 
 import org.ejml.simple.SimpleMatrix
 import org.ejml.ops.{MatrixVisualization, MatrixFeatures}
@@ -86,7 +86,7 @@ object Matrix {
     m
   }
 
-  private[agents] def apply(sm: SimpleMatrix) = {
+  private[agent] def apply(sm: SimpleMatrix) = {
     val m = new Matrix()
     m.sm = sm
     m

@@ -1,8 +1,11 @@
-package org.amcgala.agents;
+package org.amcgala.testing.agent;
 
 import akka.actor.Actor;
 import akka.japi.Creator;
 import org.amcgala.Scene;
+import org.amcgala.agent.Agent;
+import org.amcgala.agent.StateLoggerAgent;
+import org.amcgala.agent.World;
 import org.amcgala.shape.Point;
 
 import java.awt.*;

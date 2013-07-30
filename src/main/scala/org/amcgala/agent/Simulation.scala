@@ -1,13 +1,13 @@
-package org.amcgala.agents
+package org.amcgala.agent
 
 import akka.actor.{Props, ActorLogging, ActorRef, Actor}
-import org.amcgala.agents.Simulation._
+import org.amcgala.agent.Simulation._
 import scala.util.Random
-import org.amcgala.agents.World.{WorldInfo, CellWithIndex, Index, Cell}
-import org.amcgala.agents.Agent.MoveTo
-import org.amcgala.agents.Agent.AgentState
-import org.amcgala.agents.Agent.ChangeValue
-import org.amcgala.agents.Simulation.SimulationUpdate
+import org.amcgala.agent.World.{WorldInfo, CellWithIndex, Index, Cell}
+import org.amcgala.agent.Agent.MoveTo
+import org.amcgala.agent.Agent.AgentState
+import org.amcgala.agent.Agent.ChangeValue
+import org.amcgala.agent.Simulation.SimulationUpdate
 import scala.collection.JavaConversions._
 
 
@@ -35,7 +35,7 @@ object Simulation {
 
 
 /**
- * A [[org.amcgala.agents.Simulation]]
+ * A [[org.amcgala.agent.Simulation]]
  * <ul>ey
  * <li>manages all Cells in the Simulation</li>
  * <li>manages all living Agents in the Simulation</li>
@@ -61,13 +61,16 @@ class Simulation extends Actor with ActorLogging {
       agents = agents + (sender -> AgentState(sender.hashCode(), randomCell.index, randomCell.cell))
       log.debug("Registering new Actor at {}", randomCell)
       log.debug("Agents on this cell: {}", agents.filter(entry => entry._2 == randomCell).keySet)
+
     case Register(index) =>
       agents = agents + (sender -> AgentState(sender.hashCode(), index, world(index)))
       log.info("Registering new Actor at {}", index)
+
     case RegisterStateLogger if !agents.exists(e => e._1 == sender) =>
       sender ! SimulationState(world.worldInfo, agents.values.toList)
       stateLogger = stateLogger + sender
       log.info(s"Registered StateLoggers: $stateLogger")
+
     case Update =>
       agents map {
         case (ref, currentState) => {

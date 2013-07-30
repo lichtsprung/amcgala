@@ -1,4 +1,4 @@
-package org.amcgala.agents
+package org.amcgala.agent
 
 import org.scalatest.{Matchers, FlatSpec}
 

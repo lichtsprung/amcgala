@@ -1,4 +1,4 @@
-package org.amcgala.agents
+package org.amcgala.agent
 
 import com.typesafe.config.ConfigFactory
 import akka.actor.ActorSystem

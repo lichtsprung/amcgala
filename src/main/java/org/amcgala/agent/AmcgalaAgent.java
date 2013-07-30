@@ -1,4 +1,4 @@
-package org.amcgala.agents;
+package org.amcgala.agent;
 
 import akka.actor.Actor;
 import akka.actor.ActorSelection;
@@ -19,36 +19,27 @@ public abstract class AmcgalaAgent extends UntypedActor {
     protected LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
     protected Agent.AgentState currentState;
-    protected World.Index initialIndex;
+    protected World.Index startPosition;
 
     // TODO Shouldn't be hardcoded!
     private ActorSelection simulation = getContext().system().actorSelection("akka.tcp://Simulator@localhost:2552/user/simulation");
 
 
-    public AmcgalaAgent(World.Index initialIndex) {
-        this.initialIndex = initialIndex;
+    public AmcgalaAgent(World.Index startPosition) {
+        this.startPosition = startPosition;
     }
 
-    /**
-     * User overridable callback.
-     * <p/>
-     * Is called when an Actor is started.
-     * Actor are automatically started asynchronously when created.
-     * Empty default implementation.
-     */
+
     @Override
     public void preStart() throws Exception {
-        if (initialIndex == World$.MODULE$.RandomIndex()) {
+        if (startPosition == World$.MODULE$.RandomIndex()) {
             simulation.tell(Simulation.RegisterWithRandomIndex$.MODULE$, self());
         } else {
-            simulation.tell(new Simulation.Register(initialIndex), self());
+            simulation.tell(new Simulation.Register(startPosition), self());
         }
     }
 
-    /**
-     * To be implemented by concrete UntypedActor, this defines the behavior of the
-     * UntypedActor.
-     */
+
     @Override
     public void onReceive(Object message) throws Exception {
         if (message instanceof Simulation.SimulationUpdate) {

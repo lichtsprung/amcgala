@@ -1,4 +1,4 @@
-package org.amcgala.agents;
+package org.amcgala.agent;
 
 import akka.actor.ActorSelection;
 import akka.actor.UntypedActor;
@@ -45,8 +45,6 @@ public abstract class StateLoggerAgent extends UntypedActor {
     public void onReceive(Object message) throws Exception {
         if (message instanceof Simulation.SimulationState) {
             Simulation.SimulationState state = (Simulation.SimulationState) message;
-            log.info("new state!");
-
 
             for (Tuple2<World.Index, World.Cell> entry : state.worldInfo().cells()) {
                 cells.put(entry._1(), entry._2());
@@ -56,15 +54,14 @@ public abstract class StateLoggerAgent extends UntypedActor {
                 agents.put(as.id(), as);
             }
 
-            log.info("Init finished");
-
             onUpdate(cells, agents);
         } else if (message instanceof Simulation.SimulationStateUpdate) {
-            log.info("Update...");
+
             Simulation.SimulationStateUpdate state = (Simulation.SimulationStateUpdate) message;
             for (Agent.AgentState as : state.agents()) {
                 agents.put(as.id(), as);
             }
+
             for (Tuple2<World.Index, World.Cell> entry : state.changedCells()) {
                 cells.put(entry._1(), entry._2());
             }

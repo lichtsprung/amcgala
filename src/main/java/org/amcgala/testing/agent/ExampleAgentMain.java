@@ -1,6 +1,7 @@
-package org.amcgala.agents;
+package org.amcgala.testing.agent;
 
 import org.amcgala.AgentClient;
+import org.amcgala.agent.World$;
 
 /**
  * Client Main for Java
