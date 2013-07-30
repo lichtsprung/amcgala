@@ -22,6 +22,11 @@ public abstract class StateLoggerAgent extends UntypedActor {
     private Map<World.Index, World.Cell> cells = new HashMap<>();
     private Map<Integer, Agent.AgentState> agents = new HashMap<>();
 
+    protected int worldWidth;
+    protected int worldHeight;
+    protected int scaleX;
+    protected int scaleY;
+
     // TODO Shouldn't be hardcoded!
     private ActorSelection simulation = getContext().system().actorSelection("akka.tcp://Simulator@localhost:2552/user/simulation");
 
@@ -45,6 +50,11 @@ public abstract class StateLoggerAgent extends UntypedActor {
     public void onReceive(Object message) throws Exception {
         if (message instanceof Simulation.SimulationState) {
             Simulation.SimulationState state = (Simulation.SimulationState) message;
+            log.info("Got State!");
+            worldWidth = state.worldInfo().width();
+            worldHeight = state.worldInfo().height();
+            scaleX = framework.getWidth() / worldWidth;
+            scaleY = framework.getHeight() / worldHeight;
 
             for (Tuple2<World.Index, World.Cell> entry : state.worldInfo().cells()) {
                 cells.put(entry._1(), entry._2());
@@ -54,6 +64,9 @@ public abstract class StateLoggerAgent extends UntypedActor {
                 agents.put(as.id(), as);
             }
 
+            log.info("Initialising...");
+            onInit();
+            log.info("Updating...");
             onUpdate(cells, agents);
         } else if (message instanceof Simulation.SimulationStateUpdate) {
 
@@ -71,6 +84,9 @@ public abstract class StateLoggerAgent extends UntypedActor {
             unhandled(message);
         }
     }
+
+
+    abstract public void onInit();
 
     abstract public void onUpdate(Map<World.Index, World.Cell> cells, Map<Integer, Agent.AgentState> agents);
 }

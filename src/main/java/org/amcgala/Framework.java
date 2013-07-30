@@ -406,4 +406,8 @@ public final class Framework {
     public DisplayList getCurrentState() {
         return displayList;
     }
+
+    public boolean hasActiveScene() {
+        return activeScene != null;
+    }
 }

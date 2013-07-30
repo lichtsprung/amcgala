@@ -76,13 +76,18 @@ public class SoftwareRenderer implements Renderer {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                framework.getActiveScene().getEventBus().post(new KeyPressedEvent(e));
+                if (framework.hasActiveScene()) {
+                    framework.getActiveScene().getEventBus().post(new KeyPressedEvent(e));
+                }
                 framework.getEventBus().post(new KeyPressedEvent(e));
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                framework.getActiveScene().getEventBus().post(new KeyReleasedEvent(e));
+                if (framework.hasActiveScene()) {
+                    framework.getActiveScene().getEventBus().post(new KeyReleasedEvent(e));
+                }
+
                 framework.getEventBus().post(new KeyReleasedEvent(e));
             }
         });
@@ -91,31 +96,46 @@ public class SoftwareRenderer implements Renderer {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                framework.getActiveScene().getEventBus().post(new MouseClickedEvent(e));
+                if (framework.hasActiveScene()) {
+                    framework.getActiveScene().getEventBus().post(new MouseClickedEvent(e));
+                }
+
                 framework.getEventBus().post(new MouseClickedEvent(e));
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                framework.getActiveScene().getEventBus().post(new MousePressedEvent(e));
+                if (framework.hasActiveScene()) {
+                    framework.getActiveScene().getEventBus().post(new MousePressedEvent(e));
+                }
+
                 framework.getEventBus().post(new MousePressedEvent(e));
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                framework.getActiveScene().getEventBus().post(new MouseReleasedEvent(e));
+                if (framework.hasActiveScene()) {
+                    framework.getActiveScene().getEventBus().post(new MouseReleasedEvent(e));
+                }
+
                 framework.getEventBus().post(new MouseReleasedEvent(e));
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                framework.getActiveScene().getEventBus().post(e);
+                if (framework.hasActiveScene()) {
+                    framework.getActiveScene().getEventBus().post(e);
+                }
+
                 framework.getEventBus().post(e);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                framework.getActiveScene().getEventBus().post(e);
+                if (framework.hasActiveScene()) {
+                    framework.getActiveScene().getEventBus().post(e);
+                }
+
                 framework.getEventBus().post(e);
             }
         });
@@ -124,13 +144,19 @@ public class SoftwareRenderer implements Renderer {
 
             @Override
             public void mouseDragged(MouseEvent e) {
-                framework.getActiveScene().getEventBus().post(e);
+                if (framework.hasActiveScene()) {
+                    framework.getActiveScene().getEventBus().post(e);
+                }
+
                 framework.getEventBus().post(e);
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                framework.getActiveScene().getEventBus().post(e);
+                if (framework.hasActiveScene()) {
+                    framework.getActiveScene().getEventBus().post(e);
+                }
+
                 framework.getEventBus().post(e);
             }
         });
@@ -139,7 +165,10 @@ public class SoftwareRenderer implements Renderer {
 
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                framework.getActiveScene().getEventBus().post(e);
+                if (framework.hasActiveScene()) {
+                    framework.getActiveScene().getEventBus().post(e);
+                }
+
                 framework.getEventBus().post(e);
             }
         });

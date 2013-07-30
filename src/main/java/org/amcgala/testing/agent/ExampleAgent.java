@@ -22,7 +22,7 @@ public class ExampleAgent extends AmcgalaAgent {
     public Agent.AgentMessage onUpdate(Simulation.SimulationUpdate update) {
         if (r.nextBoolean()) {
 
-            if (r.nextDouble() < 0.01) {
+            if (r.nextDouble() < 0.0001) {
                 spawnChild(this.getClass(), currentState.position());
             }
             World.CellWithIndex cell = update.neighbours()[r.nextInt(update.neighbours().length)];
