@@ -86,11 +86,11 @@ public class CompositeShape extends AbstractShape implements InputHandler {
     }
 
     @Override
-    public DisplayList getDisplayList() {
-        DisplayList list = new DisplayList();
+    public DisplayList getDisplayList(DisplayList list) {
+
         for (Shape line : lines) {
             line.setColor(getColor());
-            list.add(line.getDisplayList());
+            line.getDisplayList(list);
         }
         return list;
     }

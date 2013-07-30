@@ -96,17 +96,16 @@ public class Triangle extends AbstractShape {
 
 
     @Override
-    public DisplayList getDisplayList() {
-        final DisplayList displayList = new DisplayList();
+    public DisplayList getDisplayList(DisplayList list) {
         if (fill) {
             if (Framework.currentMode == FrameworkMode.GL) {
                 TrianglePrimitive trianglePrimitive = new TrianglePrimitive(a, b, c);
                 trianglePrimitive.color = getColor();
-                displayList.triangles.add(trianglePrimitive);
+                list.triangles.add(trianglePrimitive);
             } else if (Framework.currentMode == FrameworkMode.SOFTWARE) {
                 List<Line> scanLines = scanline();
                 for (Line l : scanLines) {
-                    displayList.add(l.getDisplayList());
+                    l.getDisplayList(list);
                 }
             }
 
@@ -117,10 +116,10 @@ public class Triangle extends AbstractShape {
             l1.color = getColor();
             l2.color = getColor();
             l3.color = getColor();
-            displayList.lines.add(l1);
-            displayList.lines.add(l2);
-            displayList.lines.add(l3);
+            list.lines.add(l1);
+            list.lines.add(l2);
+            list.lines.add(l3);
         }
-        return displayList;
+        return list;
     }
 }

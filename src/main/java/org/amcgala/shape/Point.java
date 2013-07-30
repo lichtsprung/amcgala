@@ -16,8 +16,8 @@ public class Point extends AbstractShape {
     }
 
     @Override
-    public DisplayList getDisplayList() {
-        DisplayList list = new DisplayList();
+    public DisplayList getDisplayList(DisplayList list) {
+        // DisplayList list = new DisplayList();
         p.color = getColor();
         list.points.add(p);
 

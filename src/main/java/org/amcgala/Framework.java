@@ -227,9 +227,12 @@ public final class Framework {
         }
         Collection<Shape> shapes = scenegraph.getShapes();
         displayList = new DisplayList();
+        long start = System.currentTimeMillis();
         for (Shape s : shapes) {
-            displayList.add(s.getDisplayList());
+            s.getDisplayList(displayList);
         }
+        long duration = System.currentTimeMillis() - start;
+        log.info("DisplayList nach {} Millisekunden.", duration);
     }
 
 

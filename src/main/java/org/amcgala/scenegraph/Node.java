@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -90,8 +89,8 @@ public final class Node implements Updatable {
         this.label = label;
         transformations = new ArrayList<Transformation>();
         transformations.add(new Translation(0, 0, 0));
-        shapes = new CopyOnWriteArrayList<Shape>();
-        children = new CopyOnWriteArrayList<Node>();
+        shapes = new ArrayList<>();
+        children = new ArrayList<>();
         boundingBox = new BoundingBox();
     }
 
@@ -117,9 +116,9 @@ public final class Node implements Updatable {
      */
     protected Node add(Node childNode) {
         childNode.parent = this;
-        synchronized (children) {
-            children.add(childNode);
-        }
+        //synchronized (children) {
+        children.add(childNode);
+        //}
         return this;
     }
 
@@ -153,10 +152,10 @@ public final class Node implements Updatable {
      * @return {@code true}, wenn es erfolgreich hinzugefügt wurde
      */
     protected boolean add(Shape shape) {
-        synchronized (shapes) {
-            shape.setNode(this);
-            shapes.add(shape);
-        }
+        // synchronized (shapes) {
+        shape.setNode(this);
+        shapes.add(shape);
+        //}
         return true;
     }
 
@@ -167,15 +166,15 @@ public final class Node implements Updatable {
      * @return true, wenn Knoten gefunden wurde
      */
     public Node getNode(String label) {
-        synchronized (children) {
-            if (this.label.equalsIgnoreCase(label)) {
-                return this;
-            } else {
-                for (Node n : children) {
-                    n.getNode(label);
-                }
+        //synchronized (children) {
+        if (this.label.equalsIgnoreCase(label)) {
+            return this;
+        } else {
+            for (Node n : children) {
+                n.getNode(label);
             }
         }
+        //}
         return null;
     }
 
@@ -185,12 +184,12 @@ public final class Node implements Updatable {
      * @param visitor der Visitor, der den Knoten besuchen soll
      */
     public void accept(Visitor visitor) {
-        synchronized (children) {
-            visitor.visit(this);
-            for (Node n : children) {
-                n.accept(visitor);
-            }
+        //synchronized (children) {
+        visitor.visit(this);
+        for (Node n : children) {
+            n.accept(visitor);
         }
+        //}
     }
 
     /**

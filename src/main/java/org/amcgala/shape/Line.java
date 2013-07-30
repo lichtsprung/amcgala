@@ -35,11 +35,10 @@ public class Line extends AbstractShape {
     }
 
     @Override
-    public DisplayList getDisplayList() {
+    public DisplayList getDisplayList(DisplayList list) {
         LinePrimitive linePrimitive = new LinePrimitive(a, b);
         linePrimitive.color = getColor();
-        final DisplayList l = new DisplayList();
-        l.lines.add(linePrimitive);
-        return l;
+        list.lines.add(linePrimitive);
+        return list;
     }
 }

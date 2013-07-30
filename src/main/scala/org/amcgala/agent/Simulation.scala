@@ -44,7 +44,7 @@ object Simulation {
 class Simulation extends Actor with ActorLogging {
   var agents = Map.empty[ActorRef, AgentState]
   var stateLogger = Set.empty[ActorRef]
-  val world = World(800, 600)
+  val world = World(400, 300)
   var changedCells = Map.empty[Index, Cell]
 
   override def preStart() {

@@ -27,23 +27,24 @@ public final class ExampleStateLogger extends StateLoggerAgent {
         log.info("scaleY: {}", scaleY);
         points = new Point[worldWidth][worldHeight];
         int counter = 0;
-
+        long start = System.nanoTime();
         for (int x = 0; x < points.length; x++) {
             for (int y = 0; y < points[0].length; y++) {
                 points[x][y] = new Point(x * scaleX, y * scaleY, -1);
                 points[x][y].setColor(Color.GREEN);
-                // TODO AddShape ist VIEL ZU langsam!
                 scene.addShape(points[x][y]);
                 counter++;
             }
-            log.info("{} % initialisiert", (counter / ((double) worldWidth * worldHeight)) * 100);
         }
+        double duration = (System.nanoTime() - start) / 1000000000;
+        log.info("Initialisierung in {} Sekunden", duration);
         framework.addScene(scene);
         log.info("Scene added");
     }
 
     @Override
     public void onUpdate(Map<World.Index, World.Cell> cells, Map<Integer, Agent.AgentState> agents) {
+        long start = System.currentTimeMillis();
         for (Map.Entry<World.Index, World.Cell> e : cells.entrySet()) {
             Point p = points[e.getKey().x()][e.getKey().y()];
             float c = 1f - (float) e.getValue().value();
@@ -53,7 +54,8 @@ public final class ExampleStateLogger extends StateLoggerAgent {
             Point p = points[s.position().x()][s.position().y()];
             p.setColor(Color.RED);
         }
-
+        double duration = (System.currentTimeMillis() - start);
+        log.debug("Update in {} Millisekunden", duration);
     }
 
     static class StateLoggerCreator implements Creator<Actor> {

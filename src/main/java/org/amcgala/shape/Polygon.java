@@ -65,12 +65,11 @@ public class Polygon extends AbstractShape {
 
 
     @Override
-    public DisplayList getDisplayList() {
+    public DisplayList getDisplayList(DisplayList list) {
         List<Triangle> tesselation = tesselatePolygon();
-        DisplayList displayList = new DisplayList();
         for (Triangle tri : tesselation) {
-            displayList.add(tri.getDisplayList());
+            tri.getDisplayList(list);
         }
-        return displayList;
+        return list;
     }
 }

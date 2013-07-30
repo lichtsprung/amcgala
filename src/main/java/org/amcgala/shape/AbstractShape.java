@@ -21,7 +21,6 @@ import org.amcgala.raytracer.Ray;
 import org.amcgala.raytracer.ShadingInfo;
 import org.amcgala.raytracer.material.Material;
 import org.amcgala.renderer.DisplayList;
-import org.amcgala.renderer.Renderer;
 import org.amcgala.scenegraph.Node;
 import org.amcgala.shape.util.bounds.BoundingBox;
 import org.slf4j.Logger;
@@ -120,13 +119,7 @@ public abstract class AbstractShape implements Shape {
     }
 
     @Override
-    public void render(Renderer renderer) {
-        // Leere Implementierung. Sollte von Unterklassen mit Inhalt gefüllt werden,
-        // wenn sie durch einen Renderer darstellbar sein sollen.
-    }
-
-    @Override
-    public DisplayList getDisplayList() {
-        return new DisplayList();
+    public DisplayList getDisplayList(DisplayList list) {
+        return list;
     }
 }
