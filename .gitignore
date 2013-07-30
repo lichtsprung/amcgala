@@ -14,7 +14,7 @@
 /.idea
 /.idea_modules
 
-# we use maven!
+# ant
 /build.xml
 
 # maven
@@ -36,4 +36,10 @@
 /*.log
 
 project/target
+
+# backups
+*.*~
+/*.*~
+*~
+/*~
 
