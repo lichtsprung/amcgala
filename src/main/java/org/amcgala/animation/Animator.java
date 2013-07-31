@@ -146,13 +146,13 @@ public class Animator extends Thread implements Runnable {
             }
 
             if (System.nanoTime() - fpsLastTime > 1000000000) {
-                log.info("FPS = {}", fpsCounter);
+                log.debug("FPS = {}", fpsCounter);
                 fpsCounter = 0;
                 fpsLastTime = System.nanoTime();
             }
 
             if (System.nanoTime() - upsLastTime > 1000000000) {
-                log.info("UPS = {}", upsCounter);
+                log.debug("UPS = {}", upsCounter);
                 upsCounter = 0;
                 upsLastTime = System.nanoTime();
             }

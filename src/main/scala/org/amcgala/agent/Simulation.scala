@@ -4,11 +4,12 @@ import akka.actor.{Props, ActorLogging, ActorRef, Actor}
 import org.amcgala.agent.Simulation._
 import scala.util.Random
 import org.amcgala.agent.World.{WorldInfo, CellWithIndex, Index, Cell}
-import org.amcgala.agent.Agent.MoveTo
-import org.amcgala.agent.Agent.AgentState
-import org.amcgala.agent.Agent.ChangeValue
+import org.amcgala.agent.Agent.{AgentID, MoveTo, AgentState, ChangeValue}
 import org.amcgala.agent.Simulation.SimulationUpdate
 import scala.collection.JavaConversions._
+import org.amcgala.agent.World.Cell.{OwnerPheromone, Pheromone}
+import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 
 object Simulation {
@@ -44,13 +45,12 @@ object Simulation {
 class Simulation extends Actor with ActorLogging {
   var agents = Map.empty[ActorRef, AgentState]
   var stateLogger = Set.empty[ActorRef]
-  val world = World(400, 300)
-  var changedCells = Map.empty[Index, Cell]
+  val world = World(200, 150)
+  val pingTime = 200 milliseconds
 
   override def preStart() {
-    import scala.concurrent.duration._
-    import scala.concurrent.ExecutionContext.Implicits.global
-    context.system.scheduler.schedule(5.seconds, 100.milliseconds, self, Update)
+
+    context.system.scheduler.schedule(5.seconds, pingTime, self, Update)
   }
 
   def receive: Actor.Receive = simulationLifeCycle orElse handleAgentMessages
@@ -58,12 +58,12 @@ class Simulation extends Actor with ActorLogging {
   def simulationLifeCycle: Actor.Receive = {
     case RegisterWithRandomIndex =>
       val randomCell = world.randomCell
-      agents = agents + (sender -> AgentState(sender.hashCode(), randomCell.index, randomCell.cell))
+      agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), randomCell.index, randomCell.cell))
       log.debug("Registering new Actor at {}", randomCell)
       log.debug("Agents on this cell: {}", agents.filter(entry => entry._2 == randomCell).keySet)
 
     case Register(index) =>
-      agents = agents + (sender -> AgentState(sender.hashCode(), index, world(index)))
+      agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, world(index)))
       log.info("Registering new Actor at {}", index)
 
     case RegisterStateLogger if !agents.exists(e => e._1 == sender) =>
@@ -72,6 +72,7 @@ class Simulation extends Actor with ActorLogging {
       log.info(s"Registered StateLoggers: $stateLogger")
 
     case Update =>
+      world.update()
       agents map {
         case (ref, currentState) => {
           val neighbourCells = world.neighbours(currentState.position)
@@ -80,21 +81,20 @@ class Simulation extends Actor with ActorLogging {
       }
       stateLogger map (logger => {
         log.debug(s"Sending SimulationStateUpdate to $logger")
-        logger ! SimulationStateUpdate(changedCells.toList, agents.values.toList)
+        logger ! SimulationStateUpdate(world.field.toList, agents.values.toList)
       })
-      changedCells = Map.empty[Index, Cell]
+
   }
 
   def handleAgentMessages: Actor.Receive = {
     case MoveTo(index) =>
       log.debug("Moving agent {} to {}", sender, index)
-      agents = agents + (sender -> AgentState(sender.hashCode(), index, world(index)))
+      world.addPheromone(index, OwnerPheromone(AgentID(sender.hashCode())))
+      agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, world(index)))
 
     case ChangeValue(value) =>
       agents.get(sender) map (c => {
-        world.change(c.position, Cell(value))
-        changedCells = changedCells + (c.position -> Cell(value))
-        log.debug("New value at {} is {}", c.position, world(c.position))
+        world.change(c.position, value)
       })
   }
 }
@@ -102,9 +102,22 @@ class Simulation extends Actor with ActorLogging {
 
 object World {
 
+  type PheromoneMap = Map[Pheromone, Double]
+
+  object Cell {
+
+
+    trait Pheromone {
+      val strength: Double
+    }
+
+    case class OwnerPheromone(id: AgentID, strength: Double = 100) extends Pheromone
+
+  }
+
   case class WorldInfo(width: Int, height: Int, cells: java.util.List[(Index, Cell)])
 
-  case class Cell(value: Double)
+  case class Cell(value: Double, pheromones: PheromoneMap)
 
   case class CellWithIndex(index: Index, cell: Cell)
 
@@ -119,12 +132,15 @@ object World {
     new World {
       val width: Int = _width
       val height: Int = _height
+      val decayRate: Double = 0.75
+      val spreadRate: Double = 0.1
+
       var field: Map[Index, Cell] = Map.empty[Index, Cell]
 
 
       for (x <- 0 until width) {
         for (y <- 0 until height) {
-          field = field + (Index(x, y) -> Cell(0))
+          field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Double]))
         }
       }
 
@@ -145,6 +161,8 @@ object World {
 trait World {
   val width: Int
   val height: Int
+  val decayRate: Double
+  val spreadRate: Double
   var field: Map[Index, Cell]
   val neighbours: List[Index]
 
@@ -170,8 +188,16 @@ trait World {
     neighbourCells
   }
 
-  def change(index: Index, cell: Cell) = {
-    field = field + (index -> cell)
+  def change(index: Index, newValue: Double) = {
+    val c = field(index)
+    field = field + (index -> Cell(newValue, c.pheromones))
+  }
+
+  def addPheromone(index: Index, pheromone: Pheromone) = {
+    val c = field(index)
+    val nv = pheromone.strength + c.pheromones.getOrElse(pheromone, 0.0)
+    val pheromones = c.pheromones + (pheromone -> nv)
+    field = field + (index -> Cell(c.value, pheromones))
   }
 
   def apply(index: Index) = {
@@ -181,9 +207,44 @@ trait World {
   def toList: List[CellWithIndex] = (for (entry <- field) yield CellWithIndex(entry._1, entry._2)).toList
 
   def worldInfo: WorldInfo = WorldInfo(width, height, field.toList)
+
+  def update(): Unit = {
+    var newField = Map.empty[Index, Cell]
+
+    field map {
+      e =>
+        val n = neighbours(e._1) // neighbours of current cell
+      var currentCellPheromones = newField.getOrElse(e._1, Cell(0, Map.empty[Pheromone, Double])).pheromones // already updated pheromone values
+      val currentCellValue = field(e._1).value // value of current cell
+
+        e._2.pheromones map {
+          p =>
+            val decay = p._2 * decayRate // new value of this pheromone after decay
+          val sum = decay + currentCellPheromones.getOrElse(p._1, 0.0) // sum of values (this cell + this pheromone spread from neighbour cells)
+            if (sum > 0.3) {
+              currentCellPheromones = currentCellPheromones + (p._1 -> math.min(100, sum))
+            }
+            val spread = p._2 * spreadRate
+            n map {
+              neighbour =>
+                val neighbourCell = newField.getOrElse(e._1, Cell(field(neighbour.index).value, Map.empty[Pheromone, Double]))
+                var neighbourPheromones = neighbourCell.pheromones
+                val sum = spread + neighbourPheromones.getOrElse(p._1, 0.0)
+                if (sum > 0.3) {
+                  neighbourPheromones = neighbourPheromones + (p._1 -> math.min(100, sum))
+                }
+                newField = newField + (neighbour.index -> Cell(field(neighbour.index).value, neighbourPheromones))
+            }
+        }
+        newField = newField + (e._1 -> Cell(currentCellValue, currentCellPheromones))
+    }
+    field = newField
+  }
 }
 
 object Agent {
+
+  case class AgentID(id: Int)
 
   sealed trait AgentMessage
 
@@ -191,6 +252,6 @@ object Agent {
 
   case class ChangeValue(newValue: Double) extends AgentMessage
 
-  case class AgentState(id: Int, position: Index, cell: Cell)
+  case class AgentState(id: AgentID, position: Index, cell: Cell)
 
 }

@@ -20,7 +20,7 @@ public abstract class StateLoggerAgent extends UntypedActor {
     protected final Framework framework = Framework.getInstance(FrameworkMode.SOFTWARE);
 
     private Map<World.Index, World.Cell> cells = new HashMap<>();
-    private Map<Integer, Agent.AgentState> agents = new HashMap<>();
+    private Map<Agent.AgentID, Agent.AgentState> agents = new HashMap<>();
 
     protected int worldWidth;
     protected int worldHeight;
@@ -75,6 +75,7 @@ public abstract class StateLoggerAgent extends UntypedActor {
                 agents.put(as.id(), as);
             }
 
+            cells.clear();
             for (Tuple2<World.Index, World.Cell> entry : state.changedCells()) {
                 cells.put(entry._1(), entry._2());
             }
@@ -88,5 +89,5 @@ public abstract class StateLoggerAgent extends UntypedActor {
 
     abstract public void onInit();
 
-    abstract public void onUpdate(Map<World.Index, World.Cell> cells, Map<Integer, Agent.AgentState> agents);
+    abstract public void onUpdate(Map<World.Index, World.Cell> cells, Map<Agent.AgentID, Agent.AgentState> agents);
 }
