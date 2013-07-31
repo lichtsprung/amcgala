@@ -15,14 +15,12 @@
 package org.amcgala.shape;
 
 import org.amcgala.animation.Animation;
-import org.amcgala.math.Matrix;
 import org.amcgala.raytracer.RGBColor;
 import org.amcgala.raytracer.Ray;
 import org.amcgala.raytracer.ShadingInfo;
 import org.amcgala.raytracer.material.Material;
 import org.amcgala.renderer.DisplayList;
 import org.amcgala.scenegraph.Node;
-import org.amcgala.shape.util.bounds.BoundingBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +37,6 @@ public abstract class AbstractShape implements Shape {
     private Animation animation;
     private Node node;
     protected String label = getClass().getSimpleName() + " - " + System.nanoTime();
-    protected BoundingBox boundingBox = new BoundingBox();
     protected RGBColor color = new RGBColor(0, 0, 0);
     protected Material material = new Material();
 
@@ -72,10 +69,6 @@ public abstract class AbstractShape implements Shape {
         }
     }
 
-    @Override
-    public void updateBoundingBox(Matrix transform) {
-        boundingBox.updateBox(transform);
-    }
 
     @Override
     public void setAnimation(Animation animation) {
@@ -95,11 +88,6 @@ public abstract class AbstractShape implements Shape {
     @Override
     public void setNode(Node node) {
         this.node = node;
-    }
-
-    @Override
-    public BoundingBox getBoundingBox() {
-        return boundingBox;
     }
 
 

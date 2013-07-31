@@ -18,6 +18,7 @@ import org.amcgala.Framework;
 import org.amcgala.event.*;
 import org.amcgala.shape.primitives.LinePrimitive;
 import org.amcgala.shape.primitives.PointPrimitive;
+import org.amcgala.shape.primitives.RectanglePrimitive;
 
 import javax.swing.*;
 import java.awt.*;
@@ -209,12 +210,17 @@ public class SoftwareRenderer implements Renderer {
         // gezeichnet.
         for (LinePrimitive line : list.lines) {
             g.setColor(line.color);
-            g.drawLine((int) line.vertices.get(0).x, (int) line.vertices.get(0).y, (int) line.vertices.get(1).x, (int) line.vertices.get(1).y);
+            g.drawLine((int) line.v0.x, (int) line.v0.y, (int) line.v1.x, (int) line.v1.y);
         }
 
         for (PointPrimitive point : list.points) {
             g.setColor(point.color);
-            g.fillRect((int) point.vertices.get(0).x, (int) point.vertices.get(0).y, 1, 1);
+            g.fillRect((int) point.point.x, (int) point.point.y, 1, 1);
+        }
+
+        for (RectanglePrimitive r : list.rects) {
+            g.setColor(r.color);
+            g.fillRect((int) r.v0.x, (int) r.v0.y, (int) r.width, (int) r.height);
         }
 
 

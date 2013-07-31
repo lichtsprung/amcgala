@@ -296,10 +296,10 @@ public final class Node implements Updatable {
         for (Transformation t : transformations) {
             t.update();
         }
-        Matrix transform = getTransformMatrix();
+//        Matrix transform = getTransformMatrix();
         for (Shape shape : shapes) {
             shape.update();
-            shape.updateBoundingBox(transform);
+//            shape.updateBoundingBox(transform);
         }
     }
 

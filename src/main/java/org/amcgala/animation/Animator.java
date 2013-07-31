@@ -123,18 +123,19 @@ public class Animator extends Thread implements Runnable {
         while (running) {
             double now = System.nanoTime();
             unprocessed += (now - last) / upsTimer.getTimePerFrame();
+
             fpsTimer.start();
             while (unprocessed > 0) {
                 upsCounter++;
                 unprocessed--;
-
                 framework.update();
                 last = System.nanoTime();
                 render = true;
             }
 
-            fpsCounter++;
+
             if (render) {
+                fpsCounter++;
                 renderer.show();
                 render = false;
             }
@@ -145,13 +146,13 @@ public class Animator extends Thread implements Runnable {
             }
 
             if (System.nanoTime() - fpsLastTime > 1000000000) {
-                log.debug("FPS = {}", fpsCounter);
+                log.info("FPS = {}", fpsCounter);
                 fpsCounter = 0;
                 fpsLastTime = System.nanoTime();
             }
 
             if (System.nanoTime() - upsLastTime > 1000000000) {
-                log.debug("UPS = {}", upsCounter);
+                log.info("UPS = {}", upsCounter);
                 upsCounter = 0;
                 upsLastTime = System.nanoTime();
             }

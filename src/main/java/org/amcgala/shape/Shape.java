@@ -16,13 +16,11 @@ package org.amcgala.shape;
 
 import org.amcgala.animation.Animation;
 import org.amcgala.animation.Updatable;
-import org.amcgala.math.Matrix;
 import org.amcgala.raytracer.Hittable;
 import org.amcgala.raytracer.RGBColor;
 import org.amcgala.raytracer.material.Material;
 import org.amcgala.renderer.Renderable;
 import org.amcgala.scenegraph.Node;
-import org.amcgala.shape.util.bounds.BoundingBox;
 
 import java.awt.*;
 
@@ -84,21 +82,6 @@ public interface Shape extends Updatable, Renderable, Hittable {
      * @param node der neue Knoten
      */
     void setNode(Node node);
-
-    /**
-     * Gibt die {@link BoundingBox} des Shapes zurück.
-     *
-     * @return die BoundingBox
-     */
-    BoundingBox getBoundingBox();
-
-    /**
-     * Aktualisiert die {@link BoundingBox} eines Shapes durch Anwendung aller Transformationen aus dem {@link org.amcgala.scenegraph.SceneGraph},
-     * die sich auf dieses Shape auswirken.
-     *
-     * @param transform die Transformationsmatrix
-     */
-    void updateBoundingBox(Matrix transform);
 
 
     /**

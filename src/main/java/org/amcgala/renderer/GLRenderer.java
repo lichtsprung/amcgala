@@ -38,16 +38,13 @@ public class GLRenderer implements Renderer {
             frame.add(canvas);
             frame.setVisible(true);
 
-//            TODO Besser wäre Display.destroy aufzurufen.
-//            Display.destroy muss vom selben Thread wie der OpenGL Context aufgerufen werden. Wir befinden uns hier
-//            aber im AWT Event Thread und bekommen bei Display.destroy eine Exception geworfen. Könnte umgegangen werden,
-//            wenn dem Renderer von außen eine Nachricht geschickt wird, sich selbst zu beenden.
             frame.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
                     System.exit(0);
                 }
             });
+
             Display.setParent(canvas);
             Display.setVSyncEnabled(true);
             Display.setInitialBackground(0.95f, 0.95f, 0.95f);
@@ -89,28 +86,29 @@ public class GLRenderer implements Renderer {
         glBegin(GL_LINES);
         for (LinePrimitive line : list.lines) {
             setColor(line.color);
-            for (Vertex3f v : line.vertices) {
-                glVertex3f(v.x, v.y, v.z);
-            }
+            glVertex3f(line.v0.x, line.v0.y, line.v0.z);
+            glVertex3f(line.v1.x, line.v1.y, line.v1.z);
         }
         glEnd();
 
         glBegin(GL_TRIANGLES);
         for (TrianglePrimitive triangle : list.triangles) {
             setColor(triangle.color);
-            for (Vertex3f v : triangle.vertices) {
-                glVertex3f(v.x, v.y, v.z);
-            }
+            glVertex3f(triangle.v0.x, triangle.v0.y, triangle.v0.z);
+            glVertex3f(triangle.v1.x, triangle.v1.y, triangle.v1.z);
+            glVertex3f(triangle.v2.x, triangle.v2.y, triangle.v2.z);
         }
         glEnd();
 
         glBegin(GL_POINTS);
         for (PointPrimitive point : list.points) {
             setColor(point.color);
-            Vertex3f v = point.vertices.get(0);
+            Vertex3f v = point.point;
             glVertex3f(v.x, v.y, v.z);
         }
         glEnd();
+
+        // TODO Quads wieder hinzufuegen.
 
         Display.update();
     }

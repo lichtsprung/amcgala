@@ -86,15 +86,15 @@ public final class Framework {
         this.height = height;
 
 
-        frameworkInputHandlers = new HashMap<String, InputHandler>();
+        frameworkInputHandlers = new HashMap<>();
         frameworkEventBus = new EventBus("Framework Input Event Bus");
 
         sceneEventBus = new EventBus();
 
-        visitors = new ArrayList<Visitor>(10);
+        visitors = new ArrayList<>(10);
         scenegraph = new DefaultSceneGraph();
 
-        scenes = new HashMap<String, Scene>();
+        scenes = new HashMap<>();
 
         updateVisitor = new UpdateVisitor();
         visitors.add(updateVisitor);
@@ -217,22 +217,39 @@ public final class Framework {
      * Visitor den Szenengraphen besuchen.
      */
     public void update() {
+        checkCamera();
+        checkTracing();
+        Collection<Shape> shapes = scenegraph.getShapes();
+
+        displayList = new DisplayList();
+        updateDisplayList(shapes);
+    }
+
+    private void updateDisplayList(Collection<Shape> shapes) {
+//        Shape[] ss = shapes.toArray(new Shape[0]);
+//        for (int i = 0; i < ss.length; i++) {
+//            Shape s = ss[i];
+//            s.getDisplayList(displayList);
+//        }
+
+        for (Shape s : shapes) {
+            s.getDisplayList(displayList);
+        }
+    }
+
+
+    private void checkTracing() {
+        if (tracing) {
+            raytracer.traceScene();
+        }
+    }
+
+    private void checkCamera() {
         if (camera != null && !paused) {
             for (Visitor v : visitors) {
                 scenegraph.accept(v);
             }
         }
-        if (tracing) {
-            raytracer.traceScene();
-        }
-        Collection<Shape> shapes = scenegraph.getShapes();
-        displayList = new DisplayList();
-        long start = System.currentTimeMillis();
-        for (Shape s : shapes) {
-            s.getDisplayList(displayList);
-        }
-        long duration = System.currentTimeMillis() - start;
-        log.info("DisplayList nach {} Millisekunden.", duration);
     }
 
 

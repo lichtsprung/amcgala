@@ -21,8 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -45,8 +45,8 @@ public class DefaultSceneGraph implements SceneGraph {
      */
     public DefaultSceneGraph() {
         root = new Node("root");
-        nodes = new ConcurrentHashMap<>();
-        shapes = new ConcurrentHashMap<>();
+        nodes = new HashMap<>();
+        shapes = new HashMap<>();
 
         nodes.put(root.getLabel(), root);
     }
