@@ -132,8 +132,9 @@ object World {
     new World {
       val width: Int = _width
       val height: Int = _height
-      val decayRate: Double = 0.75
-      val spreadRate: Double = 0.1
+      // TODO decayRate & spreadRate should be part of the pheromone!
+      val decayRate: Double = 0.66
+      val spreadRate: Double = 0.09
 
       var field: Map[Index, Cell] = Map.empty[Index, Cell]
 
