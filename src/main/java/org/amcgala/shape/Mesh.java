@@ -11,5 +11,4 @@ import java.util.List;
  */
 public class Mesh extends AbstractShape {
     private List<Triangle> triangleList;
-
 }

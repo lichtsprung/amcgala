@@ -48,9 +48,9 @@ class Simulation extends Actor with ActorLogging {
   val world = World(200, 150)
   val pingTime = 200 milliseconds
 
-  override def preStart() {
+  override def preStart(): Unit = {
 
-    context.system.scheduler.schedule(5.seconds, pingTime, self, Update)
+    context.system.scheduler.schedule(5 seconds, pingTime, self, Update)
   }
 
   def receive: Actor.Receive = simulationLifeCycle orElse handleAgentMessages
@@ -109,9 +109,11 @@ object World {
 
     trait Pheromone {
       val strength: Double
+      val decayRate: Double
+      val spreadRate: Double
     }
 
-    case class OwnerPheromone(id: AgentID, strength: Double = 100) extends Pheromone
+    case class OwnerPheromone(id: AgentID, strength: Double = 100, decayRate: Double = 0.66, spreadRate: Double = 0.09) extends Pheromone
 
   }
 
@@ -132,9 +134,6 @@ object World {
     new World {
       val width: Int = _width
       val height: Int = _height
-      // TODO decayRate & spreadRate should be part of the pheromone!
-      val decayRate: Double = 0.66
-      val spreadRate: Double = 0.09
 
       var field: Map[Index, Cell] = Map.empty[Index, Cell]
 
@@ -162,8 +161,6 @@ object World {
 trait World {
   val width: Int
   val height: Int
-  val decayRate: Double
-  val spreadRate: Double
   var field: Map[Index, Cell]
   val neighbours: List[Index]
 
@@ -220,12 +217,12 @@ trait World {
 
         e._2.pheromones map {
           p =>
-            val decay = p._2 * decayRate // new value of this pheromone after decay
+            val decay = p._2 * p._1.decayRate // new value of this pheromone after decay
           val sum = decay + currentCellPheromones.getOrElse(p._1, 0.0) // sum of values (this cell + this pheromone spread from neighbour cells)
             if (sum > 0.3) {
               currentCellPheromones = currentCellPheromones + (p._1 -> math.min(100, sum))
             }
-            val spread = p._2 * spreadRate
+            val spread = p._2 * p._1.spreadRate
             n map {
               neighbour =>
                 val neighbourCell = newField.getOrElse(e._1, Cell(field(neighbour.index).value, Map.empty[Pheromone, Double]))
