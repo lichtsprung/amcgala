@@ -102,24 +102,23 @@ class Simulation extends Actor with ActorLogging {
 
 object World {
 
-  type PheromoneMap = Map[Pheromone, Double]
+  type PheromoneMap = Map[Pheromone, Float]
 
   object Cell {
 
-
     trait Pheromone {
-      val strength: Double
-      val decayRate: Double
-      val spreadRate: Double
+      val strength: Float
+      val decayRate: Float
+      val spreadRate: Float
     }
 
-    case class OwnerPheromone(id: AgentID, strength: Double = 100, decayRate: Double = 0.66, spreadRate: Double = 0.09) extends Pheromone
+    case class OwnerPheromone(id: AgentID, strength: Float = 1f, decayRate: Float = 0.66f, spreadRate: Float = 0.09f) extends Pheromone
 
   }
 
   case class WorldInfo(width: Int, height: Int, cells: java.util.List[(Index, Cell)])
 
-  case class Cell(value: Double, pheromones: PheromoneMap)
+  case class Cell(value: Float, pheromones: PheromoneMap)
 
   case class CellWithIndex(index: Index, cell: Cell)
 
@@ -140,7 +139,7 @@ object World {
 
       for (x <- 0 until width) {
         for (y <- 0 until height) {
-          field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Double]))
+          field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Float]))
         }
       }
 
@@ -186,14 +185,14 @@ trait World {
     neighbourCells
   }
 
-  def change(index: Index, newValue: Double) = {
+  def change(index: Index, newValue: Float) = {
     val c = field(index)
     field = field + (index -> Cell(newValue, c.pheromones))
   }
 
   def addPheromone(index: Index, pheromone: Pheromone) = {
     val c = field(index)
-    val nv = pheromone.strength + c.pheromones.getOrElse(pheromone, 0.0)
+    val nv = pheromone.strength + c.pheromones.getOrElse(pheromone, 0.0f)
     val pheromones = c.pheromones + (pheromone -> nv)
     field = field + (index -> Cell(c.value, pheromones))
   }
@@ -212,24 +211,24 @@ trait World {
     field map {
       e =>
         val n = neighbours(e._1) // neighbours of current cell
-      var currentCellPheromones = newField.getOrElse(e._1, Cell(0, Map.empty[Pheromone, Double])).pheromones // already updated pheromone values
+      var currentCellPheromones = newField.getOrElse(e._1, Cell(0, Map.empty[Pheromone, Float])).pheromones // already updated pheromone values
       val currentCellValue = field(e._1).value // value of current cell
 
         e._2.pheromones map {
           p =>
             val decay = p._2 * p._1.decayRate // new value of this pheromone after decay
-          val sum = decay + currentCellPheromones.getOrElse(p._1, 0.0) // sum of values (this cell + this pheromone spread from neighbour cells)
-            if (sum > 0.3) {
-              currentCellPheromones = currentCellPheromones + (p._1 -> math.min(100, sum))
+          val sum = decay + currentCellPheromones.getOrElse(p._1, 0.0f) // sum of values (this cell + this pheromone spread from neighbour cells)
+            if (sum > 0.03) {
+              currentCellPheromones = currentCellPheromones + (p._1 -> math.min(1f, sum))
             }
             val spread = p._2 * p._1.spreadRate
             n map {
               neighbour =>
-                val neighbourCell = newField.getOrElse(e._1, Cell(field(neighbour.index).value, Map.empty[Pheromone, Double]))
+                val neighbourCell = newField.getOrElse(e._1, Cell(field(neighbour.index).value, Map.empty[Pheromone, Float]))
                 var neighbourPheromones = neighbourCell.pheromones
-                val sum = spread + neighbourPheromones.getOrElse(p._1, 0.0)
-                if (sum > 0.3) {
-                  neighbourPheromones = neighbourPheromones + (p._1 -> math.min(100, sum))
+                val sum = spread + neighbourPheromones.getOrElse(p._1, 0.0f)
+                if (sum > 0.03) {
+                  neighbourPheromones = neighbourPheromones + (p._1 -> math.min(1f, sum))
                 }
                 newField = newField + (neighbour.index -> Cell(field(neighbour.index).value, neighbourPheromones))
             }
@@ -248,7 +247,7 @@ object Agent {
 
   case class MoveTo(index: Index) extends AgentMessage
 
-  case class ChangeValue(newValue: Double) extends AgentMessage
+  case class ChangeValue(newValue: Float) extends AgentMessage
 
   case class AgentState(id: AgentID, position: Index, cell: Cell)
 

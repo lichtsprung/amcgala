@@ -22,13 +22,13 @@ public class ExampleAgent extends AmcgalaAgent {
     public Agent.AgentMessage onUpdate(Simulation.SimulationUpdate update) {
         if (r.nextBoolean()) {
 
-            if (r.nextDouble() < 0.0001) {
+            if (r.nextFloat() < 0.0001f) {
                 spawnChild(this.getClass(), currentState.position());
             }
             World.CellWithIndex cell = update.neighbours()[r.nextInt(update.neighbours().length)];
             return new Agent.MoveTo(cell.index());
         } else {
-            return new Agent.ChangeValue(r.nextDouble());
+            return new Agent.ChangeValue(r.nextFloat());
         }
 
     }
