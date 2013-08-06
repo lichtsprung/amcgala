@@ -20,6 +20,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     protected Agent.AgentState currentState;
     protected World.Index startPosition;
+    protected Agent.AgentID id = new Agent.AgentID(getSelf().hashCode());
 
     // TODO Shouldn't be hardcoded!
     private ActorSelection simulation = getContext().system().actorSelection("akka.tcp://Simulator@localhost:2552/user/simulation");
@@ -70,7 +71,6 @@ public abstract class AmcgalaAgent extends UntypedActor {
         public Actor create() throws Exception {
             return childClass.getConstructor(World.Index.class).newInstance(index);
         }
-
     }
 }
 

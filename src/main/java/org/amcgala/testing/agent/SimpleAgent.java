@@ -10,26 +10,27 @@ import java.util.Random;
 /**
  * Example Agent. Walks randomly across the field.
  */
-public class ExampleAgent extends AmcgalaAgent {
+public class SimpleAgent extends AmcgalaAgent {
     private Random r = new Random(System.nanoTime());
 
 
-    public ExampleAgent(World.Index startPosition) {
+    public SimpleAgent(World.Index startPosition) {
         super(startPosition);
     }
 
     @Override
     public Agent.AgentMessage onUpdate(Simulation.SimulationUpdate update) {
-        if (r.nextBoolean()) {
-
-            if (r.nextFloat() < 0.0001f) {
-                spawnChild(this.getClass(), currentState.position());
-            }
+        if (r.nextFloat() < 0.0001f) {
+            spawnChild(this.getClass(), currentState.position());
             World.CellWithIndex cell = update.neighbours()[r.nextInt(update.neighbours().length)];
             return new Agent.MoveTo(cell.index());
+        } else if (r.nextFloat() >= 0.0001f && r.nextFloat() < 0.8f) {
+            World.CellWithIndex cell = update.neighbours()[r.nextInt(update.neighbours().length)];
+            return new Agent.MoveTo(cell.index());
+        } else if (r.nextFloat() >= 0.8f && r.nextFloat() < 0.95f) {
+            return new Agent.ReleasePheromone(new Agent.OwnerPheromone(id, 1f, 0.66f, 0.09f));
         } else {
             return new Agent.ChangeValue(r.nextFloat());
         }
-
     }
 }

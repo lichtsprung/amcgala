@@ -6,7 +6,7 @@ import akka.actor.ActorSystem
 /**
  * The Simulation Server.
  */
-object Server extends App {
+class AgentServer {
   val config = ConfigFactory.load()
   val system = ActorSystem("Simulator", config.getConfig("simulation"))
 

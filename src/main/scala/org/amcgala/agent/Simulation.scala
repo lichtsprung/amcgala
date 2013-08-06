@@ -3,13 +3,22 @@ package org.amcgala.agent
 import akka.actor.{Props, ActorLogging, ActorRef, Actor}
 import org.amcgala.agent.Simulation._
 import scala.util.Random
-import org.amcgala.agent.World.{WorldInfo, CellWithIndex, Index, Cell}
-import org.amcgala.agent.Agent.{AgentID, MoveTo, AgentState, ChangeValue}
-import org.amcgala.agent.Simulation.SimulationUpdate
+import org.amcgala.agent.World.Cell
+import org.amcgala.agent.Agent._
 import scala.collection.JavaConversions._
-import org.amcgala.agent.World.Cell.{OwnerPheromone, Pheromone}
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
+import org.amcgala.agent.World.CellWithIndex
+import org.amcgala.agent.Agent.MoveTo
+import org.amcgala.agent.Agent.AgentState
+import org.amcgala.agent.World.Index
+import org.amcgala.agent.Simulation.Register
+import org.amcgala.agent.Simulation.SimulationStateUpdate
+import org.amcgala.agent.Simulation.SimulationState
+import org.amcgala.agent.Agent.ChangeValue
+import org.amcgala.agent.World.WorldInfo
+import org.amcgala.agent.Agent.AgentID
+import org.amcgala.agent.Simulation.SimulationUpdate
 
 
 object Simulation {
@@ -89,8 +98,10 @@ class Simulation extends Actor with ActorLogging {
   def handleAgentMessages: Actor.Receive = {
     case MoveTo(index) =>
       log.debug("Moving agent {} to {}", sender, index)
-      world.addPheromone(index, OwnerPheromone(AgentID(sender.hashCode())))
       agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, world(index)))
+
+    case ReleasePheromone(pheromone) =>
+      agents.get(sender) map (i => world.addPheromone(i.position, pheromone))
 
     case ChangeValue(value) =>
       agents.get(sender) map (c => {
@@ -103,18 +114,6 @@ class Simulation extends Actor with ActorLogging {
 object World {
 
   type PheromoneMap = Map[Pheromone, Float]
-
-  object Cell {
-
-    trait Pheromone {
-      val strength: Float
-      val decayRate: Float
-      val spreadRate: Float
-    }
-
-    case class OwnerPheromone(id: AgentID, strength: Float = 1f, decayRate: Float = 0.66f, spreadRate: Float = 0.09f) extends Pheromone
-
-  }
 
   case class WorldInfo(width: Int, height: Int, cells: java.util.List[(Index, Cell)])
 
@@ -192,7 +191,7 @@ trait World {
 
   def addPheromone(index: Index, pheromone: Pheromone) = {
     val c = field(index)
-    val nv = pheromone.strength + c.pheromones.getOrElse(pheromone, 0.0f)
+    val nv = math.min(1f, pheromone.strength + c.pheromones.getOrElse(pheromone, 0.0f))
     val pheromones = c.pheromones + (pheromone -> nv)
     field = field + (index -> Cell(c.value, pheromones))
   }
@@ -218,7 +217,7 @@ trait World {
           p =>
             val decay = p._2 * p._1.decayRate // new value of this pheromone after decay
           val sum = decay + currentCellPheromones.getOrElse(p._1, 0.0f) // sum of values (this cell + this pheromone spread from neighbour cells)
-            if (sum > 0.03) {
+            if (sum > 0.009) {
               currentCellPheromones = currentCellPheromones + (p._1 -> math.min(1f, sum))
             }
             val spread = p._2 * p._1.spreadRate
@@ -227,7 +226,7 @@ trait World {
                 val neighbourCell = newField.getOrElse(e._1, Cell(field(neighbour.index).value, Map.empty[Pheromone, Float]))
                 var neighbourPheromones = neighbourCell.pheromones
                 val sum = spread + neighbourPheromones.getOrElse(p._1, 0.0f)
-                if (sum > 0.03) {
+                if (sum > 0.009) {
                   neighbourPheromones = neighbourPheromones + (p._1 -> math.min(1f, sum))
                 }
                 newField = newField + (neighbour.index -> Cell(field(neighbour.index).value, neighbourPheromones))
@@ -241,6 +240,14 @@ trait World {
 
 object Agent {
 
+  trait Pheromone {
+    val strength: Float
+    val decayRate: Float
+    val spreadRate: Float
+  }
+
+  case class OwnerPheromone(id: AgentID, strength: Float = 1f, decayRate: Float = 0.66f, spreadRate: Float = 0.09f) extends Pheromone
+
   case class AgentID(id: Int)
 
   sealed trait AgentMessage
@@ -248,6 +255,8 @@ object Agent {
   case class MoveTo(index: Index) extends AgentMessage
 
   case class ChangeValue(newValue: Float) extends AgentMessage
+
+  case class ReleasePheromone(pheromone: Pheromone) extends AgentMessage
 
   case class AgentState(id: AgentID, position: Index, cell: Cell)
 
