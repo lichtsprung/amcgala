@@ -1,6 +1,8 @@
 import sbt._
 import Keys._
-import sbt._
+import sbtassembly.Plugin._
+import AssemblyKeys._
+
 
 object AmcgalaAgents extends Build {
 
@@ -30,7 +32,7 @@ object AmcgalaAgents extends Build {
     resolvers += Resolvers.sonatypeSnapshotRepo
   )
 
-  lazy val root = Project(id = "root", base = file("."), settings = projectSettings)
+  lazy val root = Project(id = "root", base = file("."), settings = projectSettings ++ assemblySettings)
 }
 
 

@@ -13,6 +13,6 @@ public class ExampleAgentMain {
         Thread.sleep(2000);
         new AgentClient(1, ExampleStateLogger.class);
         Thread.sleep(2000);
-        new AgentClient(50, SimpleAgent.class, World$.MODULE$.RandomIndex());
+        new AgentClient(10, SimpleAgent.class, World$.MODULE$.RandomIndex());
     }
 }

@@ -33,6 +33,7 @@ public final class ExampleStateLogger extends StateLoggerAgent {
             }
         }
 
+
         framework.addScene(scene);
     }
 

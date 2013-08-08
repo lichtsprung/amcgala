@@ -113,6 +113,9 @@ public class LindenmayerSystem {
         }
     }
 
+    /*
+    * Hier passiert was
+    */
     private void applyRules() {
         StringBuilder sb = new StringBuilder(100);
         for (int i = 0; i < level.level; i++) {
@@ -120,7 +123,7 @@ public class LindenmayerSystem {
                 sb.append(rules.applyReplacementRules(Character.toString(c)));
             }
             current = sb.toString();
-            sb = new StringBuilder(100);
+            sb = new StringBuilder();
         }
 
         for (char c : current.toCharArray()) {

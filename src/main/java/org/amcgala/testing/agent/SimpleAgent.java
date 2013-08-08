@@ -28,7 +28,7 @@ public class SimpleAgent extends AmcgalaAgent {
             World.CellWithIndex cell = update.neighbours()[r.nextInt(update.neighbours().length)];
             return new Agent.MoveTo(cell.index());
         } else if (r.nextFloat() >= 0.8f && r.nextFloat() < 0.95f) {
-            return new Agent.ReleasePheromone(new Agent.OwnerPheromone(id, 1f, 0.66f, 0.09f));
+            return new Agent.ReleasePheromone(new Agent.OwnerPheromone(id, 1f, 0.66f, 0.10f));
         } else {
             return new Agent.ChangeValue(r.nextFloat());
         }
