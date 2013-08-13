@@ -2,9 +2,9 @@ package org.amcgala.testing;
 
 import org.amcgala.Amcgala;
 import org.amcgala.Scene;
+import org.amcgala.raytracer.RGBColor;
 import org.amcgala.shape.Point;
 
-import java.awt.*;
 import java.util.Random;
 
 /**
@@ -16,7 +16,7 @@ public class HeavyLoadTest extends Amcgala {
         Random r = new Random(System.nanoTime());
         for (int i = 0; i < 1000000; i++) {
             Point p = new Point(r.nextInt(800), r.nextInt(600), 0);
-            p.setColor(new Color(r.nextFloat(), r.nextFloat(), r.nextFloat()));
+            p.setColor(new RGBColor(r.nextFloat(), r.nextFloat(), r.nextFloat()));
             scene.addShape(p);
         }
         framework.addScene(scene);

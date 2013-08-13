@@ -81,11 +81,11 @@ public class GLRenderer implements Renderer {
 
 
     @Override
-    public void show() {
+    public void render() {
         DisplayList list = framework.getCurrentState();
         glBegin(GL_LINES);
         for (LinePrimitive line : list.lines) {
-            setColor(line.color);
+            setColor(line.color.toAWTColor());
             glVertex3f(line.v0.x, line.v0.y, line.v0.z);
             glVertex3f(line.v1.x, line.v1.y, line.v1.z);
         }
@@ -93,7 +93,7 @@ public class GLRenderer implements Renderer {
 
         glBegin(GL_TRIANGLES);
         for (TrianglePrimitive triangle : list.triangles) {
-            setColor(triangle.color);
+            setColor(triangle.color.toAWTColor());
             glVertex3f(triangle.v0.x, triangle.v0.y, triangle.v0.z);
             glVertex3f(triangle.v1.x, triangle.v1.y, triangle.v1.z);
             glVertex3f(triangle.v2.x, triangle.v2.y, triangle.v2.z);
@@ -102,7 +102,7 @@ public class GLRenderer implements Renderer {
 
         glBegin(GL_POINTS);
         for (PointPrimitive point : list.points) {
-            setColor(point.color);
+            setColor(point.color.toAWTColor());
             Vertex3f v = point.point;
             glVertex3f(v.x, v.y, v.z);
         }

@@ -16,7 +16,7 @@ package org.amcgala.camera;
 
 import org.amcgala.math.Matrix;
 import org.amcgala.math.Quaternion;
-import org.amcgala.math.Vector3;
+import org.amcgala.math.Vector3d;
 import org.amcgala.renderer.Pixel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +75,7 @@ public final class PerspectiveCamera extends AbstractCamera {
     }
 
     @Override
-    public Pixel getImageSpaceCoordinates(Vector3 vector3d) {
+    public Pixel getImageSpaceCoordinates(Vector3d vector3d) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

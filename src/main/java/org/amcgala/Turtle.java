@@ -1,6 +1,5 @@
 package org.amcgala;
 
-import org.amcgala.math.Vector3;
 import org.amcgala.math.Vector3d;
 import org.amcgala.shape.Line;
 import org.amcgala.shape.util.CompositeShape;
@@ -20,10 +19,10 @@ public class Turtle {
     private CompositeShape turtleShape;
 
     // Die Blickrichtung der Turtle. Zu Beginn schaut die Turtle nach oben.
-    private Vector3 heading = Vector3d.UNIT_X;
+    private Vector3d heading = Vector3d.UNIT_X;
 
     // Die Turtle steht im Nullpunkt des Koordinatensystems. Aktuell ist dies der Bildmittelpunkt.
-    private Vector3 position = Vector3d.ZERO;
+    private Vector3d position = Vector3d.ZERO;
 
     // Der Blinkwinkel - das gleiche wie heading, nur dass es sich hierbei um eine Graddarstellung im Bogenmaß handelt.
     private double headingAngle;
@@ -102,7 +101,7 @@ public class Turtle {
         if (up) {
             position = position.add(heading.times(length));
         } else {
-            Vector3 endPosition = position.add(heading.times(length));
+            Vector3d endPosition = position.add(heading.times(length));
             endPosition.setZ(0);
             position.setZ(0);
             Line line = new Line(position.toVertex3f(), endPosition.toVertex3f());

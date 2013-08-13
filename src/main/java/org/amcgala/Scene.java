@@ -58,7 +58,7 @@ public class Scene {
         sceneGraph = new DefaultSceneGraph();
         camera = new SimplePerspectiveCamera(Vector3d.UNIT_Y, Vector3d.UNIT_Z, Vector3d.ZERO, 2000);
         eventBus = new EventBus();
-        inputHandlers = new HashMap<String, InputHandler>();
+        inputHandlers = new HashMap<>();
     }
 
     /**

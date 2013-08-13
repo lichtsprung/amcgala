@@ -25,7 +25,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Diese Klasse kümmert sich um das Timing der Animation. Sie ruft in
- * regelmäßigen Abständen die Methoden update und show der Klasse Framework auf
+ * regelmäßigen Abständen die Methoden update und render der Klasse Framework auf
  * und ermöglicht so die Realisation von Animationen.
  *
  * @author Robert Giacinto
@@ -136,7 +136,7 @@ public class Animator extends Thread implements Runnable {
 
             if (render) {
                 fpsCounter++;
-                renderer.show();
+                renderer.render();
                 render = false;
             }
             fpsTimer.stop();

@@ -18,4 +18,9 @@ public class Vertex3f {
     public String toString() {
         return Objects.toStringHelper(getClass()).add("x", x).add("y", y).add("z", z).toString();
     }
+
+    public Vector3d toVector() {
+        return new Vector3d(x, y, z);
+    }
+
 }

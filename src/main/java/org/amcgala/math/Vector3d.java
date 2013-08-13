@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Repräsentation von 3D-Vektoren.
  */
-public class Vector3d implements Vector3 {
+public class Vector3d {
     private static final Logger log = LoggerFactory.getLogger(Vector3d.class);
     public static final Vector3d UNIT_X = createVector3d(1, 0, 0);
     public static final Vector3d UNIT_Y = createVector3d(0, 1, 0);
@@ -86,8 +86,7 @@ public class Vector3d implements Vector3 {
      * @param that der andere Vektor
      * @return Skalarprodukt
      */
-    @Override
-    public double dot(Vector3 that) {
+    public double dot(Vector3d that) {
         return this.x * that.getX() + this.y * that.getY() + this.z * that.getZ();
     }
 
@@ -98,8 +97,7 @@ public class Vector3d implements Vector3 {
      * @param that der andere Vektor
      * @return Ergebnisvektor
      */
-    @Override
-    public Vector3 cross(Vector3 that) {
+    public Vector3d cross(Vector3d that) {
         return createVector3d(
                 this.y * that.getZ() - this.z * that.getY(),
                 this.z * that.getX() - this.x * that.getZ(),
@@ -112,8 +110,7 @@ public class Vector3d implements Vector3 {
      * @param that der andere Vektor
      * @return Ergebnisvektor
      */
-    @Override
-    public Vector3 sub(Vector3 that) {
+    public Vector3d sub(Vector3d that) {
         return createVector3d(
                 this.x - that.getX(),
                 this.y - that.getY(),
@@ -126,8 +123,7 @@ public class Vector3d implements Vector3 {
      * @param that der andere Vektor
      * @return Ergebnisvektor
      */
-    @Override
-    public Vector3 add(Vector3 that) {
+    public Vector3d add(Vector3d that) {
         return createVector3d(
                 this.x + that.getX(),
                 this.y + that.getY(),
@@ -139,7 +135,6 @@ public class Vector3d implements Vector3 {
      *
      * @return die Länge
      */
-    @Override
     public double length() {
         return Math.sqrt(dot(this));
     }
@@ -149,7 +144,6 @@ public class Vector3d implements Vector3 {
      *
      * @return quadrierte Länge
      */
-    @Override
     public double lengthSquared() {
         return dot(this);
     }
@@ -160,7 +154,6 @@ public class Vector3d implements Vector3 {
      * @param s die skalare Größe
      * @return Ergebnisvektor
      */
-    @Override
     public Vector3d times(double s) {
         return createVector3d(x * s, y * s, z * s);
     }
@@ -170,7 +163,6 @@ public class Vector3d implements Vector3 {
      *
      * @return der normalisierte Vektor
      */
-    @Override
     public Vector3d normalize() {
         double norm = 1.0 / length();
         return createVector3d(x * norm, y * norm, z * norm);
@@ -181,38 +173,31 @@ public class Vector3d implements Vector3 {
      *
      * @return die Matrixrepräsentation des Vektors
      */
-    @Override
     public Matrix toMatrix() {
         double[] vals = {x, y, z, 1};
         return new Matrix(vals, 4);
     }
 
-    @Override
     public double getX() {
         return x;
     }
 
-    @Override
     public double getY() {
         return y;
     }
 
-    @Override
     public double getZ() {
         return z;
     }
 
-    @Override
     public void setX(double x) {
         this.x = x;
     }
 
-    @Override
     public void setY(double y) {
         this.y = y;
     }
 
-    @Override
     public void setZ(double z) {
         this.z = z;
     }
@@ -235,7 +220,7 @@ public class Vector3d implements Vector3 {
      * @param t         der Faktor
      * @return der neue Vektor v_neu = v_alt + direction * t
      */
-    public Vector3 travel(Vector3 direction, double t) {
+    public Vector3d travel(Vector3d direction, double t) {
         return new Vector3d(x + direction.getX() * t, y + direction.getY() * t, z + direction.getZ() * t);
     }
 
@@ -270,8 +255,7 @@ public class Vector3d implements Vector3 {
         return new Vertex3f((float) x, (float) y, (float) z);
     }
 
-    @Override
-    public int compareTo(Vector3 that) {
+    public int compareTo(Vector3d that) {
         double length = that.sub(this).length();
         if (length > 0) {
             return 1;

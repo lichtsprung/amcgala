@@ -14,8 +14,6 @@
  */
 package org.amcgala.shape;
 
-import org.amcgala.Framework;
-import org.amcgala.camera.Camera;
 import org.amcgala.math.Vertex3f;
 import org.amcgala.renderer.DisplayList;
 import org.amcgala.shape.primitives.LinePrimitive;
@@ -30,7 +28,6 @@ import org.slf4j.LoggerFactory;
 public class Line extends AbstractShape {
     private static final Logger log = LoggerFactory.getLogger(Line.class.getName());
     protected Vertex3f a, b;
-    private Camera cam = Framework.getInstance().getActiveScene().getCamera();
 
     public Line(Vertex3f a, Vertex3f b) {
         this.a = a;

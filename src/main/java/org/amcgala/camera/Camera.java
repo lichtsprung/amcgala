@@ -14,8 +14,9 @@
  */
 package org.amcgala.camera;
 
-import org.amcgala.math.Vector3;
+import org.amcgala.math.Vector3d;
 import org.amcgala.renderer.Pixel;
+
 
 /**
  * Das {@code Camera} Interface muss von allen virtuellen Kameras des Frameworks
@@ -31,7 +32,7 @@ public interface Camera {
      *
      * @return die aktuelle Blickrichtung der Kamera
      */
-    Vector3 getDirection();
+    Vector3d getDirection();
 
     /**
      * Gibt die Koordinaten des Vektors im Bildraum zurück.
@@ -39,42 +40,42 @@ public interface Camera {
      * @param vector3d der zu projezierende Vektor
      * @return die Koordinaten des Vektors im Bildraum
      */
-    Pixel getImageSpaceCoordinates(Vector3 vector3d);
+    Pixel getImageSpaceCoordinates(Vector3d vector3d);
 
     /**
      * Gibt die Position der Kamera zurück.
      *
      * @return die Position der Kamera
      */
-    Vector3 getPosition();
+    Vector3d getPosition();
 
     /**
      * Gibt den Oben-Vektor der Kamera zurück.
      *
      * @return der Oben-Vektor
      */
-    Vector3 getVup();
+    Vector3d getVup();
 
     /**
      * Ändert die Blickrichtung der Kamera.
      *
      * @param direction die neue Blickrichtung
      */
-    void setDirection(Vector3 direction);
+    void setDirection(Vector3d direction);
 
     /**
      * Ändert die Position der Kamera.
      *
      * @param position die neue Position
      */
-    void setPosition(Vector3 position);
+    void setPosition(Vector3d position);
 
     /**
      * Ändert den Oben-Vektor der Kamera.
      *
      * @param vup der neue Oben-Vektor
      */
-    void setVup(Vector3 vup);
+    void setVup(Vector3d vup);
 
     /**
      * Aktualisiert die Projektionsmatrix des Kameraobjekts. Diese Methode

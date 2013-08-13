@@ -16,7 +16,6 @@ package org.amcgala.camera;
 
 import org.amcgala.math.Matrix;
 import org.amcgala.math.Quaternion;
-import org.amcgala.math.Vector3;
 import org.amcgala.math.Vector3d;
 import org.amcgala.renderer.Pixel;
 import org.slf4j.Logger;
@@ -104,7 +103,7 @@ public final class SimplePerspectiveCamera extends AbstractCamera {
 
 
     @Override
-    public Pixel getImageSpaceCoordinates(Vector3 vector3d) {
+    public Pixel getImageSpaceCoordinates(Vector3d vector3d) {
         Matrix point = projectionMatrix.times(vector3d.toMatrix());
         return new Pixel(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0));
     }

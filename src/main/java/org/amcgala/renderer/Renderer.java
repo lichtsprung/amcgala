@@ -26,7 +26,7 @@ public interface Renderer {
     /**
      * Weist den DefaultRenderer an, den Buffer auszugeben.
      */
-    void show();
+    void render();
 
 
     /**

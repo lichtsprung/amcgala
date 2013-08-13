@@ -253,7 +253,7 @@ public final class Quaternion {
      * @param zAxis die z-Achse des Koordinatensystems
      * @return das neue Quaternion
      */
-    public Quaternion fromAxes(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis) {
+    public Quaternion fromAxes(Vector3d xAxis, Vector3d yAxis, Vector3d zAxis) {
         return fromRotationMatrix(
                 xAxis.getX(), yAxis.getX(), zAxis.getX(),
                 xAxis.getY(), yAxis.getY(), zAxis.getY(),
@@ -276,7 +276,7 @@ public final class Quaternion {
      *          sollte zwischen 0 und 2 liegen
      * @return die i. Komponente
      */
-    public Vector3 getRotationColumn(int i) {
+    public Vector3d getRotationColumn(int i) {
 
 
         double norm = lengthSquared();
@@ -331,9 +331,9 @@ public final class Quaternion {
     }
 
     public Quaternion lookAt(Vector3d vup, Vector3d direction) {
-        Vector3 v3 = direction.normalize();
-        Vector3 v1 = vup.cross(direction).normalize();
-        Vector3 v2 = direction.cross(v1).normalize();
+        Vector3d v3 = direction.normalize();
+        Vector3d v1 = vup.cross(direction).normalize();
+        Vector3d v2 = direction.cross(v1).normalize();
         return fromAxes(v1, v2, v3);
     }
 

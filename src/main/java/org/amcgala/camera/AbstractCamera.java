@@ -15,7 +15,7 @@
 package org.amcgala.camera;
 
 import org.amcgala.math.Matrix;
-import org.amcgala.math.Vector3;
+import org.amcgala.math.Vector3d;
 
 /**
  * Eine abstrakte Implementierung des {@code Camera} Interface.
@@ -27,27 +27,27 @@ public abstract class AbstractCamera implements Camera {
     /**
      * "oben" Vektor
      */
-    protected Vector3 up;
+    protected Vector3d up;
     /**
      * Position der Kamera
      */
-    protected Vector3 location;
+    protected Vector3d location;
     /**
      * Punkt, zu dem die Kamera blickt
      */
-    protected Vector3 direction;
+    protected Vector3d direction;
     /**
      * lokale x-Achse der Kamera
      */
-    protected Vector3 u;
+    protected Vector3d u;
     /**
      * lokale y-Achse der Kamera
      */
-    protected Vector3 v;
+    protected Vector3d v;
     /**
      * lokale z-Achse der Kamera
      */
-    protected Vector3 n;
+    protected Vector3d n;
     /**
      * Die Projektionsmatrix
      */
@@ -78,7 +78,7 @@ public abstract class AbstractCamera implements Camera {
      * @return die aktuelle Blickrichtung der Kamera
      */
     @Override
-    public Vector3 getDirection() {
+    public Vector3d getDirection() {
         // return quaternion.getRotationColumn(2);
         return direction;
     }
@@ -89,7 +89,7 @@ public abstract class AbstractCamera implements Camera {
      * @param direction die neue Blickrichtung
      */
     @Override
-    public void setDirection(Vector3 direction) {
+    public void setDirection(Vector3d direction) {
         this.direction = direction;
         update();
     }
@@ -100,7 +100,7 @@ public abstract class AbstractCamera implements Camera {
      * @return die Position der Kamera
      */
     @Override
-    public Vector3 getPosition() {
+    public Vector3d getPosition() {
         return location;
     }
 
@@ -110,7 +110,7 @@ public abstract class AbstractCamera implements Camera {
      * @param position die neue Position
      */
     @Override
-    public void setPosition(Vector3 position) {
+    public void setPosition(Vector3d position) {
         this.location = position;
         update();
     }
@@ -121,7 +121,7 @@ public abstract class AbstractCamera implements Camera {
      * @return der Oben-Vektor
      */
     @Override
-    public Vector3 getVup() {
+    public Vector3d getVup() {
         return up;
     }
 
@@ -131,7 +131,7 @@ public abstract class AbstractCamera implements Camera {
      * @param up der neue Oben-Vektor
      */
     @Override
-    public void setVup(Vector3 up) {
+    public void setVup(Vector3d up) {
         this.up = up;
         update();
     }

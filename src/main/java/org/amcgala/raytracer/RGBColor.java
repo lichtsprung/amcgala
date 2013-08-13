@@ -11,6 +11,11 @@ import java.awt.*;
  * @since 2.1
  */
 public class RGBColor {
+    public static final RGBColor BLACK = new RGBColor(0, 0, 0);
+    public static final RGBColor WHITE = new RGBColor(1, 1, 1);
+    public static final RGBColor RED = new RGBColor(1, 0, 0);
+    public static final RGBColor GREEN = new RGBColor(0, 1, 0);
+    public static final RGBColor BLUE = new RGBColor(0, 0, 1);
     protected float red;
     protected float green;
     protected float blue;
@@ -44,7 +49,7 @@ public class RGBColor {
         return new RGBColor((float) Math.pow(red, p), (float) Math.pow(green, p), (float) Math.pow(blue, p));
     }
 
-    public Color toColor() {
+    public Color toAWTColor() {
         return new Color(getRed(), getGreen(), getBlue());
     }
 

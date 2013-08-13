@@ -15,6 +15,7 @@
 package org.amcgala.renderer;
 
 import org.amcgala.Framework;
+import org.amcgala.camera.Camera;
 import org.amcgala.event.*;
 import org.amcgala.shape.primitives.LinePrimitive;
 import org.amcgala.shape.primitives.PointPrimitive;
@@ -199,32 +200,31 @@ public class SoftwareRenderer implements Renderer {
 
 
     @Override
-    public void show() {
+    public void render() {
         bs.show();
         g = bs.getDrawGraphics();
         g.clearRect(0, 0, frame.getWidth(), frame.getHeight());
         DisplayList list = framework.getCurrentState();
+        Camera camera = Framework.getInstance().getActiveScene().getCamera();
 
-        // Hier werden Lines und nicht gefüllte Dreiecke gezeichnet.
-        // Gefüllte Dreiecke werden per Scan Line Algorithmus auf Linien runtergebrochen und dann auch hier
-        // gezeichnet.
         for (LinePrimitive line : list.lines) {
-            g.setColor(line.color);
-            g.drawLine((int) line.v0.x, (int) line.v0.y, (int) line.v1.x, (int) line.v1.y);
+            Pixel start = camera.getImageSpaceCoordinates(line.v0.toVector());
+            Pixel end = camera.getImageSpaceCoordinates(line.v1.toVector());
+            g.setColor(line.color.toAWTColor());
+            g.drawLine(start.x, start.y, end.x, end.y);
         }
 
         for (PointPrimitive point : list.points) {
-            g.setColor(point.color);
-            g.fillRect((int) point.point.x, (int) point.point.y, 1, 1);
+            Pixel p = camera.getImageSpaceCoordinates(point.point.toVector());
+            g.setColor(point.color.toAWTColor());
+            g.fillRect(p.x, p.y, 1, 1);
         }
 
         for (RectanglePrimitive r : list.rects) {
-            g.setColor(r.color);
-            g.fillRect((int) r.v0.x, (int) r.v0.y, (int) r.width, (int) r.height);
+            Pixel start = camera.getImageSpaceCoordinates(r.v0.toVector());
+            g.setColor(r.color.toAWTColor());
+            g.fillRect(start.x, start.y, (int) r.width, (int) r.height);
         }
-
-
-        // TODO Gefüllte Vierecke
     }
 
     @Override

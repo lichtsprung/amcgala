@@ -22,8 +22,6 @@ import org.amcgala.raytracer.material.Material;
 import org.amcgala.renderer.Renderable;
 import org.amcgala.scenegraph.Node;
 
-import java.awt.*;
-
 /**
  * Schnittstelle aller Shapes, die im Framework dargestellt werden können.
  *
@@ -51,15 +49,14 @@ public interface Shape extends Updatable, Renderable, Hittable {
      *
      * @return die Farbe des Shapes
      */
-    Color getColor();
+    RGBColor getColor();
+
 
     /**
      * Ändert die Farbe des Shapes.
      *
      * @param color die neue Farbe des Shapes
      */
-    void setColor(Color color);
-
     void setColor(RGBColor color);
 
     /**

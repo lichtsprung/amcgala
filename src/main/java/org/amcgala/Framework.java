@@ -309,12 +309,11 @@ public final class Framework {
 
         scenegraph = scene.getSceneGraph();
 
-        // TODO laden der Scene in Raytracer
-
         sceneEventBus = scene.getEventBus();
         activeScene = scene;
         paused = false;
         updateVisitor.setPaused(paused);
+        log.info("Active Camera: {}", camera);
     }
 
     /**

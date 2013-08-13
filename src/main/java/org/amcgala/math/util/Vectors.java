@@ -1,6 +1,5 @@
 package org.amcgala.math.util;
 
-import org.amcgala.math.Vector3;
 import org.amcgala.math.Vector3d;
 import org.amcgala.math.Vertex3f;
 
@@ -13,7 +12,7 @@ import org.amcgala.math.Vertex3f;
  */
 public class Vectors {
 
-    public static Vertex3f toVertex3f(Vector3 vector) {
+    public static Vertex3f toVertex3f(Vector3d vector) {
         return new Vertex3f((float) vector.getX(), (float) vector.getY(), (float) vector.getZ());
     }
 

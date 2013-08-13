@@ -109,7 +109,7 @@
 //
 //  it should "visualise the values of the Matrix" in {
 //    val m = Matrix(64, 64, ::)
-//    m.show()
+//    m.render()
 //  }
 //
 //

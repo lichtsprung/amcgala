@@ -1,7 +1,7 @@
 package org.amcgala.raytracer.material;
 
 import org.amcgala.math.MathConstants;
-import org.amcgala.math.Vector3;
+import org.amcgala.math.Vector3d;
 import org.amcgala.raytracer.RGBColor;
 import org.amcgala.raytracer.Ray;
 import org.amcgala.raytracer.ShadingInfo;
@@ -31,7 +31,7 @@ public class MirrorMaterial extends Material {
     public RGBColor getColor(ShadingInfo hit) {
 
         double angle = hit.normal.dot(hit.ray.direction.times(-1));
-        Vector3 omegaI = hit.ray.direction.sub(hit.normal.times(-2 * angle));
+        Vector3d omegaI = hit.ray.direction.sub(hit.normal.times(-2 * angle));
         Ray refRay = new Ray(hit.hitPoint.travel(omegaI, MathConstants.EPSILON), omegaI);
 
         return baseColor.times(1 - reflectionCoefficient).add((hit.tracer.trace(refRay, hit.scene, hit.depth + 1).times(reflectionCoefficient)));

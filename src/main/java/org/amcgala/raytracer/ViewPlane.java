@@ -128,6 +128,6 @@ public class ViewPlane {
 
 // TODO Die Methode muss an die Displaylist angepasst werden.
 //    public void drawPixel(int column, int row, RGBColor color) {
-//        renderer.fillRect(new Pixel(column, row), pixelSize, pixelSize, color.toColor());
+//        renderer.fillRect(new Pixel(column, row), pixelSize, pixelSize, color.toAWTColor());
 //    }
 }

@@ -2,7 +2,6 @@ package org.amcgala.shape.util.lsystem;
 
 import org.amcgala.Turtle;
 import org.amcgala.TurtleState;
-import org.amcgala.math.Vector3;
 import org.amcgala.math.Vector3d;
 import org.amcgala.shape.util.CompositeShape;
 
@@ -65,9 +64,9 @@ public class LindenmayerSystem {
      * @param shape         das Shape, das für die Darstellung des L-Systems verwendet werden soll
      * @param startPosition die Startposition der Turtle
      */
-    public LindenmayerSystem(Axiom axiom, Rules rules, Level level, Length length, Angle angle, CompositeShape shape, Vector3 startPosition, float startHeading) {
+    public LindenmayerSystem(Axiom axiom, Rules rules, Level level, Length length, Angle angle, CompositeShape shape, Vector3d startPosition, float startHeading) {
         this(axiom, rules, level, length, angle, shape);
-        Vector3 heading = new Vector3d(cos(toRadians(startHeading)), -sin(toRadians(startHeading)), 0).normalize();
+        Vector3d heading = new Vector3d(cos(toRadians(startHeading)), -sin(toRadians(startHeading)), 0).normalize();
         System.out.println(heading);
         turtle = new Turtle(new TurtleState(startHeading, heading, startPosition), shape);
     }

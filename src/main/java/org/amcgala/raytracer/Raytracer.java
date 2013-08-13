@@ -16,7 +16,6 @@ package org.amcgala.raytracer;
 
 import org.amcgala.Framework;
 import org.amcgala.Scene;
-import org.amcgala.math.Vector3;
 import org.amcgala.math.Vector3d;
 import org.amcgala.raytracer.sampler.RandomSampler;
 import org.amcgala.raytracer.tracer.RecursiveTracer;
@@ -58,8 +57,8 @@ public class Raytracer {
             for (int column = 0; column < viewPlane.getHorizontalResolution(); column++) {
                 RGBColor color = new RGBColor(0, 0, 0);
                 for (int n = 0; n < viewPlane.getNumberOfSamples(); n++) {
-                    final Vector3 o = viewPlane.getWorldCoordinates(column, row);
-                    final Vector3 d = o.sub(eye);
+                    final Vector3d o = viewPlane.getWorldCoordinates(column, row);
+                    final Vector3d d = o.sub(eye);
                     Ray ray = new Ray(o, d);
                     color = color.add(tracer.trace(ray, scene));
                 }

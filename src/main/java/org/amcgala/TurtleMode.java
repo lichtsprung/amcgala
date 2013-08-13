@@ -1,7 +1,6 @@
 package org.amcgala;
 
 
-import org.amcgala.math.Vector3;
 import org.amcgala.math.Vector3d;
 import org.amcgala.math.Vertex3f;
 import org.amcgala.math.util.Vectors;
@@ -30,10 +29,10 @@ public abstract class TurtleMode {
     private final Scene scene = new Scene("turtle");
 
     // Die Blickrichtung der Turtle. Sie schaut in Richtung der x-Achse. Also nach rechts.
-    private Vector3 heading = new Vector3d(1, 0, 0);
+    private Vector3d heading = new Vector3d(1, 0, 0);
 
     // Die Turtle steht im Urspung des Koordinatensystems. Aktuell in der Mitte des Fensters.
-    private Vector3 position = new Vector3d(0, 0, 0);
+    private Vector3d position = new Vector3d(0, 0, 0);
 
     // Der Blinkwinkel - das gleiche wie heading, nur dass es sich hierbei um eine Graddarstellung im Bogenmaß handelt.
     private double headingAngle;

@@ -5,10 +5,9 @@ import org.amcgala.Framework;
 import org.amcgala.FrameworkMode;
 import org.amcgala.Scene;
 import org.amcgala.math.Vector3d;
+import org.amcgala.raytracer.RGBColor;
 import org.amcgala.shape.util.CompositeShape;
 import org.amcgala.shape.util.lsystem.*;
-
-import java.awt.*;
 
 /**
  * Testklasse für die GL Funktionalität.
@@ -20,7 +19,7 @@ public class GLTestMain {
         Scene scene = new Scene("line");
 
         CompositeShape shape = new CompositeShape();
-        shape.setColor(Color.BLUE);
+        shape.setColor(RGBColor.BLUE);
 
         LindenmayerSystem lindenmayerSystem = new LindenmayerSystem(
                 new Axiom("X"),
@@ -43,7 +42,7 @@ public class GLTestMain {
 
 
         CompositeShape shape2 = new CompositeShape();
-        shape2.setColor(Color.RED);
+        shape2.setColor(RGBColor.RED);
 
         LindenmayerSystem lindenmayerSystem2 = new LindenmayerSystem(
                 new Axiom("FX"),

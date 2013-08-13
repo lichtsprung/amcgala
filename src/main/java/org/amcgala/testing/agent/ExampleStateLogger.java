@@ -10,7 +10,6 @@ import org.amcgala.math.Vertex3f;
 import org.amcgala.raytracer.RGBColor;
 import org.amcgala.shape.Rectangle;
 
-import java.awt.*;
 import java.util.Map;
 
 /**
@@ -28,7 +27,7 @@ public final class ExampleStateLogger extends StateLoggerAgent {
         for (int x = 0; x < points.length; x++) {
             for (int y = 0; y < points[0].length; y++) {
                 points[x][y] = new Rectangle(new Vertex3f(x * scaleX, y * scaleY, -1), (float) scaleX, (float) scaleY);
-                points[x][y].setColor(Color.GREEN);
+                points[x][y].setColor(RGBColor.GREEN);
                 scene.addShape(points[x][y]);
             }
         }
@@ -57,7 +56,7 @@ public final class ExampleStateLogger extends StateLoggerAgent {
 
         for (Agent.AgentState s : agents.values()) {
             Rectangle p = points[s.position().x()][s.position().y()];
-            p.setColor(Color.RED);
+            p.setColor(RGBColor.RED);
         }
     }
 

@@ -1,10 +1,10 @@
 package org.amcgala.shape.primitives;
 
-import java.awt.*;
+import org.amcgala.raytracer.RGBColor;
 
 /**
  * Ein Primitiv.
  */
 public abstract class Primitive {
-    public Color color = Color.black;
+    public RGBColor color = new RGBColor(0, 0, 0);
 }

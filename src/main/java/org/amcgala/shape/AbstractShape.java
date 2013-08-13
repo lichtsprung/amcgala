@@ -24,8 +24,6 @@ import org.amcgala.scenegraph.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
-
 /**
  * Diese Klasse stellt die Oberklasse aller darstellbaren Objekte dar.
  *
@@ -42,14 +40,8 @@ public abstract class AbstractShape implements Shape {
 
 
     @Override
-    public Color getColor() {
-        return color.toColor();
-    }
-
-    @Override
-    public void setColor(Color color) {
-        float[] colors = color.getColorComponents(null);
-        this.color = new RGBColor(colors[0], colors[1], colors[2]);
+    public RGBColor getColor() {
+        return color;
     }
 
     @Override

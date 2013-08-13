@@ -14,15 +14,15 @@
  */
 package org.amcgala.raytracer;
 
-import org.amcgala.math.Vector3;
+import org.amcgala.math.Vector3d;
 
 /**
  * Ein Strahl, der vom {@link Raytracer} in die {@link org.amcgala.Scene} geschickt wird. Er ist über die Vektorform d
  * definiert als r(t) = origin + t * direction.
  */
 public class Ray {
-    public Vector3 origin;
-    public Vector3 direction;
+    public Vector3d origin;
+    public Vector3d direction;
 
     /**
      * Erstellt eine neue Gerade, die über einen Ursprungs- und Richtungsvektor definiert ist.
@@ -30,7 +30,7 @@ public class Ray {
      * @param origin    der Ursprungsvektor
      * @param direction der Richtungsvektor
      */
-    public Ray(Vector3 origin, Vector3 direction) {
+    public Ray(Vector3d origin, Vector3d direction) {
         this.origin = origin;
         this.direction = direction;
     }
