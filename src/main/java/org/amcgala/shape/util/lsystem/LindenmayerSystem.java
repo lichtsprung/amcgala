@@ -4,6 +4,8 @@ import org.amcgala.Turtle;
 import org.amcgala.TurtleState;
 import org.amcgala.math.Vector3d;
 import org.amcgala.shape.util.CompositeShape;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Stack;
 
@@ -20,6 +22,7 @@ import static java.lang.Math.*;
  * @since 2.0
  */
 public class LindenmayerSystem {
+    private Logger log = LoggerFactory.getLogger(LindenmayerSystem.class);
     private Axiom axiom;
     private Rules rules;
     private Level level;
@@ -67,7 +70,6 @@ public class LindenmayerSystem {
     public LindenmayerSystem(Axiom axiom, Rules rules, Level level, Length length, Angle angle, CompositeShape shape, Vector3d startPosition, float startHeading) {
         this(axiom, rules, level, length, angle, shape);
         Vector3d heading = new Vector3d(cos(toRadians(startHeading)), -sin(toRadians(startHeading)), 0).normalize();
-        System.out.println(heading);
         turtle = new Turtle(new TurtleState(startHeading, heading, startPosition), shape);
     }
 
@@ -80,31 +82,32 @@ public class LindenmayerSystem {
         for (char c : current.toCharArray()) {
             switch (c) {
                 case '+':
-//                    System.out.println("Turning right: " + angle.angle);
-                    turtle.turnRight(angle.angle);
+                    log.debug("Right Turn: {}", angle.value);
+                    turtle.turnRight(angle.value);
                     break;
                 case '-':
-//                    System.out.println("Turning left: " + angle.angle);
-                    turtle.turnLeft(angle.angle);
+                    log.debug("Left Turn: {}", angle.value);
+                    turtle.turnLeft(angle.value);
                     break;
                 case '[':
-
+                    log.debug("Push Turtle to stack");
                     Turtle t = new Turtle(turtle.getTurtleState(), shape);
                     turtles.push(turtle);
                     turtle = t;
                     break;
                 case ']':
+                    log.debug("Pop Turtle from stack");
                     turtle = turtles.pop();
                     break;
                 case 'm':
-//                    System.out.println("move: " + length.length);
+                    log.debug("Move Turtle: {}", length.value);
                     turtle.up();
-                    turtle.move(length.length);
+                    turtle.move(length.value);
                     turtle.down();
                     break;
                 case 'M':
-//                    System.out.println("draw: " + length.length);
-                    turtle.move(length.length);
+                    log.debug("Draw line: {}", length.value);
+                    turtle.move(length.value);
                     break;
                 default:
                     break;
@@ -116,7 +119,7 @@ public class LindenmayerSystem {
     * Hier passiert was
     */
     private void applyRules() {
-        StringBuilder sb = new StringBuilder(100);
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < level.level; i++) {
             for (char c : current.toCharArray()) {
                 sb.append(rules.applyReplacementRules(Character.toString(c)));
@@ -124,10 +127,10 @@ public class LindenmayerSystem {
             current = sb.toString();
             sb = new StringBuilder();
         }
-
         for (char c : current.toCharArray()) {
             sb.append(rules.applyDrawingRules(Character.toString(c)));
         }
+
         current = sb.toString();
     }
 }

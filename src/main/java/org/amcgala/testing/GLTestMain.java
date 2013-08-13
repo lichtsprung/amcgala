@@ -61,10 +61,7 @@ public class GLTestMain {
         );
 
         lindenmayerSystem2.run();
-
         scene.addShape(shape2);
-
-
         framework.addScene(scene);
     }
 
