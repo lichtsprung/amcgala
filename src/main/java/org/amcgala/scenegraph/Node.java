@@ -259,7 +259,6 @@ public final class Node implements Updatable {
      */
     public void add(Transformation... transformations) {
         Collections.addAll(this.transformations, transformations);
-        log.info("Neue Transformation hinzugefügt: {}", transformations);
     }
 
     /**
