@@ -3,9 +3,9 @@ package org.amcgala.testing;
 
 import org.amcgala.Framework;
 import org.amcgala.FrameworkMode;
+import org.amcgala.RGBColor;
 import org.amcgala.Scene;
 import org.amcgala.math.Vector3d;
-import org.amcgala.raytracer.RGBColor;
 import org.amcgala.shape.util.CompositeShape;
 import org.amcgala.shape.util.lsystem.*;
 

@@ -2,12 +2,12 @@ package org.amcgala.testing.agent;
 
 import akka.actor.Actor;
 import akka.japi.Creator;
+import org.amcgala.RGBColor;
 import org.amcgala.Scene;
 import org.amcgala.agent.Agent;
 import org.amcgala.agent.StateLoggerAgent;
 import org.amcgala.agent.World;
 import org.amcgala.math.Vertex3f;
-import org.amcgala.raytracer.RGBColor;
 import org.amcgala.shape.Rectangle;
 
 import java.util.Map;

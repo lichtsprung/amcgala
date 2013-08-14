@@ -14,8 +14,8 @@
  */
 package org.amcgala.shape;
 
+import org.amcgala.RGBColor;
 import org.amcgala.animation.Animation;
-import org.amcgala.raytracer.RGBColor;
 import org.amcgala.raytracer.Ray;
 import org.amcgala.raytracer.ShadingInfo;
 import org.amcgala.raytracer.material.Material;

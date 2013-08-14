@@ -1,6 +1,6 @@
 package org.amcgala.shape.primitives;
 
-import org.amcgala.raytracer.RGBColor;
+import org.amcgala.RGBColor;
 
 /**
  * Ein Primitiv.

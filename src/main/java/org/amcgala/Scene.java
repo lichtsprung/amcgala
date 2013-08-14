@@ -5,7 +5,6 @@ import org.amcgala.camera.Camera;
 import org.amcgala.camera.SimplePerspectiveCamera;
 import org.amcgala.event.InputHandler;
 import org.amcgala.math.Vector3d;
-import org.amcgala.raytracer.RGBColor;
 import org.amcgala.scenegraph.DefaultSceneGraph;
 import org.amcgala.scenegraph.Node;
 import org.amcgala.scenegraph.SceneGraph;

@@ -1,7 +1,7 @@
 package org.amcgala.raytracer.tracer;
 
+import org.amcgala.RGBColor;
 import org.amcgala.Scene;
-import org.amcgala.raytracer.RGBColor;
 import org.amcgala.raytracer.Ray;
 
 /**

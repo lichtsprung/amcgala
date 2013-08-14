@@ -1,4 +1,4 @@
-package org.amcgala.raytracer;
+package org.amcgala;
 
 import com.google.common.base.Objects;
 

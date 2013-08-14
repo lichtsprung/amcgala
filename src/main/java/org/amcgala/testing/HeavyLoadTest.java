@@ -1,8 +1,8 @@
 package org.amcgala.testing;
 
 import org.amcgala.Amcgala;
+import org.amcgala.RGBColor;
 import org.amcgala.Scene;
-import org.amcgala.raytracer.RGBColor;
 import org.amcgala.shape.Point;
 
 import java.util.Random;

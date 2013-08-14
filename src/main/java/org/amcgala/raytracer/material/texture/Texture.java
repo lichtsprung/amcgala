@@ -1,6 +1,6 @@
 package org.amcgala.raytracer.material.texture;
 
-import org.amcgala.raytracer.RGBColor;
+import org.amcgala.RGBColor;
 import org.amcgala.raytracer.ShadingInfo;
 
 /**

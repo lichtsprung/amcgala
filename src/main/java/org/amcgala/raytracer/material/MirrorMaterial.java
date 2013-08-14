@@ -1,8 +1,8 @@
 package org.amcgala.raytracer.material;
 
+import org.amcgala.RGBColor;
 import org.amcgala.math.MathConstants;
 import org.amcgala.math.Vector3d;
-import org.amcgala.raytracer.RGBColor;
 import org.amcgala.raytracer.Ray;
 import org.amcgala.raytracer.ShadingInfo;
 

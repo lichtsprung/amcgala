@@ -14,10 +14,10 @@
  */
 package org.amcgala.shape;
 
+import org.amcgala.RGBColor;
 import org.amcgala.animation.Animation;
 import org.amcgala.animation.Updatable;
 import org.amcgala.raytracer.Hittable;
-import org.amcgala.raytracer.RGBColor;
 import org.amcgala.raytracer.material.Material;
 import org.amcgala.renderer.Renderable;
 import org.amcgala.scenegraph.Node;

@@ -15,6 +15,7 @@
 package org.amcgala.raytracer;
 
 import org.amcgala.Framework;
+import org.amcgala.RGBColor;
 import org.amcgala.Scene;
 import org.amcgala.math.Vector3d;
 import org.amcgala.raytracer.sampler.RandomSampler;
