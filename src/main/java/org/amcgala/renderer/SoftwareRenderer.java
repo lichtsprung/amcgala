@@ -204,26 +204,28 @@ public class SoftwareRenderer implements Renderer {
         bs.show();
         g = bs.getDrawGraphics();
         g.clearRect(0, 0, frame.getWidth(), frame.getHeight());
-        DisplayList list = framework.getCurrentState();
-        Camera camera = Framework.getInstance().getActiveScene().getCamera();
+        if (Framework.getInstance().hasActiveScene()) {
+            DisplayList list = framework.getCurrentState();
+            Camera camera = Framework.getInstance().getActiveScene().getCamera();
 
-        for (LinePrimitive line : list.lines) {
-            Pixel start = camera.getImageSpaceCoordinates(line.v0.toVector());
-            Pixel end = camera.getImageSpaceCoordinates(line.v1.toVector());
-            g.setColor(line.color.toAWTColor());
-            g.drawLine(start.x, start.y, end.x, end.y);
-        }
+            for (LinePrimitive line : list.lines) {
+                Pixel start = camera.getImageSpaceCoordinates(line.v0.toVector());
+                Pixel end = camera.getImageSpaceCoordinates(line.v1.toVector());
+                g.setColor(line.color.toAWTColor());
+                g.drawLine(start.x, start.y, end.x, end.y);
+            }
 
-        for (PointPrimitive point : list.points) {
-            Pixel p = camera.getImageSpaceCoordinates(point.point.toVector());
-            g.setColor(point.color.toAWTColor());
-            g.fillRect(p.x, p.y, 1, 1);
-        }
+            for (PointPrimitive point : list.points) {
+                Pixel p = camera.getImageSpaceCoordinates(point.point.toVector());
+                g.setColor(point.color.toAWTColor());
+                g.fillRect(p.x, p.y, 1, 1);
+            }
 
-        for (RectanglePrimitive r : list.rects) {
-            Pixel start = camera.getImageSpaceCoordinates(r.v0.toVector());
-            g.setColor(r.color.toAWTColor());
-            g.fillRect(start.x, start.y, (int) r.width, (int) r.height);
+            for (RectanglePrimitive r : list.rects) {
+                Pixel start = camera.getImageSpaceCoordinates(r.v0.toVector());
+                g.setColor(r.color.toAWTColor());
+                g.fillRect(start.x, start.y, (int) r.width, (int) r.height);
+            }
         }
     }
 
