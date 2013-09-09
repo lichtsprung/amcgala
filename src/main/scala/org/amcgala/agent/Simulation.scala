@@ -19,93 +19,128 @@ import org.amcgala.agent.Agent.ChangeValue
 import org.amcgala.agent.World.WorldInfo
 import org.amcgala.agent.Agent.AgentID
 import org.amcgala.agent.Simulation.SimulationUpdate
+import com.typesafe.config.{ConfigFactory, Config}
 
 
 object Simulation {
 
-  sealed trait SimulationMessage
+  case class SimulationConfig(config: Config)
 
-  case class SimulationUpdate(currentState: AgentState, neighbours: Array[CellWithIndex]) extends SimulationMessage
+  case class SimulationUpdate(currentState: AgentState, neighbours: Array[CellWithIndex])
 
-  case class SimulationState(worldInfo: WorldInfo, agents: java.util.List[AgentState]) extends SimulationMessage
+  case class SimulationState(worldInfo: WorldInfo, agents: java.util.List[AgentState])
 
-  case class SimulationStateUpdate(changedCells: java.util.List[(Index, Cell)], agents: java.util.List[AgentState]) extends SimulationMessage
+  case class SimulationStateUpdate(changedCells: java.util.List[(Index, Cell)], agents: java.util.List[AgentState])
 
-  case class Register(index: Index) extends SimulationMessage
+  case class Register(index: Index)
 
-  case object RegisterWithRandomIndex extends SimulationMessage
+  case object RegisterWithRandomIndex
 
-  case object RegisterStateLogger extends SimulationMessage
+  case object RegisterStateLogger
 
-  case object Update extends SimulationMessage
+  case object RegisterWithDefaultIndex
+
+  case object Update
 
   def props(): Props = Props(classOf[Simulation])
 
 }
 
 
-/**
- * A [[org.amcgala.agent.Simulation]]
- * <ul>ey
- * <li>manages all Cells in the Simulation</li>
- * <li>manages all living Agents in the Simulation</li>
- * </ul>
- */
 class Simulation extends Actor with ActorLogging {
+  val defaultConfig = ConfigFactory.load("simulation")
+
   var agents = Map.empty[ActorRef, AgentState]
   var stateLogger = Set.empty[ActorRef]
-  val world = World(200, 150)
-  val pingTime = 200 milliseconds
 
-  override def preStart(): Unit = {
+  var world: Option[World] = None
 
-    context.system.scheduler.schedule(5 seconds, pingTime, self, Update)
+
+  var currentConfig = ConfigFactory.empty().withFallback(defaultConfig)
+  var pingTime = currentConfig.getInt("org.amcgala.agent.simulation.ping-time").milliseconds
+  var defaultPosition = {
+    val l = currentConfig.getIntList("org.amcgala.agent.default-position")
+    assert(l.size() == 2)
+    World.Index(l(0), l(1))
   }
 
-  def receive: Actor.Receive = simulationLifeCycle orElse handleAgentMessages
+  def receive: Actor.Receive = waitForWorld
+
+  def waitForWorld: Actor.Receive = {
+    case SimulationConfig(config) =>
+      currentConfig = config.withFallback(defaultConfig)
+      world = Some(World(currentConfig))
+      context.system.scheduler.schedule(5 seconds, pingTime, self, Update)
+      context.become(simulationLifeCycle orElse handleAgentMessages)
+  }
 
   def simulationLifeCycle: Actor.Receive = {
     case RegisterWithRandomIndex =>
-      val randomCell = world.randomCell
-      agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), randomCell.index, randomCell.cell))
-      log.debug("Registering new Actor at {}", randomCell)
-      log.debug("Agents on this cell: {}", agents.filter(entry => entry._2 == randomCell).keySet)
+      world map (w => {
+        val randomCell = w.randomCell
+        agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), randomCell.index, randomCell.cell))
+        log.debug("Registering new Actor at {}", randomCell)
+        log.debug("Agents on this cell: {}", agents.filter(entry => entry._2 == randomCell).keySet)
+      })
 
     case Register(index) =>
-      agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, world(index)))
-      log.info("Registering new Actor at {}", index)
+      world map (w => {
+        agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, w(index)))
+        log.info("Registering new Actor at {}", index)
+      })
+
+    case RegisterWithDefaultIndex =>
+      defaultPosition match {
+        case World.RandomIndex =>
+          self forward RegisterWithRandomIndex
+        case index: Index =>
+          world map (w => {
+            agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, w(index)))
+            log.info("Registering new Actor at {}", index)
+          })
+      }
 
     case RegisterStateLogger if !agents.exists(e => e._1 == sender) =>
-      sender ! SimulationState(world.worldInfo, agents.values.toList)
-      stateLogger = stateLogger + sender
-      log.info(s"Registered StateLoggers: $stateLogger")
+      world map (w => {
+        sender ! SimulationState(w.worldInfo, agents.values.toList)
+        stateLogger = stateLogger + sender
+        log.info(s"Registered StateLoggers: $stateLogger")
+      })
 
     case Update =>
-      world.update()
-      agents map {
-        case (ref, currentState) => {
-          val neighbourCells = world.neighbours(currentState.position)
-          ref ! SimulationUpdate(currentState, neighbourCells)
+      world map (w => {
+        w.update()
+        agents map {
+          case (ref, currentState) => {
+            val neighbourCells = w.neighbours(currentState.position)
+            ref ! SimulationUpdate(currentState, neighbourCells)
+          }
         }
-      }
-      stateLogger map (logger => {
-        log.debug(s"Sending SimulationStateUpdate to $logger")
-        logger ! SimulationStateUpdate(world.field.toList, agents.values.toList)
+        stateLogger map (logger => {
+          log.debug(s"Sending SimulationStateUpdate to $logger")
+          logger ! SimulationStateUpdate(w.field.toList, agents.values.toList)
+        })
       })
 
   }
 
   def handleAgentMessages: Actor.Receive = {
     case MoveTo(index) =>
-      log.debug("Moving agent {} to {}", sender, index)
-      agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, world(index)))
+      world map (w => {
+        log.debug("Moving agent {} to {}", sender, index)
+        agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, w(index)))
+      })
 
     case ReleasePheromone(pheromone) =>
-      agents.get(sender) map (i => world.addPheromone(i.position, pheromone))
+      world map (w => {
+        agents.get(sender) map (i => w.addPheromone(i.position, pheromone))
+      })
 
     case ChangeValue(value) =>
-      agents.get(sender) map (c => {
-        world.change(c.position, value)
+      world map (w => {
+        agents.get(sender) map (c => {
+          w.change(c.position, value)
+        })
       })
   }
 }
@@ -126,9 +161,9 @@ object World {
   val RandomIndex = Index(-1, -1)
 
 
-  def apply(width: Int, height: Int) = {
-    val _width = width
-    val _height = height
+  def apply(config: Config) = {
+    val _width = config.getInt("org.amcgala.agent.simulation.world.width")
+    val _height = config.getInt("org.amcgala.agent.simulation.world.height")
     new World {
       val width: Int = _width
       val height: Int = _height
@@ -251,6 +286,8 @@ object Agent {
   case class AgentID(id: Int)
 
   sealed trait AgentMessage
+
+  case class SpawnAt(position: Index) extends AgentMessage
 
   case class MoveTo(index: Index) extends AgentMessage
 

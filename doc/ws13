@@ -1,14 +1,14 @@
-1. Data Viz
-2. Turtle Landscape
+1. Data Viz         check
+2. Turtle Landscape check
     - Berge
     - Haus
     - Baum
-3. Turtle: L-System
-4. Flood Fill Agent
-5. Ordered Dithering
-6. Landscape, Rain Erosion
+3. Spirograph
+4. Turtle: L-System check
+5. Flood Fill Agent
+6. Ordered Dithering
+7. Landscape, Rain Erosion
     - Agents sind Regentropfen
     - Nehmen einen Teil des Materials mit und transportieren es zum Nachbarfeld
-7. Perspective Camera
-8. Viz von 6.
+8. Perspective Camera und Viz von 6.
 9. Ameisenwettkampf

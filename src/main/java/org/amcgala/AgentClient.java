@@ -6,30 +6,35 @@ import akka.actor.UntypedActor;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
+import java.util.List;
+
 /**
- *
  *
  */
 public class AgentClient {
-    private int numberOfAgents;
-    private Class<? extends UntypedActor> agentClass;
 
     private Config config = ConfigFactory.load();
     private ActorSystem system = ActorSystem.create("Client", config.getConfig("client"));
 
-    public AgentClient(int numberOfAgents, Class<? extends UntypedActor> agentClass) {
-        this.numberOfAgents = numberOfAgents;
-        this.agentClass = agentClass;
-        for (int i = 0; i < numberOfAgents; i++) {
-            system.actorOf(Props.create(agentClass));
+    public AgentClient(String agentConfiguration) {
+        Config agents = ConfigFactory.load(agentConfiguration);
+        List<List<String>> lists = (List<List<String>>) agents.getAnyRefList("org.amcgala.agent.client.agents");
+        for (List<String> l : lists) {
+            try {
+                int noa = Integer.parseInt(l.get(0));
+                System.out.println("Trying: " + l.get(1));
+                Class agentClass = ClassLoader.getSystemClassLoader().loadClass(l.get(1));
+                createAgents(noa, agentClass);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
-    public AgentClient(int numberOfAgents, Class<? extends UntypedActor> agentClass, Object... args) {
-        this.numberOfAgents = numberOfAgents;
-        this.agentClass = agentClass;
+    private void createAgents(int numberOfAgents, Class<? extends UntypedActor> agentClass) {
         for (int i = 0; i < numberOfAgents; i++) {
-            system.actorOf(Props.create(agentClass, args));
+            system.actorOf(Props.create(agentClass));
         }
     }
 }

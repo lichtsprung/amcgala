@@ -1,75 +1,91 @@
 package org.amcgala.agent;
 
-import akka.actor.Actor;
-import akka.actor.ActorSelection;
-import akka.actor.Props;
-import akka.actor.UntypedActor;
+import akka.actor.*;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import akka.japi.Creator;
+import akka.japi.Procedure;
+import scala.concurrent.duration.FiniteDuration;
 
-/**
- * An Agent
- * <ul>
- * <li>receives its currentState vicinity in every time step</li>
- * </ul>
- */
+import java.util.concurrent.TimeUnit;
+
+
 public abstract class AmcgalaAgent extends UntypedActor {
 
     protected LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
     protected Agent.AgentState currentState;
-    protected World.Index startPosition;
-    protected Agent.AgentID id = new Agent.AgentID(getSelf().hashCode());
 
-    // TODO Shouldn't be hardcoded!
-    private ActorSelection simulation = getContext().system().actorSelection("akka.tcp://Simulator@localhost:2552/user/simulation");
+    protected final Agent.AgentID id = new Agent.AgentID(getSelf().hashCode());
 
+    private final String simulationPath = getContext().system().settings().config().getString("org.amcgala.agent.simulation");
 
-    public AmcgalaAgent(World.Index startPosition) {
-        this.startPosition = startPosition;
-    }
+    private final ActorSelection simulation = getContext().actorSelection(simulationPath);
+
+    private final Cancellable waitTask = getContext().system().scheduler().scheduleOnce(new FiniteDuration(5, TimeUnit.SECONDS), new Runnable() {
+        @Override
+        public void run() {
+            simulation.tell(Simulation.RegisterWithDefaultIndex$.MODULE$, getSelf());
+            getContext().become(updateHandling);
+        }
+    }, getContext().system().dispatcher());
+
+    private Procedure<Object> waitForPosition = new Procedure<Object>() {
+
+        @Override
+        public void apply(Object message) throws Exception {
+            if (message instanceof Agent.SpawnAt) {
+                Agent.SpawnAt spawnMessage = (Agent.SpawnAt) message;
+                simulation.tell(new Simulation.Register(spawnMessage.position()));
+                waitTask.cancel();
+                getContext().become(updateHandling);
+            } else {
+                unhandled(message);
+            }
+        }
+    };
+
+    private Procedure<Object> updateHandling = new Procedure<Object>() {
+
+        @Override
+        public void apply(Object message) throws Exception {
+            if (message instanceof Simulation.SimulationUpdate) {
+                log.debug("Received a SimulationUpdate! Processing...");
+                currentState = ((Simulation.SimulationUpdate) message).currentState();
+                sender().tell(onUpdate((Simulation.SimulationUpdate) message), self());
+            } else {
+                unhandled(message);
+            }
+        }
+    };
 
 
     @Override
     public void preStart() throws Exception {
-        if (startPosition == World$.MODULE$.RandomIndex()) {
-            simulation.tell(Simulation.RegisterWithRandomIndex$.MODULE$, self());
-        } else {
-            simulation.tell(new Simulation.Register(startPosition), self());
-        }
+        getContext().become(waitForPosition);
     }
-
 
     @Override
     public void onReceive(Object message) throws Exception {
-        if (message instanceof Simulation.SimulationUpdate) {
-            log.debug("Received a SimulationUpdate! Processing...");
-            currentState = ((Simulation.SimulationUpdate) message).currentState();
-            sender().tell(onUpdate((Simulation.SimulationUpdate) message), self());
-        } else {
-            unhandled(message);
-        }
     }
 
-    public void spawnChild(final Class<? extends AmcgalaAgent> childClass, final World.Index index) {
-        Props props = Props.create(new AmcgalaAgentCreator(childClass, index));
-        context().actorOf(props);
+    protected void spawnChild() {
+        Props props = Props.create(new AmcgalaAgentCreator(this.getClass()));
+        ActorRef ref = getContext().actorOf(props);
+        ref.tell(new Agent.SpawnAt(currentState.position()), getSelf());
     }
 
-    abstract public Agent.AgentMessage onUpdate(Simulation.SimulationUpdate update);
+    abstract protected Agent.AgentMessage onUpdate(Simulation.SimulationUpdate update);
 
     static class AmcgalaAgentCreator implements Creator<Actor> {
         Class<? extends AmcgalaAgent> childClass;
-        World.Index index;
 
-        AmcgalaAgentCreator(Class<? extends AmcgalaAgent> childClass, World.Index index) {
+        AmcgalaAgentCreator(Class<? extends AmcgalaAgent> childClass) {
             this.childClass = childClass;
-            this.index = index;
         }
 
         public Actor create() throws Exception {
-            return childClass.getConstructor(World.Index.class).newInstance(index);
+            return childClass.getConstructor().newInstance();
         }
     }
 }
