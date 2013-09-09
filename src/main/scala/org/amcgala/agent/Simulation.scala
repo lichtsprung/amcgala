@@ -86,7 +86,6 @@ class Simulation extends Actor with ActorLogging {
     case Register(index) =>
       world map (w => {
         agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, w(index)))
-        log.info("Registering new Actor at {}", index)
       })
 
     case RegisterWithDefaultIndex =>
@@ -109,6 +108,7 @@ class Simulation extends Actor with ActorLogging {
 
     case Update =>
       world map (w => {
+        log.info(s"Number of agents ${agents.size}")
         w.update()
         agents map {
           case (ref, currentState) => {
@@ -135,6 +135,9 @@ class Simulation extends Actor with ActorLogging {
       world map (w => {
         agents.get(sender) map (i => w.addPheromone(i.position, pheromone))
       })
+
+    case Dead =>
+      agents = agents - sender
 
     case ChangeValue(value) =>
       world map (w => {
@@ -294,6 +297,8 @@ object Agent {
   case class ChangeValue(newValue: Float) extends AgentMessage
 
   case class ReleasePheromone(pheromone: Pheromone) extends AgentMessage
+
+  case object Dead extends AgentMessage
 
   case class AgentState(id: AgentID, position: Index, cell: Cell)
 

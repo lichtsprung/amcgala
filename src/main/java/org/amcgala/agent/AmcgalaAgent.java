@@ -30,13 +30,15 @@ public abstract class AmcgalaAgent extends UntypedActor {
         }
     }, getContext().system().dispatcher());
 
-    private Procedure<Object> waitForPosition = new Procedure<Object>() {
+    private final Procedure<Object> waitForPosition = new Procedure<Object>() {
 
         @Override
         public void apply(Object message) throws Exception {
             if (message instanceof Agent.SpawnAt) {
+
                 Agent.SpawnAt spawnMessage = (Agent.SpawnAt) message;
-                simulation.tell(new Simulation.Register(spawnMessage.position()));
+                log.debug("Received Spawn Instructions from parent: " + spawnMessage.position());
+                simulation.tell(new Simulation.Register(spawnMessage.position()), getSelf());
                 waitTask.cancel();
                 getContext().become(updateHandling);
             } else {
@@ -45,7 +47,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
         }
     };
 
-    private Procedure<Object> updateHandling = new Procedure<Object>() {
+    private final Procedure<Object> updateHandling = new Procedure<Object>() {
 
         @Override
         public void apply(Object message) throws Exception {
@@ -70,9 +72,17 @@ public abstract class AmcgalaAgent extends UntypedActor {
     }
 
     protected void spawnChild() {
+        log.debug("Spawning Child");
         Props props = Props.create(new AmcgalaAgentCreator(this.getClass()));
-        ActorRef ref = getContext().actorOf(props);
+        ActorRef ref = getContext().system().actorOf(props);
         ref.tell(new Agent.SpawnAt(currentState.position()), getSelf());
+        log.debug("Telling Child to spawn at " + currentState.position());
+    }
+
+    protected Agent.AgentMessage die() {
+        simulation.tell(Agent.Dead$.MODULE$, getSelf());
+        getContext().stop(getSelf());
+        return Agent.Dead$.MODULE$;
     }
 
     abstract protected Agent.AgentMessage onUpdate(Simulation.SimulationUpdate update);

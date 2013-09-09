@@ -64,13 +64,13 @@ public abstract class StateLoggerAgent extends UntypedActor {
                 agents.put(as.id(), as);
             }
 
-            log.info("Initialising...");
             onInit();
-            log.info("Updating...");
             onUpdate(cells, agents);
         } else if (message instanceof Simulation.SimulationStateUpdate) {
 
             Simulation.SimulationStateUpdate state = (Simulation.SimulationStateUpdate) message;
+
+            agents.clear();
             for (Agent.AgentState as : state.agents()) {
                 agents.put(as.id(), as);
             }
