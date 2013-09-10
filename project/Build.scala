@@ -17,15 +17,15 @@ object AmcgalaAgents extends Build {
       "com.typesafe.akka" %% "akka-remote" % "2.3-SNAPSHOT" withSources() withJavadoc(),
       "com.typesafe.akka" %% "akka-actor" % "2.3-SNAPSHOT" withSources() withJavadoc(),
       "com.typesafe.akka" %% "akka-testkit" % "2.3-SNAPSHOT" withSources() withJavadoc(),
-      "org.scalatest" % "scalatest_2.10" % "2.0.M6-SNAP35" % "test" withSources() withJavadoc(),
+      "org.scalatest" % "scalatest_2.10" % "2.0.RC1-SNAP4" % "test" withSources() withJavadoc(),
       "java3d" % "vecmath" % "1.3.1",
       "com.google.guava" % "guava" % "14.0.1" withSources() withJavadoc(),
       "org.slf4j" % "slf4j-api" % "1.7.5" withSources() withJavadoc(),
       "org.slf4j" % "slf4j-simple" % "1.7.5" withSources() withJavadoc(),
       "org.apache.commons" % "commons-math3" % "3.2" withSources() withJavadoc(),
-      "org.lwjgl.lwjgl" % "lwjgl" % "2.9.0" withSources() withJavadoc()
+      "org.lwjgl.lwjgl" % "lwjgl" % "2.9.0" withSources() withJavadoc(),
+      "org.scala-lang" % "scala-reflect" % "2.10.2" withSources() withJavadoc()
     ),
-
     resolvers += Resolvers.typesafeReleaseRepo,
     resolvers += Resolvers.typesafeSnapshotRepo,
     resolvers += Resolvers.sonatypeSnapshotRepo

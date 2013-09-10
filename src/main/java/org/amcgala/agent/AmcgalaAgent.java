@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class AmcgalaAgent extends UntypedActor {
 
-    protected LoggingAdapter log = Logging.getLogger(getContext().system(), this);
+    final protected LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
     protected Agent.AgentState currentState;
 
@@ -31,11 +31,9 @@ public abstract class AmcgalaAgent extends UntypedActor {
     }, getContext().system().dispatcher());
 
     private final Procedure<Object> waitForPosition = new Procedure<Object>() {
-
         @Override
         public void apply(Object message) throws Exception {
             if (message instanceof Agent.SpawnAt) {
-
                 Agent.SpawnAt spawnMessage = (Agent.SpawnAt) message;
                 log.debug("Received Spawn Instructions from parent: " + spawnMessage.position());
                 simulation.tell(new Simulation.Register(spawnMessage.position()), getSelf());
@@ -48,7 +46,6 @@ public abstract class AmcgalaAgent extends UntypedActor {
     };
 
     private final Procedure<Object> updateHandling = new Procedure<Object>() {
-
         @Override
         public void apply(Object message) throws Exception {
             if (message instanceof Simulation.SimulationUpdate) {
@@ -80,9 +77,9 @@ public abstract class AmcgalaAgent extends UntypedActor {
     }
 
     protected Agent.AgentMessage die() {
-        simulation.tell(Agent.Dead$.MODULE$, getSelf());
+        simulation.tell(Agent.Death$.MODULE$, getSelf());
         getContext().stop(getSelf());
-        return Agent.Dead$.MODULE$;
+        return Agent.Death$.MODULE$;
     }
 
     abstract protected Agent.AgentMessage onUpdate(Simulation.SimulationUpdate update);

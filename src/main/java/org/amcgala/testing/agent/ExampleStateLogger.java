@@ -46,12 +46,13 @@ public final class ExampleStateLogger extends StateLoggerAgent {
             Rectangle p = points[e.getKey().x()][e.getKey().y()];
             float c = 1f - (float) e.getValue().value();
             RGBColor valueColor = new RGBColor(c, c, c);
-            if (e.getValue().pheromones().size() > 0) {
-                float strength = (float) e.getValue().pheromones().head()._2();
-                p.setColor(white.times(1f - strength));
-            } else {
-                p.setColor(white);
-            }
+            p.setColor(valueColor);
+//            if (e.getValue().pheromones().size() > 0) {
+//                float strength = (float) e.getValue().pheromones().head()._2();
+//                p.setColor(white.times(1f - strength));
+//            } else {
+//                p.setColor(white);
+//            }
         }
 
         for (Agent.AgentState s : agents.values()) {

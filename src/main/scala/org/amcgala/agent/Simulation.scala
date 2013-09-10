@@ -20,6 +20,7 @@ import org.amcgala.agent.World.WorldInfo
 import org.amcgala.agent.Agent.AgentID
 import org.amcgala.agent.Simulation.SimulationUpdate
 import com.typesafe.config.{ConfigFactory, Config}
+import java.util
 
 
 object Simulation {
@@ -108,8 +109,10 @@ class Simulation extends Actor with ActorLogging {
 
     case Update =>
       world map (w => {
-        log.info(s"Number of agents ${agents.size}")
-        w.update()
+        log.debug(s"Number of agents ${agents.size}")
+        if (currentConfig.getBoolean("org.amcgala.agent.simulation.world.pheromones")) {
+          w.update()
+        }
         agents map {
           case (ref, currentState) => {
             val neighbourCells = w.neighbours(currentState.position)
@@ -133,10 +136,12 @@ class Simulation extends Actor with ActorLogging {
 
     case ReleasePheromone(pheromone) =>
       world map (w => {
-        agents.get(sender) map (i => w.addPheromone(i.position, pheromone))
+        if (currentConfig.getBoolean("org.amcgala.agent.simulation.world.pheromones")) {
+          agents.get(sender) map (i => w.addPheromone(i.position, pheromone))
+        }
       })
 
-    case Dead =>
+    case Death =>
       agents = agents - sender
 
     case ChangeValue(value) =>
@@ -167,38 +172,106 @@ object World {
   def apply(config: Config) = {
     val _width = config.getInt("org.amcgala.agent.simulation.world.width")
     val _height = config.getInt("org.amcgala.agent.simulation.world.height")
+    val worldDef = config.getString("org.amcgala.agent.simulation.world.worldDefinition")
+    println(s"Loading $worldDef")
+    val cl = ClassLoader.getSystemClassLoader.loadClass(worldDef)
     new World {
+      val initialiser = cl.newInstance().asInstanceOf[Initialiser]
       val width: Int = _width
       val height: Int = _height
+      var field: Map[Index, Cell] = initialiser.initField(width, height, neighbours, config)
 
-      var field: Map[Index, Cell] = Map.empty[Index, Cell]
-
-
-      for (x <- 0 until width) {
-        for (y <- 0 until height) {
-          field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Float]))
-        }
+      val neighbours: List[Index] = {
+        import scala.collection.JavaConversions._
+        val lists = config.getAnyRefList("org.amcgala.agent.simulation.world.neighbours").asInstanceOf[util.ArrayList[util.ArrayList[Int]]]
+        (for (
+          list <- lists
+        ) yield Index(list(0), list(1))).toList
       }
-
-      val neighbours: List[Index] = List(
-        Index(1, 0),
-        Index(1, 1),
-        Index(0, 1),
-        Index(-1, 1),
-        Index(-1, 0),
-        Index(-1, -1),
-        Index(0, -1),
-        Index(1, -1)
-      )
     }
   }
 }
 
+trait Initialiser {
+  def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell]
+}
+
+
+class EmptyWorldMapInitialiser extends Initialiser {
+  def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
+    var field: Map[Index, Cell] = Map.empty[Index, Cell]
+    for (x <- 0 until width) {
+      for (y <- 0 until height) {
+        field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Float]))
+      }
+    }
+    field
+  }
+}
+
+class PolygonWorldMapInitialiser extends Initialiser {
+  def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
+    var field: Map[Index, Cell] = Map.empty[Index, Cell]
+
+    for (x <- 0 until width) {
+      for (y <- 0 until height) {
+        field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Float]))
+      }
+    }
+
+    val polygon = config.getAnyRefList("org.amcgala.shape.polygon").asInstanceOf[util.ArrayList[util.ArrayList[Int]]]
+    polygon.zipWithIndex.foreach {
+      case (start, index) =>
+        val end = polygon.get((index + 1) % polygon.size())
+        bresenham(start(0), start(1), end(0), end(1)).foreach(i => {
+          field = field + (i -> Cell(1, Map.empty[Pheromone, Float]))
+        })
+    }
+
+    field
+  }
+
+
+  def bresenham(x0: Int, y0: Int, x1: Int, y1: Int) = {
+    import scala.math.abs
+
+    val dx = abs(x1 - x0)
+    val dy = abs(y1 - y0)
+
+    val sx = if (x0 < x1) 1 else -1
+    val sy = if (y0 < y1) 1 else -1
+
+    new Iterator[Index] {
+      var (x, y) = (x0, y0)
+      var err = dx - dy
+
+      def next = {
+        val omitted = Index(x, y)
+        val e2 = 2 * err
+        if (e2 > -dy) {
+          err -= dy
+          x += sx
+        }
+        if (e2 < dx) {
+          err += dx
+          y += sy
+        }
+        omitted
+      }
+
+      def hasNext = (!(x == x1 && y == y1))
+    }
+  }
+
+
+}
+
+
 trait World {
   val width: Int
   val height: Int
-  var field: Map[Index, Cell]
   val neighbours: List[Index]
+  var field: Map[Index, Cell]
 
   def randomCell: CellWithIndex = {
     val col = Random.nextInt(width)
@@ -211,7 +284,7 @@ trait World {
   def neighbours(index: Index): Array[CellWithIndex] = {
     val neighbourCells = Array.ofDim[CellWithIndex](neighbours.length)
 
-    neighbours.view.zipWithIndex.foreach {
+    neighbours.zipWithIndex.foreach {
       case (value, i) =>
         val ix = (((index.x + value.x) % width) + width) % width
         val iy = (((index.y + value.y) % height) + height) % height
@@ -298,7 +371,7 @@ object Agent {
 
   case class ReleasePheromone(pheromone: Pheromone) extends AgentMessage
 
-  case object Dead extends AgentMessage
+  case object Death extends AgentMessage
 
   case class AgentState(id: AgentID, position: Index, cell: Cell)
 
