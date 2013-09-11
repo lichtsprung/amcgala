@@ -59,7 +59,8 @@ class Simulation extends Actor with ActorLogging {
 
   var currentConfig = ConfigFactory.empty().withFallback(defaultConfig)
   var pingTime = currentConfig.getInt("org.amcgala.agent.simulation.ping-time").milliseconds
-  var defaultPosition = {
+
+  def defaultPosition = {
     val l = currentConfig.getIntList("org.amcgala.agent.default-position")
     assert(l.size() == 2)
     World.Index(l(0), l(1))
@@ -96,7 +97,7 @@ class Simulation extends Actor with ActorLogging {
         case index: Index =>
           world map (w => {
             agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, w(index)))
-            log.info("Registering new Actor at {}", index)
+            log.debug("Registering new Actor at {}", index)
           })
       }
 
@@ -104,7 +105,7 @@ class Simulation extends Actor with ActorLogging {
       world map (w => {
         sender ! SimulationState(w.worldInfo, agents.values.toList)
         stateLogger = stateLogger + sender
-        log.info(s"Registered StateLoggers: $stateLogger")
+        log.debug(s"Registered StateLoggers: $stateLogger")
       })
 
     case Update =>
@@ -174,7 +175,7 @@ object World {
     val _width = config.getInt("org.amcgala.agent.simulation.world.width")
     val _height = config.getInt("org.amcgala.agent.simulation.world.height")
     val worldDef = config.getString("org.amcgala.agent.simulation.world.worldDefinition")
-    println(s"Loading $worldDef")
+
     val cl = ClassLoader.getSystemClassLoader.loadClass(worldDef)
     new World {
       val initialiser = cl.newInstance().asInstanceOf[Initialiser]
@@ -193,92 +194,6 @@ object World {
   }
 }
 
-trait Initialiser {
-  def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell]
-}
-
-
-class EmptyWorldMapInitialiser extends Initialiser {
-  def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
-    var field: Map[Index, Cell] = Map.empty[Index, Cell]
-    for (x <- 0 until width) {
-      for (y <- 0 until height) {
-        field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Float]))
-      }
-    }
-    field
-  }
-}
-
-class PolygonWorldMapInitialiser extends Initialiser {
-  def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
-    var field: Map[Index, Cell] = Map.empty[Index, Cell]
-
-    for (x <- 0 until width) {
-      for (y <- 0 until height) {
-        field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Float]))
-      }
-    }
-
-    val polygon = config.getAnyRefList("org.amcgala.shape.polygon").asInstanceOf[util.ArrayList[util.ArrayList[Int]]]
-    polygon.zipWithIndex.foreach {
-      case (start, index) =>
-        val end = polygon.get((index + 1) % polygon.size())
-        bresenham(start(0), start(1), end(0), end(1)).foreach(i => {
-          field = field + (i -> Cell(1, Map.empty[Pheromone, Float]))
-        })
-    }
-
-    field
-  }
-
-
-  def bresenham(x0: Int, y0: Int, x1: Int, y1: Int) = {
-    import scala.math.abs
-
-    val dx = abs(x1 - x0)
-    val dy = abs(y1 - y0)
-
-    val sx = if (x0 < x1) 1 else -1
-    val sy = if (y0 < y1) 1 else -1
-
-    new Iterator[Index] {
-      var (x, y) = (x0, y0)
-      var err = dx - dy
-
-      def next = {
-        val point = Index(x, y)
-        val e2 = 2 * err
-        if (e2 > -dy) {
-          err -= dy
-          x += sx
-        }
-        if (e2 < dx) {
-          err += dx
-          y += sy
-        }
-        point
-      }
-
-      def hasNext = !(x == x1 && y == y1)
-    }
-  }
-}
-
-class FractalWorldMapInitialiser extends Initialiser{
-  def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
-    var field: Map[Index, Cell] = Map.empty[Index, Cell]
-
-    for (x <- 0 until width) {
-      for (y <- 0 until height) {
-        // TODO Noise Function
-        field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Float]))
-      }
-    }
-
-    field
-  }
-}
 
 trait World {
   val width: Int

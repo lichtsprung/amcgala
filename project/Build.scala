@@ -7,7 +7,7 @@ object AmcgalaAgents extends Build {
 
   lazy val projectSettings = Defaults.defaultSettings ++ Seq(
     name := "acmgala",
-    version := "0.1.0",
+    version := "3.0.0",
     organization := "org.amcgala",
     scalaVersion := "2.10.2",
     javacOptions ++= Seq("-source", "1.7"),
@@ -23,8 +23,7 @@ object AmcgalaAgents extends Build {
       "org.slf4j" % "slf4j-api" % "1.7.5" withSources() withJavadoc(),
       "org.slf4j" % "slf4j-simple" % "1.7.5" withSources() withJavadoc(),
       "org.apache.commons" % "commons-math3" % "3.2" withSources() withJavadoc(),
-      "org.lwjgl.lwjgl" % "lwjgl" % "2.9.0" withSources() withJavadoc(),
-      "org.scala-lang" % "scala-reflect" % "2.10.2" withSources() withJavadoc()
+      "org.lwjgl.lwjgl" % "lwjgl" % "2.9.0" withSources() withJavadoc()
     ),
     resolvers += Resolvers.typesafeReleaseRepo,
     resolvers += Resolvers.typesafeSnapshotRepo,

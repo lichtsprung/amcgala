@@ -41,18 +41,19 @@ public final class ExampleStateLogger extends StateLoggerAgent {
 
 //        RGBColor pheromoneColor = new RGBColor(0, 0, 0);
 //        RGBColor white = new RGBColor(1f, 1f, 1f);
-
-        for (Map.Entry<World.Index, World.Cell> e : cells.entrySet()) {
-            Rectangle p = points[e.getKey().x()][e.getKey().y()];
-            float c = 1f - (float) e.getValue().value();
-            RGBColor valueColor = new RGBColor(c, c, c);
-            p.setColor(valueColor);
 //            if (e.getValue().pheromones().size() > 0) {
 //                float strength = (float) e.getValue().pheromones().head()._2();
 //                p.setColor(white.times(1f - strength));
 //            } else {
 //                p.setColor(white);
 //            }
+
+        for (Map.Entry<World.Index, World.Cell> entry : cells.entrySet()) {
+            Rectangle p = points[entry.getKey().x()][entry.getKey().y()];
+            float c = 1f - (float) entry.getValue().value();
+            RGBColor valueColor = new RGBColor(c, c, c);
+            p.setColor(valueColor);
+
         }
 
         for (Agent.AgentState s : agents.values()) {

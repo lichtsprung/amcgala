@@ -14,6 +14,7 @@ public class SimpleAgent extends AmcgalaAgent {
     private Random r = new Random(System.nanoTime());
 
 
+
     @Override
     public Agent.AgentMessage onUpdate(Simulation.SimulationUpdate update) {
         if (r.nextFloat() < 0.05f) {
