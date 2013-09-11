@@ -26,7 +26,7 @@ public class SimpleAgent extends AmcgalaAgent {
         } else if (r.nextFloat() >= 0.8f && r.nextFloat() < 0.99f) {
             return die();
         } else {
-            return new Agent.ReleasePheromone(new Agent.OwnerPheromone(id, 1f, 0.66f, 0.10f));
+            return new Agent.ChangeValue(r.nextFloat());
         }
     }
 }

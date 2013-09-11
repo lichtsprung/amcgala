@@ -130,6 +130,7 @@ class Simulation extends Actor with ActorLogging {
   def handleAgentMessages: Actor.Receive = {
     case MoveTo(index) =>
       world map (w => {
+        // TODO ist die steigung zwischen zwei zellen egal oder gibt es eine grenze, ab der die agenten nicht dort langgehen koennen?
         log.debug("Moving agent {} to {}", sender, index)
         agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, w(index)))
       })
@@ -246,7 +247,7 @@ class PolygonWorldMapInitialiser extends Initialiser {
       var err = dx - dy
 
       def next = {
-        val omitted = Index(x, y)
+        val point = Index(x, y)
         val e2 = 2 * err
         if (e2 > -dy) {
           err -= dy
@@ -256,16 +257,28 @@ class PolygonWorldMapInitialiser extends Initialiser {
           err += dx
           y += sy
         }
-        omitted
+        point
       }
 
-      def hasNext = (!(x == x1 && y == y1))
+      def hasNext = !(x == x1 && y == y1)
     }
   }
-
-
 }
 
+class FractalWorldMapInitialiser extends Initialiser{
+  def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
+    var field: Map[Index, Cell] = Map.empty[Index, Cell]
+
+    for (x <- 0 until width) {
+      for (y <- 0 until height) {
+        // TODO Noise Function
+        field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Float]))
+      }
+    }
+
+    field
+  }
+}
 
 trait World {
   val width: Int
