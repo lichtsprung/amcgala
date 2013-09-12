@@ -66,6 +66,12 @@ class Simulation extends Actor with ActorLogging {
     World.Index(l(0), l(1))
   }
 
+  def constraintsChecker = {
+    val checkerClass = currentConfig.getString("org.amcgala.agent.simulation.world.worldConstraints")
+    val cl = ClassLoader.getSystemClassLoader.loadClass(checkerClass)
+    cl.newInstance().asInstanceOf[WorldConstraintsChecker]
+  }
+
   def receive: Actor.Receive = waitForWorld
 
   def waitForWorld: Actor.Receive = {
@@ -131,15 +137,21 @@ class Simulation extends Actor with ActorLogging {
   def handleAgentMessages: Actor.Receive = {
     case MoveTo(index) =>
       world map (w => {
-        // TODO ist die steigung zwischen zwei zellen egal oder gibt es eine grenze, ab der die agenten nicht dort langgehen koennen?
-        log.debug("Moving agent {} to {}", sender, index)
-        agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, w(index)))
+        val oldCell = agents(sender).cell
+        if (constraintsChecker.checkMove(oldCell, w(index))) {
+          log.debug("Moving agent {} to {}", sender, index)
+          agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, w(index)))
+        } else {
+          log.info("Move not allowed!")
+        }
       })
 
     case ReleasePheromone(pheromone) =>
       world map (w => {
         if (currentConfig.getBoolean("org.amcgala.agent.simulation.world.pheromones")) {
-          agents.get(sender) map (i => w.addPheromone(i.position, pheromone))
+          if (constraintsChecker.checkPheromone(agents(sender), pheromone)) {
+            agents.get(sender) map (i => w.addPheromone(i.position, pheromone))
+          }
         }
       })
 
@@ -149,7 +161,9 @@ class Simulation extends Actor with ActorLogging {
     case ChangeValue(value) =>
       world map (w => {
         agents.get(sender) map (c => {
-          w.change(c.position, value)
+          if (constraintsChecker.checkValueChange(c.cell.value, value)) {
+            w.change(c.position, value)
+          }
         })
       })
   }
