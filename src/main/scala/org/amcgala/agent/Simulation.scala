@@ -22,32 +22,89 @@ import org.amcgala.agent.Simulation.SimulationUpdate
 import com.typesafe.config.{ConfigFactory, Config}
 import java.util
 
-
+/**
+ * Companion Object der Agentensimulation. Hier finden sich alle Messageklassen, die die Simulation verarbeitet.
+ */
 object Simulation {
 
+  /**
+   * Die Konfiguration, die von der Simulation geladen werden soll. In der Regel die erste Nachricht, die an die Simulation
+   * geschickt wird, um das Laden einer Welt zu initiieren.
+   *
+   * @param config die Konfiguration, die gelanden werden soll
+   */
   case class SimulationConfig(config: Config)
 
+
+  /**
+   * Aktueller Zustand eines Agenten. Das Update wird an den entsprechenden Agenten geschickt, der auf die Nachricht
+   * reagieren kann.
+   *
+   * @param currentState der aktuelle Zustand des Agenten
+   * @param neighbours die Nachbarzellen
+   */
   case class SimulationUpdate(currentState: AgentState, neighbours: Array[CellWithIndex])
 
+  /**
+   * Der globale Zustand der Simulation. Diese Nachricht wird an alle Statelogger geschickt, die die Informationen
+   * zur Visualisierung verwenden können.
+   *
+   * @param worldInfo globale Informationen zur Welt
+   * @param agents alle sich in der Simulation befindlichen Agenten
+   */
   case class SimulationState(worldInfo: WorldInfo, agents: java.util.List[AgentState])
 
+  /**
+   * Inkrementelles Update des Simulationszustands. Kann von der Simulation an die Statelogger verschickt werden, um
+   * Traffic zu reduzieren.
+   *
+   * @param changedCells die Zellen, die sich seit dem letzten Tick geändert haben
+   * @param agents die Agenten, die ihren Zustand geändert haben
+   */
   case class SimulationStateUpdate(changedCells: java.util.List[(Index, Cell)], agents: java.util.List[AgentState])
 
+  /**
+   * Registriert einen Agenten bei der Simulation. Er wird von der Simulation auf die Zelle mit dem mitgeschickten Index
+   * geschickt.
+   * Index kann von der Simulation ignoriert werden, wenn individuelle Platzierung in der Konfiguration deaktiviert wurde.
+   *
+   * @param index der Index der Zelle, auf der der Agent platziert werden soll
+   */
   case class Register(index: Index)
 
+  /**
+   * Registriert einen Agenten bei der Simulation. Platziert diesen auf einer zufällig ausgewählten Zelle.
+   */
   case object RegisterWithRandomIndex
 
+  /**
+   * Registriert einen [[org.amcgala.agent.StateLoggerAgent]]en bei der Simulation.
+   */
   case object RegisterStateLogger
 
+  /**
+   * Registriert einen [[org.amcgala.agent.AmcgalaAgent]] bei der Simulation und platziert diesen auf der Standardzelle,
+   * die in der Konfiguration definiert werden kann.
+   */
   case object RegisterWithDefaultIndex
 
+  /**
+   * Triggert ein Update der Simulation. Das Interval kann in der Konfiguration definiert werden.
+   */
   case object Update
 
-  def props(): Props = Props(classOf[Simulation])
+  /**
+   * Gibt die [[akka.actor.Props]] Instanz zurück, die zur Erstellung eines neuen Simulation Actors benötigt wird
+   * @return die Props
+   */
+  private[agent] def props(): Props = Props(classOf[Simulation])
 
 }
 
-
+/**
+ * Die Simulation ist das Herzstück des Amcgala Multiagent System. Die Simulation kümmert sich um die Verwaltung der
+ * aktiven Welt und ist reagiert auf die Aktionen, die ein Agent durchführt.
+ */
 class Simulation extends Actor with ActorLogging {
   val defaultConfig = ConfigFactory.load("simulation")
 
@@ -60,12 +117,23 @@ class Simulation extends Actor with ActorLogging {
   var currentConfig = ConfigFactory.empty().withFallback(defaultConfig)
   var pingTime = currentConfig.getInt("org.amcgala.agent.simulation.ping-time").milliseconds
 
+  /**
+   * Die Standardposition eines Agenten in der Welt. Dieser Wert wird aus der aktuellen Konfiguration genommen.
+   * @return die Standardposition eines Agenten
+   */
   def defaultPosition = {
     val l = currentConfig.getIntList("org.amcgala.agent.default-position")
     assert(l.size() == 2)
     World.Index(l(0), l(1))
   }
 
+  /**
+   * Der aktive [[org.amcgala.agent.WorldConstraintsChecker]]. Dieser wird bei der Verarbeitung der Agentennachrichten
+   * verwendet, um diese auf Plausibilität zu prüfen. Nur wenn der ConstraintsChecker die Aktion eines Agenten zulässt,
+   * wird diese auch tatsächlich ausgeführt.
+   *
+   * @return die Instanz des aktiven [[org.amcgala.agent.WorldConstraintsChecker]]
+   */
   def constraintsChecker = {
     val checkerClass = currentConfig.getString("org.amcgala.agent.simulation.world.worldConstraints")
     val cl = ClassLoader.getSystemClassLoader.loadClass(checkerClass)
