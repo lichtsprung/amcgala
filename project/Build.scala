@@ -1,9 +1,25 @@
+import com.typesafe.sbt.SbtScalariform
+import com.typesafe.sbt.SbtScalariform.ScalariformKeys
 import sbt._
 import Keys._
 import sbtassembly.Plugin.AssemblyKeys._
 import sbtassembly.Plugin._
 
 object AmcgalaAgents extends Build {
+
+  lazy val formatSettings = SbtScalariform.scalariformSettings ++ Seq(
+    ScalariformKeys.preferences in Compile := formattingPreferences,
+    ScalariformKeys.preferences in Test := formattingPreferences
+  )
+
+  import scalariform.formatter.preferences._
+  def formattingPreferences =
+    FormattingPreferences()
+      .setPreference(RewriteArrowSymbols, true)
+      .setPreference(AlignParameters, true)
+      .setPreference(AlignSingleLineCaseStatements, true)
+      .setPreference(DoubleIndentClassDeclaration, true)
+
 
   lazy val projectSettings = Defaults.defaultSettings ++ Seq(
     name := "acmgala",
@@ -30,7 +46,7 @@ object AmcgalaAgents extends Build {
     resolvers += Resolvers.sonatypeSnapshotRepo
   )
 
-  lazy val root = Project(id = "root", base = file("."), settings = projectSettings ++ assemblySettings) settings(
+  lazy val root = Project(id = "root", base = file("."), settings = projectSettings ++ assemblySettings ++ formatSettings) settings(
     jarName in assembly := "amcgala.jar",
     test in assembly := {}
     )

@@ -58,23 +58,28 @@ public abstract class AmcgalaAgent extends UntypedActor {
         }
     };
 
+    @Override
+    public void onReceive(Object message) throws Exception {}
 
     @Override
     public void preStart() throws Exception {
         getContext().become(waitForPosition);
     }
 
-    @Override
-    public void onReceive(Object message) throws Exception {
-    }
-
-    // TODO Index Parameter
     protected void spawnChild() {
         log.debug("Spawning Child");
         Props props = Props.create(new AmcgalaAgentCreator(this.getClass()));
         ActorRef ref = getContext().system().actorOf(props);
         ref.tell(new Agent.SpawnAt(currentState.position()), getSelf());
         log.debug("Telling Child to spawn at " + currentState.position());
+    }
+
+    protected void spawnChild(World.Index index) {
+        log.debug("Spawning Child");
+        Props props = Props.create(new AmcgalaAgentCreator(this.getClass()));
+        ActorRef ref = getContext().system().actorOf(props);
+        ref.tell(new Agent.SpawnAt(index), getSelf());
+        log.debug("Telling Child to spawn at " + index);
     }
 
     protected Agent.AgentMessage die() {

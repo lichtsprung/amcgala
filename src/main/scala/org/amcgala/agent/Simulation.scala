@@ -1,6 +1,6 @@
 package org.amcgala.agent
 
-import akka.actor.{Props, ActorLogging, ActorRef, Actor}
+import akka.actor.{ Props, ActorLogging, ActorRef, Actor }
 import org.amcgala.agent.Simulation._
 import scala.util.Random
 import org.amcgala.agent.World.Cell
@@ -19,7 +19,7 @@ import org.amcgala.agent.Agent.ChangeValue
 import org.amcgala.agent.World.WorldInfo
 import org.amcgala.agent.Agent.AgentID
 import org.amcgala.agent.Simulation.SimulationUpdate
-import com.typesafe.config.{ConfigFactory, Config}
+import com.typesafe.config.{ ConfigFactory, Config }
 import java.util
 
 /**
@@ -34,7 +34,6 @@ object Simulation {
    * @param config die Konfiguration, die gelanden werden soll
    */
   case class SimulationConfig(config: Config)
-
 
   /**
    * Aktueller Zustand eines Agenten. Das Update wird an den entsprechenden Agenten geschickt, der auf die Nachricht
@@ -113,7 +112,6 @@ class Simulation extends Actor with ActorLogging {
 
   var world: Option[World] = None
 
-
   var currentConfig = ConfigFactory.empty().withFallback(defaultConfig)
   var pingTime = currentConfig.getInt("org.amcgala.agent.simulation.ping-time").milliseconds
 
@@ -135,7 +133,7 @@ class Simulation extends Actor with ActorLogging {
    * @return die Instanz des aktiven [[org.amcgala.agent.WorldConstraintsChecker]]
    */
   def constraintsChecker = {
-    val checkerClass = currentConfig.getString("org.amcgala.agent.simulation.world.worldConstraints")
+    val checkerClass = currentConfig.getString("org.amcgala.agent.simulation.world.constraints.class")
     val cl = ClassLoader.getSystemClassLoader.loadClass(checkerClass)
     cl.newInstance().asInstanceOf[WorldConstraintsChecker]
   }
@@ -143,7 +141,7 @@ class Simulation extends Actor with ActorLogging {
   def receive: Actor.Receive = waitForWorld
 
   def waitForWorld: Actor.Receive = {
-    case SimulationConfig(config) =>
+    case SimulationConfig(config) ⇒
       currentConfig = config.withFallback(defaultConfig)
       world = Some(World(currentConfig))
       context.system.scheduler.schedule(5 seconds, pingTime, self, Update)
@@ -151,50 +149,50 @@ class Simulation extends Actor with ActorLogging {
   }
 
   def simulationLifeCycle: Actor.Receive = {
-    case RegisterWithRandomIndex =>
-      world map (w => {
+    case RegisterWithRandomIndex ⇒
+      world map (w ⇒ {
         val randomCell = w.randomCell
         agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), randomCell.index, randomCell.cell))
         log.debug("Registering new Actor at {}", randomCell)
-        log.debug("Agents on this cell: {}", agents.filter(entry => entry._2 == randomCell).keySet)
+        log.debug("Agents on this cell: {}", agents.filter(entry ⇒ entry._2 == randomCell).keySet)
       })
 
-    case Register(index) =>
-      world map (w => {
+    case Register(index) ⇒
+      world map (w ⇒ {
         agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, w(index)))
       })
 
-    case RegisterWithDefaultIndex =>
+    case RegisterWithDefaultIndex ⇒
       defaultPosition match {
-        case World.RandomIndex =>
+        case World.RandomIndex ⇒
           self forward RegisterWithRandomIndex
-        case index: Index =>
-          world map (w => {
+        case index: Index ⇒
+          world map (w ⇒ {
             agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, w(index)))
             log.debug("Registering new Actor at {}", index)
           })
       }
 
-    case RegisterStateLogger if !agents.exists(e => e._1 == sender) =>
-      world map (w => {
+    case RegisterStateLogger if !agents.exists(e ⇒ e._1 == sender) ⇒
+      world map (w ⇒ {
         sender ! SimulationState(w.worldInfo, agents.values.toList)
         stateLogger = stateLogger + sender
         log.debug(s"Registered StateLoggers: $stateLogger")
       })
 
-    case Update =>
-      world map (w => {
+    case Update ⇒
+      world map (w ⇒ {
         log.debug(s"Number of agents ${agents.size}")
         if (currentConfig.getBoolean("org.amcgala.agent.simulation.world.pheromones")) {
           w.update()
         }
         agents map {
-          case (ref, currentState) => {
+          case (ref, currentState) ⇒ {
             val neighbourCells = w.neighbours(currentState.position)
             ref ! SimulationUpdate(currentState, neighbourCells)
           }
         }
-        stateLogger map (logger => {
+        stateLogger map (logger ⇒ {
           log.debug(s"Sending SimulationStateUpdate to $logger")
           logger ! SimulationStateUpdate(w.field.toList, agents.values.toList)
         })
@@ -203,8 +201,8 @@ class Simulation extends Actor with ActorLogging {
   }
 
   def handleAgentMessages: Actor.Receive = {
-    case MoveTo(index) =>
-      world map (w => {
+    case MoveTo(index) ⇒
+      world map (w ⇒ {
         val oldCell = agents(sender).cell
         if (constraintsChecker.checkMove(oldCell, w(index))) {
           log.debug("Moving agent {} to {}", sender, index)
@@ -214,21 +212,21 @@ class Simulation extends Actor with ActorLogging {
         }
       })
 
-    case ReleasePheromone(pheromone) =>
-      world map (w => {
+    case ReleasePheromone(pheromone) ⇒
+      world map (w ⇒ {
         if (currentConfig.getBoolean("org.amcgala.agent.simulation.world.pheromones")) {
           if (constraintsChecker.checkPheromone(agents(sender), pheromone)) {
-            agents.get(sender) map (i => w.addPheromone(i.position, pheromone))
+            agents.get(sender) map (i ⇒ w.addPheromone(i.position, pheromone))
           }
         }
       })
 
-    case Death =>
+    case Death ⇒
       agents = agents - sender
 
-    case ChangeValue(value) =>
-      world map (w => {
-        agents.get(sender) map (c => {
+    case ChangeValue(value) ⇒
+      world map (w ⇒ {
+        agents.get(sender) map (c ⇒ {
           if (constraintsChecker.checkValueChange(c.cell.value, value)) {
             w.change(c.position, value)
           }
@@ -236,7 +234,6 @@ class Simulation extends Actor with ActorLogging {
       })
   }
 }
-
 
 object World {
 
@@ -252,11 +249,10 @@ object World {
 
   val RandomIndex = Index(-1, -1)
 
-
   def apply(config: Config) = {
     val _width = config.getInt("org.amcgala.agent.simulation.world.width")
     val _height = config.getInt("org.amcgala.agent.simulation.world.height")
-    val worldDef = config.getString("org.amcgala.agent.simulation.world.worldDefinition")
+    val worldDef = config.getString("org.amcgala.agent.simulation.world.definition.class")
 
     val cl = ClassLoader.getSystemClassLoader.loadClass(worldDef)
     new World {
@@ -269,13 +265,12 @@ object World {
         import scala.collection.JavaConversions._
         val lists = config.getAnyRefList("org.amcgala.agent.simulation.world.neighbours").asInstanceOf[util.ArrayList[util.ArrayList[Int]]]
         (for (
-          list <- lists
+          list ← lists
         ) yield Index(list(0), list(1))).toList
       }
     }
   }
 }
-
 
 trait World {
   val width: Int
@@ -295,7 +290,7 @@ trait World {
     val neighbourCells = Array.ofDim[CellWithIndex](neighbours.length)
 
     neighbours.zipWithIndex.foreach {
-      case (value, i) =>
+      case (value, i) ⇒
         val ix = (((index.x + value.x) % width) + width) % width
         val iy = (((index.y + value.y) % height) + height) % height
         val nx = Index(ix, iy)
@@ -321,7 +316,7 @@ trait World {
     field(index)
   }
 
-  def toList: List[CellWithIndex] = (for (entry <- field) yield CellWithIndex(entry._1, entry._2)).toList
+  def toList: List[CellWithIndex] = (for (entry ← field) yield CellWithIndex(entry._1, entry._2)).toList
 
   def worldInfo: WorldInfo = WorldInfo(width, height, field.toList)
 
@@ -329,21 +324,21 @@ trait World {
     var newField = Map.empty[Index, Cell]
 
     field map {
-      e =>
+      e ⇒
         val n = neighbours(e._1) // neighbours of current cell
-      var currentCellPheromones = newField.getOrElse(e._1, Cell(0, Map.empty[Pheromone, Float])).pheromones // already updated pheromone values
-      val currentCellValue = field(e._1).value // value of current cell
+        var currentCellPheromones = newField.getOrElse(e._1, Cell(0, Map.empty[Pheromone, Float])).pheromones // already updated pheromone values
+        val currentCellValue = field(e._1).value // value of current cell
 
         e._2.pheromones map {
-          p =>
+          p ⇒
             val decay = p._2 * p._1.decayRate // new value of this pheromone after decay
-          val sum = decay + currentCellPheromones.getOrElse(p._1, 0.0f) // sum of values (this cell + this pheromone spread from neighbour cells)
+            val sum = decay + currentCellPheromones.getOrElse(p._1, 0.0f) // sum of values (this cell + this pheromone spread from neighbour cells)
             if (sum > 0.009) {
               currentCellPheromones = currentCellPheromones + (p._1 -> math.min(1f, sum))
             }
             val spread = p._2 * p._1.spreadRate
             n map {
-              neighbour =>
+              neighbour ⇒
                 val neighbourCell = newField.getOrElse(e._1, Cell(field(neighbour.index).value, Map.empty[Pheromone, Float]))
                 var neighbourPheromones = neighbourCell.pheromones
                 val sum = spread + neighbourPheromones.getOrElse(p._1, 0.0f)

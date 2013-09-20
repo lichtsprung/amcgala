@@ -1,7 +1,7 @@
 package org.amcgala.agent
 
 import org.ejml.simple.SimpleMatrix
-import org.ejml.ops.{MatrixVisualization, MatrixFeatures}
+import org.ejml.ops.{ MatrixVisualization, MatrixFeatures }
 import org.ejml.data.DenseMatrix64F
 import java.util.Random
 
@@ -54,7 +54,6 @@ class Matrix {
     Matrix(rowCount, colCount, concatList: _*)
   }
 
-
   def show() {
     MatrixVisualization.show(sm.getMatrix, "Matrix")
   }
@@ -62,8 +61,8 @@ class Matrix {
   override def toString: String = sm.toString
 
   override def equals(obj: Any): Boolean = obj match {
-    case m: Matrix => MatrixFeatures.isEquals(sm, m.sm)
-    case _ => false
+    case m: Matrix ⇒ MatrixFeatures.isEquals(sm, m.sm)
+    case _         ⇒ false
   }
 }
 

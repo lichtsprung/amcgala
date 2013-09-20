@@ -3,19 +3,18 @@ package org.amcgala.agent
 import com.typesafe.config.Config
 import java.util
 import org.amcgala.agent.Agent.Pheromone
-import org.amcgala.agent.World.{Index, Cell}
+import org.amcgala.agent.World.{ Index, Cell }
 import scala.collection.JavaConversions._
 
 trait Initialiser {
   def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell]
 }
 
-
 class EmptyWorldMap extends Initialiser {
   def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
     var field: Map[Index, Cell] = Map.empty[Index, Cell]
-    for (x <- 0 until width) {
-      for (y <- 0 until height) {
+    for (x ← 0 until width) {
+      for (y ← 0 until height) {
         field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Float]))
       }
     }
@@ -27,24 +26,23 @@ class PolygonWorldMap extends Initialiser {
   def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
     var field: Map[Index, Cell] = Map.empty[Index, Cell]
 
-    for (x <- 0 until width) {
-      for (y <- 0 until height) {
+    for (x ← 0 until width) {
+      for (y ← 0 until height) {
         field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Float]))
       }
     }
 
-    val polygon = config.getAnyRefList("org.amcgala.shape.polygon").asInstanceOf[util.ArrayList[util.ArrayList[Int]]]
+    val polygon = config.getAnyRefList("org.amcgala.agent.simulation.world.definition.args").asInstanceOf[util.ArrayList[util.ArrayList[Int]]]
     polygon.zipWithIndex.foreach {
-      case (start, index) =>
+      case (start, index) ⇒
         val end = polygon.get((index + 1) % polygon.size())
-        bresenham(start(0), start(1), end(0), end(1)).foreach(i => {
+        bresenham(start(0), start(1), end(0), end(1)).foreach(i ⇒ {
           field = field + (i -> Cell(1, Map.empty[Pheromone, Float]))
         })
     }
 
     field
   }
-
 
   def bresenham(x0: Int, y0: Int, x1: Int, y1: Int) = {
     import scala.math.abs
@@ -78,12 +76,12 @@ class PolygonWorldMap extends Initialiser {
   }
 }
 
-class FractalWorldMap extends Initialiser{
+class FractalWorldMap extends Initialiser {
   def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
     var field: Map[Index, Cell] = Map.empty[Index, Cell]
 
-    for (x <- 0 until width) {
-      for (y <- 0 until height) {
+    for (x ← 0 until width) {
+      for (y ← 0 until height) {
         // TODO Noise Function
         field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Float]))
       }
