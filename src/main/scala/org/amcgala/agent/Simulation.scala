@@ -1,6 +1,6 @@
 package org.amcgala.agent
 
-import akka.actor.{ Props, ActorLogging, ActorRef, Actor }
+import akka.actor.{Props, ActorLogging, ActorRef, Actor}
 import org.amcgala.agent.Simulation._
 import scala.util.Random
 import org.amcgala.agent.World.Cell
@@ -19,7 +19,7 @@ import org.amcgala.agent.Agent.ChangeValue
 import org.amcgala.agent.World.WorldInfo
 import org.amcgala.agent.Agent.AgentID
 import org.amcgala.agent.Simulation.SimulationUpdate
-import com.typesafe.config.{ ConfigFactory, Config }
+import com.typesafe.config.{ConfigFactory, Config}
 import java.util
 
 /**
@@ -93,6 +93,12 @@ object Simulation {
   case object Update
 
   /**
+   * Ein Broadcast an alle Agenten in der Simulation.
+   * @param message die Nachricht, die an alle Agenten weitergeleitet werden soll.
+   */
+  case class Broadcast(message: Any)
+
+  /**
    * Gibt die [[akka.actor.Props]] Instanz zurück, die zur Erstellung eines neuen Simulation Actors benötigt wird
    * @return die Props
    */
@@ -159,7 +165,10 @@ class Simulation extends Actor with ActorLogging {
 
     case Register(index) ⇒
       world map (w ⇒ {
-        agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, w(index)))
+        if (agents.values.exists(_.position == index))
+          sender ! SpawnRejected
+        else
+          agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, w(index)))
       })
 
     case RegisterWithDefaultIndex ⇒
@@ -201,6 +210,11 @@ class Simulation extends Actor with ActorLogging {
   }
 
   def handleAgentMessages: Actor.Receive = {
+    case Broadcast(msg) ⇒
+      agents map {
+        state ⇒
+          state._1 ! msg
+      }
     case MoveTo(index) ⇒
       world map (w ⇒ {
         val oldCell = agents(sender).cell
@@ -229,6 +243,7 @@ class Simulation extends Actor with ActorLogging {
         agents.get(sender) map (c ⇒ {
           if (constraintsChecker.checkValueChange(c.cell.value, value)) {
             w.change(c.position, value)
+            agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), agents(sender).position, w(agents(sender).position)))
           }
         })
       })
@@ -326,13 +341,13 @@ trait World {
     field map {
       e ⇒
         val n = neighbours(e._1) // neighbours of current cell
-        var currentCellPheromones = newField.getOrElse(e._1, Cell(0, Map.empty[Pheromone, Float])).pheromones // already updated pheromone values
-        val currentCellValue = field(e._1).value // value of current cell
+      var currentCellPheromones = newField.getOrElse(e._1, Cell(0, Map.empty[Pheromone, Float])).pheromones // already updated pheromone values
+      val currentCellValue = field(e._1).value // value of current cell
 
         e._2.pheromones map {
           p ⇒
             val decay = p._2 * p._1.decayRate // new value of this pheromone after decay
-            val sum = decay + currentCellPheromones.getOrElse(p._1, 0.0f) // sum of values (this cell + this pheromone spread from neighbour cells)
+          val sum = decay + currentCellPheromones.getOrElse(p._1, 0.0f) // sum of values (this cell + this pheromone spread from neighbour cells)
             if (sum > 0.009) {
               currentCellPheromones = currentCellPheromones + (p._1 -> math.min(1f, sum))
             }
@@ -370,6 +385,8 @@ object Agent {
 
   case class SpawnAt(position: Index) extends AgentMessage
 
+  case object SpawnRejected extends AgentMessage
+
   case class MoveTo(index: Index) extends AgentMessage
 
   case class ChangeValue(newValue: Float) extends AgentMessage
@@ -377,6 +394,10 @@ object Agent {
   case class ReleasePheromone(pheromone: Pheromone) extends AgentMessage
 
   case object Death extends AgentMessage
+
+  case object Success extends AgentMessage
+
+  case object Failure extends AgentMessage
 
   case class AgentState(id: AgentID, position: Index, cell: Cell)
 

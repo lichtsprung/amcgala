@@ -35,10 +35,11 @@ public abstract class AmcgalaAgent extends UntypedActor {
         public void apply(Object message) throws Exception {
             if (message instanceof Agent.SpawnAt) {
                 Agent.SpawnAt spawnMessage = (Agent.SpawnAt) message;
-                log.debug("Received Spawn Instructions from parent: " + spawnMessage.position());
                 simulation.tell(new Simulation.Register(spawnMessage.position()), getSelf());
                 waitTask.cancel();
                 getContext().become(updateHandling);
+            } else if (message instanceof Agent.SpawnRejected$) {
+                getContext().stop(getSelf());
             } else {
                 unhandled(message);
             }
@@ -59,7 +60,8 @@ public abstract class AmcgalaAgent extends UntypedActor {
     };
 
     @Override
-    public void onReceive(Object message) throws Exception {}
+    public void onReceive(Object message) throws Exception {
+    }
 
     @Override
     public void preStart() throws Exception {
@@ -67,25 +69,29 @@ public abstract class AmcgalaAgent extends UntypedActor {
     }
 
     protected void spawnChild() {
-        log.debug("Spawning Child");
         Props props = Props.create(new AmcgalaAgentCreator(this.getClass()));
         ActorRef ref = getContext().system().actorOf(props);
         ref.tell(new Agent.SpawnAt(currentState.position()), getSelf());
-        log.debug("Telling Child to spawn at " + currentState.position());
     }
 
     protected void spawnChild(World.Index index) {
-        log.debug("Spawning Child");
         Props props = Props.create(new AmcgalaAgentCreator(this.getClass()));
         ActorRef ref = getContext().system().actorOf(props);
         ref.tell(new Agent.SpawnAt(index), getSelf());
-        log.debug("Telling Child to spawn at " + index);
     }
 
     protected Agent.AgentMessage die() {
         simulation.tell(Agent.Death$.MODULE$, getSelf());
         getContext().stop(getSelf());
         return Agent.Death$.MODULE$;
+    }
+
+    protected void success() {
+        getContext().parent().tell(Agent.Success$.MODULE$, getSelf());
+    }
+
+    protected void failure() {
+        getContext().parent().tell(Agent.Failure$.MODULE$, getSelf());
     }
 
     abstract protected Agent.AgentMessage onUpdate(Simulation.SimulationUpdate update);

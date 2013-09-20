@@ -1,4 +1,4 @@
-package org.amcgala;
+package org.amcgala.agent;
 
 import akka.actor.ActorSystem;
 import akka.actor.Props;
@@ -11,12 +11,12 @@ import java.util.List;
 /**
  *
  */
-public class AgentClient {
+public class SimpleAgentClient {
 
     private Config config = ConfigFactory.load();
     private ActorSystem system = ActorSystem.create("Client", config.getConfig("client"));
 
-    public AgentClient(String agentConfiguration) {
+    public SimpleAgentClient(String agentConfiguration) {
         Config agents = ConfigFactory.load(agentConfiguration);
         List<List<String>> lists = (List<List<String>>) agents.getAnyRefList("org.amcgala.agent.client.agents");
         for (List<String> l : lists) {
