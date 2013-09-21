@@ -13,12 +13,13 @@ import java.util.List;
  */
 public class SimpleAgentClient {
 
-    private Config config = ConfigFactory.load();
-    private ActorSystem system = ActorSystem.create("Client", config.getConfig("client"));
+    private ActorSystem system;
 
     public SimpleAgentClient(String agentConfiguration) {
-        Config agents = ConfigFactory.load(agentConfiguration);
-        List<List<String>> lists = (List<List<String>>) agents.getAnyRefList("org.amcgala.agent.client.agents");
+        Config config = ConfigFactory.load().getConfig("client").withFallback(ConfigFactory.load(agentConfiguration)).withFallback(ConfigFactory.load("simulation"));
+        System.out.println(config.getString("org.amcgala.agent.simulation"));
+        system = ActorSystem.create("Client", config);
+        List<List<String>> lists = (List<List<String>>) config.getAnyRefList("org.amcgala.agent.client.agents");
         for (List<String> l : lists) {
             try {
                 int noa = Integer.parseInt(l.get(0));

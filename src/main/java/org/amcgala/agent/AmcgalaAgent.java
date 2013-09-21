@@ -34,6 +34,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
         @Override
         public void apply(Object message) throws Exception {
             if (message instanceof Agent.SpawnAt) {
+                log.info("Received a spawn at");
                 Agent.SpawnAt spawnMessage = (Agent.SpawnAt) message;
                 simulation.tell(new Simulation.Register(spawnMessage.position()), getSelf());
                 waitTask.cancel();
@@ -92,6 +93,10 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     protected void failure() {
         getContext().parent().tell(Agent.Failure$.MODULE$, getSelf());
+    }
+
+    protected void spawnAt(int x, int y) {
+        getSelf().tell(new Agent.SpawnAt(new World.Index(x, y)), getSelf());
     }
 
     abstract protected Agent.AgentMessage onUpdate(Simulation.SimulationUpdate update);
