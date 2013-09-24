@@ -69,36 +69,70 @@ public abstract class AmcgalaAgent extends UntypedActor {
         getContext().become(waitForPosition);
     }
 
+    /**
+     * Erzeugt ein Kind und platziert es auf dem selben Index wie der Vater-Agent.
+     */
     protected void spawnChild() {
         Props props = Props.create(new AmcgalaAgentCreator(this.getClass()));
         ActorRef ref = getContext().system().actorOf(props);
         ref.tell(new Agent.SpawnAt(currentState.position()), getSelf());
     }
 
+    /**
+     * Erzeugt ein Kind und platziert dieses auf dem angegebenen Index in der Welt.
+     *
+     * @param index der Index, auf dem das Kind platziert werden soll
+     */
     protected void spawnChild(World.Index index) {
         Props props = Props.create(new AmcgalaAgentCreator(this.getClass()));
         ActorRef ref = getContext().system().actorOf(props);
         ref.tell(new Agent.SpawnAt(index), getSelf());
     }
 
+    /**
+     * Beendet diesen Agenten und teilt dies der Simulation mit.
+     *
+     * @return die Stop-Meldung an die Simulation
+     */
     protected Agent.AgentMessage die() {
         simulation.tell(Agent.Death$.MODULE$, getSelf());
         getContext().stop(getSelf());
         return Agent.Death$.MODULE$;
     }
 
+    /**
+     * Sendet eine Erfolgsmeldung an einen Elternagenten, um diesem mitzuteilen, dass eine Aufgabe erfolgreich
+     * abgeschlossen wurde.
+     */
     protected void success() {
         getContext().parent().tell(Agent.Success$.MODULE$, getSelf());
     }
 
+    /**
+     * Sendet eine Fehlermeldung an einen Elternagenten, um diesem mitzuteilen, dass eine Aufgabe nicht erfolgreich
+     * abgeschlossen werden konnte.
+     */
     protected void failure() {
         getContext().parent().tell(Agent.Failure$.MODULE$, getSelf());
     }
 
+    /**
+     * Erzeugt einen Kindsagenten und setzt in an die angegebene Position.
+     *
+     * @param x die x-Koordinate
+     * @param y die y-Koordinate
+     */
     protected void spawnAt(int x, int y) {
         getSelf().tell(new Agent.SpawnAt(new World.Index(x, y)), getSelf());
     }
 
+    /**
+     * Callback Methode, die bei jedem Update der Simulation aufgerufen wird.
+     * Hier gehört der Code rein, der von einem Agenten ausgeführt werden soll.
+     *
+     * @param update die Update Informationen
+     * @return die Aktion des Agenten
+     */
     abstract protected Agent.AgentMessage onUpdate(Simulation.SimulationUpdate update);
 
     static class AmcgalaAgentCreator implements Creator<Actor> {

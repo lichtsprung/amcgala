@@ -74,23 +74,31 @@ object Simulation {
   /**
    * Registriert einen Agenten bei der Simulation. Platziert diesen auf einer zufällig ausgewählten Zelle.
    */
-  case object RegisterWithRandomIndex
+  case object RegisterWithRandomIndex {
+    def getInstance = this
+  }
 
   /**
    * Registriert einen [[org.amcgala.agent.StateLoggerAgent]]en bei der Simulation.
    */
-  case object RegisterStateLogger
+  case object RegisterStateLogger {
+    def getInstance = this
+  }
 
   /**
    * Registriert einen [[org.amcgala.agent.AmcgalaAgent]] bei der Simulation und platziert diesen auf der Standardzelle,
    * die in der Konfiguration definiert werden kann.
    */
-  case object RegisterWithDefaultIndex
+  case object RegisterWithDefaultIndex {
+    def getInstance = this
+  }
 
   /**
    * Triggert ein Update der Simulation. Das Interval kann in der Konfiguration definiert werden.
    */
-  case object Update
+  case object Update {
+    def getInstance = this
+  }
 
   /**
    * Ein Broadcast an alle Agenten in der Simulation.
@@ -393,11 +401,17 @@ object Agent {
 
   case class ReleasePheromone(pheromone: Pheromone) extends AgentMessage
 
-  case object Death extends AgentMessage
+  case object Death extends AgentMessage {
+    def getInstance = this
+  }
 
-  case object Success extends AgentMessage
+  case object Success extends AgentMessage {
+    def getInstance = this
+  }
 
-  case object Failure extends AgentMessage
+  case object Failure extends AgentMessage {
+    def getInstance = this
+  }
 
   case class AgentState(id: AgentID, position: Index, cell: Cell)
 
