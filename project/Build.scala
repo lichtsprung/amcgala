@@ -22,7 +22,7 @@ object AmcgalaAgents extends Build {
 
 
   lazy val projectSettings = Defaults.defaultSettings ++ Seq(
-    name := "acmgala",
+    name := "amcgala",
     version := "3.0.0",
     organization := "org.amcgala",
     scalaVersion := "2.10.2",

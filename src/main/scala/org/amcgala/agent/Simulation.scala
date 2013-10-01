@@ -1,6 +1,6 @@
 package org.amcgala.agent
 
-import akka.actor.{Props, ActorLogging, ActorRef, Actor}
+import akka.actor.{ Props, ActorLogging, ActorRef, Actor }
 import org.amcgala.agent.Simulation._
 import scala.util.Random
 import org.amcgala.agent.World.Cell
@@ -19,7 +19,7 @@ import org.amcgala.agent.Agent.ChangeValue
 import org.amcgala.agent.World.WorldInfo
 import org.amcgala.agent.Agent.AgentID
 import org.amcgala.agent.Simulation.SimulationUpdate
-import com.typesafe.config.{ConfigFactory, Config}
+import com.typesafe.config.{ ConfigFactory, Config }
 import java.util
 
 /**
@@ -349,13 +349,13 @@ trait World {
     field map {
       e ⇒
         val n = neighbours(e._1) // neighbours of current cell
-      var currentCellPheromones = newField.getOrElse(e._1, Cell(0, Map.empty[Pheromone, Float])).pheromones // already updated pheromone values
-      val currentCellValue = field(e._1).value // value of current cell
+        var currentCellPheromones = newField.getOrElse(e._1, Cell(0, Map.empty[Pheromone, Float])).pheromones // already updated pheromone values
+        val currentCellValue = field(e._1).value // value of current cell
 
         e._2.pheromones map {
           p ⇒
             val decay = p._2 * p._1.decayRate // new value of this pheromone after decay
-          val sum = decay + currentCellPheromones.getOrElse(p._1, 0.0f) // sum of values (this cell + this pheromone spread from neighbour cells)
+            val sum = decay + currentCellPheromones.getOrElse(p._1, 0.0f) // sum of values (this cell + this pheromone spread from neighbour cells)
             if (sum > 0.009) {
               currentCellPheromones = currentCellPheromones + (p._1 -> math.min(1f, sum))
             }

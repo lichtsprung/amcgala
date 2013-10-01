@@ -39,7 +39,7 @@ public class LindenmayerSystem {
      *
      * @param axiom  das Startsymbol des L-Systems
      * @param rules  die Ersetzungsregeln, die auf das Axiom angewendet werden
-     * @param level  die Rekusionstiefe
+     * @param level  die Rekursionstiefe
      * @param length die Schrittweite
      * @param angle  der Winkel, um den gedreht wird
      * @param shape  das Shape, das für die Darstellung des L-Systems verwendet werden soll

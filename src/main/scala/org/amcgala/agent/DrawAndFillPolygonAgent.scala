@@ -1,7 +1,7 @@
 package org.amcgala.agent
 
-import akka.actor.{ActorLogging, Props, Actor}
-import org.amcgala.testing.agent.{FloodFillAgent, BresenhamLineAgent}
+import akka.actor.{ ActorLogging, Props, Actor }
+import org.amcgala.testing.agent.{ FloodFillAgent, BresenhamLineAgent }
 import java.util
 
 /**
