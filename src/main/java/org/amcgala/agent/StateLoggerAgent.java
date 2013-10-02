@@ -27,7 +27,7 @@ public abstract class StateLoggerAgent extends UntypedActor {
     protected int scaleX;
     protected int scaleY;
 
-    private final String simulationPath = getContext().system().settings().config().getString("org.amcgala.agent.simulation");
+    private final String simulationPath = getContext().system().settings().config().getString("org.amcgala.agent.simulation.address");
     private final ActorSelection simulation = getContext().actorSelection(simulationPath);
 
 

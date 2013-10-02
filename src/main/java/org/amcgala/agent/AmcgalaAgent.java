@@ -18,7 +18,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     protected final Agent.AgentID id = new Agent.AgentID(getSelf().hashCode());
 
-    private final String simulationPath = getContext().system().settings().config().getString("org.amcgala.agent.simulation");
+    private final String simulationPath = getContext().system().settings().config().getString("org.amcgala.agent.simulation.address");
 
     private final ActorSelection simulation = getContext().actorSelection(simulationPath);
 
@@ -34,7 +34,6 @@ public abstract class AmcgalaAgent extends UntypedActor {
         @Override
         public void apply(Object message) throws Exception {
             if (message instanceof Agent.SpawnAt) {
-                log.info("Received a spawn at");
                 Agent.SpawnAt spawnMessage = (Agent.SpawnAt) message;
                 simulation.tell(new Simulation.Register(spawnMessage.position()), getSelf());
                 waitTask.cancel();

@@ -15,7 +15,7 @@ import static java.lang.Math.*;
  * @author Robert Giacinto
  * @since 2.0
  */
-public abstract class TurtleMode {
+public abstract class TurtleMode extends Amcgala{
     /**
      * Die Standardbreite des Turtlefensters.
      */
@@ -46,7 +46,6 @@ public abstract class TurtleMode {
      */
     public TurtleMode() {
         turtleCommands();
-        Framework framework = Framework.createInstance(WIDTH, HEIGHT);
         framework.addScene(scene);
     }
 
@@ -114,7 +113,6 @@ public abstract class TurtleMode {
      * @param length die Länge des Schritts
      */
     protected void move(double length) {
-//  TODO muss korrigiert werden, sobald GL funktioniert.
         checkArgument(length > 0, "Schrittlänge kann nur positiv sein!");
 
         if (up) {

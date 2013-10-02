@@ -25,7 +25,7 @@ object AmcgalaAgents extends Build {
     name := "amcgala",
     version := "3.0.0",
     organization := "org.amcgala",
-    scalaVersion := "2.10.2",
+    scalaVersion := "2.10.3",
     javacOptions ++= Seq("-source", "1.7"),
     fork in run := true,
     libraryDependencies ++= Seq(
@@ -46,7 +46,7 @@ object AmcgalaAgents extends Build {
     resolvers += Resolvers.sonatypeSnapshotRepo
   )
 
-  lazy val root = Project(id = "root", base = file("."), settings = projectSettings ++ assemblySettings ++ formatSettings) settings(
+  lazy val amcgala = Project(id = "amcgala", base = file("."), settings = projectSettings ++ assemblySettings ++ formatSettings) settings(
     jarName in assembly := "amcgala.jar",
     test in assembly := {}
     )
