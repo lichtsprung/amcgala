@@ -1,8 +1,10 @@
 package org.amcgala;
 
 
-import org.amcgala.framework.math.Vector3d;
-import org.amcgala.framework.shape.Line;
+import org.amcgala.math.Vector3d;
+import org.amcgala.math.Vertex3f;
+import org.amcgala.math.util.Vectors;
+import org.amcgala.shape.Line;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Math.*;
@@ -13,7 +15,7 @@ import static java.lang.Math.*;
  * @author Robert Giacinto
  * @since 2.0
  */
-public abstract class TurtleMode {
+public abstract class TurtleMode extends Amcgala{
     /**
      * Die Standardbreite des Turtlefensters.
      */
@@ -27,10 +29,10 @@ public abstract class TurtleMode {
     private final Scene scene = new Scene("turtle");
 
     // Die Blickrichtung der Turtle. Sie schaut in Richtung der x-Achse. Also nach rechts.
-    private Vector3d heading = Vector3d.UNIT_X;
+    private Vector3d heading = new Vector3d(1, 0, 0);
 
     // Die Turtle steht im Urspung des Koordinatensystems. Aktuell in der Mitte des Fensters.
-    private Vector3d position = Vector3d.ZERO;
+    private Vector3d position = new Vector3d(0, 0, 0);
 
     // Der Blinkwinkel - das gleiche wie heading, nur dass es sich hierbei um eine Graddarstellung im Bogenmaß handelt.
     private double headingAngle;
@@ -44,7 +46,6 @@ public abstract class TurtleMode {
      */
     public TurtleMode() {
         turtleCommands();
-        Framework framework = Framework.createInstance(WIDTH, HEIGHT);
         framework.addScene(scene);
     }
 
@@ -61,10 +62,10 @@ public abstract class TurtleMode {
     }
 
     private void set(int x, int y) {
-        set((double) x, (double) y);
+        set(x, y);
     }
 
-    private void set(double x, double y) {
+    private void set(float x, float y) {
         position = new Vector3d(x, y, -1);
     }
 
@@ -89,8 +90,8 @@ public abstract class TurtleMode {
      *
      * @param angle der Winkel in Grad
      */
-    protected void turnLeft(double angle) {
-        headingAngle += angle;
+    protected void turnLeft(float angle) {
+        headingAngle -= angle;
         heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
         heading.normalize();
     }
@@ -100,8 +101,8 @@ public abstract class TurtleMode {
      *
      * @param angle der Winkel in Grad
      */
-    protected void turnRight(double angle) {
-        headingAngle -= angle;
+    protected void turnRight(float angle) {
+        headingAngle += angle;
         heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
         heading.normalize();
     }
@@ -117,11 +118,12 @@ public abstract class TurtleMode {
         if (up) {
             position = position.add(heading.times(length));
         } else {
-            Vector3d endPosition = position.add(heading.times(length));
+            Vertex3f endPosition = Vectors.toVertex3f(position.add(heading.times(length)));
+            Vertex3f startPosition = Vectors.toVertex3f(position);
             endPosition.z = -1;
-            position.z = -1;
-            scene.addShape(new Line(position, endPosition));
-            position = endPosition;
+            startPosition.z = -1;
+            scene.addShape(new Line(startPosition, endPosition));
+            position = Vectors.toVector3d(endPosition);
         }
     }
 

@@ -1,0 +1,26 @@
+package org.amcgala.math;
+
+import com.google.common.base.Objects;
+
+/**
+ *
+ */
+public class Vertex3f {
+    public float x, y, z;
+
+    public Vertex3f(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(getClass()).add("x", x).add("y", y).add("z", z).toString();
+    }
+
+    public Vector3d toVector() {
+        return new Vector3d(x, y, z);
+    }
+
+}

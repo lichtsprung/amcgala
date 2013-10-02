@@ -15,26 +15,24 @@
 package org.amcgala;
 
 import com.google.common.eventbus.EventBus;
-import org.amcgala.framework.animation.Animator;
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.event.*;
-import org.amcgala.framework.raytracer.Raytracer;
-import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.scenegraph.DefaultSceneGraph;
-import org.amcgala.framework.scenegraph.SceneGraph;
-import org.amcgala.framework.scenegraph.visitor.RenderVisitor;
-import org.amcgala.framework.scenegraph.visitor.UpdateVisitor;
-import org.amcgala.framework.scenegraph.visitor.Visitor;
+import org.amcgala.animation.Animator;
+import org.amcgala.camera.Camera;
+import org.amcgala.event.InputHandler;
+import org.amcgala.raytracer.Raytracer;
+import org.amcgala.renderer.DisplayList;
+import org.amcgala.renderer.GLRenderer;
+import org.amcgala.renderer.SoftwareRenderer;
+import org.amcgala.scenegraph.DefaultSceneGraph;
+import org.amcgala.scenegraph.SceneGraph;
+import org.amcgala.scenegraph.visitor.UpdateVisitor;
+import org.amcgala.scenegraph.visitor.Visitor;
+import org.amcgala.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -52,16 +50,136 @@ import static com.google.common.base.Preconditions.checkArgument;
  * @version 2.0
  */
 public final class Framework {
-
     private static final Logger log = LoggerFactory.getLogger(Framework.class);
-    public static Properties properties;
+    public static final Properties properties = loadProperties();
+    public static FrameworkMode currentMode;
+    private static Framework instance;
+    private SceneGraph scenegraph;
+    private Animator animator;
+    private Camera camera;
+    private List<Visitor> visitors;
+    private EventBus sceneEventBus;
+    private EventBus frameworkEventBus;
+    private Map<String, Scene> scenes;
+    private Scene activeScene;
+    private UpdateVisitor updateVisitor;
+    private Raytracer raytracer;
+    private Map<String, InputHandler> frameworkInputHandlers;
+    private boolean paused;
+    private int width;
+    private int height;
+    private boolean tracing;
+    private boolean running;
+    private DisplayList displayList;
 
-    static {
+    /**
+     * Erstellt ein neues Framework, das eine grafische Ausgabe in der Auflösung
+     * width x height hat.
+     *
+     * @param width  die Breite der Auflösung
+     * @param height die Höhe der Auflösung
+     */
+    private Framework(int width, int height, FrameworkMode mode) {
+        log.info("Initialising framework");
+        currentMode = mode;
+        this.width = width;
+        this.height = height;
+
+
+        frameworkInputHandlers = new HashMap<>();
+        frameworkEventBus = new EventBus("Framework Input Event Bus");
+
+        sceneEventBus = new EventBus();
+
+        visitors = new ArrayList<>(10);
+        scenegraph = new DefaultSceneGraph();
+
+        scenes = new HashMap<>();
+
+        updateVisitor = new UpdateVisitor();
+        visitors.add(updateVisitor);
+
+        //
+        // FIXME Raytracer ist eigentlich unabhängig vom Framework. Vielleicht besser: Raytracer(Framework, RaytracerMode.(Window, File)).
+        //
+
+        switch (mode) {
+            case SOFTWARE:
+                animator = new Animator(60, 60, this, SoftwareRenderer.class);
+                break;
+            case GL:
+                animator = new Animator(60, 60, this, GLRenderer.class);
+                break;
+            case RAYTRACER:
+                tracing = true;
+                break;
+        }
+    }
+
+    /**
+     * Erzeugt eine neue Instanz des Frameworks. Die Größe des Fensters kann über die Parameter width und height
+     * bestimmt werden.
+     *
+     * @param width  die Breite des Fensters
+     * @param height die Höhe des Fensters
+     * @return Referenz auf die Frameworksinstanz
+     */
+    public static Framework createInstance(int width, int height, FrameworkMode mode) {
+        checkArgument(instance == null, "Es können keine weiteren Instanzen von Framework erzeugt werden!");
+        instance = new Framework(width, height, mode);
+
+        return instance;
+    }
+
+    /**
+     * Erzeugt eine neue Instanz des Frameworks. Die Größe des Fensters kann über die Parameter width und height
+     * bestimmt werden..
+     *
+     * @param width  die Breite des Fensters
+     * @param height die Höhe des Fensters
+     * @return Referenz auf die Frameworksinstanz
+     */
+    public static Framework createInstance(int width, int height) {
+        return createInstance(width, height, FrameworkMode.SOFTWARE);
+    }
+
+    /**
+     * Gibt die bereits erzeugte Instanz des Frameworks zurück. Wurde noch keine erstellt, wird eine der Standardgröße
+     * 800x600 erstellt und zurückgegeben.
+     * Es wird der {@link org.amcgala.renderer.SoftwareRenderer} verwendet.
+     *
+     * @return Referenz auf die Frameworksinstanz
+     */
+    public static Framework getInstance() {
+        if (instance == null) {
+            instance = createInstance(Integer.parseInt(properties.getProperty("amcgala.width")), Integer.parseInt(properties.getProperty("amcgala.height")), FrameworkMode.SOFTWARE);
+            return instance;
+        } else {
+            return instance;
+        }
+    }
+
+    /**
+     * Gibt die bereits erzeugte Instanz des Frameworks zurück. Wurde noch keine erstellt, wird eine der Standardgröße
+     * 800x600 erstellt und zurückgegeben.
+     *
+     * @return Referenz auf die Frameworksinstanz
+     */
+    public static Framework getInstance(FrameworkMode mode) {
+        if (instance == null) {
+            instance = createInstance(Integer.parseInt(properties.getProperty("amcgala.width")), Integer.parseInt(properties.getProperty("amcgala.height")), mode);
+            return instance;
+        } else {
+            return instance;
+        }
+    }
+
+    private static Properties loadProperties() {
+        final Properties props = new Properties();
         log.info("Loading properties");
-        properties = new Properties();
-        InputStream in = Framework.class.getResourceAsStream("amcgala.properties");
+        final InputStream in = Framework.class.getResourceAsStream("amcgala.properties");
         try {
-            properties.load(in);
+            props.load(in);
         } catch (IOException e) {
             log.error("Couldn't load amcgala properties file.");
         } finally {
@@ -71,194 +189,25 @@ public final class Framework {
                 log.error("Coulnd't close InputStream.");
             }
         }
-    }
-
-    private static Framework instance;
-    private SceneGraph scenegraph;
-    private Renderer renderer;
-    private Camera camera;
-    private Animator animator;
-    private List<Visitor> visitors;
-    private JFrame frame;
-    private EventBus sceneEventBus;
-    private EventBus frameworkEventBus;
-    private Map<String, Scene> scenes;
-    private Scene activeScene;
-    private RenderVisitor renderVisitor;
-    private UpdateVisitor updateVisitor;
-    private Raytracer raytracer;
-    private Map<String, InputHandler> frameworkInputHandlers;
-    private boolean paused;
-    private int width;
-    private int height;
-    private boolean raytracing;
-
-    /**
-     * Erstellt ein neues Framework, das eine grafische Ausgabe in der Auflösung
-     * width x height hat.
-     *
-     * @param width  die Breite der Auflösung
-     * @param height die Höhe der Auflösung
-     */
-    private Framework(int width, int height) {
-        log.info("Initialising framework");
-        this.width = width;
-        this.height = height;
-
-        frameworkInputHandlers = new HashMap<String, InputHandler>();
-        frameworkEventBus = new EventBus("Framework Input Event Bus");
-
-
-        sceneEventBus = new EventBus();
-
-        visitors = new ArrayList<Visitor>(10);
-        scenegraph = new DefaultSceneGraph();
-
-        scenes = new HashMap<String, Scene>();
-
-        frame = new JFrame("amCGAla Framework");
-        frame.setSize(width, height);
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-        frame.setBackground(Color.WHITE);
-        frame.setVisible(true);
-
-
-        animator = new Animator(Integer.parseInt(properties.getProperty("animator.fps")), Integer.parseInt(properties.getProperty("animator.fps")));
-
-        updateVisitor = new UpdateVisitor();
-        visitors.add(updateVisitor);
-
-        renderVisitor = new RenderVisitor();
-        visitors.add(renderVisitor);
-
-        raytracer = new Raytracer();
-
-
-        frame.addKeyListener(new KeyAdapter() {
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                sceneEventBus.post(new KeyPressedEvent(e));
-                frameworkEventBus.post(new KeyPressedEvent(e));
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                sceneEventBus.post(new KeyReleasedEvent(e));
-                frameworkEventBus.post(new KeyReleasedEvent(e));
-            }
-        });
-
-        frame.addMouseListener(new MouseListener() {
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                sceneEventBus.post(new MouseClickedEvent(e));
-                frameworkEventBus.post(new MouseClickedEvent(e));
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                sceneEventBus.post(new MousePressedEvent(e));
-                frameworkEventBus.post(new MousePressedEvent(e));
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                sceneEventBus.post(new MouseReleasedEvent(e));
-                frameworkEventBus.post(new MouseReleasedEvent(e));
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                sceneEventBus.post(e);
-                frameworkEventBus.post(e);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                sceneEventBus.post(e);
-                frameworkEventBus.post(e);
-            }
-        });
-
-        frame.addMouseMotionListener(new MouseMotionListener() {
-
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                sceneEventBus.post(e);
-                frameworkEventBus.post(e);
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                sceneEventBus.post(e);
-                frameworkEventBus.post(e);
-            }
-        });
-
-        frame.addMouseWheelListener(new MouseWheelListener() {
-
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e) {
-                sceneEventBus.post(e);
-                frameworkEventBus.post(e);
-            }
-        });
+        return props;  //To change body of created methods use File | Settings | File Templates.
     }
 
     /**
-     * Erzeugt eine neue Instanz des Frameworks. Die Größe des Fensters kann über die Parameter width und height
-     * bestimmt werden.
-     * TODO Die sollte wieder weg oder private sein. Kann mich nicht mehr daran erinnern, wieso zwischen get und create unterschieden wird.
+     * Gibt den Eventbus des Frameworks zurück. Dieser besteht unabhängig von einer Szene und kann dafür verwendet werden,
+     * Interaktionsverhalten zu implementieren, das über eine Szene hinaus aktiv sein soll.
      *
-     * @param width  die Breite des Fensters
-     * @param height die Höhe des Fensters
-     * @return Referenz auf die Frameworksinstanz
+     * @return
      */
-    public static Framework createInstance(int width, int height) {
-        checkArgument(instance == null, "Es können keine weiteren Instanzen von Framework erzeugt werden!");
-        instance = new Framework(width, height);
-        if (instance.getSceneCount() > 0) {
-            instance.start();
-        }
-        return instance;
+    public EventBus getEventBus() {
+        return frameworkEventBus;
     }
+
 
     /**
-     * Gibt die bereits erzeugte Instanz des Frameworks zurück. Wurde noch keine erstellt, wird eine der Standardgröße
-     * 800x600 erstellt und zurückgegeben.
+     * Gibt die Konfiguration des Frameworks zurück.
      *
-     * @return Referenz auf die Frameworksinstanz
+     * @return die {@link Properties} des Frameworks
      */
-    public static Framework getInstance() {
-        if (instance == null) {
-            return createInstance(Integer.parseInt(properties.getProperty("amcgala.width")), Integer.parseInt(properties.getProperty("amcgala.height")));
-        } else {
-            return instance;
-        }
-    }
-
-    /**
-     * Gibt an, ob der {@link Raytracer} des Frameworks verwendet wird.
-     *
-     * @return {@code true} wenn Raytracer aktiv
-     */
-    public boolean isRaytracing() {
-        return raytracing;
-    }
-
-    /**
-     * Aktiviert oder deaktiviert den {@link Raytracer} des Frameworks.
-     *
-     * @param raytracing {@code true} wenn Raytracer aktiviert werden soll
-     */
-    public void setRaytracing(boolean raytracing) {
-        this.raytracing = raytracing;
-    }
-
     public Properties getProperties() {
         return properties;
     }
@@ -268,46 +217,51 @@ public final class Framework {
      * Visitor den Szenengraphen besuchen.
      */
     public void update() {
+        checkCamera();
+        checkTracing();
+        Collection<Shape> shapes = scenegraph.getShapes();
+
+        displayList = new DisplayList();
+        updateDisplayList(shapes);
+    }
+
+    private void updateDisplayList(Collection<Shape> shapes) {
+//        Shape[] ss = shapes.toArray(new Shape[0]);
+//        for (int i = 0; i < ss.length; i++) {
+//            Shape s = ss[i];
+//            s.getDisplayList(displayList);
+//        }
+
+        for (Shape s : shapes) {
+            s.getDisplayList(displayList);
+        }
+    }
+
+
+    private void checkTracing() {
+        if (tracing) {
+            raytracer.traceScene();
+        }
+    }
+
+    private void checkCamera() {
         if (camera != null && !paused) {
             for (Visitor v : visitors) {
                 scenegraph.accept(v);
             }
         }
-        if (raytracer != null && raytracing) {
-            raytracer.traceScene();
-        }
     }
 
-    /**
-     * Rendert den Szenengraphen mithilfe des registrierten Renderers.
-     */
-    public void show() {
-        if (renderer != null && !paused) {
-            renderer.show();
-        }
-    }
-
-    /**
-     * Startet das Framework und aktualisiert den Szenengraphen mithilfe eines
-     * Animators.
-     */
-    private void start() {
-        if (animator == null) {
-            update();
-            show();
-        } else {
-            animator.setFramework(this);
-            animator.start();
-        }
-    }
 
     /**
      * Pausiert die Aktualisierung des Frameworks.
      */
     public void pause() {
-        if (animator != null) {
-            animator.stop();
-        }
+        running = false;
+    }
+
+    public void stop() {
+        animator.setRunning(false);
     }
 
     /**
@@ -316,12 +270,12 @@ public final class Framework {
      * @param scene die neue Szene
      */
     public void addScene(Scene scene) {
+        log.info("Adding scene {}", scene);
         checkArgument(!scenes.containsKey(scene.getLabel()), "Es existiert bereits eine Szene mit dem gleichen Namen!");
         scenes.put(scene.getLabel(), scene);
 
         if (activeScene == null) {
             loadScene(scene);
-            start();
         }
     }
 
@@ -337,7 +291,7 @@ public final class Framework {
     }
 
     /**
-     * Das Framework lädt die Szene, indem {@link org.amcgala.framework.camera.Camera}, {@link org.amcgala.framework.renderer.Renderer} und {@link org.amcgala.framework.scenegraph.SceneGraph} aus
+     * Das Framework lädt die Szene, indem {@link org.amcgala.camera.Camera}, {@link org.amcgala.renderer.Renderer} und {@link org.amcgala.scenegraph.SceneGraph} aus
      * der Szene geladen werden.
      *
      * @param scene Szene, die geladen werden soll
@@ -347,25 +301,19 @@ public final class Framework {
         paused = true;
         updateVisitor.setPaused(paused);
 
-        camera = scene.getCamera();
-        camera.setWidth(frame.getWidth());
-        camera.setHeight(frame.getHeight());
-
-        renderer = scene.getRenderer();
-        renderer.setFrame(frame);
+        if (scene.getCamera() != null) {
+            camera = scene.getCamera();
+            camera.setWidth(width);
+            camera.setHeight(height);
+        }
 
         scenegraph = scene.getSceneGraph();
-
-        renderVisitor.setRenderer(renderer);
-        renderVisitor.setCamera(camera);
-
-        raytracer.setRenderer(renderer);
-        raytracer.setScene(scene);
 
         sceneEventBus = scene.getEventBus();
         activeScene = scene;
         paused = false;
         updateVisitor.setPaused(paused);
+        log.info("Active Camera: {}", camera);
     }
 
     /**
@@ -378,15 +326,6 @@ public final class Framework {
     public Scene getScene(String label) {
         checkArgument(scenes.containsKey(label), "Es existiert keine Szene mit diesem Namen!");
         return scenes.get(label);
-    }
-
-    /**
-     * Ändert die Anzahl der Frames, die pro Sekunden berechnet werden sollen.
-     *
-     * @param fps die Frames pro Sekunde
-     */
-    public void setFPS(int fps) {
-        animator.setFramesPerSecond(fps);
     }
 
     /**
@@ -412,7 +351,7 @@ public final class Framework {
     }
 
     /**
-     * Fügt dem Framework einen neuen {@link org.amcgala.framework.event.InputHandler} hinzu.
+     * Fügt dem Framework einen neuen {@link org.amcgala.event.InputHandler} hinzu.
      *
      * @param inputHandler der neue InputHandler
      * @param label        der Bezeichner dieses InputHandlers
@@ -423,7 +362,7 @@ public final class Framework {
     }
 
     /**
-     * Entfernt einen {@link org.amcgala.framework.event.InputHandler} aus dem Framework.
+     * Entfernt einen {@link org.amcgala.event.InputHandler} aus dem Framework.
      *
      * @param label der Bezeichner des InputHandlers, der entfernt werden soll
      */
@@ -481,5 +420,13 @@ public final class Framework {
      */
     public int getHeight() {
         return (height == 0) ? Integer.parseInt(properties.getProperty("amcgala.height")) : height;
+    }
+
+    public DisplayList getCurrentState() {
+        return displayList;
+    }
+
+    public boolean hasActiveScene() {
+        return activeScene != null;
     }
 }

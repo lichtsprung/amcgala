@@ -12,8 +12,9 @@
 /*.ipr
 /*.iws
 /.idea
+/.idea_modules
 
-# we use maven!
+# ant
 /build.xml
 
 # maven
@@ -33,3 +34,12 @@
 
 # Log files
 /*.log
+
+project/target
+
+# backups
+*.*~
+/*.*~
+*~
+/*~
+

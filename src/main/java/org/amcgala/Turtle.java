@@ -1,8 +1,8 @@
 package org.amcgala;
 
-import org.amcgala.framework.math.Vector3d;
-import org.amcgala.framework.shape.Line;
-import org.amcgala.framework.shape.util.CompositeShape;
+import org.amcgala.math.Vector3d;
+import org.amcgala.shape.Line;
+import org.amcgala.shape.util.CompositeShape;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Math.*;
@@ -19,7 +19,7 @@ public class Turtle {
     private CompositeShape turtleShape;
 
     // Die Blickrichtung der Turtle. Zu Beginn schaut die Turtle nach oben.
-    private Vector3d heading = Vector3d.UNIT_Y;
+    private Vector3d heading = Vector3d.UNIT_X;
 
     // Die Turtle steht im Nullpunkt des Koordinatensystems. Aktuell ist dies der Bildmittelpunkt.
     private Vector3d position = Vector3d.ZERO;
@@ -37,25 +37,22 @@ public class Turtle {
      * @param shape das Shape, in dem die Turtlegrafik gespeichert werden soll
      */
     public Turtle(CompositeShape shape) {
-
         turtleShape = shape;
-        headingAngle = 90;
-        heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
+        headingAngle = 0;
+        heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), 0);
     }
 
     /**
      * Erzeugt eine neue Turtle, die mit beliebigen Werten initialisiert werden kann.
      *
-     * @param position die Position der Turtle
-     * @param heading der Vektor der Blickrichtung der Turtle
-     * @param headingAngle der Blickwinkel
-     * @param shape das Shape, in dem die Grafik gespeichert werden soll
+     * @param turtleState der Startzustand der Turtle
+     * @param shape       das Shape, in dem die Grafik gespeichert werden soll
      */
-    public Turtle(Vector3d position, Vector3d heading, double headingAngle, CompositeShape shape) {
-        this.position = position;
-        this.heading = heading;
+    public Turtle(TurtleState turtleState, CompositeShape shape) {
+        this.position = turtleState.position;
+        this.heading = turtleState.heading;
+        this.headingAngle = turtleState.headingAngle;
         this.turtleShape = shape;
-        this.headingAngle = headingAngle;
     }
 
 
@@ -75,64 +72,45 @@ public class Turtle {
 
     /**
      * Dreht die Turtle um einen bestimmten Winkel gegen den Uhrzeigersinn..
+     *
      * @param angle der Winkel in Grad
      */
     public void turnLeft(double angle) {
-        headingAngle += angle;
-        heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
-        heading.normalize();
+        headingAngle -= angle;
+
     }
 
     /**
      * Dreht die Turtle um einen bestimmten Winkel im Uhrzeigersinn.
+     *
      * @param angle der Winkel in Grad
      */
     public void turnRight(double angle) {
-        headingAngle -= angle;
-        heading = new Vector3d(cos(toRadians(headingAngle)), sin(toRadians(headingAngle)), -1);
-        heading.normalize();
+        headingAngle += angle;
     }
 
     /**
      * Lässt die Turtle geradeaus gehen.
+     *
      * @param length die Länge des Schritts
      */
     public void move(double length) {
         checkArgument(length > 0, "Schrittlänge kann nur positiv sein!");
-
+        heading = new Vector3d(cos(toRadians(headingAngle)), -sin(toRadians(headingAngle)), 0);
+        heading.normalize();
         if (up) {
             position = position.add(heading.times(length));
         } else {
             Vector3d endPosition = position.add(heading.times(length));
-            endPosition.z = -1;
-            position.z = -1;
-            Line line = new Line(position, endPosition);
+            endPosition.setZ(0);
+            position.setZ(0);
+            Line line = new Line(position.toVertex3f(), endPosition.toVertex3f());
             turtleShape.add(line);
             position = endPosition;
         }
     }
 
-    /**
-     * Gibt die Blickrichtung der Turtle zurück.
-     * @return die Blickrichtung der Turtle
-     */
-    public Vector3d getHeading() {
-        return heading;
-    }
-
-    /**
-     * Gibt die Position der Turtle zurück.
-     * @return die Position der Turtle
-     */
-    public Vector3d getPosition() {
-        return position;
-    }
-
-    /**
-     * Gibt den Blickwinkel der Turtle zurück.
-     * @return der Blickwinkel der Turtle
-     */
-    public double getHeadingAngle() {
-        return headingAngle;
+    public TurtleState getTurtleState() {
+        return new TurtleState(headingAngle, heading, position);
     }
 }

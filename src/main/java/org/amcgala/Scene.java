@@ -1,19 +1,15 @@
 package org.amcgala;
 
 import com.google.common.eventbus.EventBus;
-import org.amcgala.framework.camera.Camera;
-import org.amcgala.framework.camera.SimplePerspectiveCamera;
-import org.amcgala.framework.event.InputHandler;
-import org.amcgala.framework.lighting.Light;
-import org.amcgala.framework.math.Vector3d;
-import org.amcgala.framework.raytracer.RGBColor;
-import org.amcgala.framework.renderer.DefaultRenderer;
-import org.amcgala.framework.renderer.Renderer;
-import org.amcgala.framework.scenegraph.DefaultSceneGraph;
-import org.amcgala.framework.scenegraph.Node;
-import org.amcgala.framework.scenegraph.SceneGraph;
-import org.amcgala.framework.scenegraph.transform.Transformation;
-import org.amcgala.framework.shape.Shape;
+import org.amcgala.camera.Camera;
+import org.amcgala.camera.SimplePerspectiveCamera;
+import org.amcgala.event.InputHandler;
+import org.amcgala.math.Vector3d;
+import org.amcgala.scenegraph.DefaultSceneGraph;
+import org.amcgala.scenegraph.Node;
+import org.amcgala.scenegraph.SceneGraph;
+import org.amcgala.scenegraph.transform.Transformation;
+import org.amcgala.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +20,7 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
- * Ein {@link Scene} Objekt verwaltet alle Objekte und den dazugehörigen {@link org.amcgala.framework.scenegraph.DefaultSceneGraph},
+ * Ein {@link Scene} Objekt verwaltet alle Objekte und den dazugehörigen {@link org.amcgala.scenegraph.DefaultSceneGraph},
  * der über die Klasse {@link org.amcgala.Framework} dargestellt werden kann.
  * Folgende Objekte werden von jeder Szene selbstständig verwaltet und beim Laden durch das Framework zur Darstellung
  * verwendet:
@@ -46,7 +42,6 @@ public class Scene {
     private static final Logger log = LoggerFactory.getLogger(Scene.class);
     private SceneGraph sceneGraph;
     private Camera camera;
-    private Renderer renderer;
     private EventBus eventBus;
     private String label;
     private Map<String, InputHandler> inputHandlers;
@@ -61,38 +56,39 @@ public class Scene {
         this.label = label;
         sceneGraph = new DefaultSceneGraph();
         camera = new SimplePerspectiveCamera(Vector3d.UNIT_Y, Vector3d.UNIT_Z, Vector3d.ZERO, 2000);
-        renderer = new DefaultRenderer(camera);
         eventBus = new EventBus();
-        inputHandlers = new HashMap<String, InputHandler>();
+        inputHandlers = new HashMap<>();
     }
 
     /**
-     * Fügt das AbstractShape dem Rootknoten des {@link org.amcgala.framework.scenegraph.DefaultSceneGraph} hinzu.
+     * Fügt das AbstractShape dem Rootknoten des {@link org.amcgala.scenegraph.DefaultSceneGraph} hinzu.
      *
      * @param shape das hinzuzufügende Objekt
      */
-    public void addShape(Shape shape) {
+    public Scene addShape(Shape shape) {
         sceneGraph.addShape(shape);
+        return this;
     }
 
     /**
-     * Fügt dem Rootknoten des {@link org.amcgala.framework.scenegraph.DefaultSceneGraph} ein {@link org.amcgala.framework.scenegraph.Node} hinzu.
+     * Fügt dem Rootknoten des {@link org.amcgala.scenegraph.DefaultSceneGraph} ein {@link org.amcgala.scenegraph.Node} hinzu.
      *
      * @param node der neue Knoten
      */
-    public void addNode(Node node) {
+    public Scene addNode(Node node) {
         sceneGraph.addNode(node);
+        return this;
     }
 
     /**
      * Fügt der Szene ein neues Shapeobjekt hinzu. Dieses wird dem Szenengraph an dem übergebenen Knoten angehängt.
-     * TODO das ist verwirrend, dass man erst den Knoten der Szene hinzufügen muss, um ein Shape dranhängen zu können.
      *
      * @param shape das Shape, das der Szene hinzugefügt werden soll
      * @param node  der Knoten, an dem das Shape angehängt werden soll
      */
-    public void add(Shape shape, Node node) {
+    public Scene addShape(Shape shape, Node node) {
         sceneGraph.addShape(shape, node);
+        return this;
     }
 
     /**
@@ -101,8 +97,9 @@ public class Scene {
      * @param shape     das Shape, das der Szene hinzugefügt werden soll
      * @param nodeLabel das Label des Knotens
      */
-    public void addShape(Shape shape, String nodeLabel) {
+    public Scene addShape(Shape shape, String nodeLabel) {
         sceneGraph.addShape(shape, nodeLabel);
+        return this;
     }
 
     /**
@@ -111,8 +108,9 @@ public class Scene {
      * @param node        der neue Knoten, der hinzugefügt werden soll
      * @param parentLabel das Label des Elternknotens
      */
-    public void addNode(Node node, String parentLabel) {
+    public Scene addNode(Node node, String parentLabel) {
         sceneGraph.addNode(node, parentLabel);
+        return this;
     }
 
     /**
@@ -124,22 +122,23 @@ public class Scene {
 
     /**
      * Fügt einem Elternknoten einen neuen Kindsknoten im Szenengraph hinzu.
-     * TODO das Erweitern der Baumhierarchie über eine Methode in einer Szene ist umständlich. Die Hierarchie sollte automatisch aktualisiert werden, wenn ein neuer Knoten hinzufügt wird.
      *
      * @param child  der neue Kindsknoten
      * @param parent der Elternknoten
      */
-    public void addNode(Node child, Node parent) {
+    public Scene addNode(Node child, Node parent) {
         sceneGraph.addNode(child, parent);
+        return this;
     }
 
     /**
-     * Fügt dem root {@link org.amcgala.framework.scenegraph.Node} des {@link org.amcgala.framework.scenegraph.SceneGraph} eine Transformation hinzu,
+     * Fügt dem root {@link org.amcgala.scenegraph.Node} des {@link org.amcgala.scenegraph.SceneGraph} eine Transformation hinzu,
      *
      * @param transformation die Transformation, die hinzugefügt werden soll
      */
-    public void addTransformation(Transformation transformation) {
+    public Scene addTransformation(Transformation transformation) {
         sceneGraph.addTransformation(transformation);
+        return this;
     }
 
     /**
@@ -152,30 +151,12 @@ public class Scene {
     }
 
     /**
-     * Ändert die von der Szene verwendete {@link org.amcgala.framework.camera.Camera}.
+     * Ändert die von der Szene verwendete {@link org.amcgala.camera.Camera}.
      *
      * @param camera die neue Kamera
      */
     public void setCamera(Camera camera) {
         this.camera = camera;
-    }
-
-    /**
-     * Gibt den von der Szene verwendete Renderer zurück.
-     *
-     * @return der verwendete Renderer
-     */
-    public Renderer getRenderer() {
-        return renderer;
-    }
-
-    /**
-     * Ändert den von der Szene verwendeten {@link org.amcgala.framework.renderer.Renderer}.
-     *
-     * @param renderer der neue Renderer
-     */
-    public void setRenderer(Renderer renderer) {
-        this.renderer = renderer;
     }
 
     /**
@@ -202,9 +183,10 @@ public class Scene {
      * @param inputHandler der neue Inputhandler
      * @param label        Name des neuen Inputhandlers
      */
-    public void addInputHandler(InputHandler inputHandler, String label) {
+    public Scene addInputHandler(InputHandler inputHandler, String label) {
         inputHandlers.put(label, inputHandler);
         eventBus.register(inputHandler);
+        return this;
     }
 
     /**
@@ -212,9 +194,10 @@ public class Scene {
      *
      * @param label Name des {@code InputHandler} der entfernt werden soll
      */
-    public void removeInputHandler(String label) {
+    public Scene removeInputHandler(String label) {
         checkArgument(inputHandlers.containsKey(label), "InputHandler mit Namen " + label + " konnte nicht gefunden werden");
         eventBus.unregister(inputHandlers.get(label));
+        return this;
     }
 
     /**
@@ -222,10 +205,46 @@ public class Scene {
      *
      * @param label das Label des Shapes, das entfernt werden soll
      */
-    public void removeShape(String label) {
+    public Scene removeShape(String label) {
         sceneGraph.removeShape(label);
+        return this;
     }
 
+    /**
+     * Entfernt ein Shape aus denen Szenengraph.
+     *
+     * @param shape das Shape, das entfernt werden soll
+     */
+    public Scene removeShape(Shape shape) {
+        sceneGraph.removeShape(shape);
+        return this;
+    }
+
+    /**
+     * Entfernt einen Knoten aus dem Szenengraph.
+     *
+     * @param label der Name des Knotens
+     */
+    public Scene removeNode(String label) {
+        sceneGraph.removeNode(label);
+        return this;
+    }
+
+    /**
+     * Entfernt einen Knoten aus dem Szenengraph.
+     *
+     * @param node der Knoten, der entfernt werden soll
+     */
+    public Scene removeNode(Node node) {
+        sceneGraph.removeNode(node);
+        return this;
+    }
+
+    /**
+     * Gibt den Szenengraph dieser Szene zurück.
+     *
+     * @return der Szenengraph
+     */
     protected SceneGraph getSceneGraph() {
         return sceneGraph;
     }
@@ -243,24 +262,6 @@ public class Scene {
     @Override
     public int hashCode() {
         return label != null ? label.hashCode() : 0;
-    }
-
-    /**
-     * Fügt der Szene ein neues Licht hinzu.
-     *
-     * @param light das neue Licht
-     */
-    public void addLight(Light light) {
-        sceneGraph.addLight(light);
-    }
-
-    /**
-     * Prüft, ob Lichter in der Szene vorhanden sind.
-     *
-     * @return {@code true}, wenn Lichter der Szene hinzugefügt wurden
-     */
-    public boolean hasLights() {
-        return sceneGraph.hasLight();
     }
 
     /**
@@ -282,7 +283,16 @@ public class Scene {
         this.background = background;
     }
 
+    /**
+     * Gibt alle Shapes im Szenengraph zurück.
+     *
+     * @return alle Shapes im Szenengraph
+     */
     public Collection<Shape> getShapes() {
-        return sceneGraph.getAllShapes();
+        return sceneGraph.getShapes();
+    }
+
+    public void removeShapes() {
+        sceneGraph.removeShapes();
     }
 }
