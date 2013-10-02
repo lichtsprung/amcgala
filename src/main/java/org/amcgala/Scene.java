@@ -291,8 +291,4 @@ public class Scene {
     public Collection<Shape> getShapes() {
         return sceneGraph.getShapes();
     }
-
-    public void removeShapes() {
-        sceneGraph.removeShapes();
-    }
 }
