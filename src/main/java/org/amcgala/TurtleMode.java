@@ -112,7 +112,7 @@ public abstract class TurtleMode extends Amcgala{
      *
      * @param length die Länge des Schritts
      */
-    protected void move(double length) {
+    protected void move(float length) {
         checkArgument(length > 0, "Schrittlänge kann nur positiv sein!");
 
         if (up) {

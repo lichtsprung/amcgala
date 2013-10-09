@@ -110,6 +110,10 @@ public class Turtle {
         }
     }
 
+    /**
+     * Gibt den aktuellen Zustand der Turtle zurück.
+     * @return der Zustand der Turtle
+     */
     public TurtleState getTurtleState() {
         return new TurtleState(headingAngle, heading, position);
     }
