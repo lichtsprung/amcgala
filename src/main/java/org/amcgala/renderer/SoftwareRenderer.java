@@ -203,7 +203,8 @@ public class SoftwareRenderer implements Renderer {
     public void render() {
         bs.show();
         g = bs.getDrawGraphics();
-        g.clearRect(0, 0, frame.getWidth(), frame.getHeight());
+        g.setColor(frame.getBackground());
+        g.fillRect(0, 0, frame.getWidth(), frame.getHeight());
         if (Framework.getInstance().hasActiveScene()) {
             DisplayList list = framework.getCurrentState();
             Camera camera = Framework.getInstance().getActiveScene().getCamera();
