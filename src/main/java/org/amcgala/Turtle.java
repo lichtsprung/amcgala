@@ -112,6 +112,13 @@ public class Turtle {
 
     /**
      * Gibt den aktuellen Zustand der Turtle zurück.
+     * Der aktuelle Zustand besteht aus: <br />
+     * <ul>
+     *  <li>headingAngle: Richtung der Turtle auf der Zeichenfläche</li>
+     *   <li>heading: Richtungsvektor der Turtle</li>
+     *   <li> position: absolute Position der Turtle auf der Zeichenfläche</li>
+     * </ul>
+     *
      * @return der Zustand der Turtle
      */
     public TurtleState getTurtleState() {
