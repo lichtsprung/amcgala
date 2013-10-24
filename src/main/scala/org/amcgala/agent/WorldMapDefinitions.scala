@@ -5,6 +5,7 @@ import java.util
 import org.amcgala.agent.Agent.Pheromone
 import org.amcgala.agent.World.{ Index, Cell }
 import scala.collection.JavaConversions._
+import scala.util.Random
 
 trait Initialiser {
   def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell]
@@ -101,6 +102,30 @@ class GradientWorldMap extends Initialiser {
       for (y ← 0 until height) {
         val v = (1 + math.sin(x / wX) * math.sin(y / wY)) / 2
         field = field + (Index(x, y) -> Cell(v.toFloat))
+      }
+    }
+
+    field
+  }
+}
+
+class GradientWorldMap extends Initialiser {
+  def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
+    var field: Map[Index, Cell] = Map.empty[Index, Cell]
+
+    val vertical = Random.nextBoolean()
+
+    for (x ← 0 until width) {
+      for (y ← 0 until height) {
+        vertical match {
+          case true ⇒
+            val yStep = 1.0f / height
+            field = field + (Index(x, y) -> Cell(yStep * y, Map.empty[Pheromone, Float]))
+          case false ⇒
+            val xStep = 1.0f / width
+            field = field + (Index(x, y) -> Cell(xStep * x, Map.empty[Pheromone, Float]))
+        }
+
       }
     }
 
