@@ -186,7 +186,6 @@ class Simulation extends Actor with ActorLogging {
         case index: Index ⇒
           world map (w ⇒ {
             agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index, w(index)))
-            log.debug("Registering new Actor at {}", index)
           })
       }
 
@@ -204,15 +203,11 @@ class Simulation extends Actor with ActorLogging {
           w.update()
         }
         agents map {
-          case (ref, currentState) ⇒ {
+          case (ref, currentState) ⇒
             val neighbourCells = w.neighbours(currentState.position)
             ref ! SimulationUpdate(currentState, neighbourCells)
-          }
         }
-        stateLogger map (logger ⇒ {
-          log.debug(s"Sending SimulationStateUpdate to $logger")
-          logger ! SimulationStateUpdate(w.field.toList, agents.values.toList)
-        })
+        stateLogger map (_ ! SimulationStateUpdate(w.field.toList, agents.values.toList))
       })
 
   }
