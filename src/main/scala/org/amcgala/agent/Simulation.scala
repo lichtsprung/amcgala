@@ -3,24 +3,29 @@ package org.amcgala.agent
 import akka.actor.{ Props, ActorLogging, ActorRef, Actor }
 import org.amcgala.agent.Simulation._
 import scala.util.Random
-import org.amcgala.agent.World.Cell
 import org.amcgala.agent.Agent._
 import scala.collection.JavaConversions._
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
-import org.amcgala.agent.World.CellWithIndex
-import org.amcgala.agent.Agent.MoveTo
-import org.amcgala.agent.Agent.AgentState
-import org.amcgala.agent.World.Index
-import org.amcgala.agent.Simulation.Register
-import org.amcgala.agent.Simulation.SimulationStateUpdate
-import org.amcgala.agent.Simulation.SimulationState
-import org.amcgala.agent.Agent.ChangeValue
-import org.amcgala.agent.World.WorldInfo
-import org.amcgala.agent.Agent.AgentID
-import org.amcgala.agent.Simulation.SimulationUpdate
 import com.typesafe.config.{ ConfigFactory, Config }
 import java.util
+import org.amcgala.agent.AgentMessages._
+import org.amcgala.agent.World._
+import org.amcgala.agent.Agent.AgentState
+import org.amcgala.agent.World.Index
+import scala.Some
+import org.amcgala.agent.Simulation.Broadcast
+import org.amcgala.agent.AgentMessages.ReleasePheromone
+import org.amcgala.agent.Simulation.SimulationStateUpdate
+import org.amcgala.agent.Simulation.SimulationState
+import org.amcgala.agent.World.Cell
+import org.amcgala.agent.Agent.AgentID
+import org.amcgala.agent.Simulation.SimulationConfig
+import org.amcgala.agent.Simulation.SimulationUpdate
+import org.amcgala.agent.AgentMessages.MoveTo
+import org.amcgala.agent.Simulation.Register
+import org.amcgala.agent.AgentMessages.ChangeValue
+import org.amcgala.agent.World.WorldInfo
 
 /**
  * Companion Object der Agentensimulation. Hier finden sich alle Messageklassen, die die Simulation verarbeitet.
@@ -42,7 +47,7 @@ object Simulation {
    * @param currentState der aktuelle Zustand des Agenten
    * @param neighbours die Nachbarzellen
    */
-  case class SimulationUpdate(currentState: AgentState, neighbours: Array[CellWithIndex])
+  case class SimulationUpdate(currentState: AgentState, neighbours: java.util.HashMap[Index, CellWithIndex])
 
   /**
    * Der globale Zustand der Simulation. Diese Nachricht wird an alle Statelogger geschickt, die die Informationen
@@ -205,8 +210,14 @@ class Simulation extends Actor with ActorLogging {
         }
         agents map {
           case (ref, currentState) ⇒ {
+
             val neighbourCells = w.neighbours(currentState.position)
-            ref ! SimulationUpdate(currentState, neighbourCells)
+            val javaMap = new util.HashMap[Index, CellWithIndex]()
+            neighbourCells foreach {
+              entry ⇒
+                javaMap.put(entry._1, entry._2)
+            }
+            ref ! SimulationUpdate(currentState, javaMap)
           }
         }
         stateLogger map (logger ⇒ {
@@ -247,24 +258,47 @@ class Simulation extends Actor with ActorLogging {
       agents = agents - sender
 
     case ChangeValue(value) ⇒
-      world map (w ⇒ {
-        agents.get(sender) map (c ⇒ {
-          if (constraintsChecker.checkValueChange(c.cell.value, value)) {
-            w.change(c.position, value)
-            agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), agents(sender).position, w(agents(sender).position)))
-          }
-        })
-      })
+      for {
+        w ← world
+        agent ← agents.get(sender)
+      } {
+        if (constraintsChecker.checkValueChange(agent.cell.value, value)) {
+          w.change(agent.position, value)
+          agents = agents + (sender -> AgentState(agent.id, agent.position, w(agent.position)))
+        }
+      }
+
+    case PutInformationObject(o) ⇒
+      for {
+        w ← world
+        agent ← agents.get(sender)
+      } {
+        if (constraintsChecker.checkInformationObject(agent, o)) {
+          w.addInformationObject(agent.position, o)
+          agents = agents + (sender -> AgentState(agent.id, agent.position, w(agent.position)))
+        }
+      }
   }
 }
 
 object World {
 
+  trait InformationObject
+
+  case object Visited extends InformationObject
+
+  case class Error(value: Float) extends InformationObject
+
   type PheromoneMap = Map[Pheromone, Float]
 
   case class WorldInfo(width: Int, height: Int, cells: java.util.List[(Index, Cell)])
 
-  case class Cell(value: Float, pheromones: PheromoneMap)
+  case class Cell(
+    value: Float,
+    pheromones: PheromoneMap = Map.empty[Pheromone, Float],
+    informationObjects: List[InformationObject] = List.empty[InformationObject])
+
+  case class NeighbourCellWithIndex(relativeIndex: Index, absoluteIndex: Index, cell: Cell)
 
   case class CellWithIndex(index: Index, cell: Cell)
 
@@ -285,7 +319,6 @@ object World {
       var field: Map[Index, Cell] = initialiser.initField(width, height, neighbours, config)
 
       val neighbours: List[Index] = {
-        import scala.collection.JavaConversions._
         val lists = config.getAnyRefList("org.amcgala.agent.simulation.world.neighbours").asInstanceOf[util.ArrayList[util.ArrayList[Int]]]
         (for (
           list ← lists
@@ -309,8 +342,8 @@ trait World {
     CellWithIndex(i, field(i))
   }
 
-  def neighbours(index: Index): Array[CellWithIndex] = {
-    val neighbourCells = Array.ofDim[CellWithIndex](neighbours.length)
+  def neighbours(index: Index): Map[Index, CellWithIndex] = {
+    var neighbourCells = Map.empty[Index, CellWithIndex]
 
     neighbours.zipWithIndex.foreach {
       case (value, i) ⇒
@@ -318,7 +351,7 @@ trait World {
         val iy = (((index.y + value.y) % height) + height) % height
         val nx = Index(ix, iy)
 
-        neighbourCells(i) = CellWithIndex(nx, field(nx))
+        neighbourCells = neighbourCells + (value -> CellWithIndex(nx, field(nx)))
     }
     neighbourCells
   }
@@ -333,6 +366,11 @@ trait World {
     val nv = math.min(1f, pheromone.strength + c.pheromones.getOrElse(pheromone, 0.0f))
     val pheromones = c.pheromones + (pheromone -> nv)
     field = field + (index -> Cell(c.value, pheromones))
+  }
+
+  def addInformationObject(index: Index, informationObject: InformationObject) {
+    val c = field(index)
+    field = field + (index -> Cell(c.value, c.pheromones, informationObject :: c.informationObjects))
   }
 
   def apply(index: Index) = {
@@ -362,13 +400,13 @@ trait World {
             val spread = p._2 * p._1.spreadRate
             n map {
               neighbour ⇒
-                val neighbourCell = newField.getOrElse(e._1, Cell(field(neighbour.index).value, Map.empty[Pheromone, Float]))
+                val neighbourCell = newField.getOrElse(e._1, Cell(field(neighbour._1).value, Map.empty[Pheromone, Float]))
                 var neighbourPheromones = neighbourCell.pheromones
                 val sum = spread + neighbourPheromones.getOrElse(p._1, 0.0f)
                 if (sum > 0.009) {
                   neighbourPheromones = neighbourPheromones + (p._1 -> math.min(1f, sum))
                 }
-                newField = newField + (neighbour.index -> Cell(field(neighbour.index).value, neighbourPheromones))
+                newField = newField + (neighbour._1 -> Cell(field(neighbour._1).value, neighbourPheromones))
             }
         }
         newField = newField + (e._1 -> Cell(currentCellValue, currentCellPheromones))
@@ -389,6 +427,12 @@ object Agent {
 
   case class AgentID(id: Int)
 
+  case class AgentState(id: AgentID, position: Index, cell: Cell)
+
+}
+
+object AgentMessages {
+
   sealed trait AgentMessage
 
   case class SpawnAt(position: Index) extends AgentMessage
@@ -399,20 +443,16 @@ object Agent {
 
   case class ChangeValue(newValue: Float) extends AgentMessage
 
+  case class PutInformationObject(informationObject: InformationObject) extends AgentMessage
+
+  case class PutInformationObjectTo(index: Index, informationObject: InformationObject) extends AgentMessage
+
   case class ReleasePheromone(pheromone: Pheromone) extends AgentMessage
 
-  case object Death extends AgentMessage {
-    def getInstance = this
-  }
+  case object Death extends AgentMessage
 
-  case object Success extends AgentMessage {
-    def getInstance = this
-  }
+  case object Success extends AgentMessage
 
-  case object Failure extends AgentMessage {
-    def getInstance = this
-  }
-
-  case class AgentState(id: AgentID, position: Index, cell: Cell)
+  case object Failure extends AgentMessage
 
 }

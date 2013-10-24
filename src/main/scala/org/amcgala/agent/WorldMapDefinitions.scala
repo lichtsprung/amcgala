@@ -15,7 +15,7 @@ class EmptyWorldMap extends Initialiser {
     var field: Map[Index, Cell] = Map.empty[Index, Cell]
     for (x ← 0 until width) {
       for (y ← 0 until height) {
-        field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Float]))
+        field = field + (Index(x, y) -> Cell(0))
       }
     }
     field
@@ -37,7 +37,7 @@ class PolygonWorldMap extends Initialiser {
       case (start, index) ⇒
         val end = polygon.get((index + 1) % polygon.size())
         bresenham(start(0), start(1), end(0), end(1)).foreach(i ⇒ {
-          field = field + (i -> Cell(1, Map.empty[Pheromone, Float]))
+          field = field + (i -> Cell(1))
         })
     }
 
@@ -83,7 +83,24 @@ class FractalWorldMap extends Initialiser {
     for (x ← 0 until width) {
       for (y ← 0 until height) {
         // TODO Noise Function
-        field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Float]))
+        field = field + (Index(x, y) -> Cell(0))
+      }
+    }
+
+    field
+  }
+}
+
+class GradientWorldMap extends Initialiser {
+  def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
+    var field: Map[Index, Cell] = Map.empty[Index, Cell]
+    val wX = 2
+    val wY = 2
+
+    for (x ← 0 until width) {
+      for (y ← 0 until height) {
+        val v = (1 + math.sin(x / wX) * math.sin(y / wY)) / 2
+        field = field + (Index(x, y) -> Cell(v.toFloat))
       }
     }
 

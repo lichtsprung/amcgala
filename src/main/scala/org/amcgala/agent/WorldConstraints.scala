@@ -1,6 +1,6 @@
 package org.amcgala.agent
 
-import org.amcgala.agent.World.Cell
+import org.amcgala.agent.World.{ InformationObject, Cell }
 import org.amcgala.agent.Agent.{ OwnerPheromone, Pheromone, AgentState }
 
 /**
@@ -33,6 +33,14 @@ trait WorldConstraintsChecker {
    * @return true, wenn der Agent den Wert verändern darf
    */
   def checkValueChange(currentValue: Double, newValue: Double): Boolean
+
+  /**
+   *
+   * @param agent
+   * @param informationObject
+   * @return
+   */
+  def checkInformationObject(agent: AgentState, informationObject: InformationObject): Boolean
 }
 
 class DefaultConstraints extends WorldConstraintsChecker {
@@ -44,4 +52,6 @@ class DefaultConstraints extends WorldConstraintsChecker {
   }
 
   def checkValueChange(oldValue: Double, newValue: Double): Boolean = newValue >= 0 && newValue <= 1
+
+  def checkInformationObject(agent: AgentState, informationObject: InformationObject): Boolean = true
 }

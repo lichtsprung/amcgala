@@ -14,7 +14,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     final protected LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
-    protected Agent.AgentState currentState;
+    private Agent.AgentState currentState;
 
     protected final Agent.AgentID id = new Agent.AgentID(getSelf().hashCode());
 
@@ -33,12 +33,12 @@ public abstract class AmcgalaAgent extends UntypedActor {
     private final Procedure<Object> waitForPosition = new Procedure<Object>() {
         @Override
         public void apply(Object message) throws Exception {
-            if (message instanceof Agent.SpawnAt) {
-                Agent.SpawnAt spawnMessage = (Agent.SpawnAt) message;
+            if (message instanceof AgentMessages.SpawnAt) {
+                AgentMessages.SpawnAt spawnMessage = (AgentMessages.SpawnAt) message;
                 simulation.tell(new Simulation.Register(spawnMessage.position()), getSelf());
                 waitTask.cancel();
                 getContext().become(updateHandling);
-            } else if (message instanceof Agent.SpawnRejected$) {
+            } else if (message instanceof AgentMessages.SpawnRejected$) {
                 getContext().stop(getSelf());
             } else {
                 unhandled(message);
@@ -74,7 +74,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
     protected void spawnChild() {
         Props props = Props.create(new AmcgalaAgentCreator(this.getClass()));
         ActorRef ref = getContext().system().actorOf(props);
-        ref.tell(new Agent.SpawnAt(currentState.position()), getSelf());
+        ref.tell(new AgentMessages.SpawnAt(currentState.position()), getSelf());
     }
 
     /**
@@ -85,7 +85,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
     protected void spawnChild(World.Index index) {
         Props props = Props.create(new AmcgalaAgentCreator(this.getClass()));
         ActorRef ref = getContext().system().actorOf(props);
-        ref.tell(new Agent.SpawnAt(index), getSelf());
+        ref.tell(new AgentMessages.SpawnAt(index), getSelf());
     }
 
     /**
@@ -93,10 +93,10 @@ public abstract class AmcgalaAgent extends UntypedActor {
      *
      * @return die Stop-Meldung an die Simulation
      */
-    protected Agent.AgentMessage die() {
-        simulation.tell(Agent.Death$.MODULE$, getSelf());
+    protected AgentMessages.AgentMessage die() {
+        simulation.tell(AgentMessages.Death$.MODULE$, getSelf());
         getContext().stop(getSelf());
-        return Agent.Death$.MODULE$;
+        return AgentMessages.Death$.MODULE$;
     }
 
     /**
@@ -104,7 +104,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
      * abgeschlossen wurde.
      */
     protected void success() {
-        getContext().parent().tell(Agent.Success$.MODULE$, getSelf());
+        getContext().parent().tell(AgentMessages.Success$.MODULE$, getSelf());
     }
 
     /**
@@ -112,7 +112,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
      * abgeschlossen werden konnte.
      */
     protected void failure() {
-        getContext().parent().tell(Agent.Failure$.MODULE$, getSelf());
+        getContext().parent().tell(AgentMessages.Failure$.MODULE$, getSelf());
     }
 
     /**
@@ -122,7 +122,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
      * @param y die y-Koordinate
      */
     protected void spawnAt(int x, int y) {
-        getSelf().tell(new Agent.SpawnAt(new World.Index(x, y)), getSelf());
+        getSelf().tell(new AgentMessages.SpawnAt(new World.Index(x, y)), getSelf());
     }
 
     /**
@@ -132,7 +132,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
      * @param update die Update Informationen
      * @return die Aktion des Agenten
      */
-    abstract protected Agent.AgentMessage onUpdate(Simulation.SimulationUpdate update);
+    abstract protected AgentMessages.AgentMessage onUpdate(Simulation.SimulationUpdate update);
 
     static class AmcgalaAgentCreator implements Creator<Actor> {
         Class<? extends AmcgalaAgent> childClass;
