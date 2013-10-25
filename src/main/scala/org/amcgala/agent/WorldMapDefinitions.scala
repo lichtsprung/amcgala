@@ -109,26 +109,3 @@ class GradientWorldMap extends Initialiser {
   }
 }
 
-class GradientWorldMap extends Initialiser {
-  def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
-    var field: Map[Index, Cell] = Map.empty[Index, Cell]
-
-    val vertical = Random.nextBoolean()
-
-    for (x ← 0 until width) {
-      for (y ← 0 until height) {
-        vertical match {
-          case true ⇒
-            val yStep = 1.0f / height
-            field = field + (Index(x, y) -> Cell(yStep * y, Map.empty[Pheromone, Float]))
-          case false ⇒
-            val xStep = 1.0f / width
-            field = field + (Index(x, y) -> Cell(xStep * x, Map.empty[Pheromone, Float]))
-        }
-
-      }
-    }
-
-    field
-  }
-}
