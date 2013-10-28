@@ -24,3 +24,5 @@ Das Package org.amcgala.example bietet einige Beispiele, wie das Framework benut
 Einstieg reicht es, die Klasse Amcgala zu erweitern und auf die dort zu Verfügung gestellte Framework Instanz zurückzugreifen.
 
 amcgala ist Opensource und wird unter der Educational Community License, Version 2.0 (http://opensource.org/licenses/ECL-2.0) zur Verfügung gestellt.
+
+test
