@@ -7,6 +7,7 @@ import akka.japi.Creator;
 import akka.japi.Procedure;
 import scala.concurrent.duration.FiniteDuration;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 
@@ -14,7 +15,11 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     final protected LoggingAdapter log = Logging.getLogger(getContext().system(), this);
 
-    private Agent.AgentState currentState;
+    protected Random random = new Random(System.nanoTime());
+
+    private World.Cell currentCell;
+
+    private World.Index currentPosition;
 
     protected final Agent.AgentID id = new Agent.AgentID(getSelf().hashCode());
 
@@ -39,6 +44,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
                 waitTask.cancel();
                 getContext().become(updateHandling);
             } else if (message instanceof AgentMessages.SpawnRejected$) {
+                System.out.println("REjected");
                 getContext().stop(getSelf());
             } else {
                 unhandled(message);
@@ -50,8 +56,11 @@ public abstract class AmcgalaAgent extends UntypedActor {
         @Override
         public void apply(Object message) throws Exception {
             if (message instanceof Simulation.SimulationUpdate) {
-                log.debug("Received a SimulationUpdate! Processing...");
-                currentState = ((Simulation.SimulationUpdate) message).currentState();
+                Simulation.SimulationUpdate update = (Simulation.SimulationUpdate) message;
+
+                currentCell = update.currentCell();
+                currentPosition = update.currentPosition();
+
                 sender().tell(onUpdate((Simulation.SimulationUpdate) message), self());
             } else {
                 unhandled(message);
@@ -68,13 +77,14 @@ public abstract class AmcgalaAgent extends UntypedActor {
         getContext().become(waitForPosition);
     }
 
+
     /**
      * Erzeugt ein Kind und platziert es auf dem selben Index wie der Vater-Agent.
      */
     protected void spawnChild() {
         Props props = Props.create(new AmcgalaAgentCreator(this.getClass()));
         ActorRef ref = getContext().system().actorOf(props);
-        ref.tell(new AgentMessages.SpawnAt(currentState.position()), getSelf());
+        ref.tell(new AgentMessages.SpawnAt(currentPosition), getSelf());
     }
 
     /**
@@ -94,8 +104,6 @@ public abstract class AmcgalaAgent extends UntypedActor {
      * @return die Stop-Meldung an die Simulation
      */
     protected AgentMessages.AgentMessage die() {
-        simulation.tell(AgentMessages.Death$.MODULE$, getSelf());
-        getContext().stop(getSelf());
         return AgentMessages.Death$.MODULE$;
     }
 
@@ -123,6 +131,10 @@ public abstract class AmcgalaAgent extends UntypedActor {
      */
     protected void spawnAt(int x, int y) {
         getSelf().tell(new AgentMessages.SpawnAt(new World.Index(x, y)), getSelf());
+    }
+
+    protected World.CellWithIndex getRandomNeighbour(Simulation.SimulationUpdate update) {
+        return update.neighbours().values().toArray(new World.CellWithIndex[1])[random.nextInt(update.neighbours().size())];
     }
 
     /**

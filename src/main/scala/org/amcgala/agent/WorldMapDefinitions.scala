@@ -5,7 +5,6 @@ import java.util
 import org.amcgala.agent.Agent.Pheromone
 import org.amcgala.agent.World.{ Index, Cell }
 import scala.collection.JavaConversions._
-import scala.util.Random
 
 trait Initialiser {
   def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell]

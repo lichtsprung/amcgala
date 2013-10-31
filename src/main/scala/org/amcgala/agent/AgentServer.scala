@@ -5,8 +5,8 @@ import akka.actor.ActorSystem
 import org.amcgala.agent.Simulation.SimulationConfig
 
 /**
- * The Simulation Server.
- */
+  * The Simulation Server.
+  */
 class AgentServer(configName: String) {
   val config = ConfigFactory.load()
   val system = ActorSystem("Simulator", config.getConfig("simulation"))

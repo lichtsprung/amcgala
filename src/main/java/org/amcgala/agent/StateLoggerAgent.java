@@ -7,6 +7,8 @@ import akka.event.LoggingAdapter;
 import org.amcgala.Framework;
 import org.amcgala.FrameworkMode;
 import scala.Tuple2;
+import scala.concurrent.duration.Duration;
+import java.util.concurrent.TimeUnit;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +52,7 @@ public abstract class StateLoggerAgent extends UntypedActor {
     public void onReceive(Object message) throws Exception {
         if (message instanceof Simulation.SimulationState) {
             Simulation.SimulationState state = (Simulation.SimulationState) message;
-            log.info("Got State!");
+
             worldWidth = state.worldInfo().width();
             worldHeight = state.worldInfo().height();
             scaleX = framework.getWidth() / worldWidth;
@@ -65,9 +67,12 @@ public abstract class StateLoggerAgent extends UntypedActor {
             }
 
             onInit();
-            onUpdate(cells, agents);
-        } else if (message instanceof Simulation.SimulationStateUpdate) {
 
+            getContext().system().scheduler().schedule(Duration.create(200, TimeUnit.MILLISECONDS),Duration.create(200, TimeUnit.MILLISECONDS),
+                    getSelf(), Simulation.Update$.MODULE$, getContext().system().dispatcher(), null);
+
+        } else if (message instanceof Simulation.SimulationStateUpdate) {
+            System.out.println("received full update");
             Simulation.SimulationStateUpdate state = (Simulation.SimulationStateUpdate) message;
 
             agents.clear();
@@ -80,8 +85,19 @@ public abstract class StateLoggerAgent extends UntypedActor {
                 cells.put(entry._1(), entry._2());
             }
 
+        } else if (message instanceof Simulation.AgentStateChange) {
+            Simulation.AgentStateChange state = (Simulation.AgentStateChange) message;
+            agents.put(state.state().id(), state.state());
+        } else if (message instanceof Simulation.CellChange) {
+            Simulation.CellChange change = (Simulation.CellChange) message;
+            cells.put(change.index(), change.cell());
+        }else if(message instanceof Simulation.Update$){
             onUpdate(cells, agents);
-        } else {
+        }else if(message instanceof Simulation.AgentDeath) {
+            Simulation.AgentDeath death = (Simulation.AgentDeath) message;
+            agents.remove(death.state().id());
+        }
+        else {
             unhandled(message);
         }
     }

@@ -19,6 +19,7 @@ object AmcgalaAgents extends Build {
       .setPreference(AlignParameters, true)
       .setPreference(AlignSingleLineCaseStatements, true)
       .setPreference(DoubleIndentClassDeclaration, true)
+      .setPreference(PlaceScaladocAsterisksBeneathSecondAsterisk, true)
 
   val JavaDoc = config("genjavadoc") extend Compile
 
