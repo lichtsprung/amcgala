@@ -159,9 +159,15 @@ public abstract class AmcgalaAgent extends UntypedActor {
         return new AgentMessages.PutInformationObjectTo(index, informationObject);
     }
 
-    protected World.InformationObject createVisited(){
-        return World.Visited.
+    protected World.InformationObject putVisitedObject(){
+        return World.Visited$.MODULE$;
     }
+
+    protected AgentMessages.AgentMessage putDeviation(float value) {
+        return putInformationObject(new World.Deviation(value));
+    }
+
+
 
 
 

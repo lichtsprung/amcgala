@@ -44,7 +44,6 @@ object AmcgalaAgents extends Build {
     organization := "org.amcgala",
     scalaVersion := "2.10.2",
     javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
-    fork in run := true,
     libraryDependencies ++= Seq(
       "com.googlecode.efficient-java-matrix-library" % "ejml" % "0.22" withSources() withJavadoc(),
       "com.typesafe.akka" %% "akka-remote" % "2.3-SNAPSHOT" withSources() withJavadoc(),

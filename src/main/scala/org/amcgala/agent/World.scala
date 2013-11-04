@@ -14,7 +14,7 @@ object World {
 
   trait InformationObject
 
-  case class Error(value: Float) extends InformationObject
+  case class Deviation(value: Float) extends InformationObject //TODO name
 
   case object Visited extends InformationObject
 
