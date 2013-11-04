@@ -86,8 +86,16 @@ object Simulation {
     */
   case class AgentStateChange(state: AgentState) extends ChangeMessage
 
+  /**
+    * Nachricht die an StateLogger verschickt wird, wenn ein Agent aus der Simulation entfernt wurde.
+    * @param state der letzte Zustand des entfernten Agenten
+    */
   case class AgentDeath(state: AgentState) extends ChangeMessage
 
+  /**
+    * Nachricht, die an StateLogger verschickt wird, wenn ein neuer Agent die Simulation betritt.
+    * @param state der Initialzustand des Agenten
+    */
   case class AgentBirth(state: AgentState) extends ChangeMessage
 
   /**
@@ -137,6 +145,10 @@ object Simulation {
     */
   case object Update
 
+  /**
+    * Triggert ein vollstaendiges Update aller StateLogger.
+    * @deprecated wurde durch inkrementelles Update ersetzt
+    */
   case object StateLoggerUpdate
 
   /**
@@ -329,190 +341,25 @@ class Simulation extends Actor with ActorLogging {
         }
       }
 
-    case PutInformationObject(o) ⇒
+    case PutInformationObject(informationObject) ⇒
       for {
         w ← world
         agent ← agents.get(sender)
       } {
-        if (constraintsChecker.checkInformationObject(agent, o)) {
-          w.addInformationObject(agent.position, o)
+        if (constraintsChecker.checkInformationObject(agent, informationObject)) {
+          w.addInformationObject(agent.position, informationObject)
+        }
+      }
+
+    case PutInformationObjectTo(index, informationObject) ⇒
+      for {
+        w ← world
+        agent ← agents.get(sender)
+      } {
+        if (constraintsChecker.checkInformationObject(agent, informationObject)) {
+          w.addInformationObject(index, informationObject)
         }
       }
   }
 }
 
-object World {
-
-  trait InformationObject
-
-  case object Visited extends InformationObject
-
-  case class Error(value: Float) extends InformationObject
-
-  type PheromoneMap = Map[Pheromone, Float]
-
-  case class WorldInfo(width: Int, height: Int, cells: java.util.List[(Index, Cell)])
-
-  case class Cell(
-    value: Float,
-    pheromones: PheromoneMap = Map.empty[Pheromone, Float],
-    informationObjects: List[InformationObject] = List.empty[InformationObject])
-
-  case class NeighbourCellWithIndex(relativeIndex: Index, absoluteIndex: Index, cell: Cell)
-
-  case class CellWithIndex(index: Index, cell: Cell)
-
-  case class Index(x: Int, y: Int)
-
-  val RandomIndex = Index(-1, -1)
-
-  def apply(config: Config) = {
-    val _width = config.getInt("org.amcgala.agent.simulation.world.width")
-    val _height = config.getInt("org.amcgala.agent.simulation.world.height")
-    val worldDef = config.getString("org.amcgala.agent.simulation.world.definition.class")
-
-    val cl = ClassLoader.getSystemClassLoader.loadClass(worldDef)
-    new World {
-      val initialiser = cl.newInstance().asInstanceOf[Initialiser]
-      val width: Int = _width
-      val height: Int = _height
-      var field: Map[Index, Cell] = initialiser.initField(width, height, neighbours, config)
-
-      val neighbours: List[Index] = {
-        val lists = config.getAnyRefList("org.amcgala.agent.simulation.world.neighbours").asInstanceOf[util.ArrayList[util.ArrayList[Int]]]
-        (for (
-          list ← lists
-        ) yield Index(list(0), list(1))).toList
-      }
-    }
-  }
-}
-
-trait World {
-  val width: Int
-  val height: Int
-  val neighbours: List[Index]
-  var field: Map[Index, Cell]
-
-  def randomCell: CellWithIndex = {
-    val col = Random.nextInt(width)
-    val row = Random.nextInt(height)
-    val i = Index(col, row)
-
-    CellWithIndex(i, field(i))
-  }
-
-  def neighbours(index: Index): Map[Index, CellWithIndex] = {
-    var neighbourCells = Map.empty[Index, CellWithIndex]
-
-    neighbours.zipWithIndex.foreach {
-      case (value, i) ⇒
-        val ix = (((index.x + value.x) % width) + width) % width
-        val iy = (((index.y + value.y) % height) + height) % height
-        val nx = Index(ix, iy)
-
-        neighbourCells = neighbourCells + (value -> CellWithIndex(nx, field(nx)))
-    }
-    neighbourCells
-  }
-
-  def change(index: Index, newValue: Float) = {
-    val c = field(index)
-    field = field + (index -> Cell(newValue, c.pheromones))
-  }
-
-  def addPheromone(index: Index, pheromone: Pheromone) = {
-    val c = field(index)
-    val nv = math.min(1f, pheromone.strength + c.pheromones.getOrElse(pheromone, 0.0f))
-    val pheromones = c.pheromones + (pheromone -> nv)
-    field = field + (index -> Cell(c.value, pheromones))
-  }
-
-  def addInformationObject(index: Index, informationObject: InformationObject) {
-    val c = field(index)
-    field = field + (index -> Cell(c.value, c.pheromones, informationObject :: c.informationObjects))
-  }
-
-  def apply(index: Index) = {
-    field(index)
-  }
-
-  def toList: List[CellWithIndex] = (for (entry ← field) yield CellWithIndex(entry._1, entry._2)).toList
-
-  def worldInfo: WorldInfo = WorldInfo(width, height, field.toList)
-
-  def update(): Unit = {
-    var newField = Map.empty[Index, Cell]
-
-    field map {
-      e ⇒
-        val n = neighbours(e._1) // neighbours of current cell
-        var currentCellPheromones = newField.getOrElse(e._1, Cell(0, Map.empty[Pheromone, Float])).pheromones // already updated pheromone values
-        val currentCellValue = field(e._1).value // value of current cell
-
-        e._2.pheromones map {
-          p ⇒
-            val decay = p._2 * p._1.decayRate // new value of this pheromone after decay
-            val sum = decay + currentCellPheromones.getOrElse(p._1, 0.0f) // sum of values (this cell + this pheromone spread from neighbour cells)
-            if (sum > 0.009) {
-              currentCellPheromones = currentCellPheromones + (p._1 -> math.min(1f, sum))
-            }
-            val spread = p._2 * p._1.spreadRate
-            n map {
-              neighbour ⇒
-                val neighbourCell = newField.getOrElse(e._1, Cell(field(neighbour._1).value, Map.empty[Pheromone, Float]))
-                var neighbourPheromones = neighbourCell.pheromones
-                val sum = spread + neighbourPheromones.getOrElse(p._1, 0.0f)
-                if (sum > 0.009) {
-                  neighbourPheromones = neighbourPheromones + (p._1 -> math.min(1f, sum))
-                }
-                newField = newField + (neighbour._1 -> Cell(field(neighbour._1).value, neighbourPheromones))
-            }
-        }
-        newField = newField + (e._1 -> Cell(currentCellValue, currentCellPheromones))
-    }
-    field = newField
-  }
-}
-
-object Agent {
-
-  trait Pheromone {
-    val strength: Float
-    val decayRate: Float
-    val spreadRate: Float
-  }
-
-  case class OwnerPheromone(id: AgentID, strength: Float = 1f, decayRate: Float = 0.66f, spreadRate: Float = 0.09f) extends Pheromone
-
-  case class AgentID(id: Int)
-
-  case class AgentState(id: AgentID, position: Index)
-
-}
-
-object AgentMessages {
-
-  sealed trait AgentMessage
-
-  case class SpawnAt(position: Index) extends AgentMessage
-
-  case object SpawnRejected extends AgentMessage
-
-  case class MoveTo(index: Index) extends AgentMessage
-
-  case class ChangeValue(newValue: Float) extends AgentMessage
-
-  case class PutInformationObject(informationObject: InformationObject) extends AgentMessage
-
-  case class PutInformationObjectTo(index: Index, informationObject: InformationObject) extends AgentMessage
-
-  case class ReleasePheromone(pheromone: Pheromone) extends AgentMessage
-
-  case object Death extends AgentMessage
-
-  case object Success extends AgentMessage
-
-  case object Failure extends AgentMessage
-
-}

@@ -133,9 +133,37 @@ public abstract class AmcgalaAgent extends UntypedActor {
         getSelf().tell(new AgentMessages.SpawnAt(new World.Index(x, y)), getSelf());
     }
 
+    /**
+     * Waehlt einen zufaellig eine Nachbarzelle aus.
+     * @param update die aktuelle Umgebung
+     * @return die NAchbarzelle
+     */
     protected World.CellWithIndex getRandomNeighbour(Simulation.SimulationUpdate update) {
         return update.neighbours().values().toArray(new World.CellWithIndex[1])[random.nextInt(update.neighbours().size())];
     }
+
+
+    protected AgentMessages.AgentMessage moveTo(World.Index index) {
+        return new AgentMessages.MoveTo(index);
+    }
+
+    protected AgentMessages.AgentMessage changeValue(float value) {
+        return new AgentMessages.ChangeValue(value);
+    }
+
+    protected AgentMessages.AgentMessage putInformationObject(World.InformationObject informationObject) {
+        return new AgentMessages.PutInformationObject(informationObject);
+    }
+
+    protected AgentMessages.AgentMessage putInformationObjectTo(World.Index index, World.InformationObject informationObject) {
+        return new AgentMessages.PutInformationObjectTo(index, informationObject);
+    }
+
+    protected World.InformationObject createVisited(){
+        return World.Visited.
+    }
+
+
 
     /**
      * Callback Methode, die bei jedem Update der Simulation aufgerufen wird.
