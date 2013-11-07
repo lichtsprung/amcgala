@@ -14,7 +14,7 @@ object World {
 
   trait InformationObject
 
-  case class Deviation(value: Float) extends InformationObject //TODO name
+  case class QuantisationError(value: Float) extends InformationObject
 
   case object Visited extends InformationObject
 
@@ -26,9 +26,15 @@ object World {
                   pheromones: PheromoneMap = Map.empty[Pheromone, Float],
                   informationObjects: List[InformationObject] = List.empty[InformationObject])
 
+  case class JCell(value: Float,
+                   pheromones: util.Map[Pheromone, Float] = new util.HashMap[Pheromone, Float](),
+                   informationObjects: util.List[InformationObject] = new util.ArrayList[InformationObject]())
+
   case class NeighbourCellWithIndex(relativeIndex: Index, absoluteIndex: Index, cell: Cell)
 
   case class CellWithIndex(index: Index, cell: Cell)
+
+  case class JCellWithIndex(index: Index, cell: JCell)
 
   case class Index(x: Int, y: Int)
 
@@ -141,5 +147,43 @@ trait World {
         newField = newField + (e._1 -> Cell(currentCellValue, currentCellPheromones))
     }
     field = newField
+  }
+}
+
+trait Direction {
+  def relativeIndex: Index
+}
+
+object Directions {
+  val LEFT = new Direction {
+    def relativeIndex: Index = Index(-1, 0)
+  }
+
+  val RIGHT = new Direction {
+    def relativeIndex: Index = Index(1, 0)
+  }
+
+  val UP = new Direction {
+    def relativeIndex: Index = Index(0, -1)
+  }
+
+  val DOWN = new Direction {
+    def relativeIndex: Index = Index(0, 1)
+  }
+
+  val UP_LEFT = new Direction {
+    def relativeIndex: Index = Index(-1, -1)
+  }
+
+  val UP_RIGHT = new Direction {
+    def relativeIndex: Index = Index(1, -1)
+  }
+
+  val DOWN_LEFT = new Direction {
+    def relativeIndex: Index = Index(-1, 1)
+  }
+
+  val DOWN_RIGHT = new Direction {
+    def relativeIndex: Index = Index(1, 1)
   }
 }

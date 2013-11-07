@@ -78,10 +78,14 @@ public class SoftwareRenderer implements Renderer {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (framework.hasActiveScene()) {
-                    framework.getActiveScene().getEventBus().post(new KeyPressedEvent(e));
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    System.exit(0);
+                } else {
+                    if (framework.hasActiveScene()) {
+                        framework.getActiveScene().getEventBus().post(new KeyPressedEvent(e));
+                    }
+                    framework.getEventBus().post(new KeyPressedEvent(e));
                 }
-                framework.getEventBus().post(new KeyPressedEvent(e));
             }
 
             @Override
@@ -176,7 +180,8 @@ public class SoftwareRenderer implements Renderer {
         });
 
         frame.setBackground(Color.WHITE);
-
+        frame.setUndecorated(true);
+        frame.setLocation(200, 200);
         frame.setVisible(true);
         frame.createBufferStrategy(2);
         bs = frame.getBufferStrategy();

@@ -17,7 +17,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     protected Random random = new Random(System.nanoTime());
 
-    private World.Cell currentCell;
+    private World.JCell currentCell;
 
     private World.Index currentPosition;
 
@@ -44,7 +44,6 @@ public abstract class AmcgalaAgent extends UntypedActor {
                 waitTask.cancel();
                 getContext().become(updateHandling);
             } else if (message instanceof AgentMessages.SpawnRejected$) {
-                System.out.println("REjected");
                 getContext().stop(getSelf());
             } else {
                 unhandled(message);
@@ -60,8 +59,8 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
                 currentCell = update.currentCell();
                 currentPosition = update.currentPosition();
-
-                sender().tell(onUpdate((Simulation.SimulationUpdate) message), self());
+                AgentMessages.AgentMessage decision = onUpdate(update);
+                sender().tell(decision, self());
             } else {
                 unhandled(message);
             }
@@ -135,40 +134,137 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     /**
      * Waehlt einen zufaellig eine Nachbarzelle aus.
+     *
      * @param update die aktuelle Umgebung
      * @return die NAchbarzelle
      */
-    protected World.CellWithIndex getRandomNeighbour(Simulation.SimulationUpdate update) {
-        return update.neighbours().values().toArray(new World.CellWithIndex[1])[random.nextInt(update.neighbours().size())];
+    protected World.JCellWithIndex getRandomNeighbour(Simulation.SimulationUpdate update) {
+        return update.neighbours().values().toArray(new World.JCellWithIndex[1])[random.nextInt(update.neighbours().size())];
+    }
+
+    protected World.JCellWithIndex getNeighbour(World.Index relativeIndex, Simulation.SimulationUpdate update) {
+        return update.neighbours().get(relativeIndex);
     }
 
 
-    protected AgentMessages.AgentMessage moveTo(World.Index index) {
-        return new AgentMessages.MoveTo(index);
+    /**
+     * Bewegt den Agenten auf ein benachbartes Feld.
+     *
+     * @param index  der relative Index des Nachbarn
+     * @param update das SimulationUpdate Objekt
+     * @return die Nachricht, die an die Simulation gesendet wird
+     */
+    protected AgentMessages.AgentMessage moveTo(World.Index index, Simulation.SimulationUpdate update) {
+        requestUpdate();
+        return new AgentMessages.MoveTo(update.neighbours().get(index).index());
     }
 
+    /**
+     * Bewegt den Agenten in die angebenene Richtung.
+     *
+     * @param direction die Richtung, in die der Agent gehen soll
+     * @param update    der aktuelle Zustand der Agentenumgebung
+     * @return die AgentMessage, die an die Simulation geschickt wird
+     */
+    protected AgentMessages.AgentMessage moveTo(Direction direction, Simulation.SimulationUpdate update) {
+        requestUpdate();
+        return new AgentMessages.MoveTo(update.neighbours().get(direction.relativeIndex()).index());
+    }
+
+
+    /**
+     * Aendert den Wert der Zelle, auf der der Agent steht.
+     *
+     * @param value der neue Wert
+     * @return die AgentMessage, die an die Simulation geschickt wird
+     */
     protected AgentMessages.AgentMessage changeValue(float value) {
+        requestUpdate();
         return new AgentMessages.ChangeValue(value);
     }
 
+    /**
+     * Legt ein InformationObject auf der aktuellen Zelle ab.
+     *
+     * @param informationObject das InformationObject
+     * @return die AgentMessage, die an die Simulation geschickt wird
+     */
     protected AgentMessages.AgentMessage putInformationObject(World.InformationObject informationObject) {
+        requestUpdate();
         return new AgentMessages.PutInformationObject(informationObject);
     }
 
+    /**
+     * Legt ein InformationObject auf einer benachbarten Zelle ab.
+     *
+     * @param index             der Index der Nachbarzelle
+     * @param informationObject das InformationObject
+     * @return die AgentMessage, die an die Simulation geschickt wird
+     */
     protected AgentMessages.AgentMessage putInformationObjectTo(World.Index index, World.InformationObject informationObject) {
+        requestUpdate();
         return new AgentMessages.PutInformationObjectTo(index, informationObject);
     }
 
-    protected World.InformationObject putVisitedObject(){
-        return World.Visited$.MODULE$;
+    /**
+     * Legt ein InformationObject auf der aktuellen Zelle ab.
+     *
+     * @param update das InformationObject
+     * @return die AgentMessage, die an die Simulation geschickt wird
+     */
+    protected AgentMessages.AgentMessage putVisitedObject(Simulation.SimulationUpdate update) {
+        requestUpdate();
+        return new AgentMessages.PutInformationObjectTo(update.currentPosition(), World.Visited$.MODULE$);
     }
 
-    protected AgentMessages.AgentMessage putDeviation(float value) {
-        return putInformationObject(new World.Deviation(value));
+    /**
+     * Prueft, ob die Nachbarzelle schon besucht wurde
+     *
+     * @param direction die Richtung, in der die zu untersuchende Zelle liegt
+     * @param update    der aktuelle Zustand der Agentenumgebung
+     * @return true, wenn Zelle schon besucht wurde
+     */
+    protected boolean checkVisited(Direction direction, Simulation.SimulationUpdate update) {
+        return checkVisited(update.neighbours().get(direction.relativeIndex()).cell());
+    }
+
+    /**
+     * Prueft, ob die Zelle schon besucht wurde.
+     * @param cell die zu untersuchende Zelle
+     * @return true, wenn Zelle schon besucht wurde
+     */
+    protected boolean checkVisited(World.JCell cell) {
+        boolean visited = false;
+        for (World.InformationObject informationObject : cell.informationObjects()) {
+            visited = (informationObject instanceof World.Visited$) || visited;
+        }
+
+        return visited;
     }
 
 
+    /**
+     * Gibt den absoluten Index einer Nachbarzelle zurueck.
+     * @param direction die Richtung, in der die Zelle liegt
+     * @param update  der aktuelle Zustand der Agentenumgebung
+     * @return der absolute Index der Zelle
+     */
+    protected World.Index getNeighourIndex(Direction direction, Simulation.SimulationUpdate update) {
+        return getNeighbour(direction.relativeIndex(), update).index();
+    }
 
+    /**
+     * Triggert ein SimulationUpdate, das dem Agenten nach einer Aktion geschickt wird.
+     * Diese Methode hat nur eine Wirkung, wenn push-mode in der Konfiguration auf false gesetzt wird.
+     */
+    protected void requestUpdate() {
+        getContext().system().scheduler().scheduleOnce(new FiniteDuration(5, TimeUnit.MILLISECONDS), new Runnable() {
+            @Override
+            public void run() {
+                simulation.tell(Simulation.RequestUpdate$.MODULE$, getSelf());
+            }
+        }, getContext().system().dispatcher());
+    }
 
 
     /**

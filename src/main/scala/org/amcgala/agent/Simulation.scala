@@ -2,8 +2,6 @@ package org.amcgala.agent
 
 import akka.actor._
 import org.amcgala.agent.Simulation._
-import scala.util.Random
-import org.amcgala.agent.Agent._
 import scala.collection.JavaConversions._
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -11,22 +9,7 @@ import com.typesafe.config.{ ConfigFactory, Config }
 import java.util
 import org.amcgala.agent.AgentMessages._
 import org.amcgala.agent.World._
-import org.amcgala.agent.Agent.AgentState
-import org.amcgala.agent.World.Index
-import scala.Some
-import org.amcgala.agent.Simulation.Broadcast
-import org.amcgala.agent.AgentMessages.ReleasePheromone
-import org.amcgala.agent.Simulation.SimulationStateUpdate
-import org.amcgala.agent.Simulation.SimulationState
-import org.amcgala.agent.World.Cell
-import org.amcgala.agent.Agent.AgentID
-import org.amcgala.agent.Simulation.SimulationConfig
-import org.amcgala.agent.Simulation.SimulationUpdate
-import org.amcgala.agent.AgentMessages.MoveTo
-import org.amcgala.agent.Simulation.Register
-import org.amcgala.agent.AgentMessages.ChangeValue
-import org.amcgala.agent.World.WorldInfo
-import org.amcgala.agent.Agent.AgentState
+import org.amcgala.agent.Agent.{ Pheromone, AgentState, AgentID }
 import org.amcgala.agent.World.Index
 import scala.Some
 import org.amcgala.agent.AgentMessages.ReleasePheromone
@@ -34,10 +17,8 @@ import org.amcgala.agent.Simulation.SimulationStateUpdate
 import org.amcgala.agent.Simulation.SimulationState
 import org.amcgala.agent.World.Cell
 import org.amcgala.agent.Simulation.AgentDeath
-import org.amcgala.agent.Agent.AgentID
 import org.amcgala.agent.Simulation.SimulationConfig
 import org.amcgala.agent.Simulation.SimulationUpdate
-import org.amcgala.agent.World.CellWithIndex
 import org.amcgala.agent.AgentMessages.MoveTo
 import org.amcgala.agent.AgentMessages.PutInformationObject
 import org.amcgala.agent.Simulation.CellChange
@@ -50,6 +31,17 @@ import org.amcgala.agent.World.WorldInfo
   * Companion Object der Agentensimulation. Hier finden sich alle Messageklassen, die die Simulation verarbeitet.
   */
 object Simulation {
+
+  object Utils {
+    implicit def cell2JCell(cell: Cell): JCell = {
+      JCell(cell.value, new util.HashMap[Pheromone, Float](), cell.informationObjects)
+    }
+
+    implicit def cellWI2JCellWI(cell: CellWithIndex): JCellWithIndex = {
+
+      JCellWithIndex(cell.index, cell2JCell(cell.cell))
+    }
+  }
 
   /**
     * Die Konfiguration, die von der Simulation geladen werden soll. In der Regel die erste Nachricht, die an die Simulation
@@ -66,7 +58,7 @@ object Simulation {
     * @param currentCell der aktuelle Zustand des Agenten
     * @param neighbours die Nachbarzellen
     */
-  case class SimulationUpdate(currentPosition: Index, currentCell: Cell, neighbours: java.util.HashMap[Index, CellWithIndex])
+  case class SimulationUpdate(currentPosition: Index, currentCell: JCell, neighbours: java.util.HashMap[Index, JCellWithIndex])
 
   /**
     * Der globale Zustand der Simulation. Diese Nachricht wird an alle Statelogger geschickt, die die Informationen
@@ -145,6 +137,8 @@ object Simulation {
     */
   case object Update
 
+  case object RequestUpdate
+
   /**
     * Triggert ein vollstaendiges Update aller StateLogger.
     * @deprecated wurde durch inkrementelles Update ersetzt
@@ -178,8 +172,11 @@ class Simulation extends Actor with ActorLogging {
   var world: Option[World] = None
 
   var currentConfig = ConfigFactory.empty().withFallback(defaultConfig)
-  var updatePingTime = currentConfig.getInt("org.amcgala.agent.simulation.update-ping-time").milliseconds
-  var stateLoggerUpdatePingTime = currentConfig.getInt("org.amcgala.agent.simulation.statelogger-ping-time").seconds
+
+  def pingTime = currentConfig.getInt("org.amcgala.agent.simulation.update-ping-time").milliseconds
+  def stateLoggerUpdatePingTime = currentConfig.getInt("org.amcgala.agent.simulation.statelogger-ping-time").seconds
+  def pushMode = currentConfig.getBoolean("org.amcgala.agent.simulation.push-mode")
+  def pheromoneMode = currentConfig.getBoolean("org.amcgala.agent.simulation.world.pheromones")
 
   /**
     * Die Standardposition eines Agenten in der Welt. Dieser Wert wird aus der aktuellen Konfiguration genommen.
@@ -210,7 +207,9 @@ class Simulation extends Actor with ActorLogging {
     case SimulationConfig(config) ⇒
       currentConfig = config.withFallback(defaultConfig)
       world = Some(World(currentConfig))
-      context.system.scheduler.schedule(5 seconds, updatePingTime, self, Update)
+      if (pushMode) {
+        context.system.scheduler.schedule(5 seconds, pingTime, self, Update)
+      }
       //      context.system.scheduler.schedule(5 seconds, stateLoggerUpdatePingTime, self, StateLoggerUpdate)
       context.become(simulationLifeCycle orElse handleAgentMessages)
   }
@@ -221,6 +220,7 @@ class Simulation extends Actor with ActorLogging {
         val randomCell = w.randomCell
         agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), randomCell.index))
         self ! AgentStateChange(agents(sender))
+        self.tell(RequestUpdate, sender)
       })
 
     case Register(index) ⇒
@@ -230,6 +230,7 @@ class Simulation extends Actor with ActorLogging {
         if (!agents.exists(entry ⇒ entry._2.position == index)) {
           agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index))
           self ! AgentStateChange(agents(sender))
+          self.tell(RequestUpdate, sender)
         } else {
           sender ! SpawnRejected
         }
@@ -240,9 +241,11 @@ class Simulation extends Actor with ActorLogging {
         case World.RandomIndex ⇒
           self forward RegisterWithRandomIndex
         case index: Index ⇒
+          println(s"Handling index $index")
           world map (w ⇒ {
             agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index))
             self ! AgentStateChange(agents(sender))
+            self.tell(RequestUpdate, sender)
           })
       }
 
@@ -264,16 +267,38 @@ class Simulation extends Actor with ActorLogging {
           case (ref, currentState) ⇒ {
 
             val neighbourCells = w.neighbours(currentState.position)
-            val javaMap = new util.HashMap[Index, CellWithIndex]()
+            val javaNeighbours = new util.HashMap[Index, JCellWithIndex]()
+            import Simulation.Utils.cellWI2JCellWI
             neighbourCells foreach {
               entry ⇒
-                javaMap.put(entry._1, entry._2)
+                javaNeighbours.put(entry._1, entry._2)
             }
-            ref ! SimulationUpdate(currentState.position, w(currentState.position), javaMap)
+
+            import Simulation.Utils.cell2JCell
+            ref ! SimulationUpdate(currentState.position, w(currentState.position), javaNeighbours)
           }
         }
 
       })
+
+    case RequestUpdate ⇒
+      if (!pushMode) {
+        for {
+          w ← world
+          currentState ← agents.get(sender)
+        } {
+          val neighbourCells = w.neighbours(currentState.position)
+          val javaNeighbours = new util.HashMap[Index, JCellWithIndex]()
+          import Simulation.Utils.cellWI2JCellWI
+          neighbourCells foreach {
+            entry ⇒
+              javaNeighbours.put(entry._1, entry._2)
+          }
+
+          import Simulation.Utils.cell2JCell
+          sender ! SimulationUpdate(currentState.position, w(currentState.position), javaNeighbours)
+        }
+      }
 
     case StateLoggerUpdate ⇒
       for {
@@ -312,7 +337,7 @@ class Simulation extends Actor with ActorLogging {
         w ← world
         agent ← agents.get(sender)
       } {
-        if (currentConfig.getBoolean("org.amcgala.agent.simulation.world.pheromones")) {
+        if (pheromoneMode) {
           if (constraintsChecker.checkPheromone(agent, pheromone)) {
             w.addPheromone(agent.position, pheromone)
           }

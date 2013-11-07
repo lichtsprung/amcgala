@@ -2,6 +2,7 @@ package org.amcgala;
 
 import com.google.common.eventbus.EventBus;
 import org.amcgala.camera.Camera;
+import org.amcgala.camera.OrthographicCamera;
 import org.amcgala.camera.SimplePerspectiveCamera;
 import org.amcgala.event.InputHandler;
 import org.amcgala.math.Vector3d;
@@ -55,7 +56,7 @@ public class Scene {
     public Scene(String label) {
         this.label = label;
         sceneGraph = new DefaultSceneGraph();
-        camera = new SimplePerspectiveCamera(Vector3d.UNIT_Y, Vector3d.UNIT_Z, Vector3d.ZERO, 2000);
+        camera = new OrthographicCamera(Vector3d.UNIT_Y, Vector3d.UNIT_Z, Vector3d.ZERO);
         eventBus = new EventBus();
         inputHandlers = new HashMap<>();
     }

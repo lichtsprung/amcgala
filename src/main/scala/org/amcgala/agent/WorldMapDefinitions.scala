@@ -108,3 +108,48 @@ class GradientWorldMap extends Initialiser {
   }
 }
 
+class GaussWorldMap extends Initialiser {
+  def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
+    var field: Map[Index, Cell] = Map.empty[Index, Cell]
+    val x0 = width / 2
+    val y0 = height / 2
+    val sx = 0.01f
+    val sy = 0.01f
+
+    for (x ← 0 until width) {
+      for (y ← 0 until height) {
+        val tx = math.pow(x - x0, 2) / 2 * math.pow(sx, 2)
+        val ty = math.pow(y - y0, 2) / 2 * math.pow(sy, 2)
+        val t = math.exp(-(tx + ty))
+
+        field = field + (Index(x, y) -> Cell(t.toFloat))
+      }
+    }
+    field
+  }
+}
+
+class SineCosineWorldMap extends Initialiser {
+  def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
+    import math._
+    var field: Map[Index, Cell] = Map.empty[Index, Cell]
+    val x0 = width / 2
+    val y0 = height / 2
+    val sx = 0.01f
+    val sy = 0.01f
+
+    for (x ← 0 until width) {
+      for (y ← 0 until height) {
+        val tx = math.pow(x - x0, 2) / 2 * math.pow(sx, 2)
+        val ty = math.pow(y - y0, 2) / 2 * math.pow(sy, 2)
+        val t = math.exp(-(tx + ty))
+        val v = (sin(sqrt(tx)) + cos(exp(-ty))) / 2
+
+        field = field + (Index(x, y) -> Cell(v.toFloat))
+      }
+    }
+
+    field
+  }
+}
+
