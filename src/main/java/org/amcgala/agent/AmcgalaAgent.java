@@ -23,7 +23,10 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     protected final Agent.AgentID id = new Agent.AgentID(getSelf().hashCode());
 
-    private final String simulationPath = getContext().system().settings().config().getString("org.amcgala.agent.simulation.address");
+    private boolean localMode = getContext().system().settings().config().getBoolean("org.amcgala.agent.simulation.local-mode");
+
+    private final String simulationPath = localMode ? getContext().system().settings().config().getString("org.amcgala.agent.simulation.local-address") : getContext().system().settings().config().getString("org.amcgala.agent.simulation.address");
+
 
     private final ActorSelection simulation = getContext().actorSelection(simulationPath);
 
@@ -142,8 +145,8 @@ public abstract class AmcgalaAgent extends UntypedActor {
         return update.neighbours().values().toArray(new World.JCellWithIndex[1])[random.nextInt(update.neighbours().size())];
     }
 
-    protected World.JCellWithIndex getNeighbour(World.Index relativeIndex, Simulation.SimulationUpdate update) {
-        return update.neighbours().get(relativeIndex);
+    protected World.JCellWithIndex getNeighbour(Direction direction, Simulation.SimulationUpdate update) {
+        return update.neighbours().get(direction.relativeIndex());
     }
 
 
@@ -159,6 +162,16 @@ public abstract class AmcgalaAgent extends UntypedActor {
         return new AgentMessages.MoveTo(update.neighbours().get(index).index());
     }
 
+    /**
+     * Bewegt den Agenten auf ein benachbartes Feld.
+     *
+     * @param index  der relative Index des Nachbarn
+     * @return die Nachricht, die an die Simulation gesendet wird
+     */
+    protected AgentMessages.AgentMessage moveTo(World.Index index) {
+        requestUpdate();
+        return new AgentMessages.MoveTo(index);
+    }
     /**
      * Bewegt den Agenten in die angebenene Richtung.
      *
@@ -250,15 +263,15 @@ public abstract class AmcgalaAgent extends UntypedActor {
      * @return der absolute Index der Zelle
      */
     protected World.Index getNeighourIndex(Direction direction, Simulation.SimulationUpdate update) {
-        return getNeighbour(direction.relativeIndex(), update).index();
+        return getNeighbour(direction, update).index();
     }
 
     /**
      * Triggert ein SimulationUpdate, das dem Agenten nach einer Aktion geschickt wird.
      * Diese Methode hat nur eine Wirkung, wenn push-mode in der Konfiguration auf false gesetzt wird.
      */
-    protected void requestUpdate() {
-        getContext().system().scheduler().scheduleOnce(new FiniteDuration(5, TimeUnit.MILLISECONDS), new Runnable() {
+    private void requestUpdate() {
+        getContext().system().scheduler().scheduleOnce(new FiniteDuration(50, TimeUnit.NANOSECONDS), new Runnable() {
             @Override
             public void run() {
                 simulation.tell(Simulation.RequestUpdate$.MODULE$, getSelf());

@@ -29,9 +29,11 @@ public abstract class StateLoggerAgent extends UntypedActor {
     protected int scaleX;
     protected int scaleY;
 
-    private final String simulationPath = getContext().system().settings().config().getString("org.amcgala.agent.simulation.address");
-    private final ActorSelection simulation = getContext().actorSelection(simulationPath);
+    private boolean localMode = getContext().system().settings().config().getBoolean("org.amcgala.agent.simulation.local-mode");
 
+    private final String simulationPath = localMode ? getContext().system().settings().config().getString("org.amcgala.agent.simulation.local-address") : getContext().system().settings().config().getString("org.amcgala.agent.simulation.address");
+
+    private ActorSelection simulation = getContext().actorSelection(simulationPath);
 
     /**
      * User overridable callback.

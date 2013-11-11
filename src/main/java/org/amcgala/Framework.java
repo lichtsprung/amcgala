@@ -125,6 +125,7 @@ public final class Framework {
      * @return Referenz auf die Frameworksinstanz
      */
     public static Framework createInstance(int width, int height, FrameworkMode mode) {
+        System.out.println("Version: 3.1.2");
         checkArgument(instance == null, "Es können keine weiteren Instanzen von Framework erzeugt werden!");
         instance = new Framework(width, height, mode);
 

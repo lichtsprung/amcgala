@@ -5,7 +5,7 @@ import org.amcgala.agent.World.{ Index, InformationObject }
 
 object Agent {
 
-  trait Pheromone {
+  trait Pheromone extends Message {
     val strength: Float
     val decayRate: Float
     val spreadRate: Float
@@ -13,15 +13,15 @@ object Agent {
 
   case class OwnerPheromone(id: AgentID, strength: Float = 1f, decayRate: Float = 0.66f, spreadRate: Float = 0.09f) extends Pheromone
 
-  case class AgentID(id: Int)
+  case class AgentID(id: Int) extends Message
 
-  case class AgentState(id: AgentID, position: Index)
+  case class AgentState(id: AgentID, position: Index) extends Message
 
 }
 
 object AgentMessages {
 
-  sealed trait AgentMessage
+  sealed trait AgentMessage extends Message
 
   case class SpawnAt(position: Index) extends AgentMessage
 

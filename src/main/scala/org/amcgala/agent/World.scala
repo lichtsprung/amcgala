@@ -12,7 +12,7 @@ import scala.collection.JavaConversions._
 
 object World {
 
-  trait InformationObject
+  trait InformationObject extends Message
 
   case class QuantisationError(value: Float) extends InformationObject
 
@@ -24,19 +24,19 @@ object World {
 
   case class Cell(value: Float,
                   pheromones: PheromoneMap = Map.empty[Pheromone, Float],
-                  informationObjects: List[InformationObject] = List.empty[InformationObject])
+                  informationObjects: List[InformationObject] = List.empty[InformationObject]) extends Message
 
   case class JCell(value: Float,
                    pheromones: util.Map[Pheromone, Float] = new util.HashMap[Pheromone, Float](),
-                   informationObjects: util.List[InformationObject] = new util.ArrayList[InformationObject]())
+                   informationObjects: util.List[InformationObject] = new util.ArrayList[InformationObject]()) extends Message
 
-  case class NeighbourCellWithIndex(relativeIndex: Index, absoluteIndex: Index, cell: Cell)
+  case class NeighbourCellWithIndex(relativeIndex: Index, absoluteIndex: Index, cell: Cell) extends Message
 
-  case class CellWithIndex(index: Index, cell: Cell)
+  case class CellWithIndex(index: Index, cell: Cell) extends Message
 
-  case class JCellWithIndex(index: Index, cell: JCell)
+  case class JCellWithIndex(index: Index, cell: JCell) extends Message
 
-  case class Index(x: Int, y: Int)
+  case class Index(x: Int, y: Int) extends Message
 
   val RandomIndex = Index(-1, -1)
 
@@ -150,7 +150,7 @@ trait World {
   }
 }
 
-trait Direction {
+trait Direction extends Message {
   def relativeIndex: Index
 }
 

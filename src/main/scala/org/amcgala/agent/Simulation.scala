@@ -27,6 +27,8 @@ import org.amcgala.agent.AgentMessages.ChangeValue
 import org.amcgala.agent.Simulation.AgentStateChange
 import org.amcgala.agent.World.WorldInfo
 
+trait Message
+
 /**
   * Companion Object der Agentensimulation. Hier finden sich alle Messageklassen, die die Simulation verarbeitet.
   */
@@ -49,7 +51,7 @@ object Simulation {
     *
     * @param config die Konfiguration, die gelanden werden soll
     */
-  case class SimulationConfig(config: Config)
+  case class SimulationConfig(config: Config) extends Message
 
   /**
     * Aktueller Zustand eines Agenten. Das Update wird an den entsprechenden Agenten geschickt, der auf die Nachricht
@@ -58,7 +60,7 @@ object Simulation {
     * @param currentCell der aktuelle Zustand des Agenten
     * @param neighbours die Nachbarzellen
     */
-  case class SimulationUpdate(currentPosition: Index, currentCell: JCell, neighbours: java.util.HashMap[Index, JCellWithIndex])
+  case class SimulationUpdate(currentPosition: Index, currentCell: JCell, neighbours: java.util.HashMap[Index, JCellWithIndex]) extends Message
 
   /**
     * Der globale Zustand der Simulation. Diese Nachricht wird an alle Statelogger geschickt, die die Informationen
@@ -67,9 +69,9 @@ object Simulation {
     * @param worldInfo globale Informationen zur Welt
     * @param agents alle sich in der Simulation befindlichen Agenten
     */
-  case class SimulationState(worldInfo: WorldInfo, agents: java.util.List[AgentState])
+  case class SimulationState(worldInfo: WorldInfo, agents: java.util.List[AgentState]) extends Message
 
-  trait ChangeMessage
+  trait ChangeMessage extends Message
 
   /**
     * Ein Agent hat seinen Zustand veraendert. Diese Nachricht wird nach der Aenderung an alle [[org.amcgala.agent.StateLoggerAgent]]s geschickt.
@@ -105,7 +107,7 @@ object Simulation {
     * @param changedCells die Zellen, die sich seit dem letzten Tick geändert haben
     * @param agents die Agenten, die ihren Zustand geändert haben
     */
-  case class SimulationStateUpdate(changedCells: java.util.List[(Index, Cell)], agents: java.util.List[AgentState])
+  case class SimulationStateUpdate(changedCells: java.util.List[(Index, Cell)], agents: java.util.List[AgentState]) extends Message
 
   /**
     * Registriert einen Agenten bei der Simulation. Er wird von der Simulation auf die Zelle mit dem mitgeschickten Index
@@ -114,42 +116,42 @@ object Simulation {
     *
     * @param index der Index der Zelle, auf der der Agent platziert werden soll
     */
-  case class Register(index: Index)
+  case class Register(index: Index) extends Message
 
   /**
     * Registriert einen Agenten bei der Simulation. Platziert diesen auf einer zufällig ausgewählten Zelle.
     */
-  case object RegisterWithRandomIndex
+  case object RegisterWithRandomIndex extends Message
 
   /**
     * Registriert einen [[org.amcgala.agent.StateLoggerAgent]]en bei der Simulation.
     */
-  case object RegisterStateLogger
+  case object RegisterStateLogger extends Message
 
   /**
     * Registriert einen [[org.amcgala.agent.AmcgalaAgent]] bei der Simulation und platziert diesen auf der Standardzelle,
     * die in der Konfiguration definiert werden kann.
     */
-  case object RegisterWithDefaultIndex
+  case object RegisterWithDefaultIndex extends Message
 
   /**
     * Triggert ein Update der Simulation. Das Interval kann in der Konfiguration definiert werden.
     */
-  case object Update
+  case object Update extends Message
 
-  case object RequestUpdate
+  case object RequestUpdate extends Message
 
   /**
     * Triggert ein vollstaendiges Update aller StateLogger.
     * @deprecated wurde durch inkrementelles Update ersetzt
     */
-  case object StateLoggerUpdate
+  case object StateLoggerUpdate extends Message
 
   /**
     * Ein Broadcast an alle Agenten in der Simulation.
     * @param message die Nachricht, die an alle Agenten weitergeleitet werden soll.
     */
-  case class Broadcast(message: Any)
+  case class Broadcast(message: Any) extends Message
 
   /**
     * Gibt die [[akka.actor.Props]] Instanz zurück, die zur Erstellung eines neuen Simulation Actors benötigt wird
@@ -201,6 +203,8 @@ class Simulation extends Actor with ActorLogging {
     cl.newInstance().asInstanceOf[WorldConstraintsChecker]
   }
 
+  var max = 0
+
   def receive: Actor.Receive = waitForWorld
 
   def waitForWorld: Actor.Receive = {
@@ -219,6 +223,7 @@ class Simulation extends Actor with ActorLogging {
       world map (w ⇒ {
         val randomCell = w.randomCell
         agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), randomCell.index))
+        max = math.max(agents.size, max)
         self ! AgentStateChange(agents(sender))
         self.tell(RequestUpdate, sender)
       })
@@ -229,6 +234,7 @@ class Simulation extends Actor with ActorLogging {
       } {
         if (!agents.exists(entry ⇒ entry._2.position == index)) {
           agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index))
+          max = math.max(agents.size, max)
           self ! AgentStateChange(agents(sender))
           self.tell(RequestUpdate, sender)
         } else {
@@ -241,9 +247,9 @@ class Simulation extends Actor with ActorLogging {
         case World.RandomIndex ⇒
           self forward RegisterWithRandomIndex
         case index: Index ⇒
-          println(s"Handling index $index")
           world map (w ⇒ {
             agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index))
+            max = math.max(agents.size, max)
             self ! AgentStateChange(agents(sender))
             self.tell(RequestUpdate, sender)
           })

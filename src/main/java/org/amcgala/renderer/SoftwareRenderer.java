@@ -181,7 +181,7 @@ public class SoftwareRenderer implements Renderer {
 
         frame.setBackground(Color.WHITE);
         frame.setUndecorated(true);
-        frame.setLocation(200, 200);
+        frame.setLocation(150, 80);
         frame.setVisible(true);
         frame.createBufferStrategy(2);
         bs = frame.getBufferStrategy();
