@@ -5,6 +5,11 @@ import java.util
 import org.amcgala.agent.Agent.Pheromone
 import org.amcgala.agent.World.{ Index, Cell }
 import scala.collection.JavaConversions._
+import scala.util.Random
+import mikera.math.PerlinNoise
+import com.oddlabs.procedurality._
+import org.amcgala.agent.World.Index
+import org.amcgala.agent.World.Cell
 
 trait Initialiser {
   def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell]
@@ -77,16 +82,45 @@ class PolygonWorldMap extends Initialiser {
 }
 
 class FractalWorldMap extends Initialiser {
+
+  val size: Int = 512
+  val seed: Int = Random.nextInt(152)
+  val features: Int = Random.nextInt(20)
+  val hills: Float = 0.5f
+  // start off with some noise
+  val height: Channel = new Mountain(size, Utils.powerOf2Log2(size) - 6, 0.5f, seed).toChannel
+  height.copy.toLayer.saveAsPNG("terrain1")
+  // add mountain peaks
+  val voronoi: Voronoi = new Voronoi(size, features, features, 1, 1f, seed)
+  val cliffs: Channel = voronoi.getDistance(-1f, 1f, 0f).brightness(1.5f).multiply(0.33f)
+  height.multiply(0.67f).channelAdd(cliffs)
+
+  // punch a few holes
+  height.channelSubtract(voronoi.getDistance(1f, 0f, 0f).gamma(.5f).flipV.rotate(90))
+
+  // let an ice age pass
+  height.perturb(new Midpoint(size, 2, 0.5f, seed).toChannel, 0.25f)
+
+  // let it rain for a couple of thousand years
+  height.erode((24f - hills * 12f) / size, size >> 2)
+
+  // smooth things out to avoid jagged lines
+  height.smooth(1)
+
+  // produce a bump-mapped image
+  val map = new Channel(size, size).add(0.5f).bump(height, 0.1f, 0f, 0.1f, 1f, 0f).normalize
+
   def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
     var field: Map[Index, Cell] = Map.empty[Index, Cell]
 
+    val perlin = new PerlinNoise()
+
     for (x ← 0 until width) {
       for (y ← 0 until height) {
-        // TODO Noise Function
-        field = field + (Index(x, y) -> Cell(0))
+        val v =
+          field = field + (Index(x, y) -> Cell(map.getPixelWrap(x, y)))
       }
     }
-
     field
   }
 }
