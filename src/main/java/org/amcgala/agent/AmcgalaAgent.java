@@ -262,7 +262,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
      * @param update  der aktuelle Zustand der Agentenumgebung
      * @return der absolute Index der Zelle
      */
-    protected World.Index getNeighourIndex(Direction direction, Simulation.SimulationUpdate update) {
+    protected World.Index getNeighbourIndex(Direction direction, Simulation.SimulationUpdate update) {
         return getNeighbour(direction, update).index();
     }
 
