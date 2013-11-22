@@ -18,10 +18,18 @@ import java.util.Map;
 public final class SimpleStateLogger extends StateLoggerAgent {
     Scene scene = new Scene("SimpleStateLogger");
     Rectangle[][] rectangles;
+    RGBColor[] greys;
 
 
     @Override
     public void onInit() {
+        greys = new RGBColor[1000];
+        float step = 1f / greys.length;
+
+        for (int i = 0; i < greys.length; i++) {
+            greys[i] = new RGBColor(i * step, i * step, i * step);
+        }
+
         rectangles = new Rectangle[worldWidth][worldHeight];
 
         for (int x = 0; x < rectangles.length; x++) {
@@ -50,9 +58,8 @@ public final class SimpleStateLogger extends StateLoggerAgent {
 
         for (Map.Entry<World.Index, World.Cell> entry : cells.entrySet()) {
             Rectangle p = rectangles[entry.getKey().x()][entry.getKey().y()];
-            float c = entry.getValue().value();
-            RGBColor valueColor = new RGBColor(c, c, c);
-            p.setColor(valueColor);
+            int index = Math.min(Math.round(Math.min(entry.getValue().value(), 1f) * greys.length), greys.length - 1);
+            p.setColor(greys[index]);
 
         }
 

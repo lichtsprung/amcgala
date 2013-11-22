@@ -166,7 +166,7 @@ object Simulation {
   * aktiven Welt und ist reagiert auf die Aktionen, die ein Agent durchführt.
   */
 class Simulation extends Actor with ActorLogging {
-  val defaultConfig = ConfigFactory.load("simulation")
+  val defaultConfig = ConfigFactory.load("amcgala")
 
   var agents = Map.empty[ActorRef, AgentState]
   var stateLogger = Set.empty[ActorRef]
@@ -203,8 +203,6 @@ class Simulation extends Actor with ActorLogging {
     cl.newInstance().asInstanceOf[WorldConstraintsChecker]
   }
 
-  var max = 0
-
   def receive: Actor.Receive = waitForWorld
 
   def waitForWorld: Actor.Receive = {
@@ -223,7 +221,6 @@ class Simulation extends Actor with ActorLogging {
       world map (w ⇒ {
         val randomCell = w.randomCell
         agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), randomCell.index))
-        max = math.max(agents.size, max)
         self ! AgentStateChange(agents(sender))
         self.tell(RequestUpdate, sender)
       })
@@ -234,7 +231,6 @@ class Simulation extends Actor with ActorLogging {
       } {
         if (!agents.exists(entry ⇒ entry._2.position == index)) {
           agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index))
-          max = math.max(agents.size, max)
           self ! AgentStateChange(agents(sender))
           self.tell(RequestUpdate, sender)
         } else {
@@ -249,7 +245,6 @@ class Simulation extends Actor with ActorLogging {
         case index: Index ⇒
           world map (w ⇒ {
             agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index))
-            max = math.max(agents.size, max)
             self ! AgentStateChange(agents(sender))
             self.tell(RequestUpdate, sender)
           })

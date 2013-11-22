@@ -15,6 +15,8 @@
 package org.amcgala;
 
 import com.google.common.eventbus.EventBus;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import org.amcgala.animation.Animator;
 import org.amcgala.camera.Camera;
 import org.amcgala.event.InputHandler;
@@ -51,7 +53,6 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public final class Framework {
     private static final Logger log = LoggerFactory.getLogger(Framework.class);
-    public static final Properties properties = loadProperties();
     public static FrameworkMode currentMode;
     private static Framework instance;
     private SceneGraph scenegraph;
@@ -70,7 +71,8 @@ public final class Framework {
     private int height;
     private boolean tracing;
     private boolean running;
-    private DisplayList displayList;
+    private DisplayList displayList = new DisplayList();
+    public static final Config configuration = ConfigFactory.load("amcgala");
 
     /**
      * Erstellt ein neues Framework, das eine grafische Ausgabe in der Auflösung
@@ -153,7 +155,7 @@ public final class Framework {
      */
     public static Framework getInstance() {
         if (instance == null) {
-            instance = createInstance(Integer.parseInt(properties.getProperty("amcgala.width")), Integer.parseInt(properties.getProperty("amcgala.height")), FrameworkMode.SOFTWARE);
+            instance = createInstance(configuration.getInt("org.amcgala.frame-width"), configuration.getInt("org.amcgala.frame-height"), FrameworkMode.SOFTWARE);
             return instance;
         } else {
             return instance;
@@ -168,30 +170,14 @@ public final class Framework {
      */
     public static Framework getInstance(FrameworkMode mode) {
         if (instance == null) {
-            instance = createInstance(Integer.parseInt(properties.getProperty("amcgala.width")), Integer.parseInt(properties.getProperty("amcgala.height")), mode);
+            instance = createInstance(configuration.getInt("org.amcgala.frame-width"), configuration.getInt("org.amcgala.frame-height"), mode);
             return instance;
         } else {
             return instance;
         }
     }
 
-    private static Properties loadProperties() {
-        final Properties props = new Properties();
-        log.info("Loading properties");
-        final InputStream in = Framework.class.getResourceAsStream("amcgala.properties");
-        try {
-            props.load(in);
-        } catch (IOException e) {
-            log.error("Couldn't load amcgala properties file.");
-        } finally {
-            try {
-                in.close();
-            } catch (IOException e) {
-                log.error("Coulnd't close InputStream.");
-            }
-        }
-        return props;  //To change body of created methods use File | Settings | File Templates.
-    }
+
 
     /**
      * Gibt den Eventbus des Frameworks zurück. Dieser besteht unabhängig von einer Szene und kann dafür verwendet werden,
@@ -203,16 +189,6 @@ public final class Framework {
         return frameworkEventBus;
     }
 
-
-    /**
-     * Gibt die Konfiguration des Frameworks zurück.
-     *
-     * @return die {@link Properties} des Frameworks
-     */
-    public Properties getProperties() {
-        return properties;
-    }
-
     /**
      * Aktualisiert den Szenengraphen, in dem die einzelnen, registrierten
      * Visitor den Szenengraphen besuchen.
@@ -222,7 +198,7 @@ public final class Framework {
         checkTracing();
         Collection<Shape> shapes = scenegraph.getShapes();
 
-        displayList = new DisplayList();
+        displayList.clear();
         updateDisplayList(shapes);
     }
 
@@ -411,7 +387,7 @@ public final class Framework {
      * @return die Breite des Fensters
      */
     public int getWidth() {
-        return (width == 0) ? Integer.parseInt(properties.getProperty("amcgala.width")) : width;
+        return (width == 0) ? configuration.getInt("org.amcgala.frame-width") : width;
     }
 
     /**
@@ -420,7 +396,7 @@ public final class Framework {
      * @return die Höhe des Fensters
      */
     public int getHeight() {
-        return (height == 0) ? Integer.parseInt(properties.getProperty("amcgala.height")) : height;
+        return (height == 0) ? configuration.getInt("org.amcgala.frame-height") : height;
     }
 
     public DisplayList getCurrentState() {

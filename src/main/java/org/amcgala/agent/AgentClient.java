@@ -18,13 +18,7 @@ public class AgentClient {
     private ActorSystem system;
 
     public AgentClient(String agentConfiguration) {
-
-
-
-
-
-
-        Config config = ConfigFactory.load().getConfig("client").withFallback(ConfigFactory.load(agentConfiguration).withFallback(ConfigFactory.load("simulation")));
+        Config config = ConfigFactory.load().getConfig("client").withFallback(ConfigFactory.load(agentConfiguration).withFallback(ConfigFactory.load("amcgala")));
         boolean localMode = config.getBoolean("org.amcgala.agent.simulation.local-mode");
 
         if (localMode) {

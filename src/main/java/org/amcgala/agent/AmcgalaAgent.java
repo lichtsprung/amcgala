@@ -25,7 +25,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     private boolean localMode = getContext().system().settings().config().getBoolean("org.amcgala.agent.simulation.local-mode");
 
-    private final String simulationPath = localMode ? getContext().system().settings().config().getString("org.amcgala.agent.simulation.local-address") : getContext().system().settings().config().getString("org.amcgala.agent.simulation.address");
+    private final String simulationPath = localMode ? getContext().system().settings().config().getString("org.amcgala.agent.simulation.local-address") : getContext().system().settings().config().getString("org.amcgala.agent.simulation.remote-address");
 
 
     private final ActorSelection simulation = getContext().actorSelection(simulationPath);
@@ -271,7 +271,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
      * Diese Methode hat nur eine Wirkung, wenn push-mode in der Konfiguration auf false gesetzt wird.
      */
     private void requestUpdate() {
-        getContext().system().scheduler().scheduleOnce(new FiniteDuration(50, TimeUnit.NANOSECONDS), new Runnable() {
+        getContext().system().scheduler().scheduleOnce(new FiniteDuration(1, TimeUnit.MILLISECONDS), new Runnable() {
             @Override
             public void run() {
                 simulation.tell(Simulation.RequestUpdate$.MODULE$, getSelf());

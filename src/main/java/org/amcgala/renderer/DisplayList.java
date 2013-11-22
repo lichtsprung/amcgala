@@ -13,10 +13,17 @@ import java.util.List;
  * DisplayList, die vom Renderer verwendet wird.
  */
 public class DisplayList {
-    public List<LinePrimitive> lines = new ArrayList<>(5000000);
-    public List<TrianglePrimitive> triangles = new ArrayList<>(5000000);
-    public List<PointPrimitive> points = new ArrayList<>(5000000);
-    public List<RectanglePrimitive> rects = new ArrayList<>(5000000);
+    public List<LinePrimitive> lines = new ArrayList<>();
+    public List<TrianglePrimitive> triangles = new ArrayList<>();
+    public List<PointPrimitive> points = new ArrayList<>();
+    public List<RectanglePrimitive> rects = new ArrayList<>();
+
+    public void clear(){
+        lines.clear();
+        triangles.clear();
+        points.clear();
+        rects.clear();
+    }
 
     @Override
     public String toString() {

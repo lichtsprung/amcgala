@@ -315,20 +315,6 @@ public final class Quaternion {
         return store;
     }
 
-    /**
-     * Gibt die Matrixdarstellung des Quaternions zurück.
-     *
-     * @return die Matrixdarstellung des Quaternions
-     */
-    public Matrix toMatrix() {
-        double[][] vals = {
-                {x, y, z, w},
-                {-y, x, -w, z},
-                {-z, w, x, -y},
-                {-w, -z, y, x}
-        };
-        return Matrix.constructWithCopy(vals);
-    }
 
     public Quaternion lookAt(Vector3d vup, Vector3d direction) {
         Vector3d v3 = direction.normalize();

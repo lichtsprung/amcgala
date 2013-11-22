@@ -68,7 +68,7 @@ public final class SimplePerspectiveCamera extends AbstractCamera {
                 {0, 0, 1.0 / d, 1}
         };
 
-        Matrix vd = Matrix.constructWithCopy(vdValues);
+        Matrix vd = new Matrix(vdValues);
 
         Vector3d d = Vector3d.createVector3d(location.dot(u), location.dot(v), location.dot(n));
 
@@ -78,7 +78,7 @@ public final class SimplePerspectiveCamera extends AbstractCamera {
                 {n.getX(), n.getY(), n.getZ(), d.z},
                 {0, 0, 0, 1}
         };
-        Matrix kt = Matrix.constructWithCopy(viewValues);
+        Matrix kt = new Matrix(viewValues);
         projectionMatrix = vd.times(kt);
     }
 

@@ -83,44 +83,37 @@ class PolygonWorldMap extends Initialiser {
 
 class FractalWorldMap extends Initialiser {
 
-  val size: Int = 512
-  val seed: Int = Random.nextInt(152)
-  val features: Int = Random.nextInt(20)
-  val hills: Float = 0.5f
-  // start off with some noise
-  val height: Channel = new Mountain(size, Utils.powerOf2Log2(size) - 6, 0.5f, seed).toChannel
-  height.copy.toLayer.saveAsPNG("terrain1")
-  // add mountain peaks
-  val voronoi: Voronoi = new Voronoi(size, features, features, 1, 1f, seed)
-  val cliffs: Channel = voronoi.getDistance(-1f, 1f, 0f).brightness(1.5f).multiply(0.33f)
-  height.multiply(0.67f).channelAdd(cliffs)
+  private def createMap(size: Int) = {
+    val seed: Int = Random.nextInt(266234)
+    val features: Int = Random.nextInt(8) + 5
+    val hills: Float = 0.75f
 
-  // punch a few holes
-  height.channelSubtract(voronoi.getDistance(1f, 0f, 0f).gamma(.5f).flipV.rotate(90))
+    val height: Channel = new Mountain(size, Utils.powerOf2Log2(size) - 6, 0.5f, seed).toChannel
 
-  // let an ice age pass
-  height.perturb(new Midpoint(size, 2, 0.5f, seed).toChannel, 0.25f)
+    val voronoi: Voronoi = new Voronoi(size, features, features, 1, 1f, seed)
+    val cliffs: Channel = voronoi.getDistance(-1f, 1f, 0f).brightness(1.5f).multiply(0.63f)
 
-  // let it rain for a couple of thousand years
-  height.erode((24f - hills * 12f) / size, size >> 2)
+    height.channelAdd(cliffs)
+    height.channelSubtract(voronoi.getDistance(1f, 0f, 0f).gamma(.75f).flipV.rotate(90))
+    height.perturb(new Midpoint(size, 2, 0.1f, seed).toChannel, 0.15f)
+    height.erode((24f - hills * 12f) / size, size >> 2)
 
-  // smooth things out to avoid jagged lines
-  height.smooth(1)
+    height.smooth(1)
 
-  // produce a bump-mapped image
-  val map = new Channel(size, size).add(0.5f).bump(height, 0.1f, 0f, 0.1f, 1f, 0f).normalize
+    new Channel(size, size).add(0.5f).bump(height, 0.1f, 0f, 0.1f, 1f, 0f).normalize
+  }
 
   def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
     var field: Map[Index, Cell] = Map.empty[Index, Cell]
 
-    val perlin = new PerlinNoise()
+    val map = createMap(512)
 
     for (x ← 0 until width) {
       for (y ← 0 until height) {
-        val v =
-          field = field + (Index(x, y) -> Cell(map.getPixelWrap(x, y)))
+        field = field + (Index(x, y) -> Cell(map.getPixelWrap(x, y)))
       }
     }
+
     field
   }
 }

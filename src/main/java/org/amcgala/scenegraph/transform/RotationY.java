@@ -53,7 +53,7 @@ public class RotationY implements Transformation {
                 {-Math.sin(phi), 0, Math.cos(phi), 0},
                 {0, 0, 0, 1}
         };
-        transformMatrix = Matrix.constructWithCopy(values);
+        transformMatrix = new Matrix(values);
     }
 
     @Override

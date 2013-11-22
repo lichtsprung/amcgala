@@ -53,7 +53,7 @@ public class RotationX implements Transformation {
                 {0, Math.sin(phi), Math.cos(phi), 0},
                 {0, 0, 0, 1}
         };
-        transformMatrix = Matrix.constructWithCopy(values);
+        transformMatrix = new Matrix(values);
     }
 
     @Override

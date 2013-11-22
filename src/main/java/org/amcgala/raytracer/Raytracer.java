@@ -40,7 +40,7 @@ public class Raytracer {
     public Raytracer() {
         tracer = new RecursiveTracer(5);
         viewPlane = new ViewPlane(Framework.getInstance().getWidth(), Framework.getInstance().getHeight(), 1);
-        viewPlane.setSampler(new RandomSampler(Integer.parseInt(Framework.getInstance().getProperties().getProperty("raytracer.sampling"))));
+        viewPlane.setSampler(new RandomSampler(Framework.configuration.getInt("org.amcgala.raytracer.sampling")));
         eye = new Vector3d(0, 0, 600);
     }
 

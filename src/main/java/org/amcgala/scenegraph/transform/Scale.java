@@ -42,7 +42,7 @@ public class Scale implements Transformation {
                 {0, 0, 0, 1}
         };
 
-        transformMatrix = Matrix.constructWithCopy(values);
+        transformMatrix = new Matrix(values);
     }
 
     public Interpolation getInterpolationX() {

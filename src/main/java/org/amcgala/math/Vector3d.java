@@ -175,7 +175,7 @@ public class Vector3d {
      */
     public Matrix toMatrix() {
         double[] vals = {x, y, z, 1};
-        return new Matrix(vals, 4);
+        return new Matrix(4, 1, vals);
     }
 
     public double getX() {
