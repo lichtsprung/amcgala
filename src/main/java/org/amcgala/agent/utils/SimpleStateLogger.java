@@ -65,7 +65,7 @@ public final class SimpleStateLogger extends StateLoggerAgent {
 
         for (Agent.AgentState s : agents.values()) {
             Rectangle p = rectangles[s.position().x()][s.position().y()];
-            p.setColor(RGBColor.RED);
+            p.setColor(RGBColor.BLUE);
         }
     }
 

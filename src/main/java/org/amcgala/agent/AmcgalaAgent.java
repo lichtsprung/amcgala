@@ -230,6 +230,8 @@ public abstract class AmcgalaAgent extends UntypedActor {
         return new AgentMessages.PutInformationObjectTo(update.currentPosition(), World.Visited$.MODULE$);
     }
 
+
+
     /**
      * Prueft, ob die Nachbarzelle schon besucht wurde
      *

@@ -85,8 +85,8 @@ class FractalWorldMap extends Initialiser {
 
   private def createMap(size: Int) = {
     val seed: Int = Random.nextInt(266234)
-    val features: Int = Random.nextInt(8) + 5
-    val hills: Float = 0.75f
+    val features: Int = Random.nextInt(4) + 2
+    val hills: Float = 0.99f
 
     val height: Channel = new Mountain(size, Utils.powerOf2Log2(size) - 6, 0.5f, seed).toChannel
 
@@ -96,11 +96,11 @@ class FractalWorldMap extends Initialiser {
     height.channelAdd(cliffs)
     height.channelSubtract(voronoi.getDistance(1f, 0f, 0f).gamma(.75f).flipV.rotate(90))
     height.perturb(new Midpoint(size, 2, 0.1f, seed).toChannel, 0.15f)
-    height.erode((24f - hills * 12f) / size, size >> 2)
+    height.erode((24f - hills * 12f) / size, 5)
 
     height.smooth(1)
 
-    new Channel(size, size).add(0.5f).bump(height, 0.1f, 0f, 0.1f, 1f, 0f).normalize
+    height
   }
 
   def initField(width: Int, height: Int, neighbours: List[Index], config: Config): Map[Index, Cell] = {
