@@ -281,6 +281,10 @@ public abstract class AmcgalaAgent extends UntypedActor {
         }, getContext().system().dispatcher());
     }
 
+    protected void tellSimulation(AgentMessages.AgentMessage message) {
+        simulation.tell(message, getSelf());
+    }
+
 
     /**
      * Callback Methode, die bei jedem Update der Simulation aufgerufen wird.

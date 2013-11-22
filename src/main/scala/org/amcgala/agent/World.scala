@@ -73,7 +73,6 @@ trait World {
     val col = Random.nextInt(width)
     val row = Random.nextInt(height)
     val i = Index(col, row)
-    println(i)
 
     CellWithIndex(i, field(i))
   }

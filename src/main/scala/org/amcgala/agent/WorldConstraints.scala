@@ -1,7 +1,8 @@
 package org.amcgala.agent
 
-import org.amcgala.agent.World.{ InformationObject, Cell }
+import org.amcgala.agent.World.{ CellWithIndex, InformationObject }
 import org.amcgala.agent.Agent.{ OwnerPheromone, Pheromone, AgentState }
+import akka.actor.{ PoisonPill, ActorRef }
 
 /**
   * Ein WorldContraintsChecker überprüft während der Simulation die Aktionen der Agenten und kann entscheiden, ob eine Aktion in
@@ -16,7 +17,7 @@ trait WorldConstraintsChecker {
     * @param target das Zielfeld
     * @return true, wenn der Agent auf das Feld wechseln kann
     */
-  def checkMove(current: Cell, target: Cell): Boolean
+  def checkMove(requester: ActorRef, current: CellWithIndex, target: CellWithIndex, states: List[AgentState]): Boolean
 
   /**
     * Überprüft, ob der Agent ein Pheromon ausschütten darf.
@@ -49,7 +50,20 @@ trait WorldConstraintsChecker {
   */
 class DefaultConstraints extends WorldConstraintsChecker {
 
-  def checkMove(current: Cell, target: Cell): Boolean = true
+  def checkMove(requester: ActorRef, current: CellWithIndex, target: CellWithIndex, states: List[AgentState]): Boolean = {
+    if (states.exists(entry ⇒ entry.position == target.index)) {
+      requester ! PoisonPill
+      false
+    } else {
+      val dx = math.abs(current.index.x - target.index.x)
+      val dy = math.abs(current.index.y - target.index.y)
+      if (dx > 1 || dy > 1) {
+        requester ! PoisonPill
+        return false
+      }
+      true
+    }
+  }
 
   def checkPheromone(agent: AgentState, pheromone: Pheromone): Boolean = pheromone match {
     case owner: OwnerPheromone ⇒ agent.id == owner.id

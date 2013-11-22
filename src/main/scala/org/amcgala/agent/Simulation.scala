@@ -176,8 +176,11 @@ class Simulation extends Actor with ActorLogging {
   var currentConfig = ConfigFactory.empty().withFallback(defaultConfig)
 
   def pingTime = currentConfig.getInt("org.amcgala.agent.simulation.update-ping-time").milliseconds
+
   def stateLoggerUpdatePingTime = currentConfig.getInt("org.amcgala.agent.simulation.statelogger-ping-time").seconds
+
   def pushMode = currentConfig.getBoolean("org.amcgala.agent.simulation.push-mode")
+
   def pheromoneMode = currentConfig.getBoolean("org.amcgala.agent.simulation.world.pheromones")
 
   /**
@@ -325,11 +328,9 @@ class Simulation extends Actor with ActorLogging {
         agent ← agents.get(sender)
       } {
         val oldCell = w(agent.position)
-        if (constraintsChecker.checkMove(oldCell, w(index))) {
+        if (constraintsChecker.checkMove(sender, CellWithIndex(agent.position, oldCell), CellWithIndex(index, w(index)), agents.values.toList)) {
           agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index))
           self ! AgentStateChange(agent)
-        } else {
-          log.info("Move not allowed!")
         }
       }
 

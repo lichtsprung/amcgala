@@ -85,8 +85,8 @@ class FractalWorldMap extends Initialiser {
 
   private def createMap(size: Int) = {
     val seed: Int = Random.nextInt(266234)
-    val features: Int = Random.nextInt(4) + 2
-    val hills: Float = 0.99f
+    val features: Int = Random.nextInt(8) + 2
+    val hills: Float = 0.89f
 
     val height: Channel = new Mountain(size, Utils.powerOf2Log2(size) - 6, 0.5f, seed).toChannel
 
