@@ -75,7 +75,7 @@ public final class PerspectiveCamera extends AbstractCamera {
     }
 
     @Override
-    public Pixel getImageSpaceCoordinates(Vector3d vector3d) {
+    public Pixel project(Vector3d vector3d) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

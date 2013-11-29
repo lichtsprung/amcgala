@@ -55,10 +55,9 @@ public abstract class AbstractCamera implements Camera {
 
     protected Matrix inverseProjectionMatrix;
 
-    protected boolean parallel;
 
-    protected int width;
-    protected int height;
+    protected int width = 0;
+    protected int height = 0;
 
     public AbstractCamera() {
         inverseProjectionMatrix = Matrix.identity(4, 4);
@@ -134,10 +133,6 @@ public abstract class AbstractCamera implements Camera {
     public void setVup(Vector3d up) {
         this.up = up;
         update();
-    }
-
-    public boolean isParallel() {
-        return parallel;
     }
 
     @Override

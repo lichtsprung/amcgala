@@ -46,7 +46,7 @@ public class Scene {
     private EventBus eventBus;
     private String label;
     private Map<String, InputHandler> inputHandlers;
-    private RGBColor background = new RGBColor(0, 0, 0);
+    private RGBColor background = new RGBColor(1, 1, 1);
 
     /**
      * Erstellt eine neue Szene mit einem bestimmten Bezeichner.

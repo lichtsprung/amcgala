@@ -80,7 +80,7 @@ public final class OrthographicCamera extends AbstractCamera {
 
 
     @Override
-    public Pixel getImageSpaceCoordinates(Vector3d vector3d) {
+    public Pixel project(Vector3d vector3d) {
         Matrix point = projectionMatrix.times(vector3d.toMatrix());
         return new Pixel(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0));
     }

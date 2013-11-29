@@ -40,7 +40,7 @@ public interface Camera {
      * @param vector3d der zu projezierende Vektor
      * @return die Koordinaten des Vektors im Bildraum
      */
-    Pixel getImageSpaceCoordinates(Vector3d vector3d);
+    Pixel project(Vector3d vector3d);
 
     /**
      * Gibt die Position der Kamera zurück.

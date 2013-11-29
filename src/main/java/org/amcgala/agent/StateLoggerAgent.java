@@ -74,7 +74,6 @@ public abstract class StateLoggerAgent extends UntypedActor {
                     getSelf(), Simulation.Update$.MODULE$, getContext().system().dispatcher(), null);
 
         } else if (message instanceof Simulation.SimulationStateUpdate) {
-            System.out.println("received full update");
             Simulation.SimulationStateUpdate state = (Simulation.SimulationStateUpdate) message;
 
             agents.clear();

@@ -179,7 +179,8 @@ public class SoftwareRenderer implements Renderer {
             }
         });
 
-        frame.setBackground(Color.WHITE);
+
+        frame.setBackground(framework.getActiveScene().getBackground().toAWTColor());
         frame.setUndecorated(true);
         frame.setLocation(150, 80);
         frame.setVisible(true);
@@ -198,11 +199,6 @@ public class SoftwareRenderer implements Renderer {
         return height;
     }
 
-    @Override
-    public void setColor(Color color) {
-        g.setColor(checkNotNull(color));
-    }
-
 
     @Override
     public void render() {
@@ -212,32 +208,27 @@ public class SoftwareRenderer implements Renderer {
         g.fillRect(0, 0, frame.getWidth(), frame.getHeight());
         if (Framework.getInstance().hasActiveScene()) {
             DisplayList list = framework.getCurrentState();
-            Camera camera = Framework.getInstance().getActiveScene().getCamera();
+            Camera camera = framework.getActiveScene().getCamera();
 
             for (LinePrimitive line : list.lines) {
-                Pixel start = camera.getImageSpaceCoordinates(line.v0.toVector());
-                Pixel end = camera.getImageSpaceCoordinates(line.v1.toVector());
+                Pixel start = camera.project(line.v0.toVector());
+                Pixel end = camera.project(line.v1.toVector());
                 g.setColor(line.color.toAWTColor());
                 g.drawLine(start.x, start.y, end.x, end.y);
             }
 
             for (PointPrimitive point : list.points) {
-                Pixel p = camera.getImageSpaceCoordinates(point.point.toVector());
+                Pixel p = camera.project(point.point.toVector());
                 g.setColor(point.color.toAWTColor());
                 g.fillRect(p.x, p.y, 1, 1);
             }
 
             for (RectanglePrimitive r : list.rects) {
-                Pixel start = camera.getImageSpaceCoordinates(r.v0.toVector());
+                Pixel start = camera.project(r.v0.toVector());
                 g.setColor(r.color.toAWTColor());
                 g.fillRect(start.x, start.y, (int) r.width, (int) r.height);
             }
         }
-    }
-
-    @Override
-    public Color getColor() {
-        return g.getColor();
     }
 
 }

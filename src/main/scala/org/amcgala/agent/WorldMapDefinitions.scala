@@ -20,7 +20,7 @@ class EmptyWorldMap extends Initialiser {
     var field: Map[Index, Cell] = Map.empty[Index, Cell]
     for (x ← 0 until width) {
       for (y ← 0 until height) {
-        field = field + (Index(x, y) -> Cell(1))
+        field = field + (Index(x, y) -> Cell(.5f))
       }
     }
     field
@@ -164,12 +164,11 @@ class SineCosineWorldMap extends Initialiser {
     val y0 = height / 2
     val sx = 0.01f
     val sy = 0.01f
+    val p = new PerlinNoise(42)
 
     for (x ← 0 until width) {
       for (y ← 0 until height) {
-        val tx = math.pow(x - x0, 2) / 2 * math.pow(sx, 2)
-        val ty = math.pow(y - y0, 2) / 2 * math.pow(sy, 2)
-        val v = (sin(sqrt(tx)) + cos(exp(-ty))) / 2
+        val v = .7f * sin(3 * math.Pi / width * x) * cos(math.Pi / height * y) + .5f
 
         field = field + (Index(x, y) -> Cell(v.toFloat))
       }

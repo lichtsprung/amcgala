@@ -364,6 +364,7 @@ class Simulation extends Actor with ActorLogging {
         if (constraintsChecker.checkValueChange(cell.value, value)) {
           w.change(agent.position, value)
           val nCell = w(agent.position)
+          if (value > 1) println(value)
           self ! CellChange(agent.position, nCell)
         }
       }

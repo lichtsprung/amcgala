@@ -28,19 +28,4 @@ public interface Renderer {
      */
     void render();
 
-
-    /**
-     * Gibt die aktuelle Farbe zurück, die vom Renderer verwendet wird.
-     *
-     * @return die aktive Farbe
-     */
-    Color getColor();
-
-    /**
-     * Setzt eine neue Farbe, mit der die weiteren Zeichenbefehle ausgeführt werden.
-     *
-     * @param color die neue Farbe
-     */
-    void setColor(Color color);
-
 }

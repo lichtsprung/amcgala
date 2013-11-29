@@ -72,8 +72,7 @@ public class GLRenderer implements Renderer {
     }
 
 
-    @Override
-    public void setColor(Color color) {
+    private void setColor(Color color) {
         float[] colorComp = color.getColorComponents(null);
         glColor3f(colorComp[0], colorComp[1], colorComp[2]);
         currentColor = color;
@@ -113,9 +112,4 @@ public class GLRenderer implements Renderer {
         Display.update();
     }
 
-
-    @Override
-    public Color getColor() {
-        return currentColor;
-    }
 }

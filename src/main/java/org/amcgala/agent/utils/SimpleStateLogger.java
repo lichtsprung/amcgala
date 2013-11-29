@@ -58,7 +58,8 @@ public final class SimpleStateLogger extends StateLoggerAgent {
 
         for (Map.Entry<World.Index, World.Cell> entry : cells.entrySet()) {
             Rectangle p = rectangles[entry.getKey().x()][entry.getKey().y()];
-            int index = Math.min(Math.round(Math.min(entry.getValue().value(), 1f) * greys.length), greys.length - 1);
+            int index = Math.max(Math.min(Math.round(Math.min(entry.getValue().value(), 1f) * greys.length), greys.length - 1),0);
+
             p.setColor(greys[index]);
 
         }
