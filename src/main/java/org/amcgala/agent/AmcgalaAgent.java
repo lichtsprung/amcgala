@@ -63,7 +63,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
                 currentCell = update.currentCell();
                 currentPosition = update.currentPosition();
                 AgentMessages.AgentMessage decision = onUpdate(update);
-                sender().tell(decision, self());
+                simulation.tell(decision, getSelf());
             } else {
                 unhandled(message);
             }
@@ -79,6 +79,10 @@ public abstract class AmcgalaAgent extends UntypedActor {
         getContext().become(waitForPosition);
     }
 
+    @Override
+    public void postStop(){
+        tellSimulation(AgentMessages.Death$.MODULE$);
+    }
 
     /**
      * Erzeugt ein Kind und platziert es auf dem selben Index wie der Vater-Agent.
@@ -153,19 +157,19 @@ public abstract class AmcgalaAgent extends UntypedActor {
     /**
      * Bewegt den Agenten auf ein benachbartes Feld.
      *
-     * @param index  der relative Index des Nachbarn
+     * @param relativeIndex  der relative Index des Nachbarn
      * @param update das SimulationUpdate Objekt
      * @return die Nachricht, die an die Simulation gesendet wird
      */
-    protected AgentMessages.AgentMessage moveTo(World.Index index, Simulation.SimulationUpdate update) {
+    protected AgentMessages.AgentMessage moveTo(World.Index relativeIndex, Simulation.SimulationUpdate update) {
         requestUpdate();
-        return new AgentMessages.MoveTo(update.neighbours().get(index).index());
+        return new AgentMessages.MoveTo(update.neighbours().get(relativeIndex).index());
     }
 
     /**
      * Bewegt den Agenten auf ein benachbartes Feld.
      *
-     * @param index  der relative Index des Nachbarn
+     * @param index  der absoluten Index des Nachbarn
      * @return die Nachricht, die an die Simulation gesendet wird
      */
     protected AgentMessages.AgentMessage moveTo(World.Index index) {
