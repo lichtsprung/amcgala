@@ -20,6 +20,7 @@ import com.typesafe.config.ConfigFactory;
 import org.amcgala.animation.Animator;
 import org.amcgala.camera.Camera;
 import org.amcgala.event.InputHandler;
+import org.amcgala.event.Update;
 import org.amcgala.raytracer.Raytracer;
 import org.amcgala.renderer.DisplayList;
 import org.amcgala.renderer.GLRenderer;
@@ -194,6 +195,8 @@ public final class Framework {
      * Visitor den Szenengraphen besuchen.
      */
     public void update() {
+        frameworkEventBus.post(new Update());
+        sceneEventBus.post(new Update());
         checkCamera();
         checkTracing();
         Collection<Shape> shapes = scenegraph.getShapes();

@@ -34,6 +34,13 @@ public class Box extends AbstractShape {
         lines.add(new Line(position, new Vertex3f(position.x, position.y, position.z + depth)));
         lines.add(new Line(new Vertex3f(position.x, position.y + height, position.z), new Vertex3f(position.x, position.y + height, position.z + depth)));
         lines.add(new Line(new Vertex3f(position.x, position.y, position.z + depth), new Vertex3f(position.x, position.y + height, position.z + depth)));
+
+        lines.add(new Line(new Vertex3f(position.x + width, position.y, position.z), new Vertex3f(position.x + width, position.y, position.z + depth)));
+        lines.add(new Line(new Vertex3f(position.x + width, position.y + height, position.z), new Vertex3f(position.x + width, position.y + height, position.z + depth)));
+        lines.add(new Line(new Vertex3f(position.x + width, position.y, position.z + depth), new Vertex3f(position.x + width, position.y + height, position.z + depth)));
+
+        lines.add(new Line(new Vertex3f(position.x, position.y, position.z+depth), new Vertex3f(position.x + width, position.y, position.z + depth)));
+        lines.add(new Line(new Vertex3f(position.x, position.y+height, position.z + depth), new Vertex3f(position.x +width, position.y + height, position.z + depth)));
     }
 
     @Override

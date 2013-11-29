@@ -209,7 +209,6 @@ public class SoftwareRenderer implements Renderer {
         if (Framework.getInstance().hasActiveScene()) {
             DisplayList list = framework.getCurrentState();
             Camera camera = framework.getActiveScene().getCamera();
-
             for (LinePrimitive line : list.lines) {
                 Pixel start = camera.project(line.v0.toVector());
                 Pixel end = camera.project(line.v1.toVector());
