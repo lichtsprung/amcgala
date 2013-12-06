@@ -58,13 +58,16 @@ public class SoftwareRenderer implements Renderer {
      * Die globale Instanz des Frameworks kann verwendet werden, um vom Renderer Einfluss auf
      * das laufende Programm nehmen zu können.
      */
-    private Framework framework = Framework.getInstance();
+    private Framework framework;
 
 
     /**
      * Der SoftwareRenderer initialisiert sich mit den Properties, die aus der laufenden Framework Instanz genommen werden.
      */
-    public SoftwareRenderer() {
+    public SoftwareRenderer(Framework framework) {
+        this.framework = framework;
+        final Framework fr = framework;
+
         this.width = framework.getWidth();
         this.height = framework.getHeight();
 
@@ -81,20 +84,20 @@ public class SoftwareRenderer implements Renderer {
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     System.exit(0);
                 } else {
-                    if (framework.hasActiveScene()) {
-                        framework.getActiveScene().getEventBus().post(new KeyPressedEvent(e));
+                    if (fr.hasActiveScene()) {
+                        fr.getActiveScene().getEventBus().post(new KeyPressedEvent(e));
                     }
-                    framework.getEventBus().post(new KeyPressedEvent(e));
+                    fr.getEventBus().post(new KeyPressedEvent(e));
                 }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if (framework.hasActiveScene()) {
-                    framework.getActiveScene().getEventBus().post(new KeyReleasedEvent(e));
+                if (fr.hasActiveScene()) {
+                    fr.getActiveScene().getEventBus().post(new KeyReleasedEvent(e));
                 }
 
-                framework.getEventBus().post(new KeyReleasedEvent(e));
+                fr.getEventBus().post(new KeyReleasedEvent(e));
             }
         });
 
@@ -102,47 +105,47 @@ public class SoftwareRenderer implements Renderer {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (framework.hasActiveScene()) {
-                    framework.getActiveScene().getEventBus().post(new MouseClickedEvent(e));
+                if (fr.hasActiveScene()) {
+                    fr.getActiveScene().getEventBus().post(new MouseClickedEvent(e));
                 }
 
-                framework.getEventBus().post(new MouseClickedEvent(e));
+                fr.getEventBus().post(new MouseClickedEvent(e));
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                if (framework.hasActiveScene()) {
-                    framework.getActiveScene().getEventBus().post(new MousePressedEvent(e));
+                if (fr.hasActiveScene()) {
+                    fr.getActiveScene().getEventBus().post(new MousePressedEvent(e));
                 }
 
-                framework.getEventBus().post(new MousePressedEvent(e));
+                fr.getEventBus().post(new MousePressedEvent(e));
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (framework.hasActiveScene()) {
-                    framework.getActiveScene().getEventBus().post(new MouseReleasedEvent(e));
+                if (fr.hasActiveScene()) {
+                    fr.getActiveScene().getEventBus().post(new MouseReleasedEvent(e));
                 }
 
-                framework.getEventBus().post(new MouseReleasedEvent(e));
+                fr.getEventBus().post(new MouseReleasedEvent(e));
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                if (framework.hasActiveScene()) {
-                    framework.getActiveScene().getEventBus().post(e);
+                if (fr.hasActiveScene()) {
+                    fr.getActiveScene().getEventBus().post(e);
                 }
 
-                framework.getEventBus().post(e);
+                fr.getEventBus().post(e);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if (framework.hasActiveScene()) {
-                    framework.getActiveScene().getEventBus().post(e);
+                if (fr.hasActiveScene()) {
+                    fr.getActiveScene().getEventBus().post(e);
                 }
 
-                framework.getEventBus().post(e);
+                fr.getEventBus().post(e);
             }
         });
 
@@ -150,20 +153,20 @@ public class SoftwareRenderer implements Renderer {
 
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (framework.hasActiveScene()) {
-                    framework.getActiveScene().getEventBus().post(e);
+                if (fr.hasActiveScene()) {
+                    fr.getActiveScene().getEventBus().post(e);
                 }
 
-                framework.getEventBus().post(e);
+                fr.getEventBus().post(e);
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                if (framework.hasActiveScene()) {
-                    framework.getActiveScene().getEventBus().post(e);
+                if (fr.hasActiveScene()) {
+                    fr.getActiveScene().getEventBus().post(e);
                 }
 
-                framework.getEventBus().post(e);
+                fr.getEventBus().post(e);
             }
         });
 
@@ -171,14 +174,13 @@ public class SoftwareRenderer implements Renderer {
 
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                if (framework.hasActiveScene()) {
-                    framework.getActiveScene().getEventBus().post(e);
+                if (fr.hasActiveScene()) {
+                    fr.getActiveScene().getEventBus().post(e);
                 }
 
-                framework.getEventBus().post(e);
+                fr.getEventBus().post(e);
             }
         });
-
 
         frame.setBackground(framework.getActiveScene().getBackground().toAWTColor());
         frame.setUndecorated(true);

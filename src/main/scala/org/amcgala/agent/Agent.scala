@@ -15,7 +15,13 @@ object Agent {
 
   case class AgentID(id: Int) extends Message
 
-  case class AgentState(id: AgentID, position: Index) extends Message
+  trait AgentState
+
+  case class Power(value: Float) extends AgentState
+
+  case class Life(value: Float) extends AgentState
+
+  case class AgentStates(id: AgentID, position: Index, power: Power = Power(0)) extends Message
 
 }
 

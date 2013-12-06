@@ -49,15 +49,16 @@ public class Animator extends Thread implements Runnable {
      * @param framesPerSecond  die Anzahl der Bilder pro Sekunde
      * @param updatesPerSecond die Anzahl der Aktualisierungen pro Sekunde
      */
-    public Animator(int framesPerSecond, int updatesPerSecond, Framework framework, Class<? extends Renderer> renderer) {
+    public Animator(int framesPerSecond, int updatesPerSecond, Framework framework, Renderer renderer) {
         checkArgument(framesPerSecond > 0, "FPS muss größer 0 sein!");
         checkArgument(updatesPerSecond > 0, "UPS muss größer 0 sein!");
         checkArgument(framework != null, "Framework darf nicht null sein!");
         checkArgument(renderer != null, "Renderer darf nicht null sein!");
 
-        this.framework = framework;
+        log.info("Renderer is {}", renderer);
 
-        this.rendererClass = renderer;
+        this.framework = framework;
+        this.renderer = renderer;
 
         this.framesPerSecond = framesPerSecond;
         this.updatesPerSecond = updatesPerSecond;
@@ -99,19 +100,7 @@ public class Animator extends Thread implements Runnable {
     @Override
     public void run() {
 
-        try {
-            renderer = rendererClass.getDeclaredConstructor().newInstance();
-            log.info("New Renderer: {}", renderer);
-            running = true;
-        } catch (InstantiationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        running = true;
 
         double fpsLastTime = System.nanoTime();
         double upsLastTime = System.nanoTime();

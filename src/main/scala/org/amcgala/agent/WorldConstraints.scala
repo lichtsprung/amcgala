@@ -1,7 +1,7 @@
 package org.amcgala.agent
 
 import org.amcgala.agent.World.{ CellWithIndex, InformationObject }
-import org.amcgala.agent.Agent.{ OwnerPheromone, Pheromone, AgentState }
+import org.amcgala.agent.Agent.{ OwnerPheromone, Pheromone, AgentStates }
 import akka.actor.{ PoisonPill, ActorRef }
 
 /**
@@ -17,7 +17,7 @@ trait WorldConstraintsChecker {
     * @param target das Zielfeld
     * @return true, wenn der Agent auf das Feld wechseln kann
     */
-  def checkMove(requester: ActorRef, current: CellWithIndex, target: CellWithIndex, states: List[AgentState]): Boolean
+  def checkMove(requester: ActorRef, current: CellWithIndex, target: CellWithIndex, states: List[AgentStates]): Boolean
 
   /**
     * Überprüft, ob der Agent ein Pheromon ausschütten darf.
@@ -25,7 +25,7 @@ trait WorldConstraintsChecker {
     * @param pheromone das Pheromon, das der Agent ausschütten möchte
     * @return true, wenn der Agent das Pheromon abgeben darf
     */
-  def checkPheromone(agent: AgentState, pheromone: Pheromone): Boolean
+  def checkPheromone(agent: AgentStates, pheromone: Pheromone): Boolean
 
   /**
     * Überprüft, ob der Agent den Wert eines Feldes verändern darf.
@@ -41,7 +41,7 @@ trait WorldConstraintsChecker {
     * @param informationObject
     * @return
     */
-  def checkInformationObject(agent: AgentState, informationObject: InformationObject): Boolean
+  def checkInformationObject(agent: AgentStates, informationObject: InformationObject): Boolean
 }
 
 /**
@@ -50,7 +50,7 @@ trait WorldConstraintsChecker {
   */
 class RaindropConstraints extends WorldConstraintsChecker {
 
-  def checkMove(requester: ActorRef, current: CellWithIndex, target: CellWithIndex, states: List[AgentState]): Boolean = {
+  def checkMove(requester: ActorRef, current: CellWithIndex, target: CellWithIndex, states: List[AgentStates]): Boolean = {
     if (states.exists(entry ⇒ entry.position == target.index)) {
       requester ! PoisonPill
       false
@@ -65,14 +65,14 @@ class RaindropConstraints extends WorldConstraintsChecker {
     }
   }
 
-  def checkPheromone(agent: AgentState, pheromone: Pheromone): Boolean = pheromone match {
+  def checkPheromone(agent: AgentStates, pheromone: Pheromone): Boolean = pheromone match {
     case owner: OwnerPheromone ⇒ agent.id == owner.id
     case _                     ⇒ true
   }
 
   def checkValueChange(oldValue: Double, newValue: Double): Boolean = newValue >= 0 && newValue <= 1
 
-  def checkInformationObject(agent: AgentState, informationObject: InformationObject): Boolean = true
+  def checkInformationObject(agent: AgentStates, informationObject: InformationObject): Boolean = true
 }
 
 class DefaultConstraints extends WorldConstraintsChecker {
@@ -83,7 +83,7 @@ class DefaultConstraints extends WorldConstraintsChecker {
     * @param target das Zielfeld
     * @return true, wenn der Agent auf das Feld wechseln kann
     */
-  def checkMove(requester: ActorRef, current: CellWithIndex, target: CellWithIndex, states: List[AgentState]): Boolean = true
+  def checkMove(requester: ActorRef, current: CellWithIndex, target: CellWithIndex, states: List[AgentStates]): Boolean = true
 
   /**
     * Überprüft, ob der Agent ein Pheromon ausschütten darf.
@@ -91,7 +91,7 @@ class DefaultConstraints extends WorldConstraintsChecker {
     * @param pheromone das Pheromon, das der Agent ausschütten möchte
     * @return true, wenn der Agent das Pheromon abgeben darf
     */
-  def checkPheromone(agent: AgentState, pheromone: Pheromone): Boolean = true
+  def checkPheromone(agent: AgentStates, pheromone: Pheromone): Boolean = true
 
   /**
     * Überprüft, ob der Agent den Wert eines Feldes verändern darf.
@@ -107,5 +107,5 @@ class DefaultConstraints extends WorldConstraintsChecker {
     * @param informationObject
     * @return
     */
-  def checkInformationObject(agent: _root_.org.amcgala.agent.Agent.AgentState, informationObject: _root_.org.amcgala.agent.World.InformationObject): Boolean = true
+  def checkInformationObject(agent: _root_.org.amcgala.agent.Agent.AgentStates, informationObject: _root_.org.amcgala.agent.World.InformationObject): Boolean = true
 }

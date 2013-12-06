@@ -41,11 +41,11 @@ public final class SimpleStateLogger extends StateLoggerAgent {
         }
 
 
-        framework.addScene(scene);
+        framework.loadScene(scene);
     }
 
     @Override
-    public void onUpdate(Map<World.Index, World.Cell> cells, Map<Agent.AgentID, Agent.AgentState> agents) {
+    public void onUpdate(Map<World.Index, World.Cell> cells, Map<Agent.AgentID, Agent.AgentStates> agents) {
 
 //        RGBColor pheromoneColor = new RGBColor(0, 0, 0);
 //        RGBColor white = new RGBColor(1f, 1f, 1f);
@@ -64,7 +64,7 @@ public final class SimpleStateLogger extends StateLoggerAgent {
 
         }
 
-        for (Agent.AgentState s : agents.values()) {
+        for (Agent.AgentStates s : agents.values()) {
             Rectangle p = rectangles[s.position().x()][s.position().y()];
             p.setColor(RGBColor.BLUE);
         }

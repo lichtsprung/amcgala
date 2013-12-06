@@ -26,9 +26,10 @@ public class GLRenderer implements Renderer {
     private Color currentColor;
     private Framework framework;
 
-    public GLRenderer() {
+    public GLRenderer(Framework framework) {
         log.info("Creating new instance of GLRenderer...");
-        this.framework = Framework.getInstance();
+        this.framework = framework;
+
         try {
             Frame frame = new Frame("amCGAla GL");
             frame.setSize(framework.getWidth(), framework.getHeight());

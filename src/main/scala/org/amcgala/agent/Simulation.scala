@@ -9,7 +9,7 @@ import com.typesafe.config.{ ConfigFactory, Config }
 import java.util
 import org.amcgala.agent.AgentMessages._
 import org.amcgala.agent.World._
-import org.amcgala.agent.Agent.{ Pheromone, AgentState, AgentID }
+import org.amcgala.agent.Agent.{ Pheromone, AgentStates, AgentID }
 import org.amcgala.agent.World.Index
 import scala.Some
 import org.amcgala.agent.AgentMessages.ReleasePheromone
@@ -26,6 +26,7 @@ import org.amcgala.agent.Simulation.Register
 import org.amcgala.agent.AgentMessages.ChangeValue
 import org.amcgala.agent.Simulation.AgentStateChange
 import org.amcgala.agent.World.WorldInfo
+import org.amcgala.agent.utils.PartialFunctionBuilder
 
 trait Message
 
@@ -69,7 +70,7 @@ object Simulation {
     * @param worldInfo globale Informationen zur Welt
     * @param agents alle sich in der Simulation befindlichen Agenten
     */
-  case class SimulationState(worldInfo: WorldInfo, agents: java.util.List[AgentState]) extends Message
+  case class SimulationState(worldInfo: WorldInfo, agents: java.util.List[AgentStates]) extends Message
 
   trait ChangeMessage extends Message
 
@@ -78,19 +79,19 @@ object Simulation {
     *
     * @param state der neue Zustand des Agenten
     */
-  case class AgentStateChange(state: AgentState) extends ChangeMessage
+  case class AgentStateChange(state: AgentStates) extends ChangeMessage
 
   /**
     * Nachricht die an StateLogger verschickt wird, wenn ein Agent aus der Simulation entfernt wurde.
     * @param state der letzte Zustand des entfernten Agenten
     */
-  case class AgentDeath(state: AgentState) extends ChangeMessage
+  case class AgentDeath(state: AgentStates) extends ChangeMessage
 
   /**
     * Nachricht, die an StateLogger verschickt wird, wenn ein neuer Agent die Simulation betritt.
     * @param state der Initialzustand des Agenten
     */
-  case class AgentBirth(state: AgentState) extends ChangeMessage
+  case class AgentBirth(state: AgentStates) extends ChangeMessage
 
   /**
     * Eine Zelle hat ihren Zustand geaendert. Diese Nachricht wird nach der Aenderung an alle [[org.amcgala.agent.StateLoggerAgent]]s geschickt.
@@ -107,7 +108,7 @@ object Simulation {
     * @param changedCells die Zellen, die sich seit dem letzten Tick geändert haben
     * @param agents die Agenten, die ihren Zustand geändert haben
     */
-  case class SimulationStateUpdate(changedCells: java.util.List[(Index, Cell)], agents: java.util.List[AgentState]) extends Message
+  case class SimulationStateUpdate(changedCells: java.util.List[(Index, Cell)], agents: java.util.List[AgentStates]) extends Message
 
   /**
     * Registriert einen Agenten bei der Simulation. Er wird von der Simulation auf die Zelle mit dem mitgeschickten Index
@@ -157,31 +158,22 @@ object Simulation {
     * Gibt die [[akka.actor.Props]] Instanz zurück, die zur Erstellung eines neuen Simulation Actors benötigt wird
     * @return die Props
     */
-  private[agent] def props(): Props = Props(classOf[Simulation])
+  private[agent] def props(): Props = Props(new CompetitionSimulation())
 
 }
 
-/**
-  * Die Simulation ist das Herzstück des Amcgala Multiagent System. Die Simulation kümmert sich um die Verwaltung der
-  * aktiven Welt und ist reagiert auf die Aktionen, die ein Agent durchführt.
-  */
-class Simulation extends Actor with ActorLogging {
-  val defaultConfig = ConfigFactory.load("amcgala")
+trait ComposableSimulation extends Actor {
+  private val defaultConfig = ConfigFactory.load("amcgala")
 
-  var agents = Map.empty[ActorRef, AgentState]
-  var stateLogger = Set.empty[ActorRef]
+  protected var agents = Map.empty[ActorRef, AgentStates]
 
-  var world: Option[World] = None
+  protected var world: Option[World] = None
 
-  var currentConfig = ConfigFactory.empty().withFallback(defaultConfig)
+  protected var currentConfig = ConfigFactory.empty().withFallback(defaultConfig)
 
   def pingTime = currentConfig.getInt("org.amcgala.agent.simulation.update-ping-time").milliseconds
 
-  def stateLoggerUpdatePingTime = currentConfig.getInt("org.amcgala.agent.simulation.statelogger-ping-time").seconds
-
   def pushMode = currentConfig.getBoolean("org.amcgala.agent.simulation.push-mode")
-
-  def pheromoneMode = currentConfig.getBoolean("org.amcgala.agent.simulation.world.pheromones")
 
   /**
     * Die Standardposition eines Agenten in der Welt. Dieser Wert wird aus der aktuellen Konfiguration genommen.
@@ -200,13 +192,15 @@ class Simulation extends Actor with ActorLogging {
     *
     * @return die Instanz des aktiven [[org.amcgala.agent.WorldConstraintsChecker]]
     */
-  lazy val constraintsChecker = {
+  def constraintsChecker: WorldConstraintsChecker = {
     val checkerClass = currentConfig.getString("org.amcgala.agent.simulation.world.constraints.class")
     val cl = ClassLoader.getSystemClassLoader.loadClass(checkerClass)
     cl.newInstance().asInstanceOf[WorldConstraintsChecker]
   }
 
-  def receive: Actor.Receive = waitForWorld
+  protected lazy val receiveBuilder = new PartialFunctionBuilder[Any, Unit]
+
+  context.become(waitForWorld)
 
   def waitForWorld: Actor.Receive = {
     case SimulationConfig(config) ⇒
@@ -215,43 +209,19 @@ class Simulation extends Actor with ActorLogging {
       if (pushMode) {
         context.system.scheduler.schedule(5 seconds, pingTime, self, Update)
       }
-      //      context.system.scheduler.schedule(5 seconds, stateLoggerUpdatePingTime, self, StateLoggerUpdate)
-      context.become(simulationLifeCycle orElse handleAgentMessages)
+      context.become(receive)
   }
 
-  def simulationLifeCycle: Actor.Receive = {
-    case RegisterWithRandomIndex ⇒
-      world map (w ⇒ {
-        val randomCell = w.randomCell
-        agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), randomCell.index))
-        self ! AgentStateChange(agents(sender))
-        self.tell(RequestUpdate, sender)
-      })
+  final def receive = receiveBuilder.result()
+}
 
-    case Register(index) ⇒
-      for {
-        w ← world
-      } {
-        if (!agents.exists(entry ⇒ entry._2.position == index)) {
-          agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index))
-          self ! AgentStateChange(agents(sender))
-          self.tell(RequestUpdate, sender)
-        } else {
-          sender ! SpawnRejected
-        }
-      }
+trait StateLoggerHandling {
+  comp: ComposableSimulation ⇒
+  var stateLogger = Set.empty[ActorRef]
 
-    case RegisterWithDefaultIndex ⇒
-      defaultPosition match {
-        case World.RandomIndex ⇒
-          self forward RegisterWithRandomIndex
-        case index: Index ⇒
-          world map (w ⇒ {
-            agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index))
-            self ! AgentStateChange(agents(sender))
-            self.tell(RequestUpdate, sender)
-          })
-      }
+  def stateLoggerUpdatePingTime = currentConfig.getInt(s"org.amcgala.agent.simulation.statelogger-ping-time ${}").seconds
+
+  receiveBuilder += {
 
     case RegisterStateLogger if !agents.exists(e ⇒ e._1 == sender) ⇒
       for {
@@ -261,6 +231,117 @@ class Simulation extends Actor with ActorLogging {
         stateLogger = stateLogger + sender
       }
 
+    case change: ChangeMessage ⇒
+      stateLogger foreach {
+        _ ! change
+      }
+  }
+}
+
+trait InformationObjectHandling {
+  comp: ComposableSimulation ⇒
+
+  receiveBuilder += {
+    case PutInformationObjectTo(index, informationObject) ⇒
+      for {
+        w ← world
+        agent ← agents.get(sender)
+      } {
+        if (constraintsChecker.checkInformationObject(agent, informationObject)) {
+          w.addInformationObject(index, informationObject)
+        }
+      }
+
+    case PutInformationObject(informationObject) ⇒
+      for {
+        w ← world
+        agent ← agents.get(sender)
+      } {
+        if (constraintsChecker.checkInformationObject(agent, informationObject)) {
+          w.addInformationObject(agent.position, informationObject)
+        }
+      }
+  }
+
+}
+
+trait CellChangeHandling {
+  comp: ComposableSimulation ⇒
+
+  receiveBuilder += {
+    case ChangeValue(value) ⇒
+      for {
+        w ← world
+        agent ← agents.get(sender)
+      } {
+        val cell = w(agent.position)
+        if (constraintsChecker.checkValueChange(cell.value, value)) {
+          w.change(agent.position, value)
+          val nCell = w(agent.position)
+          if (value > 1) println(value)
+          self ! CellChange(agent.position, nCell)
+        }
+      }
+  }
+}
+
+trait AgentDeathHandling {
+  comp: ComposableSimulation ⇒
+
+  receiveBuilder += {
+    case Death ⇒
+      for {
+        agent ← agents.get(sender)
+      } {
+        self ! AgentDeath(agent)
+        agents = agents - sender
+        sender ! PoisonPill
+      }
+  }
+}
+
+trait AgentMoveHandling {
+  comp: ComposableSimulation ⇒
+
+  receiveBuilder += {
+    case MoveTo(index) ⇒
+      for {
+        w ← world
+        agent ← agents.get(sender)
+      } {
+        val oldCell = w(agent.position)
+        if (constraintsChecker.checkMove(sender, CellWithIndex(agent.position, oldCell), CellWithIndex(index, w(index)), agents.values.toList)) {
+          agents = agents + (sender -> AgentStates(AgentID(sender.hashCode()), index))
+          self ! AgentStateChange(agent)
+        }
+      }
+  }
+}
+
+trait PheromoneHandling {
+  comp: ComposableSimulation ⇒
+
+  protected def pheromoneMode = currentConfig.getBoolean("org.amcgala.agent.simulation.world.pheromones")
+
+  receiveBuilder += {
+    case ReleasePheromone(pheromone) ⇒
+      for {
+        w ← world
+        agent ← agents.get(sender)
+      } {
+        if (pheromoneMode) {
+          if (constraintsChecker.checkPheromone(agent, pheromone)) {
+            w.addPheromone(agent.position, pheromone)
+          }
+        }
+      }
+  }
+}
+
+trait UpdateHandling {
+  comp: ComposableSimulation ⇒
+
+  receiveBuilder += {
     case Update ⇒
       world map (w ⇒ {
         if (currentConfig.getBoolean("org.amcgala.agent.simulation.world.pheromones")) {
@@ -303,25 +384,66 @@ class Simulation extends Actor with ActorLogging {
           sender ! SimulationUpdate(currentState.position, w(currentState.position), javaNeighbours)
         }
       }
+  }
+}
 
-    case StateLoggerUpdate ⇒
+trait AgentRegisterHandling {
+  comp: ComposableSimulation ⇒
+
+  receiveBuilder += {
+    case RegisterWithRandomIndex ⇒
+      world map (w ⇒ {
+        val randomCell = w.randomCell
+        agents = agents + (sender -> AgentStates(AgentID(sender.hashCode()), randomCell.index))
+        self ! AgentStateChange(agents(sender))
+        self.tell(RequestUpdate, sender)
+      })
+
+    case Register(index) ⇒
       for {
         w ← world
       } {
-        stateLogger foreach {
-          _ ! SimulationStateUpdate(w.field.toList, agents.values.toList)
+        if (!agents.exists(entry ⇒ entry._2.position == index)) {
+          agents = agents + (sender -> AgentStates(AgentID(sender.hashCode()), index))
+          self ! AgentStateChange(agents(sender))
+          self.tell(RequestUpdate, sender)
+        } else {
+          sender ! SpawnRejected
         }
       }
 
-    case change: ChangeMessage ⇒
-      stateLogger foreach {
-        _ ! change
+    case RegisterWithDefaultIndex ⇒
+      defaultPosition match {
+        case World.RandomIndex ⇒
+          self forward RegisterWithRandomIndex
+        case index: Index ⇒
+          world map (w ⇒ {
+            agents = agents + (sender -> AgentStates(AgentID(sender.hashCode()), index))
+            self ! AgentStateChange(agents(sender))
+            self.tell(RequestUpdate, sender)
+          })
       }
+  }
+}
 
+trait PaidService[A, B, C] {
+  comp: ComposableSimulation ⇒
+  protected var prices = Map.empty[A, B]
+  protected var amounts = Map.empty[ActorRef, C]
+
+  protected def setPrice(entry: (A, B)): Unit = {
+    prices = prices + entry
   }
 
-  def handleAgentMessages: Actor.Receive = {
+}
 
+trait PaidAgentMoveHandling {
+  comp: ComposableSimulation with PaidService[Any, Int, Int] ⇒
+
+  private val price = 1
+  setPrice(MoveTo -> 1)
+
+  receiveBuilder += {
     case MoveTo(index) ⇒
       for {
         w ← world
@@ -329,65 +451,24 @@ class Simulation extends Actor with ActorLogging {
       } {
         val oldCell = w(agent.position)
         if (constraintsChecker.checkMove(sender, CellWithIndex(agent.position, oldCell), CellWithIndex(index, w(index)), agents.values.toList)) {
-          agents = agents + (sender -> AgentState(AgentID(sender.hashCode()), index))
+          agents = agents + (sender -> AgentStates(AgentID(sender.hashCode()), index))
+          amounts = amounts + (sender -> (amounts.getOrElse(sender, 0) + price))
+          println(amounts)
           self ! AgentStateChange(agent)
         }
       }
-
-    case ReleasePheromone(pheromone) ⇒
-      for {
-        w ← world
-        agent ← agents.get(sender)
-      } {
-        if (pheromoneMode) {
-          if (constraintsChecker.checkPheromone(agent, pheromone)) {
-            w.addPheromone(agent.position, pheromone)
-          }
-        }
-      }
-
-    case Death ⇒
-      for {
-        agent ← agents.get(sender)
-      } {
-        self ! AgentDeath(agent)
-        agents = agents - sender
-        sender ! PoisonPill
-      }
-
-    case ChangeValue(value) ⇒
-      for {
-        w ← world
-        agent ← agents.get(sender)
-      } {
-        val cell = w(agent.position)
-        if (constraintsChecker.checkValueChange(cell.value, value)) {
-          w.change(agent.position, value)
-          val nCell = w(agent.position)
-          if (value > 1) println(value)
-          self ! CellChange(agent.position, nCell)
-        }
-      }
-
-    case PutInformationObject(informationObject) ⇒
-      for {
-        w ← world
-        agent ← agents.get(sender)
-      } {
-        if (constraintsChecker.checkInformationObject(agent, informationObject)) {
-          w.addInformationObject(agent.position, informationObject)
-        }
-      }
-
-    case PutInformationObjectTo(index, informationObject) ⇒
-      for {
-        w ← world
-        agent ← agents.get(sender)
-      } {
-        if (constraintsChecker.checkInformationObject(agent, informationObject)) {
-          w.addInformationObject(index, informationObject)
-        }
-      }
   }
+
 }
 
+class DefaultSimulation extends ComposableSimulation
+  with StateLoggerHandling with AgentMoveHandling
+  with AgentDeathHandling with CellChangeHandling
+  with InformationObjectHandling with UpdateHandling
+  with AgentRegisterHandling
+
+class CompetitionSimulation extends ComposableSimulation
+  with StateLoggerHandling with PaidService[Any, Int, Int] with PaidAgentMoveHandling
+  with AgentDeathHandling with CellChangeHandling
+  with InformationObjectHandling with UpdateHandling
+  with AgentRegisterHandling

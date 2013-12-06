@@ -23,7 +23,6 @@ import org.amcgala.event.InputHandler;
 import org.amcgala.event.Update;
 import org.amcgala.raytracer.Raytracer;
 import org.amcgala.renderer.DisplayList;
-import org.amcgala.renderer.GLRenderer;
 import org.amcgala.renderer.SoftwareRenderer;
 import org.amcgala.scenegraph.DefaultSceneGraph;
 import org.amcgala.scenegraph.SceneGraph;
@@ -33,8 +32,6 @@ import org.amcgala.shape.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -54,7 +51,7 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 public final class Framework {
     private static final Logger log = LoggerFactory.getLogger(Framework.class);
-    public static FrameworkMode currentMode;
+    public static FrameworkMode currentMode = FrameworkMode.SOFTWARE;
     private static Framework instance;
     private SceneGraph scenegraph;
     private Animator animator;
@@ -82,9 +79,8 @@ public final class Framework {
      * @param width  die Breite der Auflösung
      * @param height die Höhe der Auflösung
      */
-    private Framework(int width, int height, FrameworkMode mode) {
+    private Framework(int width, int height) {
         log.info("Initialising framework");
-        currentMode = mode;
         this.width = width;
         this.height = height;
 
@@ -102,21 +98,7 @@ public final class Framework {
         updateVisitor = new UpdateVisitor();
         visitors.add(updateVisitor);
 
-        //
-        // FIXME Raytracer ist eigentlich unabhängig vom Framework. Vielleicht besser: Raytracer(Framework, RaytracerMode.(Window, File)).
-        //
-
-        switch (mode) {
-            case SOFTWARE:
-                animator = new Animator(60, 60, this, SoftwareRenderer.class);
-                break;
-            case GL:
-                animator = new Animator(60, 60, this, GLRenderer.class);
-                break;
-            case RAYTRACER:
-                tracing = true;
-                break;
-        }
+        addScene(new Scene("default"));
     }
 
     /**
@@ -130,7 +112,8 @@ public final class Framework {
     public static Framework createInstance(int width, int height, FrameworkMode mode) {
         System.out.println("amCGAla Version: " + configuration.getString("org.amcgala.version"));
         checkArgument(instance == null, "Es können keine weiteren Instanzen von Framework erzeugt werden!");
-        instance = new Framework(width, height, mode);
+        instance = new Framework(width, height);
+        instance.animator = new Animator(60, 60, instance, new SoftwareRenderer(instance));
 
         return instance;
     }
@@ -177,7 +160,6 @@ public final class Framework {
             return instance;
         }
     }
-
 
 
     /**

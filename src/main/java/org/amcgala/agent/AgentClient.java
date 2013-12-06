@@ -23,7 +23,7 @@ public class AgentClient {
 
         if (localMode) {
             system = ActorSystem.create("Client", config);
-            ActorRef simulation = system.actorOf(Props.create(Simulation.class), "simulation");
+            ActorRef simulation = system.actorOf(Props.create(CompetitionSimulation.class), "simulation");
             simulation.tell(new Simulation.SimulationConfig(ConfigFactory.load(agentConfiguration)), ActorRef.noSender());
         }else{
             system = ActorSystem.create("Client", config);

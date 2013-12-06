@@ -35,12 +35,12 @@ public final class OrthographicCamera extends AbstractCamera {
      * Blickpunkt.
      *
      * @param vup       Das Oben der Kamera
-     * @param position  Die Position der Kamera
+     * @param location  Die Position der Kamera
      * @param direction Der Punkt, zu dem die Kamera blickt
      */
-    public OrthographicCamera(Vector3d vup, Vector3d position, Vector3d direction) {
+    public OrthographicCamera(Vector3d vup, Vector3d location, Vector3d direction) {
         this.up = vup;
-        this.location = position;
+        this.location = location;
         this.direction = direction;
 
         update();

@@ -93,5 +93,8 @@ public class Matrix {
         return new Matrix(values);
     }
 
-
+    @Override
+    public String toString() {
+        return m.toString();
+    }
 }

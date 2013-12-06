@@ -36,14 +36,14 @@ public final class SimplePerspectiveCamera extends AbstractCamera {
      * Blickpunkt.
      *
      * @param vup       Das Oben der Kamera
-     * @param position  Die Position der Kamera
+     * @param location  Die Position der Kamera
      * @param direction Der Punkt, zu dem die Kamera blickt
      * @param d         der Abstand der Kamera zur Projektionsebene. Umso kleiner der
      *                  Wert desto größer die perspektivische Wirkung
      */
-    public SimplePerspectiveCamera(Vector3d vup, Vector3d position, Vector3d direction, double d) {
+    public SimplePerspectiveCamera(Vector3d vup, Vector3d location, Vector3d direction, double d) {
         this.up = vup;
-        this.location = position;
+        this.location = location;
         this.direction = direction;
         this.d = d;
         quaternion = new Quaternion(direction, 0);
@@ -105,7 +105,8 @@ public final class SimplePerspectiveCamera extends AbstractCamera {
     @Override
     public Pixel project(Vector3d vector3d) {
         Matrix point = projectionMatrix.times(vector3d.toMatrix());
-        return new Pixel(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0));
+        Pixel p = new Pixel(point.get(0, 0) / point.get(3, 0), point.get(1, 0) / point.get(3, 0));
+        return p;
     }
 
     private static final Logger log = LoggerFactory.getLogger(OrthographicCamera.class);
