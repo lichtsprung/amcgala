@@ -82,8 +82,8 @@ trait World {
 
     neighbours.zipWithIndex.foreach {
       case (value, i) ⇒
-        val ix = (((index.x + value.x) % width) + width) % width
-        val iy = (((index.y + value.y) % height) + height) % height
+        val ix = (index.x + value.x + width) % width
+        val iy = (index.y + value.y + height) % height
         val nx = Index(ix, iy)
 
         neighbourCells = neighbourCells + (value -> CellWithIndex(nx, field(nx)))

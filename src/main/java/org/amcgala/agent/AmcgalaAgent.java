@@ -25,12 +25,13 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     private boolean localMode = getContext().system().settings().config().getBoolean("org.amcgala.agent.simulation.local-mode");
 
-    private final String simulationPath = localMode ? getContext().system().settings().config().getString("org.amcgala.agent.simulation.local-address") : getContext().system().settings().config().getString("org.amcgala.agent.simulation.remote-address");
+    private final String simulationManagerPath = localMode ? getContext().system().settings().config().getString("org.amcgala.agent.simulation.local-address") : getContext().system().settings().config().getString("org.amcgala.agent.simulationManager.remote-address");
 
 
-    private final ActorSelection simulation = getContext().actorSelection(simulationPath);
+    private final ActorSelection simulationManager = getContext().actorSelection(simulationManagerPath);
+    private ActorRef simulation = ActorRef.noSender();
 
-    private final Cancellable waitTask = getContext().system().scheduler().scheduleOnce(new FiniteDuration(5, TimeUnit.SECONDS), new Runnable() {
+    private final Cancellable waitTask = getContext().system().scheduler().scheduleOnce(new FiniteDuration(10, TimeUnit.SECONDS), new Runnable() {
         @Override
         public void run() {
             simulation.tell(Simulation.RegisterWithDefaultIndex$.MODULE$, getSelf());
@@ -42,6 +43,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
         @Override
         public void apply(Object message) throws Exception {
             if (message instanceof AgentMessages.SpawnAt) {
+
                 AgentMessages.SpawnAt spawnMessage = (AgentMessages.SpawnAt) message;
                 simulation.tell(new Simulation.Register(spawnMessage.position()), getSelf());
                 waitTask.cancel();
@@ -70,17 +72,30 @@ public abstract class AmcgalaAgent extends UntypedActor {
         }
     };
 
+    private final Procedure<Object> waitForSimulation = new Procedure<Object>() {
+        @Override
+        public void apply(Object message) throws Exception {
+            if (message instanceof SimulationManager.SimulationResponse$) {
+                simulation = getSender();
+                getContext().become(waitForPosition);
+            } else {
+                unhandled(message);
+            }
+        }
+    };
+
     @Override
     public void onReceive(Object message) throws Exception {
     }
 
     @Override
     public void preStart() throws Exception {
-        getContext().become(waitForPosition);
+        simulationManager.tell(SimulationManager.SimulationRequest$.MODULE$, getSelf());
+        getContext().become(waitForSimulation);
     }
 
     @Override
-    public void postStop(){
+    public void postStop() {
         tellSimulation(AgentMessages.Death$.MODULE$);
     }
 
@@ -101,6 +116,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
     protected void spawnChild(World.Index index) {
         Props props = Props.create(new AmcgalaAgentCreator(this.getClass()));
         ActorRef ref = getContext().system().actorOf(props);
+        ref.tell(SimulationManager.SimulationResponse$.MODULE$, simulation);
         ref.tell(new AgentMessages.SpawnAt(index), getSelf());
     }
 
@@ -157,8 +173,8 @@ public abstract class AmcgalaAgent extends UntypedActor {
     /**
      * Bewegt den Agenten auf ein benachbartes Feld.
      *
-     * @param relativeIndex  der relative Index des Nachbarn
-     * @param update das SimulationUpdate Objekt
+     * @param relativeIndex der relative Index des Nachbarn
+     * @param update        das SimulationUpdate Objekt
      * @return die Nachricht, die an die Simulation gesendet wird
      */
     protected AgentMessages.AgentMessage moveTo(World.Index relativeIndex, Simulation.SimulationUpdate update) {
@@ -169,13 +185,14 @@ public abstract class AmcgalaAgent extends UntypedActor {
     /**
      * Bewegt den Agenten auf ein benachbartes Feld.
      *
-     * @param index  der absoluten Index des Nachbarn
+     * @param index der absoluten Index des Nachbarn
      * @return die Nachricht, die an die Simulation gesendet wird
      */
     protected AgentMessages.AgentMessage moveTo(World.Index index) {
         requestUpdate();
         return new AgentMessages.MoveTo(index);
     }
+
     /**
      * Bewegt den Agenten in die angebenene Richtung.
      *
@@ -235,7 +252,6 @@ public abstract class AmcgalaAgent extends UntypedActor {
     }
 
 
-
     /**
      * Prueft, ob die Nachbarzelle schon besucht wurde
      *
@@ -249,6 +265,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     /**
      * Prueft, ob die Zelle schon besucht wurde.
+     *
      * @param cell die zu untersuchende Zelle
      * @return true, wenn Zelle schon besucht wurde
      */
@@ -257,15 +274,15 @@ public abstract class AmcgalaAgent extends UntypedActor {
         for (World.InformationObject informationObject : cell.informationObjects()) {
             visited = (informationObject instanceof World.Visited$) || visited;
         }
-
         return visited;
     }
 
 
     /**
      * Gibt den absoluten Index einer Nachbarzelle zurueck.
+     *
      * @param direction die Richtung, in der die Zelle liegt
-     * @param update  der aktuelle Zustand der Agentenumgebung
+     * @param update    der aktuelle Zustand der Agentenumgebung
      * @return der absolute Index der Zelle
      */
     protected World.Index getNeighbourIndex(Direction direction, Simulation.SimulationUpdate update) {

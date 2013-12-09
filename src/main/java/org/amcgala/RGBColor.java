@@ -3,6 +3,7 @@ package org.amcgala;
 import com.google.common.base.Objects;
 
 import java.awt.*;
+import java.util.Random;
 
 /**
  * RGB Color.
@@ -15,6 +16,7 @@ public class RGBColor {
     public static final RGBColor RED = new RGBColor(1, 0, 0);
     public static final RGBColor GREEN = new RGBColor(0, 1, 0);
     public static final RGBColor BLUE = new RGBColor(0, 0, 1);
+    private static final Random random = new Random(System.nanoTime());
     protected float red;
     protected float green;
     protected float blue;
@@ -137,5 +139,10 @@ public class RGBColor {
     @Override
     public String toString() {
         return Objects.toStringHelper(getClass()).add("red", red).add("green", green).add("blue", blue).toString();
+    }
+
+    public static RGBColor randomColour() {
+
+        return new RGBColor(random.nextFloat(), random.nextFloat(), random.nextFloat());
     }
 }

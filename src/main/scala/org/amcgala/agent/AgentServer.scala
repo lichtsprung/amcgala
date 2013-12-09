@@ -11,6 +11,6 @@ class AgentServer(configName: String) {
   val config = ConfigFactory.load()
   val system = ActorSystem("Simulator", config.getConfig("simulation"))
 
-  val simulation = system.actorOf(Simulation.props(), "simulation")
+  val simulation = system.actorOf(Simulation.props(), "simulationManager")
   simulation ! SimulationConfig(ConfigFactory.load(configName))
 }

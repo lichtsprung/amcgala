@@ -465,7 +465,7 @@ object PaidService {
 trait PaidAgentMoveHandling {
   comp: ComposableSimulation with PaidService[Any, Float] ⇒
 
-  private val price = 1
+  private val price = 10
   setPrice(MoveTo -> price)
 
   receiveBuilder += {
@@ -513,7 +513,7 @@ trait PaidInformationObjectHandling {
   comp: ComposableSimulation with PaidService[Any, Float] ⇒
 
   val pricePutInformationObject = 1f
-  val pricePutInformationObjectTo = 2f
+  val pricePutInformationObjectTo = 1f
 
   setPrice(PutInformationObject -> pricePutInformationObject)
   setPrice(PutInformationObjectTo -> pricePutInformationObjectTo)
@@ -524,9 +524,9 @@ trait PaidInformationObjectHandling {
         w ← world
         agent ← agents.get(sender)
       } {
-        if (constraintsChecker.checkInformationObject(agent, informationObject)) {
-          w.addInformationObject(index, informationObject)
-          amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + pricePutInformationObjectTo))
+        if(w.neighbours(agent.position).contains(index) && constraintsChecker.checkInformationObject(agent, informationObject)){
+            w.addInformationObject(index, informationObject)
+            amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + pricePutInformationObjectTo))
         }
       }
 
@@ -547,8 +547,12 @@ trait PaidInformationObjectHandling {
 trait PaidAgentRegisterHandling {
   comp: ComposableSimulation with PaidService[Any, Float] ⇒
 
-  val spawnPrice = 2
-  val spawnRandomPrice = 4
+  val spawnDefaultPrice = 20
+  val spawnPrice = 40
+
+  setPrice(RegisterWithRandomIndex -> spawnPrice)
+  setPrice(Register -> spawnPrice)
+  setPrice(RegisterWithDefaultIndex -> spawnDefaultPrice)
 
   receiveBuilder += {
     case RegisterWithRandomIndex ⇒
@@ -556,7 +560,7 @@ trait PaidAgentRegisterHandling {
         val randomCell = w.randomCell
         val agentStates = AgentStates(id = AgentID(sender.hashCode()), position = randomCell.index, owner = sender.path.address)
         agents = agents + (sender -> agentStates)
-        amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + spawnRandomPrice))
+        amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + spawnPrice))
         self ! AgentStateChange(agents(sender))
         self.tell(RequestUpdate, sender)
       })
@@ -584,7 +588,7 @@ trait PaidAgentRegisterHandling {
           world map (w ⇒ {
             val agentStates = AgentStates(id = AgentID(sender.hashCode()), position = index, owner = sender.path.address)
             agents = agents + (sender -> agentStates)
-            amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + spawnPrice))
+            amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + spawnDefaultPrice))
             self ! AgentStateChange(agents(sender))
             self.tell(RequestUpdate, sender)
           })
@@ -592,14 +596,22 @@ trait PaidAgentRegisterHandling {
   }
 }
 
+trait SimulationManagerHandling {
+  comp: ComposableSimulation ⇒
+  import SimulationManager._
+  receiveBuilder += {
+    case SimulationRequest ⇒
+      sender ! SimulationResponse
+  }
+}
+
 class DefaultSimulation extends ComposableSimulation
   with StateLoggerHandling with AgentMoveHandling
   with AgentDeathHandling with CellChangeHandling
   with InformationObjectHandling with UpdateHandling
-  with AgentRegisterHandling
+  with AgentRegisterHandling with SimulationManagerHandling
 
 class CompetitionSimulation extends ComposableSimulation
   with StateLoggerHandling with PaidService[Any, Float] with PaidAgentMoveHandling
-  with AgentDeathHandling with PaidCellChangeHandling
-  with PaidInformationObjectHandling with UpdateHandling
-  with PaidAgentRegisterHandling
+  with AgentDeathHandling  with PaidInformationObjectHandling with UpdateHandling
+  with PaidAgentRegisterHandling with SimulationManagerHandling

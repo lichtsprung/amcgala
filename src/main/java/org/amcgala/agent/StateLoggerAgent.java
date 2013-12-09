@@ -1,13 +1,16 @@
 package org.amcgala.agent;
 
+import akka.actor.ActorRef;
 import akka.actor.ActorSelection;
 import akka.actor.UntypedActor;
 import akka.event.Logging;
 import akka.event.LoggingAdapter;
+import akka.japi.Procedure;
 import org.amcgala.Framework;
 import org.amcgala.FrameworkMode;
 import scala.Tuple2;
 import scala.concurrent.duration.Duration;
+
 import java.util.concurrent.TimeUnit;
 
 import java.util.HashMap;
@@ -31,9 +34,79 @@ public abstract class StateLoggerAgent extends UntypedActor {
 
     private boolean localMode = getContext().system().settings().config().getBoolean("org.amcgala.agent.simulation.local-mode");
 
-    private final String simulationPath = localMode ? getContext().system().settings().config().getString("org.amcgala.agent.simulation.local-address") : getContext().system().settings().config().getString("org.amcgala.agent.simulation.remote-address");
+    private final String simulationManagerPath = localMode ? getContext().system().settings().config().getString("org.amcgala.agent.simulation.local-address") : getContext().system().settings().config().getString("org.amcgala.agent.simulation.remote-address");
+    private ActorSelection simulationManager = getContext().actorSelection(simulationManagerPath);
 
-    private ActorSelection simulation = getContext().actorSelection(simulationPath);
+    private ActorRef simulation = ActorRef.noSender();
+
+    private final Procedure<Object> waitForSimulation = new Procedure<Object>() {
+        @Override
+        public void apply(Object message) throws Exception {
+            if (message instanceof SimulationManager.SimulationResponse$) {
+                simulation = getSender();
+                simulation.tell(Simulation.RegisterStateLogger$.MODULE$, self());
+                getContext().become(handleUpdates);
+            } else {
+                unhandled(message);
+            }
+        }
+    };
+
+
+    private final Procedure<Object> handleUpdates = new Procedure<Object>() {
+        @Override
+        public void apply(Object message) throws Exception {
+            if (message instanceof Simulation.SimulationState) {
+                Simulation.SimulationState state = (Simulation.SimulationState) message;
+
+                worldWidth = state.worldInfo().width();
+                worldHeight = state.worldInfo().height();
+                scaleX = framework.getWidth() / worldWidth;
+                scaleY = framework.getHeight() / worldHeight;
+
+                for (Tuple2<World.Index, World.Cell> entry : state.worldInfo().cells()) {
+                    cells.put(entry._1(), entry._2());
+                }
+
+                for (Agent.AgentStates as : state.agents()) {
+                    agents.put(as.id(), as);
+                }
+
+                onInit();
+
+                getContext().system().scheduler().schedule(Duration.create(200, TimeUnit.MILLISECONDS), Duration.create(200, TimeUnit.MILLISECONDS),
+                        getSelf(), Simulation.Update$.MODULE$, getContext().system().dispatcher(), null);
+
+            } else if (message instanceof Simulation.SimulationStateUpdate) {
+                Simulation.SimulationStateUpdate state = (Simulation.SimulationStateUpdate) message;
+
+                agents.clear();
+                for (Agent.AgentStates as : state.agents()) {
+                    agents.put(as.id(), as);
+                }
+
+                cells.clear();
+                for (Tuple2<World.Index, World.Cell> entry : state.changedCells()) {
+                    cells.put(entry._1(), entry._2());
+                }
+
+            } else if (message instanceof Simulation.AgentStateChange) {
+                Simulation.AgentStateChange state = (Simulation.AgentStateChange) message;
+                agents.put(state.state().id(), state.state());
+            } else if (message instanceof Simulation.CellChange) {
+                Simulation.CellChange change = (Simulation.CellChange) message;
+                cells.put(change.index(), change.cell());
+            } else if (message instanceof Simulation.Update$) {
+                onUpdate(cells, agents);
+            } else if (message instanceof Simulation.AgentDeath) {
+                Simulation.AgentDeath death = (Simulation.AgentDeath) message;
+                agents.remove(death.state().id());
+            } else {
+                unhandled(message);
+            }
+        }
+    };
+
 
     /**
      * User overridable callback.
@@ -43,7 +116,8 @@ public abstract class StateLoggerAgent extends UntypedActor {
      */
     @Override
     public void preStart() throws Exception {
-        simulation.tell(Simulation.RegisterStateLogger$.MODULE$, self());
+        simulationManager.tell(SimulationManager.SimulationRequest$.MODULE$, getSelf());
+        getContext().become(waitForSimulation);
     }
 
     /**
@@ -52,55 +126,7 @@ public abstract class StateLoggerAgent extends UntypedActor {
      */
     @Override
     public void onReceive(Object message) throws Exception {
-        if (message instanceof Simulation.SimulationState) {
-            Simulation.SimulationState state = (Simulation.SimulationState) message;
 
-            worldWidth = state.worldInfo().width();
-            worldHeight = state.worldInfo().height();
-            scaleX = framework.getWidth() / worldWidth;
-            scaleY = framework.getHeight() / worldHeight;
-
-            for (Tuple2<World.Index, World.Cell> entry : state.worldInfo().cells()) {
-                cells.put(entry._1(), entry._2());
-            }
-
-            for (Agent.AgentStates as : state.agents()) {
-                agents.put(as.id(), as);
-            }
-
-            onInit();
-
-            getContext().system().scheduler().schedule(Duration.create(200, TimeUnit.MILLISECONDS),Duration.create(200, TimeUnit.MILLISECONDS),
-                    getSelf(), Simulation.Update$.MODULE$, getContext().system().dispatcher(), null);
-
-        } else if (message instanceof Simulation.SimulationStateUpdate) {
-            Simulation.SimulationStateUpdate state = (Simulation.SimulationStateUpdate) message;
-
-            agents.clear();
-            for (Agent.AgentStates as : state.agents()) {
-                agents.put(as.id(), as);
-            }
-
-            cells.clear();
-            for (Tuple2<World.Index, World.Cell> entry : state.changedCells()) {
-                cells.put(entry._1(), entry._2());
-            }
-
-        } else if (message instanceof Simulation.AgentStateChange) {
-            Simulation.AgentStateChange state = (Simulation.AgentStateChange) message;
-            agents.put(state.state().id(), state.state());
-        } else if (message instanceof Simulation.CellChange) {
-            Simulation.CellChange change = (Simulation.CellChange) message;
-            cells.put(change.index(), change.cell());
-        }else if(message instanceof Simulation.Update$){
-            onUpdate(cells, agents);
-        }else if(message instanceof Simulation.AgentDeath) {
-            Simulation.AgentDeath death = (Simulation.AgentDeath) message;
-            agents.remove(death.state().id());
-        }
-        else {
-            unhandled(message);
-        }
     }
 
 

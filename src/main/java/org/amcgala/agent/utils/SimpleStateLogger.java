@@ -1,6 +1,7 @@
 package org.amcgala.agent.utils;
 
 import akka.actor.Actor;
+import akka.actor.Address;
 import akka.japi.Creator;
 import org.amcgala.RGBColor;
 import org.amcgala.Scene;
@@ -9,7 +10,9 @@ import org.amcgala.agent.StateLoggerAgent;
 import org.amcgala.agent.World;
 import org.amcgala.math.Vertex3f;
 import org.amcgala.shape.Rectangle;
+import sun.management.resources.agent;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -19,11 +22,14 @@ public final class SimpleStateLogger extends StateLoggerAgent {
     Scene scene = new Scene("SimpleStateLogger");
     Rectangle[][] rectangles;
     RGBColor[] greys;
+    Map<Address, RGBColor> agentColours;
 
 
     @Override
     public void onInit() {
         greys = new RGBColor[1000];
+        agentColours = new HashMap<>();
+
         float step = 1f / greys.length;
 
         for (int i = 0; i < greys.length; i++) {
@@ -65,8 +71,11 @@ public final class SimpleStateLogger extends StateLoggerAgent {
         }
 
         for (Agent.AgentStates s : agents.values()) {
+            if(!agentColours.containsKey(s.owner())) {
+                agentColours.put(s.owner(), RGBColor.randomColour());
+            }
             Rectangle p = rectangles[s.position().x()][s.position().y()];
-            p.setColor(RGBColor.BLUE);
+            p.setColor(agentColours.get(s.owner()));
         }
     }
 
