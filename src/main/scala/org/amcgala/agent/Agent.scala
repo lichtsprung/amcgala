@@ -2,6 +2,7 @@ package org.amcgala.agent
 
 import org.amcgala.agent.Agent.Pheromone
 import org.amcgala.agent.World.{ Index, InformationObject }
+import akka.actor.Address
 
 object Agent {
 
@@ -21,7 +22,7 @@ object Agent {
 
   case class Life(value: Float) extends AgentState
 
-  case class AgentStates(id: AgentID, position: Index, power: Power = Power(0)) extends Message
+  case class AgentStates(id: AgentID, position: Index, power: Power = Power(0), owner: Address) extends Message
 
 }
 
