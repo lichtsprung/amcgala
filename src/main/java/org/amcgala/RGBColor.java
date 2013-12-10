@@ -16,6 +16,8 @@ public class RGBColor {
     public static final RGBColor RED = new RGBColor(1, 0, 0);
     public static final RGBColor GREEN = new RGBColor(0, 1, 0);
     public static final RGBColor BLUE = new RGBColor(0, 0, 1);
+    public static final RGBColor YELLOW = new RGBColor(1, 1, 0);
+    public static final RGBColor ORANGE = new RGBColor(1, .5f, 0);
     private static final Random random = new Random(System.nanoTime());
     protected float red;
     protected float green;

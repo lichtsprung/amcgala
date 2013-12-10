@@ -9,7 +9,7 @@ import com.typesafe.config.{ ConfigFactory, Config }
 import java.util
 import org.amcgala.agent.AgentMessages._
 import org.amcgala.agent.World._
-import org.amcgala.agent.Agent.{ Pheromone, AgentStates, AgentID }
+import org.amcgala.agent.Agent._
 import org.amcgala.agent.World.Index
 import scala.Some
 import org.amcgala.agent.AgentMessages.ReleasePheromone
@@ -27,6 +27,32 @@ import org.amcgala.agent.Simulation.AgentStateChange
 import org.amcgala.agent.World.WorldInfo
 import org.amcgala.agent.utils.PartialFunctionBuilder
 import org.amcgala.agent.PaidService.PaidService
+import org.amcgala.agent.SimulationManager.SimulationRequest
+import org.amcgala.agent.AgentMessages.PutInformationObjectTo
+import org.amcgala.agent.Agent.AgentStates
+import org.amcgala.agent.World.Index
+import scala.Some
+import org.amcgala.agent.World.JCell
+import org.amcgala.agent.AgentMessages.ReleasePheromone
+import org.amcgala.agent.Simulation.SimulationState
+import org.amcgala.agent.World.Cell
+import org.amcgala.agent.Simulation.AgentDeath
+import org.amcgala.agent.Agent.AgentID
+import org.amcgala.agent.Simulation.SimulationConfig
+import org.amcgala.agent.Simulation.SimulationUpdate
+import org.amcgala.agent.World.CellWithIndex
+import org.amcgala.agent.AgentMessages.MoveTo
+import org.amcgala.agent.Simulation.RegisterWithDefaultIndex
+import org.amcgala.agent.Simulation.RegisterWithRandomIndex
+import org.amcgala.agent.AgentMessages.PutInformationObject
+import org.amcgala.agent.Simulation.CellChange
+import org.amcgala.agent.Simulation.Register
+import org.amcgala.agent.World.JCellWithIndex
+import org.amcgala.agent.AgentMessages.ChangeValue
+import org.amcgala.agent.Agent.Payloads
+import org.amcgala.agent.Simulation.AgentStateChange
+import org.amcgala.agent.AgentMessages.TakePayload
+import org.amcgala.agent.World.WorldInfo
 
 /**
   * Nachricht, die zwischen Agenten und der Simulation verschickt werden können.
@@ -45,7 +71,7 @@ object Simulation {
       * @return die [[org.amcgala.agent.World.JCell]]
       */
     implicit def cell2JCell(cell: Cell): JCell = {
-      JCell(cell.value, new util.HashMap[Pheromone, Float](), cell.informationObjects)
+      JCell(cell.value, new util.HashMap[Pheromone, Float](), cell.informationObjects, cell.payloadObjects)
     }
 
     implicit def cellWI2JCellWI(cell: CellWithIndex): JCellWithIndex = {
@@ -69,7 +95,7 @@ object Simulation {
     * @param currentCell der aktuelle Zustand des Agenten
     * @param neighbours die Nachbarzellen
     */
-  case class SimulationUpdate(currentPosition: Index, currentCell: JCell, neighbours: java.util.HashMap[Index, JCellWithIndex]) extends Message
+  case class SimulationUpdate(currentPosition: Index, currentCell: JCell, currentState: AgentStates, neighbours: java.util.HashMap[Index, JCellWithIndex]) extends Message
 
   /**
     * Der globale Zustand der Simulation. Diese Nachricht wird an alle Statelogger geschickt, die die Informationen
@@ -288,11 +314,11 @@ trait CellChangeHandling {
       for {
         w ← world
         agent ← agents.get(sender.path)
+        cell ← w.get(agent.position)
+        nCell ← w.get(agent.position)
       } {
-        val cell = w(agent.position)
         if (constraintsChecker.checkValueChange(cell.value, value)) {
           w.change(agent.position, value)
-          val nCell = w(agent.position)
           self ! CellChange(agent.position, nCell)
         }
       }
@@ -325,9 +351,10 @@ trait AgentMoveHandling {
       for {
         w ← world
         agent ← agents.get(sender.path)
+        oldCell ← w.get(agent.position)
+        nCell ← w.get(index)
       } {
-        val oldCell = w(agent.position)
-        if (constraintsChecker.checkMove(sender, CellWithIndex(agent.position, oldCell), CellWithIndex(index, w(index)), agents.values.toList)) {
+        if (constraintsChecker.checkMove(sender, CellWithIndex(agent.position, oldCell), CellWithIndex(index, nCell), agents.values.toList)) {
           val agentStates = AgentStates(id = AgentID(sender.hashCode()), position = index, owner = sender.path.address)
           agents = agents + (sender.path -> agentStates)
           self ! AgentStateChange(agent)
@@ -377,7 +404,7 @@ trait UpdateHandling {
             }
 
             import Simulation.Implicits.cell2JCell
-            context.actorSelection(ref) ! SimulationUpdate(currentState.position, w(currentState.position), javaNeighbours)
+            context.actorSelection(ref) ! SimulationUpdate(currentState.position, w.get(currentState.position).get, currentState, javaNeighbours)
         }
 
       })
@@ -397,7 +424,7 @@ trait UpdateHandling {
           }
 
           import Simulation.Implicits.cell2JCell
-          sender ! SimulationUpdate(currentState.position, w(currentState.position), javaNeighbours)
+          sender ! SimulationUpdate(currentState.position, w.get(currentState.position).get, currentState, javaNeighbours)
         }
       }
   }
@@ -466,9 +493,11 @@ object PaidService {
 }
 
 trait PaidAgentMoveHandling {
-  comp: ComposableSimulation with PaidService[Any, Float] ⇒
+  comp: ComposableSimulation with PaidService[Any, Float] with PayloadHandling with StopTimer ⇒
+  import StopTimer._
 
   private val price = 10
+  private val honeyPrice = -100
   setPrice(MoveTo -> price)
 
   receiveBuilder += {
@@ -476,12 +505,20 @@ trait PaidAgentMoveHandling {
       for {
         w ← world
         agent ← agents.get(sender.path)
+        ncell ← w.get(index)
+        oldCell ← w.get(agent.position)
       } {
-        val oldCell = w(agent.position)
-        if (constraintsChecker.checkMove(sender, CellWithIndex(agent.position, oldCell), CellWithIndex(index, w(index)), agents.values.toList)) {
-          val agentStates = AgentStates(id = AgentID(sender.hashCode()), position = index, owner = sender.path.address)
-          agents = agents + (sender.path -> agentStates)
+        if (constraintsChecker.checkMove(sender, CellWithIndex(agent.position, oldCell), CellWithIndex(index, ncell), agents.values.toList)) {
           amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + price))
+          var payloads = agent.payloads
+          if (ncell.informationObjects.contains(Base) && payloads.values.contains(Honey)) {
+            println("Habe Honig nach Hause gebracht!")
+            amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + honeyPrice))
+            payloads = Payloads(payloads.values.filterNot(p ⇒ p == Honey).toSet)
+            self ! CheckStopCondition
+          }
+          val agentStates = AgentStates(agent.id, index, agent.power, agent.owner, agent.life, payloads)
+          agents = agents + (sender.path -> agentStates)
           self ! AgentStateChange(agent)
         }
       }
@@ -499,11 +536,11 @@ trait PaidCellChangeHandling {
       for {
         w ← world
         agent ← agents.get(sender.path)
+        cell ← w.get(agent.position)
+        nCell ← w.get(agent.position)
       } {
-        val cell = w(agent.position)
         if (constraintsChecker.checkValueChange(cell.value, value)) {
           w.change(agent.position, value)
-          val nCell = w(agent.position)
           amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + price))
           self ! CellChange(agent.position, nCell)
         }
@@ -527,7 +564,7 @@ trait PaidInformationObjectHandling {
         w ← world
         agent ← agents.get(sender.path)
       } {
-        if (w.neighbours(agent.position).contains(index) && constraintsChecker.checkInformationObject(agent, informationObject)) {
+        if (constraintsChecker.checkInformationObject(agent, informationObject)) {
           w.addInformationObject(index, informationObject)
           amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + pricePutInformationObjectTo))
         }
@@ -588,7 +625,7 @@ trait PaidAgentRegisterHandling {
     case RegisterWithDefaultIndex(parentIndex) ⇒
       defaultPosition match {
         case World.RandomIndex ⇒
-          self forward RegisterWithRandomIndex
+          self forward RegisterWithRandomIndex(parentIndex)
         case index: Index ⇒
           world map (w ⇒ {
             val agentStates = AgentStates(id = AgentID(sender.hashCode()), position = index, owner = sender.path.address)
@@ -610,13 +647,69 @@ trait SimulationManagerHandling {
   }
 }
 
+object StopTimer {
+  case object StopSimulation
+  case object CheckStopCondition
+}
+
+trait StopTimer {
+  comp: ComposableSimulation with PaidService.PaidService[Any, Float] ⇒
+  import StopTimer._
+
+  val stopTime = currentConfig.getInt("org.amcgala.agent.simulation.stop-timer").minute
+
+  context.system.scheduler.scheduleOnce(stopTime, self, StopSimulation)
+
+  receiveBuilder += {
+    case StopSimulation ⇒
+      println(s"Score: ${amounts.head._2}")
+      context.stop(self)
+
+  }
+}
+
+trait BaseHandling {
+  comp: ComposableSimulation ⇒
+  var bases = Map.empty[Address, Index]
+}
+
+trait PayloadHandling {
+  comp: ComposableSimulation ⇒
+
+  receiveBuilder += {
+    case TakePayload(payload) ⇒
+      for {
+        w ← world
+        state ← agents.get(sender.path)
+        cell ← w.get(state.position)
+      } {
+        if (cell.payloadObjects.contains(payload)) {
+          agents = agents + (sender.path -> AgentStates(state.id, state.position, state.power, state.owner, state.life, Payloads(state.payloads.values + payload)))
+        }
+      }
+  }
+}
+
+trait IdleHandling {
+  comp: ComposableSimulation ⇒
+
+  receiveBuilder += {
+    case Idle ⇒
+  }
+}
+
+case object Honey extends Payload
+
+case object Base extends InformationObject
+
 class DefaultSimulation extends ComposableSimulation
   with StateLoggerHandling with AgentMoveHandling
   with AgentDeathHandling with CellChangeHandling
   with InformationObjectHandling with UpdateHandling
-  with AgentRegisterHandling with SimulationManagerHandling
+  with AgentRegisterHandling with SimulationManagerHandling with IdleHandling
 
 class CompetitionSimulation extends ComposableSimulation
   with StateLoggerHandling with PaidService[Any, Float] with PaidAgentMoveHandling
   with AgentDeathHandling with PaidInformationObjectHandling with UpdateHandling
-  with PaidAgentRegisterHandling with SimulationManagerHandling
+  with PaidAgentRegisterHandling with SimulationManagerHandling with PayloadHandling with StopTimer
+  with IdleHandling

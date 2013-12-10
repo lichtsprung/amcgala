@@ -1,6 +1,6 @@
 package org.amcgala.agent
 
-import org.amcgala.agent.Agent.Pheromone
+import org.amcgala.agent.Agent.{ Payload, Pheromone }
 import org.amcgala.agent.World.{ Index, InformationObject }
 import akka.actor.Address
 
@@ -22,7 +22,17 @@ object Agent {
 
   case class Life(value: Float) extends AgentState
 
-  case class AgentStates(id: AgentID, position: Index, power: Power = Power(0), owner: Address) extends Message
+  trait Payload
+
+  case class Payloads(values: Set[Payload])
+
+  case class AgentStates(
+    id: AgentID,
+    position: Index,
+    power: Power = Power(0),
+    owner: Address,
+    life: Life = Life(100),
+    payloads: Payloads = Payloads(Set.empty[Payload])) extends Message
 
 }
 
@@ -42,7 +52,11 @@ object AgentMessages {
 
   case class PutInformationObjectTo(index: Index, informationObject: InformationObject) extends AgentMessage
 
+  case class TakePayload(payload: Payload) extends AgentMessage
+
   case class ReleasePheromone(pheromone: Pheromone) extends AgentMessage
+
+  case object Idle extends AgentMessage
 
   case object Death extends AgentMessage
 

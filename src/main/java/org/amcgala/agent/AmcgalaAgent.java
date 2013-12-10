@@ -17,9 +17,13 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     protected Random random = new Random(System.nanoTime());
 
+    @Deprecated
     private World.JCell currentCell;
 
+    @Deprecated
     private World.Index currentPosition;
+
+    private Agent.AgentStates currentState;
 
     protected final Agent.AgentID id = new Agent.AgentID(getSelf().hashCode());
 
@@ -31,7 +35,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
     private final ActorSelection simulationManager = getContext().actorSelection(simulationManagerPath);
     private ActorRef simulation = ActorRef.noSender();
 
-    private final Cancellable waitTask = getContext().system().scheduler().scheduleOnce(new FiniteDuration(10, TimeUnit.SECONDS), new Runnable() {
+    private final Cancellable waitTask = getContext().system().scheduler().scheduleOnce(new FiniteDuration(1, TimeUnit.SECONDS), new Runnable() {
         @Override
         public void run() {
             simulation.tell(new Simulation.RegisterWithDefaultIndex(new World.Index(0,0)), getSelf());
@@ -64,6 +68,8 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
                 currentCell = update.currentCell();
                 currentPosition = update.currentPosition();
+                currentState = update.currentState();
+
                 AgentMessages.AgentMessage decision = onUpdate(update);
                 simulation.tell(decision, getSelf());
             } else {
@@ -306,6 +312,15 @@ public abstract class AmcgalaAgent extends UntypedActor {
         simulation.tell(message, getSelf());
     }
 
+    protected AgentMessages.AgentMessage idle() {
+        requestUpdate();
+        return AgentMessages.Idle$.MODULE$;
+    }
+
+    protected AgentMessages.AgentMessage takePayload(Agent.Payload payload) {
+        requestUpdate();
+        return new AgentMessages.TakePayload(payload);
+    }
 
     /**
      * Callback Methode, die bei jedem Update der Simulation aufgerufen wird.

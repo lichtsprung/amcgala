@@ -107,5 +107,5 @@ class DefaultConstraints extends WorldConstraintsChecker {
     * @param informationObject
     * @return
     */
-  def checkInformationObject(agent: _root_.org.amcgala.agent.Agent.AgentStates, informationObject: _root_.org.amcgala.agent.World.InformationObject): Boolean = true
+  def checkInformationObject(agent: Agent.AgentStates, informationObject: World.InformationObject): Boolean = true
 }

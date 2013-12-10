@@ -1,6 +1,6 @@
 package org.amcgala.agent
 
-import org.amcgala.agent.Agent.Pheromone
+import org.amcgala.agent.Agent.{ Payload, Pheromone }
 import com.typesafe.config.Config
 import java.util
 import scala.util.Random
@@ -24,11 +24,13 @@ object World {
 
   case class Cell(value: Float,
                   pheromones: PheromoneMap = Map.empty[Pheromone, Float],
-                  informationObjects: List[InformationObject] = List.empty[InformationObject]) extends Message
+                  informationObjects: List[InformationObject] = List.empty[InformationObject],
+                  payloadObjects: List[Payload] = List.empty[Payload]) extends Message
 
   case class JCell(value: Float,
                    pheromones: util.Map[Pheromone, Float] = new util.HashMap[Pheromone, Float](),
-                   informationObjects: util.List[InformationObject] = new util.ArrayList[InformationObject]()) extends Message
+                   informationObjects: util.List[InformationObject] = new util.ArrayList[InformationObject](),
+                   payloadObjects: util.List[Payload] = new util.ArrayList[Payload]()) extends Message
 
   case class NeighbourCellWithIndex(relativeIndex: Index, absoluteIndex: Index, cell: Cell) extends Message
 
@@ -108,8 +110,8 @@ trait World {
     field = field + (index -> Cell(c.value, c.pheromones, informationObject :: c.informationObjects))
   }
 
-  def apply(index: Index) = {
-    field(index)
+  def get(index: Index): Option[Cell] = {
+    field.get(index)
   }
 
   def toList: List[CellWithIndex] = (for (entry ← field) yield CellWithIndex(entry._1, entry._2)).toList
