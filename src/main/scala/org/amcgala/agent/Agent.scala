@@ -30,7 +30,7 @@ object AgentMessages {
 
   sealed trait AgentMessage extends Message
 
-  case class SpawnAt(position: Index) extends AgentMessage
+  case class SpawnAt(position: Index, parentPosition: Index) extends AgentMessage
 
   case object SpawnRejected extends AgentMessage
 

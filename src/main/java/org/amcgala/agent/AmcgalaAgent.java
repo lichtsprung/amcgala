@@ -34,7 +34,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
     private final Cancellable waitTask = getContext().system().scheduler().scheduleOnce(new FiniteDuration(10, TimeUnit.SECONDS), new Runnable() {
         @Override
         public void run() {
-            simulation.tell(Simulation.RegisterWithDefaultIndex$.MODULE$, getSelf());
+            simulation.tell(new Simulation.RegisterWithDefaultIndex(new World.Index(0,0)), getSelf());
             getContext().become(updateHandling);
         }
     }, getContext().system().dispatcher());
@@ -45,7 +45,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
             if (message instanceof AgentMessages.SpawnAt) {
 
                 AgentMessages.SpawnAt spawnMessage = (AgentMessages.SpawnAt) message;
-                simulation.tell(new Simulation.Register(spawnMessage.position()), getSelf());
+                simulation.tell(new Simulation.Register(spawnMessage.position(), spawnMessage.parentPosition()), getSelf());
                 waitTask.cancel();
                 getContext().become(updateHandling);
             } else if (message instanceof AgentMessages.SpawnRejected$) {
@@ -105,7 +105,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
     protected void spawnChild() {
         Props props = Props.create(new AmcgalaAgentCreator(this.getClass()));
         ActorRef ref = getContext().system().actorOf(props);
-        ref.tell(new AgentMessages.SpawnAt(currentPosition), getSelf());
+        ref.tell(new AgentMessages.SpawnAt(currentPosition, currentPosition), getSelf());
     }
 
     /**
@@ -117,7 +117,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
         Props props = Props.create(new AmcgalaAgentCreator(this.getClass()));
         ActorRef ref = getContext().system().actorOf(props);
         ref.tell(SimulationManager.SimulationResponse$.MODULE$, simulation);
-        ref.tell(new AgentMessages.SpawnAt(index), getSelf());
+        ref.tell(new AgentMessages.SpawnAt(index, currentPosition), getSelf());
     }
 
     /**
@@ -152,7 +152,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
      * @param y die y-Koordinate
      */
     protected void spawnAt(int x, int y) {
-        getSelf().tell(new AgentMessages.SpawnAt(new World.Index(x, y)), getSelf());
+        getSelf().tell(new AgentMessages.SpawnAt(new World.Index(x, y), new World.Index(0,0)), getSelf());
     }
 
     /**
