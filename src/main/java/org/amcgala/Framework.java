@@ -113,7 +113,7 @@ public final class Framework {
         System.out.println("amCGAla Version: " + configuration.getString("org.amcgala.version"));
         checkArgument(instance == null, "Es können keine weiteren Instanzen von Framework erzeugt werden!");
         instance = new Framework(width, height);
-        instance.animator = new Animator(60, 60, instance, new SoftwareRenderer(instance));
+        instance.animator = new Animator(configuration.getInt("org.amcgala.animator.fps"), configuration.getInt("org.amcgala.animator.ups"), instance, new SoftwareRenderer(instance));
 
         return instance;
     }

@@ -107,5 +107,10 @@ class DefaultConstraints extends WorldConstraintsChecker {
     * @param informationObject
     * @return
     */
-  def checkInformationObject(agent: Agent.AgentStates, informationObject: World.InformationObject): Boolean = true
+  def checkInformationObject(agent: Agent.AgentStates, informationObject: World.InformationObject): Boolean = informationObject match {
+    case o: Base.type ⇒
+      println("Es ist nicht erlaubt ein Objekt dieses Typs zu platzieren!")
+      false
+    case _ ⇒ true
+  }
 }

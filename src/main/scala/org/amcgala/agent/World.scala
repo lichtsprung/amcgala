@@ -102,12 +102,21 @@ trait World {
     val c = field(index)
     val nv = math.min(1f, pheromone.strength + c.pheromones.getOrElse(pheromone, 0.0f))
     val pheromones = c.pheromones + (pheromone -> nv)
-    field = field + (index -> Cell(c.value, pheromones))
+    field = field + (index -> Cell(c.value, pheromones, c.informationObjects, c.payloadObjects))
   }
 
-  def addInformationObject(index: Index, informationObject: InformationObject) {
+  def addInformationObject(index: Index, informationObject: InformationObject): Unit = {
     val c = field(index)
-    field = field + (index -> Cell(c.value, c.pheromones, informationObject :: c.informationObjects))
+    field = field + (index -> Cell(c.value, c.pheromones, informationObject :: c.informationObjects, c.payloadObjects))
+  }
+
+  def addPayload(index: Index, payload: Payload): Unit = {
+    for {
+      c ← field.get(index)
+    } {
+      field = field + (index -> Cell(c.value, c.pheromones, c.informationObjects, payload :: c.payloadObjects))
+    }
+
   }
 
   def get(index: Index): Option[Cell] = {

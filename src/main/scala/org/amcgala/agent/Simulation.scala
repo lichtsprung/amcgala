@@ -10,24 +10,8 @@ import java.util
 import org.amcgala.agent.AgentMessages._
 import org.amcgala.agent.World._
 import org.amcgala.agent.Agent._
-import org.amcgala.agent.World.Index
-import scala.Some
-import org.amcgala.agent.AgentMessages.ReleasePheromone
-import org.amcgala.agent.Simulation.SimulationState
-import org.amcgala.agent.World.Cell
-import org.amcgala.agent.Simulation.AgentDeath
-import org.amcgala.agent.Simulation.SimulationConfig
-import org.amcgala.agent.Simulation.SimulationUpdate
-import org.amcgala.agent.AgentMessages.MoveTo
-import org.amcgala.agent.AgentMessages.PutInformationObject
-import org.amcgala.agent.Simulation.CellChange
-import org.amcgala.agent.Simulation.Register
-import org.amcgala.agent.AgentMessages.ChangeValue
-import org.amcgala.agent.Simulation.AgentStateChange
-import org.amcgala.agent.World.WorldInfo
 import org.amcgala.agent.utils.PartialFunctionBuilder
 import org.amcgala.agent.PaidService.PaidService
-import org.amcgala.agent.SimulationManager.SimulationRequest
 import org.amcgala.agent.AgentMessages.PutInformationObjectTo
 import org.amcgala.agent.Agent.AgentStates
 import org.amcgala.agent.World.Index
@@ -53,6 +37,7 @@ import org.amcgala.agent.Agent.Payloads
 import org.amcgala.agent.Simulation.AgentStateChange
 import org.amcgala.agent.AgentMessages.TakePayload
 import org.amcgala.agent.World.WorldInfo
+import scala.util.Random
 
 /**
   * Nachricht, die zwischen Agenten und der Simulation verschickt werden können.
@@ -337,9 +322,6 @@ trait AgentDeathHandling {
         agents = agents - sender.path
         sender ! PoisonPill
       }
-      if (agents.size == 0) {
-        println(agents)
-      }
   }
 }
 
@@ -473,6 +455,7 @@ trait AgentRegisterHandling {
 }
 
 object PaidService {
+
   case object PriceListRequest extends Message
 
   trait PaidService[A, B] {
@@ -490,11 +473,11 @@ object PaidService {
     }
 
   }
+
 }
 
 trait PaidAgentMoveHandling {
   comp: ComposableSimulation with PaidService[Any, Float] with PayloadHandling with StopTimer ⇒
-  import StopTimer._
 
   private val price = 10
   private val honeyPrice = -100
@@ -515,7 +498,6 @@ trait PaidAgentMoveHandling {
             println("Habe Honig nach Hause gebracht!")
             amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + honeyPrice))
             payloads = Payloads(payloads.values.filterNot(p ⇒ p == Honey).toSet)
-            self ! CheckStopCondition
           }
           val agentStates = AgentStates(agent.id, index, agent.power, agent.owner, agent.life, payloads)
           agents = agents + (sender.path -> agentStates)
@@ -566,6 +548,7 @@ trait PaidInformationObjectHandling {
       } {
         if (constraintsChecker.checkInformationObject(agent, informationObject)) {
           w.addInformationObject(index, informationObject)
+          self ! CellChange(index, w.get(index).get)
           amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + pricePutInformationObjectTo))
         }
       }
@@ -577,6 +560,7 @@ trait PaidInformationObjectHandling {
       } {
         if (constraintsChecker.checkInformationObject(agent, informationObject)) {
           w.addInformationObject(agent.position, informationObject)
+          self ! CellChange(agent.position, w.get(agent.position).get)
           amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + pricePutInformationObject))
         }
       }
@@ -588,10 +572,40 @@ trait PaidAgentRegisterHandling {
   comp: ComposableSimulation with PaidService[Any, Float] ⇒
 
   val spawnPrice = 20
+  var homeBases = Map.empty[Address, Index]
 
   setPrice(RegisterWithRandomIndex -> spawnPrice)
   setPrice(Register -> spawnPrice)
   setPrice(RegisterWithDefaultIndex -> spawnPrice)
+
+  def honeyPosition: Option[Index] = {
+    for {
+      w ← world
+      cellWithIndex ← w.toList.find(cell ⇒ cell.cell.payloadObjects.contains(Honey))
+    } {
+      return Some(cellWithIndex.index)
+    }
+    None
+  }
+
+  def homeBase(honeyPosition: Index, homeBases: Map[Address, Index], hostAddress: Address): (Option[Index], Map[Address, Index]) = {
+    for {
+      w ← world
+    } {
+      val distance = 100
+      val xDist = distance - Random.nextInt(distance)
+      val yDist = distance - xDist
+      val baseIndex = Index((honeyPosition.x + xDist) % w.width, (honeyPosition.y + yDist) % w.height)
+      if (homeBases.contains(baseIndex)) {
+        return homeBase(honeyPosition, homeBases, hostAddress)
+      } else {
+        w.addInformationObject(baseIndex, Base)
+        self ! CellChange(baseIndex, w.get(baseIndex).get)
+        return (Some(baseIndex), homeBases + (hostAddress -> baseIndex))
+      }
+    }
+    (None, homeBases)
+  }
 
   receiveBuilder += {
     case RegisterWithRandomIndex(parentIndex) ⇒
@@ -622,25 +636,34 @@ trait PaidAgentRegisterHandling {
         }
       }
 
-    case RegisterWithDefaultIndex(parentIndex) ⇒
-      defaultPosition match {
-        case World.RandomIndex ⇒
-          self forward RegisterWithRandomIndex(parentIndex)
-        case index: Index ⇒
-          world map (w ⇒ {
-            val agentStates = AgentStates(id = AgentID(sender.hashCode()), position = index, owner = sender.path.address)
-            agents = agents + (sender.path -> agentStates)
-            amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + spawnPrice))
-            self ! AgentStateChange(agents(sender.path))
-            self.tell(RequestUpdate, sender)
-          })
+    case reg @ RegisterWithDefaultIndex(parentIndex) ⇒
+      if (homeBases.contains(sender.path.address)) {
+        val index = homeBases(sender.path.address)
+        world map (w ⇒ {
+          val agentStates = AgentStates(id = AgentID(sender.hashCode()), position = index, owner = sender.path.address)
+          agents = agents + (sender.path -> agentStates)
+          amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + spawnPrice))
+          self ! AgentStateChange(agents(sender.path))
+          self.tell(RequestUpdate, sender)
+        })
+      } else {
+        for {
+          hp ← honeyPosition
+        } {
+          val newBase = homeBase(hp, homeBases, sender.path.address)
+          homeBases = newBase._2
+          self.tell(reg, sender)
+        }
       }
+
   }
 }
 
 trait SimulationManagerHandling {
   comp: ComposableSimulation ⇒
+
   import SimulationManager._
+
   receiveBuilder += {
     case SimulationRequest ⇒
       sender ! SimulationResponse
@@ -648,12 +671,14 @@ trait SimulationManagerHandling {
 }
 
 object StopTimer {
+
   case object StopSimulation
-  case object CheckStopCondition
+
 }
 
 trait StopTimer {
   comp: ComposableSimulation with PaidService.PaidService[Any, Float] ⇒
+
   import StopTimer._
 
   val stopTime = currentConfig.getInt("org.amcgala.agent.simulation.stop-timer").minute
@@ -666,11 +691,6 @@ trait StopTimer {
       context.stop(self)
 
   }
-}
-
-trait BaseHandling {
-  comp: ComposableSimulation ⇒
-  var bases = Map.empty[Address, Index]
 }
 
 trait PayloadHandling {
@@ -698,8 +718,10 @@ trait IdleHandling {
   }
 }
 
+// TODO Sollte nicht hier sein
 case object Honey extends Payload
 
+// TODO Sollte nicht hier sein
 case object Base extends InformationObject
 
 class DefaultSimulation extends ComposableSimulation

@@ -183,7 +183,7 @@ public class SoftwareRenderer implements Renderer {
         });
 
         frame.setBackground(framework.getActiveScene().getBackground().toAWTColor());
-        frame.setUndecorated(false);
+        frame.setUndecorated(true);
         frame.setLocation(150, 80);
         frame.setVisible(true);
         frame.createBufferStrategy(2);
