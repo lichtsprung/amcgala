@@ -56,11 +56,10 @@ object Simulation {
       * @return die [[org.amcgala.agent.World.JCell]]
       */
     implicit def cell2JCell(cell: Cell): JCell = {
-      JCell(cell.value, new util.HashMap[Pheromone, Float](), cell.informationObjects, cell.payloadObjects)
+      JCell(cell.value, cell.pheromones, cell.informationObjects, cell.payloadObjects, cell.agents)
     }
 
     implicit def cellWI2JCellWI(cell: CellWithIndex): JCellWithIndex = {
-
       JCellWithIndex(cell.index, cell2JCell(cell.cell))
     }
   }
@@ -235,6 +234,8 @@ trait ComposableSimulation extends Actor {
       context.become(receive)
   }
 
+  def agentAt(index: Index): Map[ActorPath, AgentStates] = agents.filter(p ⇒ p._2.position == index)
+
   final def receive = receiveBuilder.result()
 }
 
@@ -377,21 +378,23 @@ trait UpdateHandling {
 
         agents map {
           case (ref, currentState) ⇒
+            import Simulation.Implicits._
             val neighbourCells = w.neighbours(currentState.position)
             val javaNeighbours = new util.HashMap[Index, JCellWithIndex]()
-            import Simulation.Implicits.cellWI2JCellWI
+
             neighbourCells foreach {
               entry ⇒
-                javaNeighbours.put(entry._1, entry._2)
+                val nAgents = agentAt(entry._2.index)
+                javaNeighbours.put(entry._1, JCellWithIndex(entry._2.index, JCell(entry._2.cell.value, entry._2.cell.pheromones, entry._2.cell.informationObjects, entry._2.cell.payloadObjects, nAgents.values.toList)))
             }
 
-            import Simulation.Implicits.cell2JCell
             context.actorSelection(ref) ! SimulationUpdate(currentState.position, w.get(currentState.position).get, currentState, javaNeighbours)
         }
 
       })
 
     case RequestUpdate ⇒
+      import Simulation.Implicits._
       if (!pushMode) {
         for {
           w ← world
@@ -399,13 +402,13 @@ trait UpdateHandling {
         } {
           val neighbourCells = w.neighbours(currentState.position)
           val javaNeighbours = new util.HashMap[Index, JCellWithIndex]()
-          import Simulation.Implicits.cellWI2JCellWI
+
           neighbourCells foreach {
             entry ⇒
-              javaNeighbours.put(entry._1, entry._2)
+              val nAgents = agentAt(entry._2.index)
+              javaNeighbours.put(entry._1, JCellWithIndex(entry._2.index, JCell(entry._2.cell.value, entry._2.cell.pheromones, entry._2.cell.informationObjects, entry._2.cell.payloadObjects, nAgents.values.toList)))
           }
 
-          import Simulation.Implicits.cell2JCell
           sender ! SimulationUpdate(currentState.position, w.get(currentState.position).get, currentState, javaNeighbours)
         }
       }
@@ -655,8 +658,36 @@ trait PaidAgentRegisterHandling {
           self.tell(reg, sender)
         }
       }
+  }
+}
+
+trait PaidAgentAttackHandling {
+  comp: ComposableSimulation with PaidService[Any, Float] with AgentDeathHandling ⇒
+
+  val attackPrice = 20
+
+  setPrice(Attack -> attackPrice)
+
+  receiveBuilder += {
+    case Attack(index) ⇒
+      for {
+        agent ← agents.get(sender.path)
+        w ← world
+      } {
+        if (w.neighbours(agent.position).values.exists(c ⇒ c.index == index)) {
+          amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + attackPrice))
+          for {
+            a ← agentAt(index)
+          } {
+            context.actorSelection(a._1) ! PoisonPill
+          }
+        } else {
+          println(s"Illegal target index!")
+        }
+      }
 
   }
+
 }
 
 trait SimulationManagerHandling {
@@ -734,4 +765,4 @@ class CompetitionSimulation extends ComposableSimulation
   with StateLoggerHandling with PaidService[Any, Float] with PaidAgentMoveHandling
   with AgentDeathHandling with PaidInformationObjectHandling with UpdateHandling
   with PaidAgentRegisterHandling with SimulationManagerHandling with PayloadHandling with StopTimer
-  with IdleHandling
+  with IdleHandling with PaidAgentAttackHandling

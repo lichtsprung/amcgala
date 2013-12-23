@@ -1,6 +1,6 @@
 package org.amcgala.agent
 
-import org.amcgala.agent.Agent.{ Payload, Pheromone }
+import org.amcgala.agent.Agent.{ AgentStates, Payload, Pheromone }
 import com.typesafe.config.Config
 import java.util
 import scala.util.Random
@@ -9,6 +9,7 @@ import org.amcgala.agent.World.CellWithIndex
 import org.amcgala.agent.World.Index
 import org.amcgala.agent.World.Cell
 import scala.collection.JavaConversions._
+import akka.actor.ActorPath
 
 object World {
 
@@ -25,12 +26,14 @@ object World {
   case class Cell(value: Float,
                   pheromones: PheromoneMap = Map.empty[Pheromone, Float],
                   informationObjects: List[InformationObject] = List.empty[InformationObject],
-                  payloadObjects: List[Payload] = List.empty[Payload]) extends Message
+                  payloadObjects: List[Payload] = List.empty[Payload],
+                  agents: List[AgentStates] = List.empty[AgentStates]) extends Message
 
   case class JCell(value: Float,
                    pheromones: util.Map[Pheromone, Float] = new util.HashMap[Pheromone, Float](),
                    informationObjects: util.List[InformationObject] = new util.ArrayList[InformationObject](),
-                   payloadObjects: util.List[Payload] = new util.ArrayList[Payload]()) extends Message
+                   payloadObjects: util.List[Payload] = new util.ArrayList[Payload](),
+                   agents: util.List[AgentStates] = new util.ArrayList[AgentStates]()) extends Message
 
   case class NeighbourCellWithIndex(relativeIndex: Index, absoluteIndex: Index, cell: Cell) extends Message
 

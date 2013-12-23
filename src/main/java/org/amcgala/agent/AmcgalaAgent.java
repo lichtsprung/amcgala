@@ -29,7 +29,9 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     private boolean localMode = getContext().system().settings().config().getBoolean("org.amcgala.agent.simulation.local-mode");
 
-    private final String simulationManagerPath = localMode ? getContext().system().settings().config().getString("org.amcgala.agent.simulation.local-address") : getContext().system().settings().config().getString("org.amcgala.agent.simulationManager.remote-address");
+    private final String simulationManagerPath = localMode ?
+            getContext().system().settings().config().getString("org.amcgala.agent.simulation.local-address") :
+            getContext().system().settings().config().getString("org.amcgala.agent.simulation.remote-address");
 
 
     private final ActorSelection simulationManager = getContext().actorSelection(simulationManagerPath);
@@ -38,7 +40,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
     private final Cancellable waitTask = getContext().system().scheduler().scheduleOnce(new FiniteDuration(1, TimeUnit.SECONDS), new Runnable() {
         @Override
         public void run() {
-            simulation.tell(new Simulation.RegisterWithDefaultIndex(new World.Index(0,0)), getSelf());
+            simulation.tell(new Simulation.RegisterWithDefaultIndex(new World.Index(0, 0)), getSelf());
             getContext().become(updateHandling);
         }
     }, getContext().system().dispatcher());
@@ -102,6 +104,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     @Override
     public void postStop() {
+        System.out.println("Got killed");
         tellSimulation(AgentMessages.Death$.MODULE$);
     }
 
@@ -158,7 +161,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
      * @param y die y-Koordinate
      */
     protected void spawnAt(int x, int y) {
-        getSelf().tell(new AgentMessages.SpawnAt(new World.Index(x, y), new World.Index(0,0)), getSelf());
+        getSelf().tell(new AgentMessages.SpawnAt(new World.Index(x, y), new World.Index(0, 0)), getSelf());
     }
 
     /**
@@ -171,8 +174,48 @@ public abstract class AmcgalaAgent extends UntypedActor {
         return update.neighbours().values().toArray(new World.JCellWithIndex[1])[random.nextInt(update.neighbours().size())];
     }
 
+    /**
+     * Gibt den Nachbarn einer Zelle zurueck.
+     *
+     * @param direction die Richtung des Nachbarn
+     * @param update    die Update Informationen
+     * @return die Nachbarzelle
+     */
     protected World.JCellWithIndex getNeighbour(Direction direction, Simulation.SimulationUpdate update) {
         return update.neighbours().get(direction.relativeIndex());
+    }
+
+    /**
+     * Prueft, ob sich auf einer Zelle ein gegnerischer Agent aufhaelt.
+     *
+     * @param cell die Zelle, die geprueft werden soll
+     * @return true, wenn ein Gegner gefunden wurde
+     */
+    protected boolean checkEnemy(World.JCellWithIndex cell) {
+        if (cell.cell().agents().size() == 0) {
+            return false;
+        }
+
+        boolean e = false;
+        for (Agent.AgentStates a : cell.cell().agents()) {
+            if (!a.owner().equals(getSelf().path().address())) {
+                e = true;
+            }
+        }
+
+        return e;
+    }
+
+
+    /**
+     * Greift ein benachbartes Feld an.
+     *
+     * @param index Absolute Index der Zelle, die angegriffen werden soll
+     * @return die Attack Message an die Simulation
+     */
+    protected AgentMessages.AgentMessage attackCell(World.Index index) {
+        requestUpdate();
+        return new AgentMessages.Attack(index);
     }
 
 
@@ -308,15 +351,31 @@ public abstract class AmcgalaAgent extends UntypedActor {
         }, getContext().system().dispatcher());
     }
 
+    /**
+     * Schickt eine beliebige Nachricht der Simulation.
+     *
+     * @param message die Nachricht, die der Simulation geschickt werden soll
+     */
     protected void tellSimulation(AgentMessages.AgentMessage message) {
         simulation.tell(message, getSelf());
     }
 
+    /**
+     * Sendet der Simulation eine Idle Message.
+     *
+     * @return die Idle Nachricht
+     */
     protected AgentMessages.AgentMessage idle() {
         requestUpdate();
         return AgentMessages.Idle$.MODULE$;
     }
 
+    /**
+     * Sendet der Simulation eine Nachricht, die ein Payload Objekt in das Inventar des Agenten legt.
+     *
+     * @param payload das Payload Objekt, das in das Inventar abgelegt werden soll
+     * @return die TakePayload Message an die Simulation
+     */
     protected AgentMessages.AgentMessage takePayload(Agent.Payload payload) {
         requestUpdate();
         return new AgentMessages.TakePayload(payload);
