@@ -176,7 +176,7 @@ object Simulation {
     * Gibt die [[akka.actor.Props]] Instanz zurück, die zur Erstellung eines neuen Simulation Actors benötigt wird
     * @return die Props
     */
-  private[agent] def props(): Props = Props(new CompetitionSimulation())
+  private[agent] def props(): Props = Props(new DefaultSimulation())
 
 }
 
@@ -443,9 +443,10 @@ trait AgentRegisterHandling {
       }
 
     case RegisterWithDefaultIndex(parentIndex) ⇒
+      println(defaultPosition)
       defaultPosition match {
         case World.RandomIndex ⇒
-          self forward RegisterWithRandomIndex
+          self forward RegisterWithRandomIndex(parentIndex)
         case index: Index ⇒
           world map (w ⇒ {
             val agentStates = AgentStates(id = AgentID(sender.hashCode()), position = index, owner = sender.path.address)
@@ -571,7 +572,7 @@ trait PaidInformationObjectHandling {
 
 }
 
-trait PaidAgentRegisterHandling {
+trait HoneyCompetitionAgentRegisterHandling {
   comp: ComposableSimulation with PaidService[Any, Float] ⇒
 
   val spawnPrice = 20
@@ -705,6 +706,8 @@ object StopTimer {
 
   case object StopSimulation
 
+  case class SimulationResults(results: Map[Address, Float])
+
 }
 
 trait StopTimer {
@@ -718,7 +721,7 @@ trait StopTimer {
 
   receiveBuilder += {
     case StopSimulation ⇒
-      println(s"Score: ${amounts.head._2}")
+      context.parent ! SimulationResults(amounts)
       context.stop(self)
 
   }
@@ -761,8 +764,3 @@ class DefaultSimulation extends ComposableSimulation
   with InformationObjectHandling with UpdateHandling
   with AgentRegisterHandling with SimulationManagerHandling with IdleHandling
 
-class CompetitionSimulation extends ComposableSimulation
-  with StateLoggerHandling with PaidService[Any, Float] with PaidAgentMoveHandling
-  with AgentDeathHandling with PaidInformationObjectHandling with UpdateHandling
-  with PaidAgentRegisterHandling with SimulationManagerHandling with PayloadHandling with StopTimer
-  with IdleHandling with PaidAgentAttackHandling

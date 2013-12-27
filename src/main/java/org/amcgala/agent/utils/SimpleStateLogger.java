@@ -10,7 +10,6 @@ import org.amcgala.agent.StateLoggerAgent;
 import org.amcgala.agent.World;
 import org.amcgala.math.Vertex3f;
 import org.amcgala.shape.Rectangle;
-import sun.management.resources.agent;
 
 import java.util.HashMap;
 import java.util.Map;

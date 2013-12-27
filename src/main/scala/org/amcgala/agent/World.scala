@@ -19,18 +19,16 @@ object World {
 
   case object Visited extends InformationObject
 
-  type PheromoneMap = Map[Pheromone, Float]
-
   case class WorldInfo(width: Int, height: Int, cells: java.util.List[(Index, Cell)])
 
   case class Cell(value: Float,
-                  pheromones: PheromoneMap = Map.empty[Pheromone, Float],
+                  pheromones: List[Pheromone] = List.empty[Pheromone],
                   informationObjects: List[InformationObject] = List.empty[InformationObject],
                   payloadObjects: List[Payload] = List.empty[Payload],
                   agents: List[AgentStates] = List.empty[AgentStates]) extends Message
 
   case class JCell(value: Float,
-                   pheromones: util.Map[Pheromone, Float] = new util.HashMap[Pheromone, Float](),
+                   pheromones: util.List[Pheromone] = new util.ArrayList[Pheromone](),
                    informationObjects: util.List[InformationObject] = new util.ArrayList[InformationObject](),
                    payloadObjects: util.List[Payload] = new util.ArrayList[Payload](),
                    agents: util.List[AgentStates] = new util.ArrayList[AgentStates]()) extends Message
@@ -103,8 +101,7 @@ trait World {
 
   def addPheromone(index: Index, pheromone: Pheromone) = {
     val c = field(index)
-    val nv = math.min(1f, pheromone.strength + c.pheromones.getOrElse(pheromone, 0.0f))
-    val pheromones = c.pheromones + (pheromone -> nv)
+    val pheromones = pheromone :: c.pheromones
     field = field + (index -> Cell(c.value, pheromones, c.informationObjects, c.payloadObjects))
   }
 
@@ -131,36 +128,37 @@ trait World {
   def worldInfo: WorldInfo = WorldInfo(width, height, field.toList)
 
   def update(): Unit = {
-    var newField = Map.empty[Index, Cell]
-
-    field map {
-      e ⇒
-        val n = neighbours(e._1) // neighbours of current cell
-        var currentCellPheromones = newField.getOrElse(e._1, Cell(0, Map.empty[Pheromone, Float])).pheromones // already updated pheromone values
-        val currentCellValue = field(e._1).value // value of current cell
-
-        e._2.pheromones map {
-          p ⇒
-            val decay = p._2 * p._1.decayRate // new value of this pheromone after decay
-            val sum = decay + currentCellPheromones.getOrElse(p._1, 0.0f) // sum of values (this cell + this pheromone spread from neighbour cells)
-            if (sum > 0.009) {
-              currentCellPheromones = currentCellPheromones + (p._1 -> math.min(1f, sum))
-            }
-            val spread = p._2 * p._1.spreadRate
-            n map {
-              neighbour ⇒
-                val neighbourCell = newField.getOrElse(e._1, Cell(field(neighbour._1).value, Map.empty[Pheromone, Float]))
-                var neighbourPheromones = neighbourCell.pheromones
-                val sum = spread + neighbourPheromones.getOrElse(p._1, 0.0f)
-                if (sum > 0.009) {
-                  neighbourPheromones = neighbourPheromones + (p._1 -> math.min(1f, sum))
-                }
-                newField = newField + (neighbour._1 -> Cell(field(neighbour._1).value, neighbourPheromones))
-            }
-        }
-        newField = newField + (e._1 -> Cell(currentCellValue, currentCellPheromones))
-    }
-    field = newField
+    // TODO Pheromone List!
+    //    var newField = Map.empty[Index, Cell]
+    //
+    //    field map {
+    //      e ⇒
+    //        val n = neighbours(e._1) // neighbours of current cell
+    //        var currentCellPheromones = newField.getOrElse(e._1, Cell(0, List.empty[Pheromone])).pheromones // already updated pheromone values
+    //        val currentCellValue = field(e._1).value // value of current cell
+    //
+    //        e._2.pheromones map {
+    //          p ⇒
+    //            val decay = p._2 * p._1.decayRate // new value of this pheromone after decay
+    //            val sum = decay + currentCellPheromones.getOrElse(p._1, 0.0f) // sum of values (this cell + this pheromone spread from neighbour cells)
+    //            if (sum > 0.009) {
+    //              currentCellPheromones = currentCellPheromones + (p._1 -> math.min(1f, sum))
+    //            }
+    //            val spread = p._2 * p._1.spreadRate
+    //            n map {
+    //              neighbour ⇒
+    //                val neighbourCell = newField.getOrElse(e._1, Cell(field(neighbour._1).value, Map.empty[Pheromone, Float]))
+    //                var neighbourPheromones = neighbourCell.pheromones
+    //                val sum = spread + neighbourPheromones.getOrElse(p._1, 0.0f)
+    //                if (sum > 0.009) {
+    //                  neighbourPheromones = neighbourPheromones + (p._1 -> math.min(1f, sum))
+    //                }
+    //                newField = newField + (neighbour._1 -> Cell(field(neighbour._1).value, neighbourPheromones))
+    //            }
+    //        }
+    //        newField = newField + (e._1 -> Cell(currentCellValue, currentCellPheromones))
+    //    }
+    //    field = newField
   }
 }
 

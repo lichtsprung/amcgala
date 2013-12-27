@@ -34,7 +34,7 @@ class PolygonWorldMap extends Initialiser {
 
     for (x ← 0 until width) {
       for (y ← 0 until height) {
-        field = field + (Index(x, y) -> Cell(0, Map.empty[Pheromone, Float]))
+        field = field + (Index(x, y) -> Cell(0))
       }
     }
 

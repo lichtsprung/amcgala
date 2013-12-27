@@ -37,7 +37,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
     private final ActorSelection simulationManager = getContext().actorSelection(simulationManagerPath);
     private ActorRef simulation = ActorRef.noSender();
 
-    private final Cancellable waitTask = getContext().system().scheduler().scheduleOnce(new FiniteDuration(1, TimeUnit.SECONDS), new Runnable() {
+    private final Cancellable waitTask = getContext().system().scheduler().scheduleOnce(new FiniteDuration(5, TimeUnit.SECONDS), new Runnable() {
         @Override
         public void run() {
             simulation.tell(new Simulation.RegisterWithDefaultIndex(new World.Index(0, 0)), getSelf());
