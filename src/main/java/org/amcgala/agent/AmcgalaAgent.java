@@ -74,6 +74,9 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
                 AgentMessages.AgentMessage decision = onUpdate(update);
                 simulation.tell(decision, getSelf());
+            }else if (message instanceof AgentMessages.NextRound$) {
+                System.out.println("Next round...poisoning myself");
+                getSelf().tell(PoisonPill$.MODULE$, getSelf());
             } else {
                 unhandled(message);
             }

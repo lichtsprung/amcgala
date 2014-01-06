@@ -65,4 +65,6 @@ object AgentMessages {
   case object Failure extends AgentMessage
 
   case class Attack(index: Index) extends AgentMessage
+
+  case object NextRound extends AgentMessage
 }

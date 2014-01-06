@@ -183,7 +183,7 @@ object Simulation {
 trait ComposableSimulation extends Actor {
   private val defaultConfig = ConfigFactory.load("amcgala")
 
-  protected var agents = Map.empty[ActorPath, AgentStates]
+  protected var agents = Map.empty[ActorRef, AgentStates]
 
   protected var world: Option[World] = None
 
@@ -234,7 +234,7 @@ trait ComposableSimulation extends Actor {
       context.become(receive)
   }
 
-  def agentAt(index: Index): Map[ActorPath, AgentStates] = agents.filter(p ⇒ p._2.position == index)
+  def agentAt(index: Index): Map[ActorRef, AgentStates] = agents.filter(p ⇒ p._2.position == index)
 
   final def receive = receiveBuilder.result()
 }
@@ -272,7 +272,7 @@ trait InformationObjectHandling {
     case PutInformationObjectTo(index, informationObject) ⇒
       for {
         w ← world
-        agent ← agents.get(sender.path)
+        agent ← agents.get(sender)
       } {
         if (constraintsChecker.checkInformationObject(agent, informationObject)) {
           w.addInformationObject(index, informationObject)
@@ -282,7 +282,7 @@ trait InformationObjectHandling {
     case PutInformationObject(informationObject) ⇒
       for {
         w ← world
-        agent ← agents.get(sender.path)
+        agent ← agents.get(sender)
       } {
         if (constraintsChecker.checkInformationObject(agent, informationObject)) {
           w.addInformationObject(agent.position, informationObject)
@@ -299,7 +299,7 @@ trait CellChangeHandling {
     case ChangeValue(value) ⇒
       for {
         w ← world
-        agent ← agents.get(sender.path)
+        agent ← agents.get(sender)
         cell ← w.get(agent.position)
         nCell ← w.get(agent.position)
       } {
@@ -317,10 +317,10 @@ trait AgentDeathHandling {
   receiveBuilder += {
     case Death ⇒
       for {
-        agent ← agents.get(sender.path)
+        agent ← agents.get(sender)
       } {
         self ! AgentDeath(agent)
-        agents = agents - sender.path
+        agents = agents - sender
         sender ! PoisonPill
       }
   }
@@ -333,13 +333,13 @@ trait AgentMoveHandling {
     case MoveTo(index) ⇒
       for {
         w ← world
-        agent ← agents.get(sender.path)
+        agent ← agents.get(sender)
         oldCell ← w.get(agent.position)
         nCell ← w.get(index)
       } {
         if (constraintsChecker.checkMove(sender, CellWithIndex(agent.position, oldCell), CellWithIndex(index, nCell), agents.values.toList)) {
           val agentStates = AgentStates(id = AgentID(sender.hashCode()), position = index, owner = sender.path.address)
-          agents = agents + (sender.path -> agentStates)
+          agents = agents + (sender -> agentStates)
           self ! AgentStateChange(agent)
         }
       }
@@ -355,7 +355,7 @@ trait PheromoneHandling {
     case ReleasePheromone(pheromone) ⇒
       for {
         w ← world
-        agent ← agents.get(sender.path)
+        agent ← agents.get(sender)
       } {
         if (pheromoneMode) {
           if (constraintsChecker.checkPheromone(agent, pheromone)) {
@@ -371,6 +371,7 @@ trait UpdateHandling {
 
   receiveBuilder += {
     case Update ⇒
+      import Simulation.Implicits._
       world map (w ⇒ {
         if (currentConfig.getBoolean("org.amcgala.agent.simulation.world.pheromones")) {
           w.update()
@@ -378,17 +379,16 @@ trait UpdateHandling {
 
         agents map {
           case (ref, currentState) ⇒
-            import Simulation.Implicits._
+
             val neighbourCells = w.neighbours(currentState.position)
             val javaNeighbours = new util.HashMap[Index, JCellWithIndex]()
-
             neighbourCells foreach {
               entry ⇒
                 val nAgents = agentAt(entry._2.index)
                 javaNeighbours.put(entry._1, JCellWithIndex(entry._2.index, JCell(entry._2.cell.value, entry._2.cell.pheromones, entry._2.cell.informationObjects, entry._2.cell.payloadObjects, nAgents.values.toList)))
             }
 
-            context.actorSelection(ref) ! SimulationUpdate(currentState.position, w.get(currentState.position).get, currentState, javaNeighbours)
+            ref ! SimulationUpdate(currentState.position, w.get(currentState.position).get, currentState, javaNeighbours)
         }
 
       })
@@ -398,7 +398,7 @@ trait UpdateHandling {
       if (!pushMode) {
         for {
           w ← world
-          currentState ← agents.get(sender.path)
+          currentState ← agents.get(sender)
         } {
           val neighbourCells = w.neighbours(currentState.position)
           val javaNeighbours = new util.HashMap[Index, JCellWithIndex]()
@@ -415,6 +415,11 @@ trait UpdateHandling {
   }
 }
 
+trait ThreeStrikesPolicy {
+  var strikes = Map[ActorRef, Int]()
+
+}
+
 trait AgentRegisterHandling {
   comp: ComposableSimulation ⇒
 
@@ -423,8 +428,8 @@ trait AgentRegisterHandling {
       world map (w ⇒ {
         val randomCell = w.randomCell
         val agentStates = AgentStates(id = AgentID(sender.hashCode()), position = randomCell.index, owner = sender.path.address)
-        agents = agents + (sender.path -> agentStates)
-        self ! AgentStateChange(agents(sender.path))
+        agents = agents + (sender -> agentStates)
+        self ! AgentStateChange(agents(sender))
         self.tell(RequestUpdate, sender)
       })
 
@@ -434,8 +439,8 @@ trait AgentRegisterHandling {
       } {
         if (!agents.exists(entry ⇒ entry._2.position == index)) {
           val agentStates = AgentStates(id = AgentID(sender.hashCode()), position = index, owner = sender.path.address)
-          agents = agents + (sender.path -> agentStates)
-          self ! AgentStateChange(agents(sender.path))
+          agents = agents + (sender -> agentStates)
+          self ! AgentStateChange(agents(sender))
           self.tell(RequestUpdate, sender)
         } else {
           sender ! SpawnRejected
@@ -450,8 +455,8 @@ trait AgentRegisterHandling {
         case index: Index ⇒
           world map (w ⇒ {
             val agentStates = AgentStates(id = AgentID(sender.hashCode()), position = index, owner = sender.path.address)
-            agents = agents + (sender.path -> agentStates)
-            self ! AgentStateChange(agents(sender.path))
+            agents = agents + (sender -> agentStates)
+            self ! AgentStateChange(agents(sender))
             self.tell(RequestUpdate, sender)
           })
       }
@@ -491,7 +496,7 @@ trait PaidAgentMoveHandling {
     case MoveTo(index) ⇒
       for {
         w ← world
-        agent ← agents.get(sender.path)
+        agent ← agents.get(sender)
         ncell ← w.get(index)
         oldCell ← w.get(agent.position)
       } {
@@ -504,7 +509,7 @@ trait PaidAgentMoveHandling {
             payloads = Payloads(payloads.values.filterNot(p ⇒ p == Honey).toSet)
           }
           val agentStates = AgentStates(agent.id, index, agent.power, agent.owner, agent.life, payloads)
-          agents = agents + (sender.path -> agentStates)
+          agents = agents + (sender -> agentStates)
           self ! AgentStateChange(agent)
         }
       }
@@ -521,7 +526,7 @@ trait PaidCellChangeHandling {
     case ChangeValue(value) ⇒
       for {
         w ← world
-        agent ← agents.get(sender.path)
+        agent ← agents.get(sender)
         cell ← w.get(agent.position)
         nCell ← w.get(agent.position)
       } {
@@ -548,7 +553,7 @@ trait PaidInformationObjectHandling {
     case PutInformationObjectTo(index, informationObject) ⇒
       for {
         w ← world
-        agent ← agents.get(sender.path)
+        agent ← agents.get(sender)
       } {
         if (constraintsChecker.checkInformationObject(agent, informationObject)) {
           w.addInformationObject(index, informationObject)
@@ -560,7 +565,7 @@ trait PaidInformationObjectHandling {
     case PutInformationObject(informationObject) ⇒
       for {
         w ← world
-        agent ← agents.get(sender.path)
+        agent ← agents.get(sender)
       } {
         if (constraintsChecker.checkInformationObject(agent, informationObject)) {
           w.addInformationObject(agent.position, informationObject)
@@ -616,10 +621,10 @@ trait HoneyCompetitionAgentRegisterHandling {
       world map (w ⇒ {
         val randomCell = w.randomCell
         val agentStates = AgentStates(id = AgentID(sender.hashCode()), position = randomCell.index, owner = sender.path.address)
-        agents = agents + (sender.path -> agentStates)
+        agents = agents + (sender -> agentStates)
         val distance = math.abs(parentIndex.x - randomCell.index.x) + math.abs(parentIndex.y - randomCell.index.y)
         amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + distance * spawnPrice))
-        self ! AgentStateChange(agents(sender.path))
+        self ! AgentStateChange(agents(sender))
         self.tell(RequestUpdate, sender)
       })
 
@@ -629,11 +634,11 @@ trait HoneyCompetitionAgentRegisterHandling {
       } {
         if (!agents.exists(entry ⇒ entry._2.position == index)) {
           val agentStates = AgentStates(id = AgentID(sender.hashCode()), position = index, owner = sender.path.address)
-          agents = agents + (sender.path -> agentStates)
+          agents = agents + (sender -> agentStates)
           val distance = math.abs(parentIndex.x - index.x) + math.abs(parentIndex.y - index.y)
           amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + distance * spawnPrice))
 
-          self ! AgentStateChange(agents(sender.path))
+          self ! AgentStateChange(agents(sender))
           self.tell(RequestUpdate, sender)
         } else {
           sender ! SpawnRejected
@@ -645,9 +650,9 @@ trait HoneyCompetitionAgentRegisterHandling {
         val index = homeBases(sender.path.address)
         world map (w ⇒ {
           val agentStates = AgentStates(id = AgentID(sender.hashCode()), position = index, owner = sender.path.address)
-          agents = agents + (sender.path -> agentStates)
+          agents = agents + (sender -> agentStates)
           amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + spawnPrice))
-          self ! AgentStateChange(agents(sender.path))
+          self ! AgentStateChange(agents(sender))
           self.tell(RequestUpdate, sender)
         })
       } else {
@@ -672,7 +677,7 @@ trait PaidAgentAttackHandling {
   receiveBuilder += {
     case Attack(index) ⇒
       for {
-        agent ← agents.get(sender.path)
+        agent ← agents.get(sender)
         w ← world
       } {
         if (w.neighbours(agent.position).values.exists(c ⇒ c.index == index)) {
@@ -680,7 +685,7 @@ trait PaidAgentAttackHandling {
           for {
             a ← agentAt(index)
           } {
-            context.actorSelection(a._1) ! PoisonPill
+            a._1 ! PoisonPill
           }
         } else {
           println(s"Illegal target index!")
@@ -734,11 +739,11 @@ trait PayloadHandling {
     case TakePayload(payload) ⇒
       for {
         w ← world
-        state ← agents.get(sender.path)
+        state ← agents.get(sender)
         cell ← w.get(state.position)
       } {
         if (cell.payloadObjects.contains(payload)) {
-          agents = agents + (sender.path -> AgentStates(state.id, state.position, state.power, state.owner, state.life, Payloads(state.payloads.values + payload)))
+          agents = agents + (sender -> AgentStates(state.id, state.position, state.power, state.owner, state.life, Payloads(state.payloads.values + payload)))
         }
       }
   }

@@ -2,11 +2,13 @@ package org.amcgala.agent
 
 import akka.actor._
 import com.typesafe.config.{ ConfigFactory, Config }
-import org.amcgala.agent.SimulationManager.{ SimulationCreation, SimulationRequest, SimulationResponse }
+import org.amcgala.agent.SimulationManager.{ SimulationCreation, SimulationRequest }
 import org.amcgala.agent.CompetitionManager.{ Application, StartCompetition }
-import scala.Application
 import scala.Some
 import java.lang.Class
+import org.amcgala.agent.CompetitionClient.EndRound
+import org.amcgala.agent.AgentMessages.NextRound
+import scala.util.Sorting
 
 object SimulationManager {
 
@@ -77,7 +79,7 @@ class CompetitionManager extends Actor {
     case StartCompetition ⇒
       var contestants = applicants.toList
       assert(contestants.size % 2 == 0)
-      simulationCount = contestants.size /2
+      simulationCount = contestants.size / 2
 
       for (i ← 0 until contestants.size / 2) {
 
@@ -101,7 +103,7 @@ class CompetitionManager extends Actor {
       println("done")
 
       print("Starting Competition...")
-      applicants.foreach(a ⇒ a ! StartCompetition)
+      applicants foreach (_ ! StartCompetition)
       println("done")
 
     case SimulationRequest ⇒
@@ -112,15 +114,52 @@ class CompetitionManager extends Actor {
         sim forward SimulationRequest
       }
 
-    case StopTimer.SimulationResults(r) =>
+    case StopTimer.SimulationResults(r) ⇒
+
+      println("Simulation stopped.")
       results = results ++ r
       resultCounter += 1
-      if(resultCounter == simulationCount){
+      if (resultCounter == simulationCount) {
+        println("Ending round")
+
+        println("Killing old simulations")
         context.children foreach (_ ! PoisonPill)
-        // TODO Reset everything and start new round until there are only two agents left
+
+        stashedRequests = List.empty[ActorRef]
+        resultCounter = 0
+        simulationCount = 0
+
+        applicants foreach (_ ! EndRound)
+        val ranking = results.toArray
+        Sorting.quickSort(ranking)(new Ordering[(Address, Float)] {
+          def compare(x: (Address, Float), y: (Address, Float)): Int = math.signum(x._2 - y._2).toInt
+        })
+        ranking foreach (println(_))
+        context become round
+        self ! Start
       }
   }
 
+  def round: Actor.Receive = {
+    case SimulationRequest ⇒
+      println(s"Stashing request from $sender")
+      stashedRequests = sender :: stashedRequests
+    case SimulationCreation(c) ⇒
+      config = c
+    case Start ⇒
+      val simCount = applicants.size / 2
+      if (simCount < 1) {
+        println(s"And the winner is: ${applicants.head}")
+      } else {
+        if (applicants.size % 2 != 0) {
+          println("Ungerade Anzahl von Teilnehmern. Einer vom Wettbewerb ausgenommen.")
+          applicants = applicants - applicants.last
+        }
+        println("Switching to competition mode...")
+        context become competitionMode
+        self ! StartCompetition
+      }
+  }
 
   def receive: Actor.Receive = {
     case SimulationRequest ⇒
@@ -156,22 +195,53 @@ class CompetitionManager extends Actor {
 }
 
 object CompetitionClient {
-  def props(agentCls: Class[_], count: Int, managerPath: String) = Props(new CompetitionClient(agentCls, count, managerPath: String))
+  def props(agents: List[(Class[_], Int)], managerPath: String) = Props(new CompetitionClient(agents, managerPath: String))
+
+  case object EndRound
+
 }
 
-class CompetitionClient(agentCls: Class[_], count: Int, managerPath: String) extends Actor {
+class CompetitionClient(agents: List[(Class[_], Int)], managerPath: String) extends Actor {
+
+  import CompetitionClient._
 
   val manager = context.actorSelection(managerPath)
+  var firstRound = true
 
   println(s"Sending application to $manager")
   manager ! Application
 
   def receive: Actor.Receive = {
     case StartCompetition ⇒
-      println("Creating competing agents...")
-      for (i ← 0 until count) {
-        context.actorOf(Props(agentCls))
+      if (firstRound) {
+        println("Creating competing agents...")
+        for (agent ← agents) {
+          val count = agent._2
+          val cls = agent._1
+
+          for (i ← 0 until count) {
+            context.actorOf(Props(cls))
+          }
+        }
+      } else {
+        println("Creating competing agents without Statelogger...")
+        for (agent ← agents) {
+          val count = agent._2
+          val cls = agent._1
+
+          if (!cls.getSuperclass.eq(classOf[StateLoggerAgent])) {
+            for (i ← 0 until count) {
+              context.actorOf(Props(cls))
+            }
+          } else {
+            println("Skipping Logger!")
+          }
+        }
       }
+    case EndRound ⇒
+      println("Ending round...")
+      if (firstRound) firstRound = false
+      context.children.foreach(_ ! NextRound)
   }
 }
 
@@ -192,15 +262,17 @@ class CompetitionApp(agentConfig: String) {
   } else {
     managerPath = config.getString("org.amcgala.agent.simulation.remote-address")
   }
-  val lists = config.getAnyRefList("org.amcgala.agent.client.agents").asInstanceOf[java.util.List[java.util.List[String]]]
+  val agents = config.getAnyRefList("org.amcgala.agent.client.agents").asInstanceOf[java.util.List[java.util.List[String]]]
 
   import scala.collection.JavaConversions._
 
-  for (l ← lists) {
+  var a = List.empty[(Class[_], Int)]
+
+  for (l ← agents) {
     try {
       val numberOfAgents: Int = Integer.parseInt(l.get(0))
       val agentClass = ClassLoader.getSystemClassLoader.loadClass(l.get(1))
-      createAgents(numberOfAgents, agentClass)
+      a = (agentClass, numberOfAgents) :: a
     } catch {
       case e: ClassNotFoundException ⇒
         println(s"Class could not be found: ${e.getMessage}")
@@ -208,14 +280,6 @@ class CompetitionApp(agentConfig: String) {
     }
   }
 
-  def createAgents(numberOfAgents: Int, agentClass: Class[_]) = {
-    agentClass.getSuperclass match {
-      case AmcgalaAgentCls ⇒
-        system.actorOf(CompetitionClient.props(agentClass, numberOfAgents, managerPath))
-      case _ ⇒
-        for (i ← 0 until numberOfAgents) {
-          system.actorOf(Props(agentClass))
-        }
-    }
-  }
+  system.actorOf(CompetitionClient.props(a, managerPath))
+
 }

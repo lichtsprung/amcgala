@@ -11,10 +11,9 @@ import org.amcgala.FrameworkMode;
 import scala.Tuple2;
 import scala.concurrent.duration.Duration;
 
-import java.util.concurrent.TimeUnit;
-
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A StateLoggerAgent receives a SimulationUpdate every time something changes in the simulated world. It provides all
@@ -44,7 +43,7 @@ public abstract class StateLoggerAgent extends UntypedActor {
         public void apply(Object message) throws Exception {
             if (message instanceof SimulationManager.SimulationResponse$) {
                 simulation = getSender();
-                simulation.tell(Simulation.RegisterStateLogger$.MODULE$, self());
+                simulation.tell(Simulation.RegisterStateLogger$.MODULE$, getSelf());
                 getContext().become(handleUpdates);
             } else {
                 unhandled(message);
@@ -57,6 +56,7 @@ public abstract class StateLoggerAgent extends UntypedActor {
         @Override
         public void apply(Object message) throws Exception {
             if (message instanceof Simulation.SimulationState) {
+                System.out.println("Received State!");
                 Simulation.SimulationState state = (Simulation.SimulationState) message;
 
                 worldWidth = state.worldInfo().width();
@@ -64,19 +64,25 @@ public abstract class StateLoggerAgent extends UntypedActor {
                 scaleX = framework.getWidth() / worldWidth;
                 scaleY = framework.getHeight() / worldHeight;
 
+                cells.clear();
                 for (Tuple2<World.Index, World.Cell> entry : state.worldInfo().cells()) {
                     cells.put(entry._1(), entry._2());
                 }
-
+                agents.clear();
                 for (Agent.AgentStates as : state.agents()) {
                     agents.put(as.id(), as);
                 }
 
                 onInit();
 
-                getContext().system().scheduler().schedule(Duration.create(200, TimeUnit.MILLISECONDS), Duration.create(200, TimeUnit.MILLISECONDS),
-                        getSelf(), Simulation.Update$.MODULE$, getContext().system().dispatcher(), null);
-
+                getContext().system().scheduler().schedule(
+                        Duration.create(200, TimeUnit.MILLISECONDS),
+                        Duration.create(200, TimeUnit.MILLISECONDS),
+                        getSelf(),
+                        Simulation.Update$.MODULE$,
+                        getContext().system().dispatcher(),
+                        ActorRef.noSender()
+                );
             } else if (message instanceof Simulation.SimulationStateUpdate) {
                 Simulation.SimulationStateUpdate state = (Simulation.SimulationStateUpdate) message;
 
@@ -101,6 +107,12 @@ public abstract class StateLoggerAgent extends UntypedActor {
             } else if (message instanceof Simulation.AgentDeath) {
                 Simulation.AgentDeath death = (Simulation.AgentDeath) message;
                 agents.remove(death.state().id());
+            } else if (message instanceof AgentMessages.NextRound$) {
+                System.out.println("Resetting Statelogger and waiting for new simulation...");
+                onReset();
+                simulation = ActorRef.noSender();
+                simulationManager.tell(SimulationManager.SimulationRequest$.MODULE$, getSelf());
+                getContext().become(waitForSimulation);
             } else {
                 unhandled(message);
             }
@@ -120,17 +132,22 @@ public abstract class StateLoggerAgent extends UntypedActor {
         getContext().become(waitForSimulation);
     }
 
-    /**
-     * To be implemented by concrete UntypedActor, this defines the behavior of the
-     * UntypedActor.
-     */
     @Override
     public void onReceive(Object message) throws Exception {
-
     }
 
+    public void onReset(){}
 
+    /**
+     * Wird waehrend der Instantiierung des Objekts aufgerufen. Kann verwendet werden, um einmal auszufuehrende Logik
+     * (z.B. Initialisierung von Variablen) zu definieren.
+     */
     abstract public void onInit();
 
+    /**
+     * Wird einmal pro Tick aufgerufen.
+     * @param cells Map aller Zellen der darstellbaren Welt
+     * @param agents Map aller in der Welt lebenden Agenten
+     */
     abstract public void onUpdate(Map<World.Index, World.Cell> cells, Map<Agent.AgentID, Agent.AgentStates> agents);
 }
