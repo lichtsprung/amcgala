@@ -133,7 +133,7 @@ class CompetitionManager extends Actor {
         Sorting.quickSort(ranking)(new Ordering[(Address, Float)] {
           def compare(x: (Address, Float), y: (Address, Float)): Int = math.signum(x._2 - y._2).toInt
         })
-        ranking foreach (println(_))
+        applicants = applicants.filterNot(a ⇒ ranking.take(ranking.size / 2).exists(e ⇒ e._1 == a.path.address))
         context become round
         self ! Start
       }
@@ -141,7 +141,6 @@ class CompetitionManager extends Actor {
 
   def round: Actor.Receive = {
     case SimulationRequest ⇒
-      println(s"Stashing request from $sender")
       stashedRequests = sender :: stashedRequests
     case SimulationCreation(c) ⇒
       config = c
@@ -149,6 +148,7 @@ class CompetitionManager extends Actor {
       val simCount = applicants.size / 2
       if (simCount < 1) {
         println(s"And the winner is: ${applicants.head}")
+        context.system.shutdown()
       } else {
         if (applicants.size % 2 != 0) {
           println("Ungerade Anzahl von Teilnehmern. Einer vom Wettbewerb ausgenommen.")
@@ -162,7 +162,6 @@ class CompetitionManager extends Actor {
 
   def receive: Actor.Receive = {
     case SimulationRequest ⇒
-      println(s"Stashing request from $sender")
       stashedRequests = sender :: stashedRequests
     case SimulationCreation(c) ⇒
       config = c
@@ -178,7 +177,7 @@ class CompetitionManager extends Actor {
       if (simCount < 1) {
         println(s"Konnte keine Gegner finden.")
         print(s"Resetting...")
-        applicants = Set.empty[ActorRef]
+        applicants = Set[ActorRef]()
         println("done")
       } else {
         if (applicants.size % 2 != 0) {

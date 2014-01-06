@@ -46,8 +46,12 @@ public abstract class AmcgalaAgent extends UntypedActor {
     private final Cancellable waitTask = getContext().system().scheduler().scheduleOnce(new FiniteDuration(15, TimeUnit.SECONDS), new Runnable() {
         @Override
         public void run() {
-            simulation.tell(new Simulation.RegisterWithDefaultIndex(DNA, new World.Index(0, 0)), getSelf());
-            getContext().become(updateHandling);
+            if (simulation != null) {
+                simulation.tell(new Simulation.RegisterWithDefaultIndex(DNA, new World.Index(0, 0)), getSelf());
+                getContext().become(updateHandling);
+            }else{
+                getContext().stop(getSelf());
+            }
         }
     }, getContext().system().dispatcher());
 
@@ -116,7 +120,9 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     @Override
     public void postStop() {
-        simulation.tell(AgentMessages.Death$.MODULE$, getSelf());
+        if (simulation != null) {
+            simulation.tell(AgentMessages.Death$.MODULE$, getSelf());
+        }
     }
 
     /**
