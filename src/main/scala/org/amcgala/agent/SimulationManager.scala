@@ -107,7 +107,6 @@ class CompetitionManager extends Actor {
       println("done")
 
     case SimulationRequest ⇒
-      println("Received Simulation request...")
       for {
         sim ← simulations.get(sender.path.address)
       } {

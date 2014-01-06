@@ -94,9 +94,11 @@ trait World {
     neighbourCells
   }
 
-  def change(index: Index, newValue: Float) = {
+  def change(index: Index, newValue: Float): Cell = {
     val c = field(index)
-    field = field + (index -> Cell(newValue, c.pheromones))
+    val nCell = Cell(newValue, c.pheromones)
+    field = field + (index -> nCell)
+    nCell
   }
 
   def addPheromone(index: Index, pheromone: Pheromone) = {

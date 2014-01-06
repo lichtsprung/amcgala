@@ -5,15 +5,19 @@ import akka.event.Logging;
 import akka.event.LoggingAdapter;
 import akka.japi.Creator;
 import akka.japi.Procedure;
+import org.lwjgl.Sys;
 import scala.concurrent.duration.FiniteDuration;
 
 import java.util.Random;
+import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
 
 public abstract class AmcgalaAgent extends UntypedActor {
 
     final protected LoggingAdapter log = Logging.getLogger(getContext().system(), this);
+
+    private final static long DNA = System.nanoTime();
 
     protected Random random = new Random(System.nanoTime());
 
@@ -37,10 +41,12 @@ public abstract class AmcgalaAgent extends UntypedActor {
     private final ActorSelection simulationManager = getContext().actorSelection(simulationManagerPath);
     private ActorRef simulation = ActorRef.noSender();
 
-    private final Cancellable waitTask = getContext().system().scheduler().scheduleOnce(new FiniteDuration(5, TimeUnit.SECONDS), new Runnable() {
+    private Stack<Object> stash = new Stack<>();
+
+    private final Cancellable waitTask = getContext().system().scheduler().scheduleOnce(new FiniteDuration(15, TimeUnit.SECONDS), new Runnable() {
         @Override
         public void run() {
-            simulation.tell(new Simulation.RegisterWithDefaultIndex(new World.Index(0, 0)), getSelf());
+            simulation.tell(new Simulation.RegisterWithDefaultIndex(DNA, new World.Index(0, 0)), getSelf());
             getContext().become(updateHandling);
         }
     }, getContext().system().dispatcher());
@@ -49,9 +55,8 @@ public abstract class AmcgalaAgent extends UntypedActor {
         @Override
         public void apply(Object message) throws Exception {
             if (message instanceof AgentMessages.SpawnAt) {
-
                 AgentMessages.SpawnAt spawnMessage = (AgentMessages.SpawnAt) message;
-                simulation.tell(new Simulation.Register(spawnMessage.position(), spawnMessage.parentPosition()), getSelf());
+                simulation.tell(new Simulation.Register(DNA, spawnMessage.position(), spawnMessage.parentPosition()), getSelf());
                 waitTask.cancel();
                 getContext().become(updateHandling);
             } else if (message instanceof AgentMessages.SpawnRejected$) {
@@ -89,8 +94,12 @@ public abstract class AmcgalaAgent extends UntypedActor {
             if (message instanceof SimulationManager.SimulationResponse$) {
                 simulation = getSender();
                 getContext().become(waitForPosition);
+
+                for (Object msg : stash) {
+                    getSelf().tell(msg, ActorRef.noSender());
+                }
             } else {
-                unhandled(message);
+                stash.push(message);
             }
         }
     };
@@ -107,8 +116,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
     @Override
     public void postStop() {
-        System.out.println("Got killed");
-        tellSimulation(AgentMessages.Death$.MODULE$);
+        simulation.tell(AgentMessages.Death$.MODULE$, getSelf());
     }
 
     /**
@@ -201,7 +209,7 @@ public abstract class AmcgalaAgent extends UntypedActor {
 
         boolean e = false;
         for (Agent.AgentStates a : cell.cell().agents()) {
-            if (!a.owner().equals(getSelf().path().address())) {
+            if (a.dna() != DNA) {
                 e = true;
             }
         }
@@ -354,14 +362,6 @@ public abstract class AmcgalaAgent extends UntypedActor {
         }, getContext().system().dispatcher());
     }
 
-    /**
-     * Schickt eine beliebige Nachricht der Simulation.
-     *
-     * @param message die Nachricht, die der Simulation geschickt werden soll
-     */
-    protected void tellSimulation(AgentMessages.AgentMessage message) {
-        simulation.tell(message, getSelf());
-    }
 
     /**
      * Sendet der Simulation eine Idle Message.

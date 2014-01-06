@@ -27,6 +27,7 @@ object Agent {
   case class Payloads(values: Set[Payload])
 
   case class AgentStates(
+    dna: Long,
     id: AgentID,
     position: Index,
     power: Power = Power(0),

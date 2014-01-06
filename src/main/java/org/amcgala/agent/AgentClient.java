@@ -18,13 +18,12 @@ public class AgentClient {
     private ActorSystem system;
 
     public AgentClient(String agentConfiguration) {
-        Config config = ConfigFactory.load().getConfig("client").withFallback(ConfigFactory.load(agentConfiguration).withFallback(ConfigFactory.load("amcgala")));
+        Config config =  ConfigFactory.load().getConfig("client").withFallback(ConfigFactory.load(agentConfiguration).withFallback(ConfigFactory.load("amcgala")));
         boolean localMode = config.getBoolean("org.amcgala.agent.simulation.local-mode");
-        System.out.println(localMode);
         if (localMode) {
             system = ActorSystem.create("Client", config);
-            ActorRef simulationManager = system.actorOf(Props.create(SimulationManager.class), "simulationManager");
-            simulationManager.tell(new SimulationManager.SimulationCreation(ConfigFactory.load(agentConfiguration)), ActorRef.noSender());
+            ActorRef simulationManager = system.actorOf(Props.create(SimulationManager.class), "simulation-manager");
+            simulationManager.tell(new SimulationManager.SimulationCreation(config), ActorRef.noSender());
         }else{
             system = ActorSystem.create("Client", config);
         }

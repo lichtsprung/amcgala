@@ -45,9 +45,8 @@ object AmcgalaAgents extends Build {
     scalaVersion := "2.10.2",
     javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-remote" % "2.3-SNAPSHOT" withSources() withJavadoc(),
-      "com.typesafe.akka" %% "akka-actor" % "2.3-SNAPSHOT" withSources() withJavadoc(),
-      "com.typesafe.akka" %% "akka-testkit" % "2.3-SNAPSHOT" withSources() withJavadoc(),
+      "com.typesafe.akka" %% "akka-remote" % "2.3-20131127-231000" withSources() withJavadoc(),
+      "com.typesafe.akka" %% "akka-actor" % "2.3-20131127-231000" withSources() withJavadoc(),
       "org.scalatest" % "scalatest_2.10" % "2.0.RC1-SNAP4" % "test" withSources() withJavadoc(),
       "java3d" % "vecmath" % "1.3.1",
       "com.googlecode.efficient-java-matrix-library" % "ejml" % "0.23" withSources() withJavadoc(),
@@ -70,7 +69,7 @@ object AmcgalaAgents extends Build {
 
 
 object Resolvers {
-  lazy val typesafeReleaseRepo = "Typesafe Snapshot Repository" at "http://repo.typesafe.com/typesafe/snapshots/"
-  lazy val typesafeSnapshotRepo = "Typesafe Release Repository" at "http://repo.typesafe.com/typesafe/releases/"
+  lazy val typesafeReleaseRepo = "Typesafe Snapshot Repository" at "http://repo.typesafe.com/typesafe/releases/"
+  lazy val typesafeSnapshotRepo = "Typesafe Release Repository" at "http://repo.typesafe.com/typesafe/snapshots/"
   lazy val sonatypeSnapshotRepo = "Sonatype Snapshots Repository" at "https://oss.sonatype.org/content/repositories/snapshots/"
 }
