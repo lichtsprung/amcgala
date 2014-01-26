@@ -6,7 +6,7 @@ import org.amcgala.agent.SimulationManager.{ SimulationCreation, SimulationReque
 import org.amcgala.agent.CompetitionManager.{ Application, StartCompetition }
 import scala.Some
 import java.lang.Class
-import org.amcgala.agent.CompetitionClient.EndRound
+import org.amcgala.agent.CompetitionClient.{ Ranking, EndRound }
 import org.amcgala.agent.AgentMessages.NextRound
 import scala.util.Sorting
 
@@ -47,7 +47,7 @@ class SimulationManager extends Actor {
 
 object CompetitionManager {
 
-  case object Application
+  case class Application(name: String)
 
   case object Start
 
@@ -62,9 +62,10 @@ class CompetitionManager extends Actor {
   import concurrent.duration._
   import scala.concurrent.ExecutionContext.Implicits.global
 
-  var applicants = Set.empty[ActorRef]
-  var simulations = Map.empty[Address, ActorRef]
-  var config = ConfigFactory.empty()
+  var applicants = Set[ActorRef]()
+  var simulations = Map[Address, ActorRef]()
+  var names = Map[Address, String]()
+  var config = ConfigFactory.empty
 
   var stashedRequests = List.empty[ActorRef]
 
@@ -78,10 +79,9 @@ class CompetitionManager extends Actor {
   def competitionMode: Actor.Receive = {
     case StartCompetition ⇒
       var contestants = applicants.toList
-      assert(contestants.size % 2 == 0)
       simulationCount = contestants.size / 2
 
-      for (i ← 0 until contestants.size / 2) {
+      for (i ← 0 until simulationCount) {
 
         val simCls = config.getString("org.amcgala.agent.simulation.definition.class")
         val clazz = ClassLoader.getSystemClassLoader.loadClass(simCls)
@@ -133,7 +133,10 @@ class CompetitionManager extends Actor {
         Sorting.quickSort(ranking)(new Ordering[(Address, Float)] {
           def compare(x: (Address, Float), y: (Address, Float)): Int = math.signum(x._2 - y._2).toInt
         })
-        applicants = applicants.filterNot(a ⇒ ranking.take(ranking.size / 2).exists(e ⇒ e._1 == a.path.address))
+        val rs = for (r ← ranking) yield (names(r._1), r._2)
+        applicants.foreach(_ ! Ranking(rs.toList))
+        applicants = applicants.filterNot(a ⇒ ranking.reverse.take(ranking.size / 2).exists(e ⇒ e._1 == a.path.address))
+        println(applicants)
         context become round
         self ! Start
       }
@@ -147,7 +150,7 @@ class CompetitionManager extends Actor {
     case Start ⇒
       val simCount = applicants.size / 2
       if (simCount < 1) {
-        println(s"And the winner is: ${applicants.head}")
+        println(s"And the winner is: ${names(applicants.head.path.address)}")
         context.system.shutdown()
       } else {
         if (applicants.size % 2 != 0) {
@@ -165,13 +168,14 @@ class CompetitionManager extends Actor {
       stashedRequests = sender :: stashedRequests
     case SimulationCreation(c) ⇒
       config = c
-    case Application ⇒
+    case Application(name) ⇒
       if (applicants.isEmpty) {
         context.system.scheduler.scheduleOnce(1 minutes, self, Start)
         println("Started application timer... 1 minute remaining.")
       }
       applicants = applicants + sender
-      println(s"Added contestant: $sender")
+      names = names + (sender.path.address -> name)
+      println(s"Added contestant: $sender -> $name")
     case Start ⇒
       val simCount = applicants.size / 2
       if (simCount < 1) {
@@ -184,8 +188,9 @@ class CompetitionManager extends Actor {
           println("Ungerade Anzahl von Teilnehmern. Einer vom Wettbewerb ausgenommen.")
           applicants = applicants - applicants.last
         }
-        println("Switching to competition mode...")
+        print("Switching to competition mode...")
         context become competitionMode
+        println("done")
         self ! StartCompetition
       }
 
@@ -193,13 +198,14 @@ class CompetitionManager extends Actor {
 }
 
 object CompetitionClient {
-  def props(agents: List[(Class[_], Int)], managerPath: String) = Props(new CompetitionClient(agents, managerPath: String))
+  def props(agents: List[(Class[_], Int)], managerPath: String, name: String) = Props(new CompetitionClient(agents, managerPath: String, name))
 
   case object EndRound
+  case class Ranking(ranking: List[(String, Float)])
 
 }
 
-class CompetitionClient(agents: List[(Class[_], Int)], managerPath: String) extends Actor {
+class CompetitionClient(agents: List[(Class[_], Int)], managerPath: String, name: String) extends Actor {
 
   import CompetitionClient._
 
@@ -207,7 +213,7 @@ class CompetitionClient(agents: List[(Class[_], Int)], managerPath: String) exte
   var firstRound = true
 
   println(s"Sending application to $manager")
-  manager ! Application
+  manager ! Application(name)
 
   def receive: Actor.Receive = {
     case StartCompetition ⇒
@@ -240,10 +246,15 @@ class CompetitionClient(agents: List[(Class[_], Int)], managerPath: String) exte
       println("Ending round...")
       if (firstRound) firstRound = false
       context.children.foreach(_ ! NextRound)
+      println("done")
+    case Ranking(r) ⇒
+      println("Results:")
+      r.foreach(e ⇒ println(s"${e._1} :: ${e._2}"))
+
   }
 }
 
-class CompetitionApp(agentConfig: String) {
+class CompetitionApp(agentConfig: String, name: String) {
   val AmcgalaAgentCls = classOf[AmcgalaAgent]
   val StateloggerAgentCls = classOf[StateLoggerAgent]
   val UntypedActorCls = classOf[Actor]
@@ -278,6 +289,6 @@ class CompetitionApp(agentConfig: String) {
     }
   }
 
-  system.actorOf(CompetitionClient.props(a, managerPath))
+  system.actorOf(CompetitionClient.props(a, managerPath, name))
 
 }

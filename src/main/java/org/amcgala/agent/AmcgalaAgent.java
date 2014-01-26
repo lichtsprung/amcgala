@@ -135,6 +135,24 @@ public abstract class AmcgalaAgent extends UntypedActor {
     }
 
     /**
+     * Erzeugt ein Kind und platziert es auf die Zelle, auf der der Eltern-Agent gerade steht
+     * @param type Instanz von dem neuen Agententypen
+     */
+    protected void spawnChild(AmcgalaAgent type) {
+        Props props = Props.create(new AmcgalaAgentCreator(type.getClass()));
+
+        ActorRef ref = getContext().system().actorOf(props);
+        ref.tell(new AgentMessages.SpawnAt(currentPosition, currentPosition), getSelf());
+    }
+
+    protected void spawnChild(AmcgalaAgent type, World.Index index) {
+        Props props = Props.create(new AmcgalaAgentCreator(type.getClass()));
+        ActorRef ref = getContext().system().actorOf(props);
+        ref.tell(SimulationManager.SimulationResponse$.MODULE$, simulation);
+        ref.tell(new AgentMessages.SpawnAt(index, currentPosition), getSelf());
+    }
+
+    /**
      * Erzeugt ein Kind und platziert dieses auf dem angegebenen Index in der Welt.
      *
      * @param index der Index, auf dem das Kind platziert werden soll
@@ -227,12 +245,12 @@ public abstract class AmcgalaAgent extends UntypedActor {
     /**
      * Greift ein benachbartes Feld an.
      *
-     * @param index Absolute Index der Zelle, die angegriffen werden soll
+     * @param cell die Zelle, die angeriffen werden soll
      * @return die Attack Message an die Simulation
      */
-    protected AgentMessages.AgentMessage attackCell(World.Index index) {
+    protected AgentMessages.AgentMessage attackCell(World.JCellWithIndex cell) {
         requestUpdate();
-        return new AgentMessages.Attack(index);
+        return new AgentMessages.Attack(cell.index());
     }
 
 

@@ -232,6 +232,7 @@ trait ComposableSimulation extends Actor {
         context.system.scheduler.schedule(5 seconds, pingTime, self, Update)
       }
       context.become(receive)
+      self ! StopTimer.Start
   }
 
   def agentAt(index: Index): Map[ActorRef, AgentStates] = agents.filter(p ⇒ p._2.position == index)
@@ -485,8 +486,8 @@ object PaidService {
 trait PaidAgentMoveHandling {
   comp: ComposableSimulation with PaidService[Any, Float] with PayloadHandling with StopTimer ⇒
 
-  private val price = 10
-  private val honeyPrice = -100
+  private val price = 2
+  private val honeyPrice = -1000
   setPrice(MoveTo -> price)
 
   receiveBuilder += {
@@ -692,6 +693,20 @@ trait PaidAgentAttackHandling {
 
 }
 
+trait PaidIdleHandling {
+  comp: ComposableSimulation with PaidService[Any, Float] ⇒
+
+  val idlePrice = 10
+
+  setPrice(Idle -> idlePrice)
+
+  receiveBuilder += {
+    case Idle ⇒
+      for (agent ← agents.get(sender)) amounts = amounts + (sender.path.address -> (amounts.getOrElse(sender.path.address, 0f) + idlePrice))
+
+  }
+}
+
 trait SimulationManagerHandling {
   comp: ComposableSimulation ⇒
 
@@ -705,7 +720,9 @@ trait SimulationManagerHandling {
 
 object StopTimer {
 
-  case object StopSimulation
+  case object Stop
+
+  case object Start
 
   case class SimulationResults(results: Map[Address, Float])
 
@@ -716,15 +733,16 @@ trait StopTimer {
 
   import StopTimer._
 
-  val stopTime = currentConfig.getInt("org.amcgala.agent.simulation.stop-timer").minute
-
-  context.system.scheduler.scheduleOnce(stopTime, self, StopSimulation)
-
   receiveBuilder += {
-    case StopSimulation ⇒
-      context.parent ! SimulationResults(amounts)
-      context.stop(self)
+    case Start ⇒
+      val stopTime = currentConfig.getInt("org.amcgala.agent.simulation.stop-timer").minute
+      println(s"Stopping simulation in $stopTime")
 
+      context.system.scheduler.scheduleOnce(stopTime, self, Stop)
+    case Stop ⇒
+      context.parent ! SimulationResults(amounts)
+      println(amounts.head._2)
+      context.stop(self)
   }
 }
 
