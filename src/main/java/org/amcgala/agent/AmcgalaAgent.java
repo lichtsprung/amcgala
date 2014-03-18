@@ -203,10 +203,33 @@ public abstract class AmcgalaAgent extends UntypedActor {
      * Waehlt einen zufaellig eine Nachbarzelle aus.
      *
      * @param update die aktuelle Umgebung
-     * @return die NAchbarzelle
+     * @return die Nachbarzelle
+     * @deprecated Neue Methode: getRandomNeighbourCell
      */
     protected World.JCellWithIndex getRandomNeighbour(Simulation.SimulationUpdate update) {
         return update.neighbours().values().toArray(new World.JCellWithIndex[1])[random.nextInt(update.neighbours().size())];
+    }
+
+    /**
+     * Waehlt einen zufaellig eine Nachbarzelle aus.
+     *
+     * @param update die aktuelle Umgebung
+     * @return die Nachbarzelle
+     */
+    protected World.JCellWithIndex getRandomNeighbourCell(Simulation.SimulationUpdate update) {
+        return getRandomNeighbour(update);
+    }
+
+    /**
+     * Gibt den Nachbarn einer Zelle zurueck.
+     *
+     * @param direction die Richtung des Nachbarn
+     * @param update    die Update Informationen
+     * @return die Nachbarzelle
+     * @deprecated Neue Methode: getNeighbourCell
+     */
+    protected World.JCellWithIndex getNeighbour(Direction direction, Simulation.SimulationUpdate update) {
+        return update.neighbours().get(direction.relativeIndex());
     }
 
     /**
@@ -216,8 +239,8 @@ public abstract class AmcgalaAgent extends UntypedActor {
      * @param update    die Update Informationen
      * @return die Nachbarzelle
      */
-    protected World.JCellWithIndex getNeighbour(Direction direction, Simulation.SimulationUpdate update) {
-        return update.neighbours().get(direction.relativeIndex());
+    protected World.JCellWithIndex getNeighbourCell(Direction direction, Simulation.SimulationUpdate update) {
+        return getNeighbour(direction, update);
     }
 
     /**
