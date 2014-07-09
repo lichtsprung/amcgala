@@ -50,7 +50,7 @@ object AmcgalaAgents extends Build {
       "-optimise"
     ),
     incOptions := incOptions.value.withNameHashing(nameHashing = true),
-    javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
+    javacOptions ++= Seq("-source", "1.8", "-target", "1.8"),
     libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-remote" % "2.3.2" withSources() withJavadoc(),
       "com.typesafe.akka" %% "akka-actor" % "2.3.2" withSources() withJavadoc(),
