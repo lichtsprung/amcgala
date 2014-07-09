@@ -4,6 +4,7 @@ import org.ejml.simple.SimpleMatrix
 import org.ejml.ops.{ MatrixVisualization, MatrixFeatures }
 import org.ejml.data.DenseMatrix64F
 import java.util.Random
+import scala.language.implicitConversions
 
 class Matrix {
   private var sm: SimpleMatrix = _

@@ -170,7 +170,7 @@ class CompetitionManager extends Actor {
       config = c
     case Application(name) ⇒
       if (applicants.isEmpty) {
-        context.system.scheduler.scheduleOnce(1 minutes, self, Start)
+        context.system.scheduler.scheduleOnce(1.minutes, self, Start)
         println("Started application timer... 1 minute remaining.")
       }
       applicants = applicants + sender
@@ -255,6 +255,7 @@ class CompetitionClient(agents: List[(Class[_], Int)], managerPath: String, name
 }
 
 class CompetitionApp(agentConfig: String, name: String) {
+  import scala.language.existentials
   val AmcgalaAgentCls = classOf[AmcgalaAgent]
   val StateloggerAgentCls = classOf[StateLoggerAgent]
   val UntypedActorCls = classOf[Actor]

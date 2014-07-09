@@ -25,7 +25,7 @@ object AmcgalaAgents extends Build {
 
   val javadocSettings = inConfig(JavaDoc)(Defaults.configSettings) ++ Seq(
     libraryDependencies += compilerPlugin("com.typesafe.genjavadoc" %%
-      "genjavadoc-plugin" % "0.5" cross CrossVersion.full),
+      "genjavadoc-plugin" % "0.8" cross CrossVersion.full),
     scalacOptions <+= target map (t => "-P:genjavadoc:out=" + (t / "java")),
     packageDoc in Compile <<= packageDoc in JavaDoc,
     sources in JavaDoc <<=
@@ -38,16 +38,23 @@ object AmcgalaAgents extends Build {
   )
 
 
-  lazy val projectSettings = Defaults.defaultSettings ++ Seq(
+  lazy val projectSettings = Defaults.coreDefaultSettings ++ Seq(
     name := "amcgala",
-    version := "3.2.0",
+    version := "3.2.5",
     organization := "org.amcgala",
-    scalaVersion := "2.11.0-RC1",
+    scalaVersion := "2.11.1",
+    scalacOptions := Seq(
+      "-deprecation",
+      "-feature",
+      "-Xlint",
+      "-optimise"
+    ),
+    incOptions := incOptions.value.withNameHashing(nameHashing = true),
     javacOptions ++= Seq("-source", "1.7", "-target", "1.7"),
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-remote" % "2.3.0-RC4" withSources() withJavadoc(),
-      "com.typesafe.akka" %% "akka-actor" % "2.3.0-RC4" withSources() withJavadoc(),
-      "org.scalatest" % "scalatest_2.10" % "2.0.RC1-SNAP4" % "test" withSources() withJavadoc(),
+      "com.typesafe.akka" %% "akka-remote" % "2.3.2" withSources() withJavadoc(),
+      "com.typesafe.akka" %% "akka-actor" % "2.3.2" withSources() withJavadoc(),
+      "org.scalatest" %% "scalatest" % "2.2.0" % "test" withSources() withJavadoc(),
       "java3d" % "vecmath" % "1.3.1",
       "com.googlecode.efficient-java-matrix-library" % "ejml" % "0.23" withSources() withJavadoc(),
       "com.google.guava" % "guava" % "14.0.1" withSources() withJavadoc(),

@@ -38,6 +38,7 @@ import org.amcgala.agent.Simulation.AgentStateChange
 import org.amcgala.agent.AgentMessages.TakePayload
 import org.amcgala.agent.World.WorldInfo
 import scala.util.Random
+import scala.language.implicitConversions
 
 /**
   * Nachricht, die zwischen Agenten und der Simulation verschickt werden können.
@@ -229,7 +230,7 @@ trait ComposableSimulation extends Actor {
       currentConfig = config.withFallback(defaultConfig)
       world = Some(World(currentConfig))
       if (pushMode) {
-        context.system.scheduler.schedule(5 seconds, pingTime, self, Update)
+        context.system.scheduler.schedule(5.seconds, pingTime, self, Update)
       }
       context.become(receive)
       self ! StopTimer.Start
