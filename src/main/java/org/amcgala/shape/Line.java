@@ -16,6 +16,7 @@ package org.amcgala.shape;
 
 import org.amcgala.math.Vertex3f;
 import org.amcgala.renderer.DisplayList;
+import org.amcgala.scenegraph.transform.Transformation;
 import org.amcgala.shape.primitives.LinePrimitive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,5 +41,11 @@ public class Line extends AbstractShape {
         linePrimitive.color = getColor();
         list.lines.add(linePrimitive);
         return list;
+    }
+
+    @Override
+    public DisplayList getDisplayList(DisplayList list, Transformation transformation) {
+        // TODO Füge die Primitiven der DisplayList hinzu, aber vorher transformiere die Vektoren mithilfe des Transformationsobjekts.
+        return super.getDisplayList(list, transformation);
     }
 }

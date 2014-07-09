@@ -2,6 +2,7 @@ package org.amcgala.shape;
 
 import org.amcgala.math.Vertex3f;
 import org.amcgala.renderer.DisplayList;
+import org.amcgala.scenegraph.transform.Transformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,5 +51,11 @@ public class Box extends AbstractShape {
             dl = l.getDisplayList(dl);
         }
         return dl;
+    }
+
+    @Override
+    public DisplayList getDisplayList(DisplayList list, Transformation transformation) {
+        // TODO Füge die Primitiven der DisplayList hinzu, aber vorher transformiere die Vektoren mithilfe des Transformationsobjekts.
+        return super.getDisplayList(list, transformation);
     }
 }

@@ -11,4 +11,20 @@ public class PointPrimitive extends Primitive {
     public PointPrimitive(Vertex3f point) {
         this.point = point;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PointPrimitive that = (PointPrimitive) o;
+
+        return point.equals(that.point);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return point.hashCode();
+    }
 }

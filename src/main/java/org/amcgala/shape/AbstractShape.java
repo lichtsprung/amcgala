@@ -21,6 +21,7 @@ import org.amcgala.raytracer.ShadingInfo;
 import org.amcgala.raytracer.material.Material;
 import org.amcgala.renderer.DisplayList;
 import org.amcgala.scenegraph.Node;
+import org.amcgala.scenegraph.transform.Transformation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,12 +33,11 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractShape implements Shape {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractShape.class);
-    private Animation animation;
-    private Node node;
     protected String label = getClass().getSimpleName() + " - " + System.nanoTime();
     protected RGBColor color = new RGBColor(0, 0, 0);
     protected Material material = new Material();
-
+    private Animation animation;
+    private Node node;
 
     @Override
     public RGBColor getColor() {
@@ -61,15 +61,14 @@ public abstract class AbstractShape implements Shape {
         }
     }
 
+    @Override
+    public Animation getAnimation() {
+        return animation;
+    }
 
     @Override
     public void setAnimation(Animation animation) {
         this.animation = animation;
-    }
-
-    @Override
-    public Animation getAnimation() {
-        return animation;
     }
 
     @Override
@@ -81,7 +80,6 @@ public abstract class AbstractShape implements Shape {
     public void setNode(Node node) {
         this.node = node;
     }
-
 
     @Override
     public boolean hit(Ray ray, ShadingInfo shadingInfo) {
@@ -100,6 +98,11 @@ public abstract class AbstractShape implements Shape {
 
     @Override
     public DisplayList getDisplayList(DisplayList list) {
+        return list;
+    }
+
+    @Override
+    public DisplayList getDisplayList(DisplayList list, Transformation transformation) {
         return list;
     }
 }

@@ -17,6 +17,7 @@ package org.amcgala.shape.util;
 import com.google.common.base.Objects;
 import org.amcgala.event.InputHandler;
 import org.amcgala.renderer.DisplayList;
+import org.amcgala.scenegraph.transform.Transformation;
 import org.amcgala.shape.AbstractShape;
 import org.amcgala.shape.Line;
 import org.amcgala.shape.Shape;
@@ -93,5 +94,11 @@ public class CompositeShape extends AbstractShape implements InputHandler {
             line.getDisplayList(list);
         }
         return list;
+    }
+
+    @Override
+    public DisplayList getDisplayList(DisplayList list, Transformation transformation) {
+        // TODO Füge die Primitiven der DisplayList hinzu, aber vorher transformiere die Vektoren mithilfe des Transformationsobjekts.
+        return super.getDisplayList(list, transformation);
     }
 }

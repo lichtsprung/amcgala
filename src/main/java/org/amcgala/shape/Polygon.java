@@ -3,6 +3,7 @@ package org.amcgala.shape;
 import com.google.common.base.Preconditions;
 import org.amcgala.math.Vector3d;
 import org.amcgala.renderer.DisplayList;
+import org.amcgala.scenegraph.transform.Transformation;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
@@ -71,5 +72,11 @@ public class Polygon extends AbstractShape {
             tri.getDisplayList(list);
         }
         return list;
+    }
+
+    @Override
+    public DisplayList getDisplayList(DisplayList list, Transformation transformation) {
+        // TODO Füge die Primitiven der DisplayList hinzu, aber vorher transformiere die Vektoren mithilfe des Transformationsobjekts.
+        return super.getDisplayList(list, transformation);
     }
 }

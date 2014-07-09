@@ -19,4 +19,22 @@ public class LinePrimitive extends Primitive {
     public String toString() {
         return Objects.toStringHelper(getClass()).add("Start", v0).add("End", v1).toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LinePrimitive that = (LinePrimitive) o;
+
+        return v0.equals(that.v0) && v1.equals(that.v1);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = v0.hashCode();
+        result = 31 * result + v1.hashCode();
+        return result;
+    }
 }

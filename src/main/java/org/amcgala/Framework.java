@@ -26,6 +26,7 @@ import org.amcgala.renderer.DisplayList;
 import org.amcgala.renderer.SoftwareRenderer;
 import org.amcgala.scenegraph.DefaultSceneGraph;
 import org.amcgala.scenegraph.SceneGraph;
+import org.amcgala.scenegraph.visitor.DisplayListUpdater;
 import org.amcgala.scenegraph.visitor.UpdateVisitor;
 import org.amcgala.scenegraph.visitor.Visitor;
 import org.amcgala.shape.Shape;
@@ -181,10 +182,10 @@ public final class Framework {
         sceneEventBus.post(new Update());
         checkCamera();
         checkTracing();
-        Collection<Shape> shapes = scenegraph.getShapes();
-
+        //Collection<Shape> shapes = scenegraph.getShapes();
+        // updateDisplayList(shapes);
         displayList.clear();
-        updateDisplayList(shapes);
+        scenegraph.accept(new DisplayListUpdater(displayList));
     }
 
     private void updateDisplayList(Collection<Shape> shapes) {
@@ -208,9 +209,7 @@ public final class Framework {
 
     private void checkCamera() {
         if (camera != null && !paused) {
-            for (Visitor v : visitors) {
-                scenegraph.accept(v);
-            }
+            visitors.forEach(scenegraph::accept);
         }
     }
 
