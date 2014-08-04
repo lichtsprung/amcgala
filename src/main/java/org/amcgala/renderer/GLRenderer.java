@@ -1,6 +1,7 @@
 package org.amcgala.renderer;
 
 import org.amcgala.Framework;
+import org.amcgala.event.*;
 import org.amcgala.math.Vertex3f;
 import org.amcgala.shape.primitives.LinePrimitive;
 import org.amcgala.shape.primitives.PointPrimitive;
@@ -12,8 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -30,6 +30,8 @@ public class GLRenderer implements Renderer {
         log.info("Creating new instance of GLRenderer...");
         this.framework = framework;
 
+        final Framework fr = framework;
+
         try {
             Frame frame = new Frame("amCGAla GL");
             frame.setSize(framework.getWidth(), framework.getHeight());
@@ -43,6 +45,111 @@ public class GLRenderer implements Renderer {
                 @Override
                 public void windowClosing(WindowEvent e) {
                     System.exit(0);
+                }
+            });
+
+            frame.addKeyListener(new KeyAdapter() {
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                        System.exit(0);
+                    } else {
+                        if (fr.hasActiveScene()) {
+                            fr.getActiveScene().getEventBus().post(new KeyPressedEvent(e));
+                        }
+                        fr.getEventBus().post(new KeyPressedEvent(e));
+                    }
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    if (fr.hasActiveScene()) {
+                        fr.getActiveScene().getEventBus().post(new KeyReleasedEvent(e));
+                    }
+
+                    fr.getEventBus().post(new KeyReleasedEvent(e));
+                }
+            });
+
+            frame.addMouseListener(new MouseListener() {
+
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (fr.hasActiveScene()) {
+                        fr.getActiveScene().getEventBus().post(new MouseClickedEvent(e));
+                    }
+
+                    fr.getEventBus().post(new MouseClickedEvent(e));
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    if (fr.hasActiveScene()) {
+                        fr.getActiveScene().getEventBus().post(new MousePressedEvent(e));
+                    }
+
+                    fr.getEventBus().post(new MousePressedEvent(e));
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    if (fr.hasActiveScene()) {
+                        fr.getActiveScene().getEventBus().post(new MouseReleasedEvent(e));
+                    }
+
+                    fr.getEventBus().post(new MouseReleasedEvent(e));
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    if (fr.hasActiveScene()) {
+                        fr.getActiveScene().getEventBus().post(e);
+                    }
+
+                    fr.getEventBus().post(e);
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    if (fr.hasActiveScene()) {
+                        fr.getActiveScene().getEventBus().post(e);
+                    }
+
+                    fr.getEventBus().post(e);
+                }
+            });
+
+            frame.addMouseMotionListener(new MouseMotionListener() {
+
+                @Override
+                public void mouseDragged(MouseEvent e) {
+                    if (fr.hasActiveScene()) {
+                        fr.getActiveScene().getEventBus().post(e);
+                    }
+
+                    fr.getEventBus().post(e);
+                }
+
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    if (fr.hasActiveScene()) {
+                        fr.getActiveScene().getEventBus().post(e);
+                    }
+
+                    fr.getEventBus().post(e);
+                }
+            });
+
+            frame.addMouseWheelListener(new MouseWheelListener() {
+
+                @Override
+                public void mouseWheelMoved(MouseWheelEvent e) {
+                    if (fr.hasActiveScene()) {
+                        fr.getActiveScene().getEventBus().post(e);
+                    }
+
+                    fr.getEventBus().post(e);
                 }
             });
 

@@ -180,7 +180,7 @@ public final class Framework {
     public void update() {
         frameworkEventBus.post(new Update());
         sceneEventBus.post(new Update());
-        checkCamera();
+        updateScenegraph();
         checkTracing();
         //Collection<Shape> shapes = scenegraph.getShapes();
         // updateDisplayList(shapes);
@@ -207,7 +207,7 @@ public final class Framework {
         }
     }
 
-    private void checkCamera() {
+    private void updateScenegraph() {
         if (camera != null && !paused) {
             visitors.forEach(scenegraph::accept);
         }
