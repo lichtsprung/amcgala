@@ -6,6 +6,7 @@ package org.amcgala.math;
 
 import org.ejml.simple.SimpleMatrix;
 
+
 /**
  *
  */
@@ -93,8 +94,16 @@ public class Matrix {
         return new Matrix(values);
     }
 
+    public Vector3d toVector() {
+        return new Vector3d(m.get(0, 0), m.get(1, 0), m.get(2, 0));
+    }
+
     @Override
     public String toString() {
         return m.toString();
+    }
+
+    public Vertex3f toVertex3f() {
+        return new Vertex3f((float) m.get(0, 0), (float) m.get(1, 0), (float) m.get(2, 0));
     }
 }

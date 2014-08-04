@@ -21,6 +21,8 @@ import org.amcgala.shape.primitives.LinePrimitive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+
 /**
  * Eine Linie im 3d Raum.
  *
@@ -46,6 +48,11 @@ public class Line extends AbstractShape {
     @Override
     public DisplayList getDisplayList(DisplayList list, Transformation transformation) {
         // TODO Füge die Primitiven der DisplayList hinzu, aber vorher transformiere die Vektoren mithilfe des Transformationsobjekts.
-        return super.getDisplayList(list, transformation);
+
+        Vertex3f am = transformation.getTransformMatrix().times(a.toVector().toMatrix()).toVertex3f();
+        Vertex3f bm = transformation.getTransformMatrix().times(b.toVector().toMatrix()).toVertex3f();
+        LinePrimitive p = new LinePrimitive(am, bm);
+        list.lines.add(p);
+        return list;
     }
 }
